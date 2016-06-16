@@ -1,0 +1,99 @@
+Login l = new Login();
+        this.dispose();
+        l.setVisible(true);
+--------------------------     
+        System.exit(0);
+
+---------------------
+
+
+ Usuarios usu;
+        try {
+            usu = new Usuarios();
+            this.dispose();
+            usu.setVisible(true);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Bodega.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+---------------------------------
+   Registro_Usuario ru;
+        try {
+            ru = new Registro_Usuario();
+            this.dispose();
+            ru.setVisible(true);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Bodega.class.getName()).log(Level.SEVERE, null, ex);
+        }
+------------------------------------
+   Provedores p;
+        try {
+            p = new Provedores();
+            this.dispose();;
+            p.setVisible(true);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+----------------------------------------
+
+       try {
+            // TODO add your handling code here:
+            Bodega b = new Bodega();
+            this.dispose();
+            b.setVisible(true);
+        } catch (Exception ex) {
+
+        }
+------------------------------------
+Articulo ar;
+        try {
+            ar = new Articulo();
+            this.dispose();
+            ar.setVisible(true);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Bodega.class.getName()).log(Level.SEVERE, null, ex);
+        }
+--------------------------------------
+Entrada_Nueva rp;
+        try {
+            ArrayList<Producto> pr = new ArrayList();
+
+            rp = new Entrada_Nueva(pr);
+            rp.setVisible(true);
+            this.dispose();
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Articulo.class.getName()).log(Level.SEVERE, null, ex);
+        }
+--------------------------------
+  try {
+            Categoria c = new Categoria();
+            this.setVisible(false);
+            c.setVisible(true);
+        } catch (Exception x) {
+
+        }
+--------------------------
+Registro_Categoria r;
+        try {
+            r = new Registro_Categoria();
+            this.setVisible(false);
+            r.setVisible(true);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Categoria.class.getName()).log(Level.SEVERE, null, ex);
+        }
+-----------------------
+   Reportes re = new Reportes();
+        this.setVisible(false);
+        re.setVisible(true);
+----------------------
+ArrayList<Producto> pro = new ArrayList();
+        Venta v;
+        try {
+            v = new Venta(pro);
+            this.setVisible(false);
+            v.setVisible(true);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+        }
+---------------------

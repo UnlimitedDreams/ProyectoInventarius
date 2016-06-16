@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="297" pageHeight="421" columnWidth="257" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<queryString>
+		<![CDATA[select cod_producto from producto where cod_producto in ('731') union all select cod_producto from producto where cod_producto in ('731')]]>
+	</queryString>
+	<field name="cod_producto" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="31">
+			<staticText>
+				<reportElement x="0" y="0" width="108" height="20"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Codigo barra]]></text>
+			</staticText>
+		</band>
+	</title>
+	<detail>
+		<band height="31" splitType="Stretch">
+			<image scaleImage="RetainShape">
+				<reportElement x="0" y="0" width="80" height="27"/>
+				<imageExpression><![CDATA[new net.sf.jasperreports.components.barbecue.BarbecueRenderer(net.sourceforge.barbecue.BarcodeFactory.createCode128($F{cod_producto}))]]></imageExpression>
+			</image>
+		</band>
+	</detail>
+</jasperReport>
