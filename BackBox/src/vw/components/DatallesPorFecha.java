@@ -22,6 +22,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import vw.main.Menu;
 
 /**
  *
@@ -37,15 +38,19 @@ public class DatallesPorFecha extends javax.swing.JFrame {
         this.nom = nom;
         this.ListAcciones = acciones;
         this.setLocationRelativeTo(null);
-        setTitle("GALVISOFT DETALLE POR FECHA");
+        setTitle("REPORTE ENTRADA Y SALIDA DE PRODUCTOS EN BODEGA");
         this.setResizable(false);
         setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/facelet/icon.png")));
+        Date fecha = new Date();
+        jDateChooser1.setDate(fecha);
+        jDateChooser2.setDate(fecha);
 
     }
 
     public void inicio() throws ClassNotFoundException {
         Control.conectar();
         Producto temp = null;
+        String query = "";
         Date date = jDateChooser1.getDate();
         SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd");
         String fecha = format2.format(date);
@@ -54,15 +59,17 @@ public class DatallesPorFecha extends javax.swing.JFrame {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         String fecha2 = format2.format(date2);
 
-        String query = "select producto.nombre \"Nombre\""
+        query = "select fecha,producto.nombre \"Nombre\""
                 + ",salida_entrada.nombre \"Tipo\","
-                + "salida_entrada.cant \"Cantidad\","
-                + "fecha from salida_entrada,producto where\n"
+                + "salida_entrada.cant \"Cantidad\",salida_entrada.comentario \"Descripcion\",responsable"
+                + " from salida_entrada,producto where\n"
                 + "salida_entrada.cod_producto=producto.cod_producto and \n"
                 + "  fecha>='" + fecha2 + "' and fecha<='" + fecha + "'\n"
                 + " order by fecha DESC";
+
         System.out.println(query);
         String codi = "", nom = "", valor = "", cant = "", costo = "";
+        String descrip = "", respon = "";
         DefaultTableModel modeloEmpleado = new DefaultTableModel();
         int numeroPreguntas;
         ResultSetMetaData rsetMetaData;
@@ -82,6 +89,8 @@ public class DatallesPorFecha extends javax.swing.JFrame {
                 nom = Control.rs.getString(2);
                 costo = Control.rs.getString(3);
                 valor = Control.rs.getString(4);
+                descrip = Control.rs.getString(5);
+                respon = Control.rs.getString(6);
 
                 Object[] registroEmpleado = new Object[numeroPreguntas];
 
@@ -111,20 +120,21 @@ public class DatallesPorFecha extends javax.swing.JFrame {
         volver = new javax.swing.JButton();
         exportar = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
         jDateChooser1 = new com.alee.extended.date.WebDateField();
         jDateChooser2 = new com.alee.extended.date.WebDateField();
         jButton1 = new javax.swing.JButton();
+        jLabel6 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jPanel1.setPreferredSize(new java.awt.Dimension(750, 561));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jScrollPane1.setViewportView(jTable1);
 
-        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 80, 770, 430));
+        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 80, 700, 350));
 
         volver.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-xhdpi/ic_arrow_back_black_24dp.png"))); // NOI18N
         volver.setBorder(null);
@@ -139,7 +149,7 @@ public class DatallesPorFecha extends javax.swing.JFrame {
                 volverActionPerformed(evt);
             }
         });
-        jPanel1.add(volver, new org.netbeans.lib.awtextra.AbsoluteConstraints(695, 525, -1, -1));
+        jPanel1.add(volver, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 470, -1, -1));
 
         exportar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-xhdpi/export_to_excel_24dp.png"))); // NOI18N
         exportar.setBorder(null);
@@ -154,15 +164,12 @@ public class DatallesPorFecha extends javax.swing.JFrame {
                 exportarActionPerformed(evt);
             }
         });
-        jPanel1.add(exportar, new org.netbeans.lib.awtextra.AbsoluteConstraints(11, 525, -1, -1));
+        jPanel1.add(exportar, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 470, -1, -1));
 
         jLabel2.setText("Fecha Final");
-        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 50, -1, -1));
-
-        jLabel3.setText("Fecha Inicial");
-        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, -1, -1));
-        jPanel1.add(jDateChooser1, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 50, 170, -1));
-        jPanel1.add(jDateChooser2, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 20, 170, -1));
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 20, -1, -1));
+        jPanel1.add(jDateChooser1, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 17, 170, -1));
+        jPanel1.add(jDateChooser2, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 17, 170, -1));
 
         jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-mdpi/ic_find_in_page_black_24dp.png"))); // NOI18N
         jButton1.setText("Buscar");
@@ -178,17 +185,22 @@ public class DatallesPorFecha extends javax.swing.JFrame {
                 jButton1ActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 10, -1, -1));
+        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(543, 10, 50, 50));
+
+        jLabel6.setText("Fecha Inicial");
+        jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, -1, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 793, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 732, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 613, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 545, Short.MAX_VALUE)
+                .addGap(0, 0, 0))
         );
 
         pack();
@@ -196,14 +208,8 @@ public class DatallesPorFecha extends javax.swing.JFrame {
 
     private void volverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_volverActionPerformed
 
-        Reportes m;
-        try {
-            m = new Reportes(nom, ListAcciones);
-            this.setVisible(false);
-            m.setVisible(true);
-        } catch (Exception ex) {
-            Logger.getLogger(DatallesPorFecha.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        new Menu(nom).setVisible(true);
+        this.dispose();
 
     }//GEN-LAST:event_volverActionPerformed
 
@@ -262,7 +268,7 @@ public class DatallesPorFecha extends javax.swing.JFrame {
     private com.alee.extended.date.WebDateField jDateChooser1;
     private com.alee.extended.date.WebDateField jDateChooser2;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;

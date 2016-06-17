@@ -142,6 +142,12 @@ public class VentaDiaria extends javax.swing.JFrame {
                         if (object1.getAccion().equalsIgnoreCase("Venta")) {
                             menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, ActionEvent.CTRL_MASK));
                         }
+                        if (object1.getAccion().equalsIgnoreCase("Lista Clientes")) {
+                            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, 10));
+                        }
+                        if (object1.getAccion().equalsIgnoreCase("Crear Cliente")) {
+                            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK));
+                        }
                         menuItem.addActionListener(new ActionListener() {
                             @Override
                             public void actionPerformed(ActionEvent e) {
@@ -215,14 +221,15 @@ public class VentaDiaria extends javax.swing.JFrame {
         DecimalFormat formateador = new DecimalFormat("###,###,###");
         Control.conectar();
         Producto temp = null;
-        String query = "select "
+        String query = "select to_char(fecha_venta, 'HH24:MI:SS')  \"Hora\","
                 + " cod_factura \"Código Factura\","
                 + " total_venta \"Venta Total\","
                 + " Upper(b.descripcion) \"Detalle\" "
                 + "from venta a, tipo_venta b\n"
                 + " where a.tipoventa=b.cod_tipo and \n"
-                + " a.fecha_venta='" + fecha + "' and cod_usuario=" + usuario + " order by cod_factura desc";
-        String codi = "", total = "", tipo = "";
+                + " a.fecha_venta between '" + fecha.substring(0, 10).concat(" 00:00:00") + "' and '"
+                + fecha.substring(0, 10).concat(" 23:59:59") + "' and cod_usuario=" + usuario + " order by fecha_venta desc";
+        String codi = "", total = "", tipo = "", hora = "";
         DefaultTableModel modeloEmpleado = new DefaultTableModel();
         int numeroPreguntas;
         ResultSetMetaData rsetMetaData;
@@ -236,11 +243,13 @@ public class VentaDiaria extends javax.swing.JFrame {
             for (int i = 0; i < numeroPreguntas; i++) {
                 modeloEmpleado.addColumn(rsetMetaData.getColumnLabel(i + 1));
             }
+            double totalVenta = 0;
             while (Control.rs.next()) {
-                codi = Control.rs.getString(1);
-                total = Control.rs.getString(2);
-                tipo = Control.rs.getString(3);
-
+                hora = Control.rs.getString(1);
+                codi = Control.rs.getString(2);
+                total = Control.rs.getString(3);
+                tipo = Control.rs.getString(4);
+                totalVenta = totalVenta + Double.parseDouble(total);
                 Object[] registroEmpleado = new Object[numeroPreguntas];
 
                 for (int i = 0; i < numeroPreguntas; i++) {
@@ -248,13 +257,7 @@ public class VentaDiaria extends javax.swing.JFrame {
                 }
                 modeloEmpleado.addRow(registroEmpleado);
             }
-            String sum = "select sum(total_venta) from venta a where \n"
-                    + "a.fecha_venta='" + fecha + "'";
-            Control.ejecuteQuery(sum);
-            double totalVenta = 0;
-            while (Control.rs.next()) {
-                totalVenta = Control.rs.getDouble(1);
-            }
+
             Total.setText("" + formateador.format(totalVenta));
             Control.cerrarConexion();
 
@@ -424,7 +427,7 @@ public class VentaDiaria extends javax.swing.JFrame {
     private void ventasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ventasActionPerformed
         ArrayList<Producto> pro = new ArrayList();
         try {
-            new Venta(pro, usuario, 1, List_Menu).setVisible(true);;
+            new Venta(pro, usuario, 1, List_Menu, "1").setVisible(true);;
             this.setVisible(false);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
@@ -437,7 +440,7 @@ public class VentaDiaria extends javax.swing.JFrame {
             Entrada.muestreMensajeV("Seleccione una de las facturas primero",
                     javax.swing.JOptionPane.ERROR_MESSAGE);
         } else {
-            String cod = (String) jTable1.getValueAt(i, 0).toString();
+            String cod = (String) jTable1.getValueAt(i, 1).toString();
             FacturaDetalle v;
             try {
                 v = new FacturaDetalle(this, true, usuario, cod);
@@ -451,7 +454,7 @@ public class VentaDiaria extends javax.swing.JFrame {
     private void devolucionesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_devolucionesActionPerformed
         ArrayList<Producto> pro = new ArrayList();
         try {
-            new Venta(pro, usuario, 2, List_Menu).setVisible(true);;
+            new Venta(pro, usuario, 2, List_Menu, "1").setVisible(true);;
             this.dispose();
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);

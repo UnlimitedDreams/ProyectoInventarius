@@ -195,14 +195,7 @@ public class Datalles_porFecha extends javax.swing.JFrame {
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
 
-        Reportes m;
-        try {
-            m = new Reportes(nom,ListAcciones);
-            this.setVisible(false);
-            m.setVisible(true);
-        } catch (Exception ex) {
-            Logger.getLogger(Datalles_porFecha.class.getName()).log(Level.SEVERE, null, ex);
-        }
+      
 
     }//GEN-LAST:event_jButton6ActionPerformed
 

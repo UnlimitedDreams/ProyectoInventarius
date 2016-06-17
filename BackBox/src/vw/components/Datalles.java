@@ -157,15 +157,7 @@ public class Datalles extends javax.swing.JFrame {
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
 
-        Reportes m;
-        try {
-            m = new Reportes(nom, ListAcciones);
-            this.dispose();
-            m.setVisible(true);
-        } catch (Exception ex) {
-            Logger.getLogger(Datalles.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
+  
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed

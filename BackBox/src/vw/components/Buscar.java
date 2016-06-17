@@ -124,11 +124,11 @@ public class Buscar extends javax.swing.JFrame {
                         if (object1.getAccion().equalsIgnoreCase("Compras")) {
                             menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_W, ActionEvent.CTRL_MASK));
                         }
-                        if (object1.getAccion().equalsIgnoreCase("Entrada y Salidas")) {
-                            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, ActionEvent.CTRL_MASK));
+                        if (object1.getAccion().equalsIgnoreCase("Lista Clientes")) {
+                            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, 10));
                         }
-                        if (object1.getAccion().equalsIgnoreCase("Venta")) {
-                            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, ActionEvent.CTRL_MASK));
+                        if (object1.getAccion().equalsIgnoreCase("Crear Cliente")) {
+                            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK));
                         }
                         menuItem.addActionListener(new ActionListener() {
                             @Override

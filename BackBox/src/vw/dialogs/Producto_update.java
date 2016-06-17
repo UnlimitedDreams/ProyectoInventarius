@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package vw.components;
+package vw.dialogs;
 
 import Control.Control;
 import java.net.URL;
@@ -11,12 +11,15 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
+import vw.components.Bodega;
+import vw.components.Entrada;
+import vw.components.Producto;
 
 /**
  *
  * @author Microinformatica
  */
-public class Producto_update extends javax.swing.JFrame {
+public class Producto_update extends javax.swing.JDialog {
 
     private int cod;
     Producto p;
@@ -28,7 +31,8 @@ public class Producto_update extends javax.swing.JFrame {
     int secuenciaIva;
     ArrayList<Integer> ListAcciones = new ArrayList();
 
-    public Producto_update(Producto p, String nom, ArrayList acciones) throws ClassNotFoundException {
+    public Producto_update(java.awt.Frame parent, boolean modal, Producto p, String nom, ArrayList acciones) throws ClassNotFoundException {
+        super(parent, modal);
         initComponents();
         this.p = p;
         this.nom = nom;
@@ -49,6 +53,8 @@ public class Producto_update extends javax.swing.JFrame {
         jTextField8.setText("" + p.getCantidad());
         jTextField6.setText("" + p.getPrecio_venta());
         jTextField9.setText("" + p.getDesc());
+        jTextField9.setText("" + p.getIva());
+        jTextField9.setText("" + p.getStock());
     }
 
     @SuppressWarnings("unchecked")
@@ -72,10 +78,12 @@ public class Producto_update extends javax.swing.JFrame {
         jLabel10 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
+        jTextField12 = new javax.swing.JTextField();
         jTextField10 = new javax.swing.JTextField();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Actualizar Producto - Inventarius");
+        setPreferredSize(new java.awt.Dimension(669, 550));
         setResizable(false);
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
@@ -87,6 +95,14 @@ public class Producto_update extends javax.swing.JFrame {
         jPanel1.add(jTextField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 40, 400, 40));
 
         jTextField3.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
+        jTextField3.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jTextField3KeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jTextField3KeyReleased(evt);
+            }
+        });
         jPanel1.add(jTextField3, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 90, 400, 40));
 
         jTextField4.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
@@ -129,7 +145,7 @@ public class Producto_update extends javax.swing.JFrame {
                 jButton1ActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 400, -1, -1));
+        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 460, -1, -1));
 
         jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-xhdpi/ic_arrow_back_black_24dp.png"))); // NOI18N
         jButton2.setToolTipText("Volver");
@@ -146,7 +162,7 @@ public class Producto_update extends javax.swing.JFrame {
                 jButton2ActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 400, -1, -1));
+        jPanel1.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 460, -1, -1));
 
         jTextField8.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
         jTextField8.addActionListener(new java.awt.event.ActionListener() {
@@ -190,7 +206,10 @@ public class Producto_update extends javax.swing.JFrame {
         jLabel9.setText("Cantidad");
 
         jLabel11.setFont(new java.awt.Font("Segoe UI Light", 1, 24)); // NOI18N
-        jLabel11.setText("Iva(%)");
+        jLabel11.setText("Stock");
+
+        jLabel12.setFont(new java.awt.Font("Segoe UI Light", 1, 24)); // NOI18N
+        jLabel12.setText("Iva(%)");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -204,12 +223,10 @@ public class Producto_update extends javax.swing.JFrame {
                     .addComponent(jLabel5)
                     .addComponent(jLabel7)
                     .addComponent(jLabel10)
-                    .addComponent(jLabel9))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel11)
-                .addGap(414, 414, 414))
+                    .addComponent(jLabel9)
+                    .addComponent(jLabel12)
+                    .addComponent(jLabel11))
+                .addContainerGap(69, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -227,11 +244,21 @@ public class Producto_update extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(jLabel9)
                 .addGap(18, 18, 18)
+                .addComponent(jLabel12)
+                .addGap(18, 18, 18)
                 .addComponent(jLabel11)
-                .addContainerGap(96, Short.MAX_VALUE))
+                .addContainerGap(116, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 230, 470));
+        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 230, 540));
+
+        jTextField12.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
+        jTextField12.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jTextField12KeyReleased(evt);
+            }
+        });
+        jPanel1.add(jTextField12, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 390, 400, 40));
 
         jTextField10.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
         jTextField10.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -249,7 +276,9 @@ public class Producto_update extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 466, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 540, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();
@@ -292,20 +321,24 @@ public class Producto_update extends javax.swing.JFrame {
                 valor = Double.parseDouble(cadena);
                 SecuenciaVenta = cadena.length();
             } else if (condicion == 3) {
-                 num = Long.parseLong(cadena);
+                num = Long.parseLong(cadena);
                 SecuenciaDesc = cadena.length();
             } else if (condicion == 4) {
-                 num = Long.parseLong(cadena);
+                num = Long.parseLong(cadena);
                 SecuenciaCant = cadena.length();
             } else if (condicion == 5) {
-                 num = Long.parseLong(cadena);
+                num = Long.parseLong(cadena);
                 secuenciaIva = cadena.length();
+            } else {
+                num = Long.parseLong(cadena);
             }
             return true;
         } catch (Exception ex) {
             return false;
         }
     }
+
+
     private void jTextField4KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField4KeyReleased
         try {
             boolean v = SoloNumeros(jTextField4.getText(), 1);
@@ -346,9 +379,21 @@ public class Producto_update extends javax.swing.JFrame {
 
     }//GEN-LAST:event_jTextField8KeyReleased
 
-    private void jTextField10KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField10KeyReleased
+    private void jTextField12KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField12KeyReleased
+        boolean v = SoloNumeros(jTextField12.getText(), 5);
+        if (v == false) {
+            Entrada.muestreMensajeV("Se debe ingresar Numeros");
+            jTextField12.setText("");
+        }
 
-        
+
+    }//GEN-LAST:event_jTextField12KeyReleased
+
+    private void jTextField8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField8ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField8ActionPerformed
+
+    private void jTextField10KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField10KeyReleased
         boolean v = SoloNumeros(jTextField10.getText(), 5);
         if (v == false) {
             jTextField10.setText(jTextField10.getText().substring(0, secuenciaIva));
@@ -358,9 +403,24 @@ public class Producto_update extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jTextField10KeyReleased
 
-    private void jTextField8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField8ActionPerformed
+    private void jTextField3KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField3KeyReleased
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField8ActionPerformed
+    }//GEN-LAST:event_jTextField3KeyReleased
+
+    private void jTextField3KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField3KeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField3KeyPressed
+    public int detectarNumero(String a) {
+        int valor = 0;
+        try {
+            valor = Integer.parseInt(a);
+        } catch (Exception ex) {
+            valor = 0;
+            System.out.println("Error sistema");
+        }
+        return valor;
+    }
+
     public void update() throws ClassNotFoundException {
         Control.conectar();
 
@@ -370,7 +430,7 @@ public class Producto_update extends javax.swing.JFrame {
                 + "descu=" + jTextField9.getText() + ","
                 + "precio_desc=" + ((Double.parseDouble(jTextField6.getText()))
                 - ((Double.parseDouble(jTextField6.getText())) * (Double.parseDouble(jTextField9.getText()) / 100))) + ","
-                + " iva=" + Integer.parseInt(jTextField10.getText()) + " where cod_producto='" + jTextField2.getText()
+                + " iva=" + detectarNumero(jTextField12.getText()) + ",stock=" + Integer.parseInt(jTextField12.getText()) + " where cod_producto='" + jTextField2.getText()
                 + "'");
         if (r) {
             Entrada.muestreMensajeV("Actualizacion Exitosa",
@@ -394,6 +454,7 @@ public class Producto_update extends javax.swing.JFrame {
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -402,6 +463,7 @@ public class Producto_update extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JTextField jTextField10;
+    private javax.swing.JTextField jTextField12;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;

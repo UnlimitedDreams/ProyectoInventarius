@@ -5,6 +5,7 @@
  */
 package vw.components;
 
+import vw.dialogs.Producto_update;
 import vw.model.Articulo;
 import Control.Control;
 import java.awt.Toolkit;

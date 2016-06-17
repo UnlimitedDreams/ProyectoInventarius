@@ -11,9 +11,11 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.ResultSetMetaData;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -21,6 +23,13 @@ import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.view.JasperViewer;
+import vw.dialogs.ReporteDetalleCompra;
 import vw.main.Menu;
 //com.alee.extended.date.WebDateField
 
@@ -45,6 +54,10 @@ public class Reporte_Entradas extends javax.swing.JFrame {
         URL url = getClass().getResource("/images/facelet/icon.png");
         ImageIcon img = new ImageIcon(url);
         setIconImage(img.getImage());
+
+        Date fecha = new Date();
+        jDateChooser1.setDate(fecha);
+        jDateChooser2.setDate(fecha);
     }
 
     /**
@@ -66,6 +79,11 @@ public class Reporte_Entradas extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
+        jDateChooser2 = new com.alee.extended.date.WebDateField();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jButton6 = new javax.swing.JButton();
 
         jButton3.setText("Nuevo");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
@@ -78,8 +96,11 @@ public class Reporte_Entradas extends javax.swing.JFrame {
         setTitle("Reporte Entradas - BackBox");
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jScrollPane1.setViewportView(jTable1);
+
+        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 91, 762, 354));
 
         jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-xhdpi/ic_arrow_back_black_24dp.png"))); // NOI18N
         jButton4.setBorder(null);
@@ -95,9 +116,12 @@ public class Reporte_Entradas extends javax.swing.JFrame {
                 jButton4ActionPerformed(evt);
             }
         });
+        jPanel1.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(717, 467, -1, -1));
 
         jLabel2.setFont(new java.awt.Font("Segoe UI Light", 1, 14)); // NOI18N
         jLabel2.setText("Fecha Inicial");
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 33, -1, -1));
+        jPanel1.add(jDateChooser1, new org.netbeans.lib.awtextra.AbsoluteConstraints(105, 32, 133, -1));
 
         jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-mdpi/ic_find_in_page_black_24dp.png"))); // NOI18N
         jButton1.setText("Buscar");
@@ -114,6 +138,7 @@ public class Reporte_Entradas extends javax.swing.JFrame {
                 jButton1ActionPerformed(evt);
             }
         });
+        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(506, 32, -1, -1));
 
         jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-mdpi/ic_assignment_black_24dp.png"))); // NOI18N
         jButton2.setText("Detalle");
@@ -130,6 +155,7 @@ public class Reporte_Entradas extends javax.swing.JFrame {
                 jButton2ActionPerformed(evt);
             }
         });
+        jPanel1.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 470, -1, -1));
 
         jButton5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-xhdpi/export_to_excel_24dp.png"))); // NOI18N
         jButton5.setBorder(null);
@@ -145,50 +171,32 @@ public class Reporte_Entradas extends javax.swing.JFrame {
                 jButton5ActionPerformed(evt);
             }
         });
+        jPanel1.add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 470, -1, -1));
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 762, Short.MAX_VALUE)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addGap(26, 26, 26)
-                        .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel2))
-                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(33, 33, 33)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 354, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
+        jLabel3.setFont(new java.awt.Font("Segoe UI Light", 1, 14)); // NOI18N
+        jLabel3.setText("Fecha Final");
+        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(256, 33, -1, -1));
+        jPanel1.add(jDateChooser2, new org.netbeans.lib.awtextra.AbsoluteConstraints(344, 32, 133, -1));
+
+        jLabel5.setFont(new java.awt.Font("Segoe UI Light", 1, 36)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(255, 153, 0));
+        jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(146, 466, 348, -1));
+
+        jLabel4.setFont(new java.awt.Font("Segoe UI Light", 1, 36)); // NOI18N
+        jLabel4.setText("Total:");
+        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 466, -1, -1));
+
+        jButton6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/facelet/pdf.jpg"))); // NOI18N
+        jButton6.setBorder(null);
+        jButton6.setBorderPainted(false);
+        jButton6.setContentAreaFilled(false);
+        jButton6.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jButton6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton6ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(jButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 470, -1, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -232,10 +240,10 @@ public class Reporte_Entradas extends javax.swing.JFrame {
             SimpleDateFormat format2 = new SimpleDateFormat("yyyy_MM-dd");
             String fecha = format2.format(date);
             String cod = (String) jTable1.getValueAt(i, 0).toString();
-            Detalle_Entrada de;
+            String total = (String) jTable1.getValueAt(i, 2).toString();
+            ReporteDetalleCompra de;
             try {
-                de = new Detalle_Entrada(cod, usuario, fecha);
-                this.dispose();
+                de = new ReporteDetalleCompra(this, true, fecha, cod, total);
                 de.setVisible(true);
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(Reporte_Entradas.class.getName()).log(Level.SEVERE, null, ex);
@@ -253,6 +261,53 @@ public class Reporte_Entradas extends javax.swing.JFrame {
 
 
     }//GEN-LAST:event_jButton5ActionPerformed
+    public void generarCompraPDF() throws JRException, ClassNotFoundException {
+
+        try {
+            Date date = jDateChooser1.getDate();
+            SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd");
+            String fecha = format2.format(date);
+
+            Date date2 = jDateChooser2.getDate();
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+            String fechaF = format.format(date2);
+            String query = "";
+
+            query = "select distinct c.factura \"Factura\" ,a.cod_producto \"Producto\",a.nombre \"Descripcion\",c.costo \"Costo\",c.cantidad \"cantidad\",b.empresa \n"
+                    + "\"Proveedor\",b.nit \"Nit\",to_char(c.fecha_entrada, 'dd-mm-yyyy') \"fecha\" from detalle c ,provedor b ,producto a where \n"
+                    + "b.cod_provedor=c.provedor\n"
+                    + "and  c.cod_producto=a.cod_producto\n"
+                    + "and c.fecha_entrada between  '" + fecha.substring(0, 10).concat(" 00:00:00'") + " and '"
+                    + fechaF.substring(0, 10).concat(" 23:59:59'")
+                    + "group by\n"
+                    + "c.factura,b.empresa,b.nit,a.cod_producto,a.nombre,c.costo,c.cantidad,c.fecha_entrada\n"
+                    + "order by c.factura,a.cod_producto";
+            System.out.println(""+query);
+            Control.conectar();
+            HashMap<String, Object> parametros = new HashMap<String, Object>();
+            parametros.put("fechaI", fecha);
+            parametros.put("FechaF", fechaF);
+            parametros.put("query", query);
+            JasperReport report = JasperCompileManager.compileReport("Rep_FacturasCompradas.jrxml");
+            System.out.println("--- : " + report.getName());
+            JasperPrint jasperPrint = JasperFillManager.fillReport(report, parametros, Control.con);
+            JasperViewer.viewReport(jasperPrint, false);
+            //JasperPrintManager.printReport(jasperPrint, true);
+            Control.cerrarConexion();
+        } catch (Exception ex) {
+            System.err.println(ex.toString());
+        }
+    }
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+        try {
+            System.out.println("------------- : COMPRAPDF" );
+            generarCompraPDF();
+        } catch (JRException ex) {
+            Logger.getLogger(Reporte_Ventas.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Reporte_Ventas.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jButton6ActionPerformed
     private void getBto_exportar() {
         try {
             /**
@@ -284,18 +339,24 @@ public class Reporte_Entradas extends javax.swing.JFrame {
 
     public void inicio() throws ClassNotFoundException {
         Control.conectar();
+        DecimalFormat formateador = new DecimalFormat("###,###.##");
         Date date = jDateChooser1.getDate();
-        SimpleDateFormat format2 = new SimpleDateFormat("yyyy_MM-dd");
+        SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd");
         String fecha = format2.format(date);
+
+        Date date2 = jDateChooser2.getDate();
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        String fecha2 = format.format(date2);
 
         Producto temp = null;
         String query = "select distinct detalle.factura \"Factura\""
-                + ",provedor.empresa \"Empresa\""
+                + ",provedor.empresa \"Proveedor\""
                 + ",sum(detalle.costo)\"Total\",\n"
                 + "sum(detalle.cantidad)\"Cantidad\" from detalle,provedor where \n"
                 + "provedor.cod_provedor=detalle.provedor\n"
-                + "and detalle.fecha_entrada='" + fecha + "'\n"
-                + "group by\n"
+                + "and detalle.fecha_entrada between '" + fecha.substring(0, 10).concat(" 00:00:00") + "' and '"
+                + fecha2.substring(0, 10).concat(" 23:59:59'")
+                + " group by\n"
                 + "detalle.factura,provedor.empresa\n"
                 + "order by sum(detalle.costo) DESC";
         String cod = "", nom = "", valor = "", cant = "", costo = "", iva = "", precio = "";
@@ -312,13 +373,13 @@ public class Reporte_Entradas extends javax.swing.JFrame {
             for (int i = 0; i < numeroPreguntas; i++) {
                 modeloEmpleado.addColumn(rsetMetaData.getColumnLabel(i + 1));
             }
-
+            double total = 0;
             while (Control.rs.next()) {
-                cant = Control.rs.getString(1);
-                cod = Control.rs.getString(2);
-                nom = Control.rs.getString(3);
-                costo = Control.rs.getString(4);
-
+                cod = Control.rs.getString(1);
+                nom = Control.rs.getString(2);
+                costo = Control.rs.getString(3);
+                cant = Control.rs.getString(4);
+                total = total + Double.parseDouble(costo);
                 Object[] registroEmpleado = new Object[numeroPreguntas];
 
                 for (int i = 0; i < numeroPreguntas; i++) {
@@ -327,7 +388,7 @@ public class Reporte_Entradas extends javax.swing.JFrame {
                 modeloEmpleado.addRow(registroEmpleado);
             }
             Control.cerrarConexion();
-
+            jLabel5.setText("" + formateador.format(total));
 //            Control.rs.close();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "ERROR " + e.getMessage());
@@ -348,8 +409,13 @@ public class Reporte_Entradas extends javax.swing.JFrame {
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
+    private javax.swing.JButton jButton6;
     private com.alee.extended.date.WebDateField jDateChooser1;
+    private com.alee.extended.date.WebDateField jDateChooser2;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;

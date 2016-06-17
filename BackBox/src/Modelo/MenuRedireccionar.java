@@ -16,6 +16,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import vw.components.Bodega;
 import vw.components.CategoriaGestion;
+import vw.components.Clientes;
+import vw.components.DatallesPorFecha;
 import vw.components.Entrada_Nueva;
 import vw.components.Producto;
 import vw.components.Provedores;
@@ -27,6 +29,7 @@ import vw.components.VentaDiaria;
 import vw.dialogs.AcercaDe;
 import vw.dialogs.CategoriasRegistrar;
 import vw.dialogs.ProveedoresRegistrar;
+import vw.dialogs.RegistroCliente;
 import vw.dialogs.RolRegistrar;
 import vw.dialogs.UsuariosRegistrar;
 import vw.main.Acceder;
@@ -71,7 +74,7 @@ public class MenuRedireccionar {
                 new ProveedoresRegistrar(this.parent, true).setVisible(true);
             } else if (CadenaMenu.equalsIgnoreCase("Ver Articulos")) {
                 new Articulo(Usuario, listMenu).setVisible(true);
-            } else if (CadenaMenu.equalsIgnoreCase("Nuevo Articulo")) {
+            } else if (CadenaMenu.equalsIgnoreCase("Nueva Compra")) {
                 ArrayList<Producto> pr = new ArrayList();
                 String fac = "";
                 new Entrada_Nueva(pr, Usuario, fac, listMenu).setVisible(true);
@@ -81,10 +84,10 @@ public class MenuRedireccionar {
                 new CategoriasRegistrar(this.parent, true).setVisible(true);
             } else if (CadenaMenu.equalsIgnoreCase("Realizar Venta")) {
                 ArrayList<Producto> productos = new ArrayList();
-                new Venta(productos, Usuario, 1, listMenu).setVisible(true);
+                new Venta(productos, Usuario, 1, listMenu, "1").setVisible(true);
             } else if (CadenaMenu.equalsIgnoreCase("Realizar Devolucion")) {
                 ArrayList<Producto> productos = new ArrayList();
-                new Venta(productos, Usuario, 2, listMenu).setVisible(true);
+                new Venta(productos, Usuario, 2, listMenu, "1").setVisible(true);
             } else if (CadenaMenu.equalsIgnoreCase("Ver Venta Diaria")) {
                 new VentaDiaria(Usuario, listMenu).setVisible(true);
             } else if (CadenaMenu.equalsIgnoreCase("Venta")) {
@@ -92,16 +95,24 @@ public class MenuRedireccionar {
             } else if (CadenaMenu.equalsIgnoreCase("Compras")) {
                 new Reporte_Entradas(Usuario, listMenu).setVisible(true);
             } else if (CadenaMenu.equalsIgnoreCase("Entrada y Salidas")) {//Pendiente
-                //new VentaDiaria(Usuario, listMenu).setVisible(true);
+                new DatallesPorFecha(Usuario, listMenu).setVisible(true);
             } else if (CadenaMenu.equalsIgnoreCase("Ayuda en Linea")) {
                 Desktop.getDesktop().browse(new URI("http://www.qmanager.com.co"));
-            }else if (CadenaMenu.equalsIgnoreCase("BackBox")) {
+            } else if (CadenaMenu.equalsIgnoreCase("BackBox")) {
                 Desktop.getDesktop().browse(new URI("http://www.qmanager.com.co"));
-            }else if (CadenaMenu.equalsIgnoreCase("Atajos")) {
-                  Desktop.getDesktop().browse(new URI("http://www.qmanager.com.co"));
-            }else if (CadenaMenu.equalsIgnoreCase("Acerca De")) {
-                 new AcercaDe(this.parent, true).setVisible(true);
+            } else if (CadenaMenu.equalsIgnoreCase("Atajos")) {
+                Desktop.getDesktop().browse(new URI("http://www.qmanager.com.co"));
+            } else if (CadenaMenu.equalsIgnoreCase("Acerca De")) {
+                new AcercaDe(this.parent, true).setVisible(true);
+            } else if (CadenaMenu.equalsIgnoreCase("Lista Clientes")) {
+                new Clientes(Usuario, listMenu).setVisible(true);
+            } else if (CadenaMenu.equalsIgnoreCase("Crear Cliente")) {
+                RegistroCliente r = null;
+                ArrayList<Producto> productos = new ArrayList();
+                r = new RegistroCliente(this.parent, true, productos, Usuario, listMenu,2);
+                r.setVisible(true);
             }
+
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(MenuRedireccionar.class.getName()).log(Level.SEVERE, null, ex);
         }

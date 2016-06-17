@@ -108,6 +108,15 @@ public class RolRegistrar extends javax.swing.JDialog {
                     Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",3)");
                     codigoAct++;
                 }
+                if (jCheckBox15.isSelected()) {
+                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",30)");
+                    codigoAct++;
+                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",31)");
+                    codigoAct++;
+                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",3)");
+                    codigoAct++;
+                }
+                
 
                 Control.cerrarConexion();
                 this.dispose();
@@ -147,6 +156,7 @@ public class RolRegistrar extends javax.swing.JDialog {
         role = new javax.swing.JCheckBox();
         jLabel2 = new javax.swing.JLabel();
         jCheckBox26 = new javax.swing.JCheckBox();
+        jCheckBox15 = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Nuevo Rol - BackBox");
@@ -248,7 +258,7 @@ public class RolRegistrar extends javax.swing.JDialog {
         jPanel1.add(role, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 210, -1, -1));
 
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/facelet/triangulo.gif"))); // NOI18N
-        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(-200, 20, -1, -1));
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(-270, -10, -1, -1));
 
         jCheckBox26.setBackground(new java.awt.Color(255, 255, 255));
         jCheckBox26.setFont(new java.awt.Font("Segoe UI Light", 0, 14)); // NOI18N
@@ -256,6 +266,18 @@ public class RolRegistrar extends javax.swing.JDialog {
         jCheckBox26.setText("Provedores");
         jCheckBox26.setOpaque(false);
         jPanel1.add(jCheckBox26, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 180, -1, -1));
+
+        jCheckBox15.setBackground(new java.awt.Color(255, 255, 255));
+        jCheckBox15.setFont(new java.awt.Font("Segoe UI Light", 0, 14)); // NOI18N
+        jCheckBox15.setSelected(true);
+        jCheckBox15.setText("Clientes");
+        jCheckBox15.setOpaque(false);
+        jCheckBox15.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBox15ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(jCheckBox15, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 240, -1, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -278,6 +300,10 @@ public class RolRegistrar extends javax.swing.JDialog {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         this.dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jCheckBox15ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox15ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jCheckBox15ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -327,6 +353,7 @@ public class RolRegistrar extends javax.swing.JDialog {
     private javax.swing.JCheckBox jCheckBox12;
     private javax.swing.JCheckBox jCheckBox13;
     private javax.swing.JCheckBox jCheckBox14;
+    private javax.swing.JCheckBox jCheckBox15;
     private javax.swing.JCheckBox jCheckBox17;
     private javax.swing.JCheckBox jCheckBox23;
     private javax.swing.JCheckBox jCheckBox26;

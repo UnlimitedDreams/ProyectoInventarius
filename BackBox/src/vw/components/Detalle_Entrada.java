@@ -19,6 +19,7 @@ import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperPrintManager;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.view.JasperViewer;
 
@@ -188,7 +189,7 @@ public class Detalle_Entrada extends javax.swing.JFrame {
             parametros.put("provedor", provedor);
             JasperReport report = JasperCompileManager.compileReport("FacCompra.jrxml");
             JasperPrint jasperPrint = JasperFillManager.fillReport(report, parametros, c);
-            JasperViewer.viewReport(jasperPrint);
+            JasperPrintManager.printReport(jasperPrint, true);
             //JasperPrintManager.printReport(jasperPrint, true);
         } catch (Exception ex) {
             System.err.println(ex.toString());

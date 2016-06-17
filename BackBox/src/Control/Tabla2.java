@@ -38,7 +38,6 @@ public class Tabla2 implements TableCellRenderer {
                 frecuencias[1][nrofreq] = "" + pro.get(i).getNombre();
                 frecuencias[2][nrofreq] = ""+pro.get(i).getPrecio_venta();
                 frecuencias[3][nrofreq] = "" + pro.get(i).getCantidad();
-                frecuencias[4][nrofreq] = "borrar" ;
                 nrofreq++;
             }      
     }

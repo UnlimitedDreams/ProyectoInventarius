@@ -23,6 +23,7 @@ public class Producto {
     private int desc;
     private int categoria;
     private int precio_final;
+    private int stock;
 
     public Producto(String codigo, String nombre, int Costo, int iva, int precio_venta, int cantidad, int desc) {
         this.codigo = codigo;
@@ -129,6 +130,15 @@ public class Producto {
     public void setPrecio_final(int precio_final) {
         this.precio_final = precio_final;
     }
+
+    public int getStock() {
+        return stock;
+    }
+
+    public void setStock(int stock) {
+        this.stock = stock;
+    }
+    
 
 
 

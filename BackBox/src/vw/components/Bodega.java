@@ -5,6 +5,7 @@
  */
 package vw.components;
 
+import vw.dialogs.Producto_update;
 import vw.main.Menu;
 import vw.main.Acceder;
 import vw.model.Venta;
@@ -64,6 +65,9 @@ public class Bodega extends javax.swing.JFrame {
         setIconImage(img.getImage());
         ContenedorMenus con_menu = new ContenedorMenus();
         con_menu = (ContenedorMenus) List_Menu.get(0);
+        tablaProductos.setEditingColumn(0);
+        tablaProductos.setEditingRow(0);
+
         listaSeccion = con_menu.getListaSeccion();
         listaaccion = con_menu.getListaAcciones();
         for (seccion object : listaSeccion) {
@@ -129,6 +133,12 @@ public class Bodega extends javax.swing.JFrame {
                         }
                         if (object1.getAccion().equalsIgnoreCase("Venta")) {
                             menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, ActionEvent.CTRL_MASK));
+                        }
+                        if (object1.getAccion().equalsIgnoreCase("Lista Clientes")) {
+                            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, 10));
+                        }
+                        if (object1.getAccion().equalsIgnoreCase("Crear Cliente")) {
+                            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK));
                         }
                         menuItem.addActionListener(new ActionListener() {
                             @Override
@@ -201,7 +211,7 @@ public class Bodega extends javax.swing.JFrame {
 
     public void Stock() throws ClassNotFoundException {
         Control.conectar();
-        Control.ejecuteQuery("select * from producto where cantidad=0 and estado='A'");
+        Control.ejecuteQuery("select * from producto where  (cantidad=0 or stock>=cantidad)  and estado='A'");
         int count = 0;
         try {
             while (Control.rs.next()) {
@@ -298,8 +308,6 @@ public class Bodega extends javax.swing.JFrame {
         jTextField2 = new javax.swing.JTextField();
         jButton6 = new javax.swing.JButton();
         stock = new javax.swing.JButton();
-        jLabel3 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox();
         jMenuBar1 = new javax.swing.JMenuBar();
         file = new javax.swing.JMenu();
         inicio = new javax.swing.JMenuItem();
@@ -316,7 +324,7 @@ public class Bodega extends javax.swing.JFrame {
         tablaProductos.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
         jScrollPane1.setViewportView(tablaProductos);
 
-        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 120, 711, 380));
+        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 98, 711, 390));
 
         entrada.setFont(new java.awt.Font("Segoe UI Light", 0, 11)); // NOI18N
         entrada.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-mdpi/ic_vertical_align_top_black_24dp.png"))); // NOI18N
@@ -391,7 +399,7 @@ public class Bodega extends javax.swing.JFrame {
         });
         jPanel1.add(borrar, new org.netbeans.lib.awtextra.AbsoluteConstraints(725, 400, -1, -1));
 
-        jTextField2.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
+        jTextField2.setFont(new java.awt.Font("Segoe UI Light", 0, 18)); // NOI18N
         jTextField2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField2ActionPerformed(evt);
@@ -405,7 +413,7 @@ public class Bodega extends javax.swing.JFrame {
                 jTextField2KeyReleased(evt);
             }
         });
-        jPanel1.add(jTextField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 30, 590, 31));
+        jPanel1.add(jTextField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 30, 590, 40));
 
         jButton6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-xhdpi/ic_home_black_24dp.png"))); // NOI18N
         jButton6.setBorder(null);
@@ -440,14 +448,6 @@ public class Bodega extends javax.swing.JFrame {
             }
         });
         jPanel1.add(stock, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 520, -1, -1));
-
-        jLabel3.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
-        jLabel3.setText("Buscar Producto por:");
-        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 80, 130, 20));
-
-        jComboBox1.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Nombre", "Codigo", "Categoria" }));
-        jPanel1.add(jComboBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 80, 120, -1));
 
         file.setText("Archivo");
         file.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
@@ -594,10 +594,19 @@ public class Bodega extends javax.swing.JFrame {
     private void salirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_salirActionPerformed
         System.exit(0);
     }//GEN-LAST:event_salirActionPerformed
+    public boolean SoloNumeros(String cadena) {
+        try {
+            Long.parseLong(cadena);
+            return true;
+        } catch (Exception ex) {
+            return false;
+        }
+    }
 
     public void Buscar() throws ClassNotFoundException {
+
         String query = "";
-        if (jComboBox1.getSelectedIndex() == 0) {
+        if (SoloNumeros(jTextField2.getText())) {
             query = "select  distinct "
                     + "cod_producto \"Código\","
                     + "upper(nombre)\"Nombre\","
@@ -609,9 +618,10 @@ public class Bodega extends javax.swing.JFrame {
                     + "cantidad \"Cantidad\"\n"
                     + " from producto,categoria where\n"
                     + "  producto.cod_categoria=categoria.cod_categoria and \n"
-                    + "   \n"
-                    + "  producto.nombre ILIKE ('%" + jTextField2.getText() + "%')  and producto.estado='A'";
-        } else if (jComboBox1.getSelectedIndex() == 1) {
+                    + "  \n"
+                    + "  producto.cod_producto ILIKE ('%" + jTextField2.getText() + "')  and producto.estado='A'"
+                    + "  limit 40 ";
+        } else {
             query = "select  distinct "
                     + "cod_producto \"Código\","
                     + "upper(nombre)\"Nombre\","
@@ -621,25 +631,13 @@ public class Bodega extends javax.swing.JFrame {
                     + "precio_desc \"Precio\","
                     + "descu \"Descuento\","
                     + "cantidad \"Cantidad\"\n"
-                    + " from producto,categoria where\n"
-                    + "  producto.cod_categoria=categoria.cod_categoria and \n"
-                    + "   \n"
-                    + "  producto.cod_producto ILIKE ('%" + jTextField2.getText() + "%')  and producto.estado='A'";
-        } else if (jComboBox1.getSelectedIndex() == 2) {
-            query = "select  distinct "
-                    + "cod_producto \"Código\","
-                    + "upper(nombre)\"Nombre\","
-                    + "upper(categoria.descripcion) \"Categoría \","
-                    + "costo \"Costo\","
-                    + "iva \"IVA\","
-                    + "precio_desc \"Precio\","
-                    + "descu \"Descuento\","
-                    + "cantidad \"Cantidad\"\n"
-                    + " from producto,categoria where\n"
-                    + "  producto.cod_categoria=categoria.cod_categoria and \n"
-                    + "   \n"
-                    + "  categoria.descripcion ILIKE ('%" + jTextField2.getText() + "%')  and producto.estado='A'";
+                    + " from producto,categoria where "
+                    + "  producto.cod_categoria=categoria.cod_categoria and "
+                    + " (categoria.descripcion ILIKE ('%" + jTextField2.getText() + "%') or  "
+                    + "producto.nombre ILIKE ('%" + jTextField2.getText() + "%') or "
+                    + " producto.cod_producto ILIKE ('%" + jTextField2.getText() + "%') )  and producto.estado='A'";
         }
+        System.out.println(query);
         Control.conectar();
         Producto temp = null;
         String cod = "", nom = "", valor = "", cant = "", costo = "", iva = "", precio = "";
@@ -706,10 +704,9 @@ public class Bodega extends javax.swing.JFrame {
             producto.setDesc(Integer.parseInt(Desc));
             producto.setPrecio_venta(Double.parseDouble(Precio));
             producto.setCantidad(Integer.parseInt(cant));
-            Producto_update p = new Producto_update(producto, usuario, List_Menu);
+            Producto_update p = new Producto_update(this,true,producto, usuario, List_Menu);
             p.setVisible(true);
             this.setVisible(false);
-
         }
     }
 
@@ -807,8 +804,6 @@ public class Bodega extends javax.swing.JFrame {
     private javax.swing.JMenu file;
     private javax.swing.JMenuItem inicio;
     private javax.swing.JButton jButton6;
-    private javax.swing.JComboBox jComboBox1;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;

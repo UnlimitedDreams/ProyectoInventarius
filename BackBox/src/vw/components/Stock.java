@@ -133,6 +133,12 @@ public class Stock extends javax.swing.JFrame {
                         if (object1.getAccion().equalsIgnoreCase("Venta")) {
                             menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, ActionEvent.CTRL_MASK));
                         }
+                        if (object1.getAccion().equalsIgnoreCase("Lista Clientes")) {
+                            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, 10));
+                        }
+                        if (object1.getAccion().equalsIgnoreCase("Crear Cliente")) {
+                            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK));
+                        }
                         menuItem.addActionListener(new ActionListener() {
                             @Override
                             public void actionPerformed(ActionEvent e) {
@@ -209,7 +215,7 @@ public class Stock extends javax.swing.JFrame {
                 + "	upper(nombre) as \"Nombre\", costo  \"Costo\",\n"
                 + "	cantidad as \"Cantidad\" \n"
                 + "from 	producto \n"
-                + "where 	cantidad=0 \n"
+                + "where 	(cantidad=0 or stock>=cantidad) \n"
                 + "and 	estado='A';";
         String codi = "", nom = "", valor = "", cant = "", costo = "";
         DefaultTableModel modeloEmpleado = new DefaultTableModel();

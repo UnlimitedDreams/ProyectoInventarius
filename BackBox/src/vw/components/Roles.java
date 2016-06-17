@@ -134,6 +134,12 @@ public class Roles extends javax.swing.JFrame {
                         if (object1.getAccion().equalsIgnoreCase("Venta")) {
                             menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, ActionEvent.CTRL_MASK));
                         }
+                        if (object1.getAccion().equalsIgnoreCase("Lista Clientes")) {
+                            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, 10));
+                        }
+                        if (object1.getAccion().equalsIgnoreCase("Crear Cliente")) {
+                            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, ActionEvent.CTRL_MASK));
+                        }
                         menuItem.addActionListener(new ActionListener() {
                             @Override
                             public void actionPerformed(ActionEvent e) {
@@ -414,13 +420,15 @@ public class Roles extends javax.swing.JFrame {
 
     private void actualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_actualizarActionPerformed
         String cod = "";
+        String Nom = "";
         try {
             int i = jTable1.getSelectedRow();
             if (i == -1) {
                 JOptionPane.showMessageDialog(null, "Favor... seleccione una fila");
             } else {
                 cod = (String) jTable1.getValueAt(i, 0).toString();
-                new RolActualizar(this, true, cod,List_Menu).setVisible(true);
+                Nom = (String) jTable1.getValueAt(i, 1).toString();
+                new RolActualizar(this, true, cod, List_Menu, Nom).setVisible(true);
             }
         } catch (Exception ex) {
             System.out.println("Error: " + ex.toString());

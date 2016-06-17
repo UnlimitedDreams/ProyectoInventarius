@@ -11,6 +11,7 @@ import java.net.URL;
 import java.sql.Connection;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.logging.Level;
@@ -195,19 +196,20 @@ public class FacturaDetalle extends javax.swing.JDialog {
     }
 
     public void inicio() throws ClassNotFoundException {
+        DecimalFormat formateador = new DecimalFormat("###,###,###");
         Control.conectar();
         Producto temp = null;
         String query = "select "
                 + "producto.cod_producto \"Producto\","
                 + "nombre \"Nombre\","
                 + "precio_venta \"Precio\","
-                + "venta_pro.cantidad \"Cantidad\" "
+                + "venta_pro.cantidad \"Cantidad\",(precio_venta*venta_pro.cantidad) \"Total\""
                 + "from venta,venta_pro,producto\n"
                 + "               where\n"
                 + "                 venta.cod_factura=venta_pro.cod_factura\n"
                 + "                and venta_pro.cod_prodcuto=producto.cod_producto\n"
                 + "                and venta.cod_factura='" + factura + "'";
-        String codi = "", total = "", cant = "", nombre = "";
+        String codi = "", total = "", cant = "", nombre = "",totalValor="";
         DefaultTableModel modeloEmpleado = new DefaultTableModel();
         int numeroPreguntas;
         ResultSetMetaData rsetMetaData;
@@ -221,12 +223,14 @@ public class FacturaDetalle extends javax.swing.JDialog {
             for (int i = 0; i < numeroPreguntas; i++) {
                 modeloEmpleado.addColumn(rsetMetaData.getColumnLabel(i + 1));
             }
-
+            double totalVenta = 0;
             while (Control.rs.next()) {
                 codi = Control.rs.getString(1);
                 nombre = Control.rs.getString(2);
-                cant = Control.rs.getString(3);
                 total = Control.rs.getString(3);
+                cant = Control.rs.getString(4);
+                totalValor=Control.rs.getString(5);
+                totalVenta=totalVenta+(Double.parseDouble(total)*Integer.parseInt(cant));
 
                 Object[] registroEmpleado = new Object[numeroPreguntas];
 
@@ -235,14 +239,8 @@ public class FacturaDetalle extends javax.swing.JDialog {
                 }
                 modeloEmpleado.addRow(registroEmpleado);
             }
-            String sum = "   select sum(total_venta) from venta where \n"
-                    + "              cod_factura='" + factura + "'";
-            Control.ejecuteQuery(sum);
-            double totalVenta = 0;
-            while (Control.rs.next()) {
-                totalVenta = Control.rs.getDouble(1);
-            }
-            jLabel3.setText("" + totalVenta);
+           
+            jLabel3.setText("" + formateador.format(totalVenta));
             Control.cerrarConexion();
 
 //            Control.rs.close();

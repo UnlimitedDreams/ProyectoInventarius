@@ -27,7 +27,7 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author Britany
  */
-public class Detalle_Venta extends javax.swing.JFrame {
+public class Detalle_Venta extends javax.swing.JDialog {
 
     /**
      * Creates new form Articulo
@@ -38,7 +38,9 @@ public class Detalle_Venta extends javax.swing.JFrame {
     String nom;
     ArrayList<Integer> ListAcciones = new ArrayList();
 
-    public Detalle_Venta(String fec, String cod, String total, String nom, ArrayList acciones) throws ClassNotFoundException {
+    public Detalle_Venta(java.awt.Frame parent, boolean modal, String fec, String cod, String total, String nom,
+            ArrayList acciones) throws ClassNotFoundException {
+        super(parent, modal);
         initComponents();
         this.cod = cod;
         this.fec = fec;
@@ -99,9 +101,10 @@ public class Detalle_Venta extends javax.swing.JFrame {
             }
         });
 
-        jLabel2.setText("Total");
+        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
+        jLabel2.setText("Total:");
 
-        jLabel3.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        jLabel3.setFont(new java.awt.Font("Arial", 1, 24)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 153, 0));
 
         jLabel4.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
@@ -116,10 +119,10 @@ public class Detalle_Venta extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 757, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addGap(42, 42, 42)
-                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(476, 476, 476)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 283, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(321, 321, 321)
                         .addComponent(jButton4))
                     .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(37, Short.MAX_VALUE))
@@ -134,7 +137,7 @@ public class Detalle_Venta extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel2)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jButton4))
                 .addContainerGap())
@@ -174,7 +177,7 @@ public class Detalle_Venta extends javax.swing.JFrame {
     public void inicio() throws ClassNotFoundException {
         Control.conectar();
         Producto temp = null;
-        String query = "select producto.cod_producto \"Codigo\""
+        String query = "select time(venta.fecha_venta),producto.cod_producto \"Codigo\""
                 + ",producto.nombre \"Nombre\",venta_pro.cantidad\"Cantidad\""
                 + ",producto.precio_desc\"Precio\" from venta,usuario,persona,venta_pro,producto\n"
                 + "where\n"
@@ -184,6 +187,7 @@ public class Detalle_Venta extends javax.swing.JFrame {
                 + "and producto.cod_producto=venta_pro.cod_prodcuto\n"
                 + "and persona.cedula=" + cod + "\n"
                 + "and venta.fecha_venta='" + fec + "'";
+        System.out.println(query);
         String cod = "", nom = "", valor = "", cant = "", costo = "", iva = "", precio = "";
         String cate = "";
         DefaultTableModel modeloEmpleado = new DefaultTableModel();

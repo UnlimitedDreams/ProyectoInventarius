@@ -42,14 +42,12 @@ public class Acceder extends javax.swing.JFrame {
     public void probarConexion() {
         try {
             if (Control.conectar()) {
-                System.out.println("conecto");
                 alerta.setText("Conectado...");
-                System.out.println("1");
                 alerta.setForeground(Color.green);
-                System.out.println("2");
             } else {
                 alerta.setText("Sin Conexión...");
                 alerta.setForeground(Color.lightGray);
+                Entrada.muestreMensajeV("No hay Conecion a la Base de Datos Comunicarse con soporte");
             }
         } catch (ClassNotFoundException ex) {
 //            Logger.getLogger(Acceder.class.getName()).log(Level.SEVERE, null, "-------------"+ex);
@@ -293,8 +291,8 @@ public class Acceder extends javax.swing.JFrame {
                 + "where\n"
                 + "usuario.cod_rol=rol.cod_rol and\n"
                 + "persona.cedula=usuario.cedula\n"
-                + "and usuario.usuario='" + field01.getText() + "' and\n"
-                + "usuario.clave='" + field02.getText() + "'");
+                + "and usuario.usuario=lower('" + field01.getText() + "') and\n"
+                + " usuario.clave=lower('" + field02.getText() + "')");
         System.out.println("Ejecuto consulta: " + r);
         int rol = 0;
         String Usuario = "";
@@ -312,9 +310,8 @@ public class Acceder extends javax.swing.JFrame {
             if (f) {
                 if (rol >= 1) {
                     Menu newMenu = new Menu(Usu);
-                    this.dispose();
                     newMenu.setVisible(true);
-                    
+                    this.setVisible(false);
                 } else {
 //                    Venta newBuscar = new Venta(Usuario);
 //                    newBuscar.setVisible(true);
@@ -348,7 +345,7 @@ public class Acceder extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
-            @Override
+//            @Override
             public void run() {
                 WebLookAndFeel.install();
                 new Acceder().setVisible(true);
