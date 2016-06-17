@@ -57,9 +57,9 @@ public class Datalles extends javax.swing.JFrame {
         int numeroPreguntas;
         ResultSetMetaData rsetMetaData;
         this.jTable1.setModel(modeloEmpleado);
-        boolean r = Control.ejecuteQuery(query);
-
         try {
+            boolean r = Control.ejecuteQuery(query);
+
             rsetMetaData = Control.rs.getMetaData();
             numeroPreguntas = rsetMetaData.getColumnCount();
             //Establece los nombres de las columnas de las tablas
@@ -85,9 +85,7 @@ public class Datalles extends javax.swing.JFrame {
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "ERROR " + e.getMessage());
         } finally {
-            try {
-            } catch (Exception e) {;
-            }
+            Control.cerrarConexion();
         }
     }
 
@@ -157,7 +155,7 @@ public class Datalles extends javax.swing.JFrame {
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
 
-  
+
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed

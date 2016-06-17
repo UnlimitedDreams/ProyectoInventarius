@@ -282,7 +282,7 @@ public class Reporte_Entradas extends javax.swing.JFrame {
                     + "group by\n"
                     + "c.factura,b.empresa,b.nit,a.cod_producto,a.nombre,c.costo,c.cantidad,c.fecha_entrada\n"
                     + "order by c.factura,a.cod_producto";
-            System.out.println(""+query);
+            System.out.println("" + query);
             Control.conectar();
             HashMap<String, Object> parametros = new HashMap<String, Object>();
             parametros.put("fechaI", fecha);
@@ -300,7 +300,7 @@ public class Reporte_Entradas extends javax.swing.JFrame {
     }
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
         try {
-            System.out.println("------------- : COMPRAPDF" );
+            System.out.println("------------- : COMPRAPDF");
             generarCompraPDF();
         } catch (JRException ex) {
             Logger.getLogger(Reporte_Ventas.class.getName()).log(Level.SEVERE, null, ex);
@@ -365,8 +365,9 @@ public class Reporte_Entradas extends javax.swing.JFrame {
         int numeroPreguntas;
         ResultSetMetaData rsetMetaData;
         this.jTable1.setModel(modeloEmpleado);
-        boolean r = Control.ejecuteQuery(query);
         try {
+            boolean r = Control.ejecuteQuery(query);
+
             rsetMetaData = Control.rs.getMetaData();
             numeroPreguntas = rsetMetaData.getColumnCount();
             //Establece los nombres de las columnas de las tablas
@@ -393,9 +394,7 @@ public class Reporte_Entradas extends javax.swing.JFrame {
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "ERROR " + e.getMessage());
         } finally {
-            try {
-            } catch (Exception e) {;
-            }
+            Control.cerrarConexion();
         }
     }
 

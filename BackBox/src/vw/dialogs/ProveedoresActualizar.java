@@ -48,8 +48,8 @@ public class ProveedoresActualizar extends javax.swing.JDialog {
 
     public final void recuperarDatos() throws ClassNotFoundException {
         Control.conectar();
-        Control.ejecuteQuery("select * from provedor where cod_provedor=" + codigoProveedor);
         try {
+            Control.ejecuteQuery("select * from provedor where cod_provedor=" + codigoProveedor);
             while (Control.rs.next()) {
                 nit.setText("" + Control.rs.getString(2));
                 nombre.setText("" + Control.rs.getString(3));
@@ -59,6 +59,8 @@ public class ProveedoresActualizar extends javax.swing.JDialog {
             Control.cerrarConexion();
         } catch (Exception ex) {
             System.out.println("Error: " + ex.toString());
+        } finally {
+            Control.cerrarConexion();
         }
     }
 

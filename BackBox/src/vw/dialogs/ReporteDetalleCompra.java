@@ -62,7 +62,7 @@ public class ReporteDetalleCompra extends javax.swing.JDialog {
         DecimalFormat formateador = new DecimalFormat("###,###.##");
         this.cod = cod;
         this.fec = fec;
-        this.tot = total;        
+        this.tot = total;
         this.nom = nom;
         jLabel3.setText(formateador.format(Double.parseDouble(tot)));
         inicio();
@@ -192,9 +192,8 @@ public class ReporteDetalleCompra extends javax.swing.JDialog {
         int numeroPreguntas;
         ResultSetMetaData rsetMetaData;
         this.jTable1.setModel(modeloEmpleado);
-        boolean r = Control.ejecuteQuery(query);
-
         try {
+            boolean r = Control.ejecuteQuery(query);
             rsetMetaData = Control.rs.getMetaData();
             numeroPreguntas = rsetMetaData.getColumnCount();
             //Establece los nombres de las columnas de las tablas
@@ -220,9 +219,7 @@ public class ReporteDetalleCompra extends javax.swing.JDialog {
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "ERROR " + e.getMessage());
         } finally {
-            try {
-            } catch (Exception e) {;
-            }
+             Control.cerrarConexion();
         }
     }
 

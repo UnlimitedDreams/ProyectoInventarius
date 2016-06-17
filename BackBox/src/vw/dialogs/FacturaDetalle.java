@@ -214,9 +214,10 @@ public class FacturaDetalle extends javax.swing.JDialog {
         int numeroPreguntas;
         ResultSetMetaData rsetMetaData;
         this.jTable1.setModel(modeloEmpleado);
+        try {
         boolean r = Control.ejecuteQuery(query);
 
-        try {
+        
             rsetMetaData = Control.rs.getMetaData();
             numeroPreguntas = rsetMetaData.getColumnCount();
             //Establece los nombres de las columnas de las tablas
@@ -247,9 +248,7 @@ public class FacturaDetalle extends javax.swing.JDialog {
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "ERROR " + e.getMessage());
         } finally {
-            try {
-            } catch (Exception e) {;
-            }
+            Control.cerrarConexion();
         }
     }
     /**

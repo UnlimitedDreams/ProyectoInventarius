@@ -80,10 +80,11 @@ public class Entrada_Nueva extends javax.swing.JFrame {
 
     public void Categoria2() throws ClassNotFoundException {
         Control.conectar();
-        Control.ejecuteQuery("select * from provedor where estado='A'");
-        String cod = "", nom = "";
-        ArrayList<List_Categoria> cater = new ArrayList();
         try {
+            Control.ejecuteQuery("select * from provedor where estado='A'");
+            String cod = "", nom = "";
+            ArrayList<List_Categoria> cater = new ArrayList();
+
             while (Control.rs.next()) {
                 cater.add(new List_Categoria(Control.rs.getInt(1), Control.rs.getString(3)));
                 proveedores.addItem(Control.rs.getInt(1) + "-" + Control.rs.getString(3));
@@ -92,6 +93,8 @@ public class Entrada_Nueva extends javax.swing.JFrame {
             Control.cerrarConexion();
         } catch (Exception ex) {
 
+        } finally {
+            Control.cerrarConexion();
         }
     }
 
@@ -475,7 +478,7 @@ public class Entrada_Nueva extends javax.swing.JFrame {
 
                         if (r) {
                             boolean r1 = Control.ejecuteUpdate("update producto set cantidad=cantidad+" + pro.getCantidad() + ","
-                                    + "stock="+pro.getStock()+" where cod_producto='" + pro.getCodigo() + "'");
+                                    + "stock=" + pro.getStock() + " where cod_producto='" + pro.getCodigo() + "'");
                             if (r1) {
                                 int cost = costo(pro.getCodigo());
                                 boolean f = promedio_costo(cost, pro.getCosto(), pro.getCodigo());
@@ -502,6 +505,8 @@ public class Entrada_Nueva extends javax.swing.JFrame {
 
             } catch (Exception ex) {
                 System.out.println("Error : " + ex.toString());
+            } finally {
+                Control.cerrarConexion();
             }
         }
 
@@ -535,15 +540,15 @@ public class Entrada_Nueva extends javax.swing.JFrame {
     }
 
     public int costo(String cod) throws ClassNotFoundException {
-        Control.ejecuteQuery("select costo from producto where "
-                + "cod_producto='" + cod + "'");
         int costo = 0;
         try {
+            Control.ejecuteQuery("select costo from producto where "
+                    + "cod_producto='" + cod + "'");
             while (Control.rs.next()) {
                 costo = Control.rs.getInt(1);
             }
         } catch (Exception ex) {
-
+            Entrada.muestreMensajeV("Error Calculando Costo");
         }
         return costo;
     }
@@ -589,10 +594,8 @@ public class Entrada_Nueva extends javax.swing.JFrame {
     public boolean VerificarFactura() throws ClassNotFoundException {
         Control.conectar();
         boolean r = false;
-        System.out.println("select factura from detalle where factura='" + jTextField1.getText() + "'");
-        Control.ejecuteQuery("select factura from detalle where factura='" + jTextField1.getText() + "'");
-
         try {
+            Control.ejecuteQuery("select factura from detalle where factura='" + jTextField1.getText() + "'");
             while (Control.rs.next()) {
                 r = true;
             }
@@ -685,7 +688,7 @@ public class Entrada_Nueva extends javax.swing.JFrame {
 
     private void jTextField2KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField2KeyReleased
         if (evt.getKeyCode() == 10 && condicionfiltro == false) {
-            c.setVisible(false);  
+            c.setVisible(false);
             this.condicionfiltro = true;
             Producto p = null;
             String cod = "";
@@ -720,15 +723,15 @@ public class Entrada_Nueva extends javax.swing.JFrame {
                     }
                     Control.cerrarConexion();
                     if (r) {
-                        temp = new Producto(cod, nom, precio, 1, iva,1);
+                        temp = new Producto(cod, nom, precio, 1, iva, 1);
                         productos.add(temp);
-                    } 
+                    }
                 } catch (ClassNotFoundException ex) {
                     Logger.getLogger(Venta.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (SQLException ex) {
                     Logger.getLogger(Venta.class.getName()).log(Level.SEVERE, null, ex);
                 }
-            } 
+            }
             c.setVisible(false);
             jTextField2.setText("");
             iniciar();
@@ -824,10 +827,9 @@ public class Entrada_Nueva extends javax.swing.JFrame {
         boolean r2 = false;
 
         this.jTable1.setModel(modeloEmpleado);
-
-        boolean r = Control.ejecuteQuery(query);
-
         try {
+            boolean r = Control.ejecuteQuery(query);
+
             rsetMetaData = Control.rs.getMetaData();
             numeroPreguntas = rsetMetaData.getColumnCount();
             //Establece los nombres de las columnas de las tablas
@@ -856,9 +858,7 @@ public class Entrada_Nueva extends javax.swing.JFrame {
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "ERROR " + e.getMessage());
         } finally {
-            try {
-            } catch (Exception e) {;
-            }
+            Control.cerrarConexion();
         }
 
     }
@@ -916,9 +916,9 @@ public class Entrada_Nueva extends javax.swing.JFrame {
                     }
                     Control.cerrarConexion();
                     if (r) {
-                        temp = new Producto(cod, nom, precio, 1, iva,1);
+                        temp = new Producto(cod, nom, precio, 1, iva, 1);
                         productos.add(temp);
-                    } 
+                    }
                 } catch (ClassNotFoundException ex) {
                     Logger.getLogger(Venta.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (SQLException ex) {
@@ -946,11 +946,11 @@ public class Entrada_Nueva extends javax.swing.JFrame {
     }//GEN-LAST:event_jTable1KeyPressed
 
     private void jTable2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTable2KeyPressed
-       try {
+        try {
             if (evt.getKeyCode() == 127) {
                 borrar();
-            }else if(evt.getKeyCode() == 127){
-                
+            } else if (evt.getKeyCode() == 127) {
+
             }
         } catch (Exception ex) {
             Entrada.muestreMensajeV("Error al borrar producto :" + ex.toString());

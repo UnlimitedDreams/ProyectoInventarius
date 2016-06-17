@@ -15,15 +15,18 @@ public class Sequence {
 
     public static int seque(String sql) throws ClassNotFoundException {
         Control.conectar();
-        Control.ejecuteQuery(sql);
         int cod = 0;
         try {
+            Control.ejecuteQuery(sql);
+
             while (Control.rs.next()) {
                 cod = Control.rs.getInt(1);
             }
             Control.cerrarConexion();
         } catch (Exception ex) {
 
+        } finally {
+            Control.cerrarConexion();
         }
         return cod + 1;
     }

@@ -207,9 +207,10 @@ public class Bodega extends javax.swing.JFrame {
 
     public void Stock() throws ClassNotFoundException {
         Control.conectar();
-        Control.ejecuteQuery("select * from producto where  (cantidad=0 or stock>=cantidad)  and estado='A'");
-        int count = 0;
         try {
+            Control.ejecuteQuery("select * from producto where  (cantidad=0 or stock>=cantidad)  and estado='A'");
+            int count = 0;
+
             while (Control.rs.next()) {
                 count++;
             }
@@ -220,6 +221,8 @@ public class Bodega extends javax.swing.JFrame {
             Control.cerrarConexion();
         } catch (Exception ex) {
             Entrada.muestreMensajeV("Error al Cargar Stock de Productos " + ex.getMessage());
+        } finally {
+            Control.cerrarConexion();
         }
     }
 
@@ -251,9 +254,9 @@ public class Bodega extends javax.swing.JFrame {
         int numeroPreguntas;
         ResultSetMetaData rsetMetaData;
         this.tablaProductos.setModel(modeloEmpleado);
-        boolean r = Control.ejecuteQuery(query);
-
         try {
+            boolean r = Control.ejecuteQuery(query);
+
             rsetMetaData = Control.rs.getMetaData();
             numeroPreguntas = rsetMetaData.getColumnCount();
             for (int i = 0; i < numeroPreguntas; i++) {
@@ -280,9 +283,7 @@ public class Bodega extends javax.swing.JFrame {
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "ERROR " + e.getMessage());
         } finally {
-            try {
-            } catch (Exception e) {;
-            }
+            Control.cerrarConexion();
         }
     }
 
@@ -519,7 +520,7 @@ public class Bodega extends javax.swing.JFrame {
             update();
         } catch (Exception ex) {
             Entrada.muestreMensajeV("Error Al Actualizar Datos",
-                        javax.swing.JOptionPane.INFORMATION_MESSAGE);
+                    javax.swing.JOptionPane.INFORMATION_MESSAGE);
         }
 
     }//GEN-LAST:event_actualizarActionPerformed
@@ -639,8 +640,9 @@ public class Bodega extends javax.swing.JFrame {
         ResultSetMetaData rsetMetaData;
         boolean r2 = false;
         this.tablaProductos.setModel(modeloEmpleado);
-        boolean r = Control.ejecuteQuery(query);
         try {
+            boolean r = Control.ejecuteQuery(query);
+
             rsetMetaData = Control.rs.getMetaData();
             numeroPreguntas = rsetMetaData.getColumnCount();
             //Establece los nombres de las columnas de las tablas
@@ -669,9 +671,7 @@ public class Bodega extends javax.swing.JFrame {
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "ERROR " + e.getMessage());
         } finally {
-            try {
-            } catch (Exception e) {;
-            }
+            Control.cerrarConexion();
         }
     }
 
@@ -696,7 +696,7 @@ public class Bodega extends javax.swing.JFrame {
             producto.setDesc(Integer.parseInt(Desc));
             producto.setPrecio_venta(Double.parseDouble(Precio));
             producto.setCantidad(Integer.parseInt(cant));
-            Producto_update p = new Producto_update(this,true,producto, usuario, List_Menu);
+            Producto_update p = new Producto_update(this, true, producto, usuario, List_Menu);
             p.setVisible(true);
             this.setVisible(false);
         }

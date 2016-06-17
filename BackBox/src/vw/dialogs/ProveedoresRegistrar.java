@@ -7,6 +7,7 @@ package vw.dialogs;
 
 import Control.Control;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -35,42 +36,52 @@ public class ProveedoresRegistrar extends javax.swing.JDialog {
 
     public boolean buscar_cod() throws ClassNotFoundException {
         Control.conectar();
-        Control.ejecuteQuery("select * from persona where "
-                + "cedula=" + nit.getText() + "");
         boolean r = false;
         try {
+            Control.ejecuteQuery("select * from persona where "
+                    + "cedula=" + nit.getText() + "");
             while (Control.rs.next()) {
                 r = true;
             }
-            Control.cerrarConexion();
 
+            Control.cerrarConexion();
         } catch (Exception ex) {
 
+        } finally {
+            Control.cerrarConexion();
         }
         return r;
     }
 
-    public void registrar() throws ClassNotFoundException {
+    public void registrar() throws ClassNotFoundException, SQLException {
         if (buscar_cod() == false) {
-            Control.conectar();
-
             int secUsuario = Sequence.seque("select max(cod_provedor) from provedor");
-            boolean ejecutoUpdate = Control.ejecuteUpdate("insert into provedor"
-                    + " values(" + secUsuario + ",'"
-                    + nit.getText() + "','"
-                    + nombre.getText() + "','"
-                    + telefono.getText() + "','"
-                    + direccion.getText() + "',"
-                    + "'A')");
-            if (ejecutoUpdate) {
-                Entrada.muestreMensajeV("REGISTRO EXITOSO",
-                        javax.swing.JOptionPane.INFORMATION_MESSAGE);
-                this.dispose();
-            } else {
-                Entrada.muestreMensajeV("ERROR",
-                        javax.swing.JOptionPane.ERROR_MESSAGE);
+            try {
+                Control.conectar();
+                Control.con.setAutoCommit(false);
+                boolean ejecutoUpdate = Control.ejecuteUpdate("insert into provedor"
+                        + " values(" + secUsuario + ",'"
+                        + nit.getText() + "','"
+                        + nombre.getText() + "','"
+                        + telefono.getText() + "','"
+                        + direccion.getText() + "',"
+                        + "'A')");
+                if (ejecutoUpdate) {
+                    Entrada.muestreMensajeV("REGISTRO EXITOSO",
+                            javax.swing.JOptionPane.INFORMATION_MESSAGE);
+                    this.dispose();
+                } else {
+                    Entrada.muestreMensajeV("ERROR",
+                            javax.swing.JOptionPane.ERROR_MESSAGE);
+                }
+                Control.cerrarConexion();
+            } catch (Exception ex) {
+
+            } finally {
+                Control.con.commit();
+                Control.con.setAutoCommit(true);
+                Control.cerrarConexion();
             }
-            Control.cerrarConexion();
         } else {
             Entrada.muestreMensajeV("La cedula  ya existe",
                     javax.swing.JOptionPane.WARNING_MESSAGE);
@@ -220,6 +231,8 @@ public class ProveedoresRegistrar extends javax.swing.JDialog {
                 registrar();
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(ProveedoresRegistrar.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SQLException ex) {
+                Entrada.muestreMensajeV("Error Al Registrar Proveedor");
             }
         } else {
             Entrada.muestreMensajeV("No puede haber campos vacíos",

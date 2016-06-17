@@ -7,6 +7,7 @@ package vw.dialogs;
 
 import Control.Control;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -49,21 +50,22 @@ public class UsuariosRegistrar extends javax.swing.JDialog {
 
     public void cargarRoles() throws ClassNotFoundException {
         Control.conectar();
-        Control.ejecuteQuery("select * from rol");
+
         String cod = "", nom = "";
         ArrayList<List_Categoria> cater = new ArrayList();
         rol.addItem("--");
         try {
+            Control.ejecuteQuery("select * from rol");
             while (Control.rs.next()) {
                 cater.add(new List_Categoria(Control.rs.getInt(1), Control.rs.getString(2)));
                 rol.addItem(Control.rs.getString(2));
             }
-            System.out.println("Tamaño de roles");
-            System.out.println("-- " + cater.size());
             Control.cerrarConexion();
 
         } catch (Exception ex) {
 
+        } finally {
+            Control.cerrarConexion();
         }
     }
 
@@ -97,90 +99,105 @@ public class UsuariosRegistrar extends javax.swing.JDialog {
 
     public boolean buscar_cod() throws ClassNotFoundException {
         Control.conectar();
-        Control.ejecuteQuery("select * from persona where "
-                + "cedula=" + cedula.getText() + "");
+
         boolean r = false;
         try {
+            Control.ejecuteQuery("select * from persona where "
+                    + "cedula=" + cedula.getText() + "");
             while (Control.rs.next()) {
                 r = true;
             }
             Control.cerrarConexion();
         } catch (Exception ex) {
+        } finally {
+            Control.cerrarConexion();
         }
         return r;
     }
 
-    public void registrar() throws ClassNotFoundException {
+    public void registrar() throws ClassNotFoundException, SQLException {
         if (VerificarDatos()) {
             if (buscar_cod() == false) {
                 int cod_rol = traerCod();
                 int S = sexo.getSelectedIndex();
                 int usu = Sequence.seque("select max(cod_usuario) from usuario  ");
-                Control.conectar();
-                String sexo = "";
-                if (S == 1) {
-                    sexo = "M";
-                } else if (S == 2) {
-                    sexo = "F";
-                }
-                boolean r = Control.ejecuteUpdate("insert into persona values("
-                        + cedula.getText() + ",'"
-                        + nombre.getText() + "','"
-                        + apellido.getText() + "','"
-                        + sexo + "',"
-                        + "'A','" + email.getText() + "','" + telefono.getText() + "','" + cedular.getText() + "')");
-                if (r) {
+                try {
+                    Control.conectar();
+                    Control.con.setAutoCommit(false);
+                    String sexo = "";
+                    if (S == 1) {
+                        sexo = "M";
+                    } else if (S == 2) {
+                        sexo = "F";
+                    }
+                    boolean r = Control.ejecuteUpdate("insert into persona values("
+                            + cedula.getText() + ",'"
+                            + nombre.getText() + "','"
+                            + apellido.getText() + "','"
+                            + sexo + "',"
+                            + "'A','" + email.getText() + "','" + telefono.getText() + "','" + cedular.getText() + "')");
+                    if (r) {
 
-                    boolean f = Control.ejecuteUpdate("insert into usuario"
-                            + " values(" + usu + ",'" + usuario.getText() + "','"
-                            + clave.getText() + "'," + cod_rol + "," + cedula.getText() + ")");
-                    if (f) {
-                        Entrada.muestreMensajeV("REGISTRO EXITOSO", javax.swing.JOptionPane.INFORMATION_MESSAGE);
-                        Control.cerrarConexion();
-                        this.dispose();
+                        boolean f = Control.ejecuteUpdate("insert into usuario"
+                                + " values(" + usu + ",'" + usuario.getText() + "','"
+                                + clave.getText() + "'," + cod_rol + "," + cedula.getText() + ")");
+                        if (f) {
+                            Entrada.muestreMensajeV("REGISTRO EXITOSO", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+                            Control.cerrarConexion();
+                            this.dispose();
+                        } else {
+                            Entrada.muestreMensajeV("ERROR ", javax.swing.JOptionPane.ERROR_MESSAGE);
+                        }
                     } else {
                         Entrada.muestreMensajeV("ERROR ", javax.swing.JOptionPane.ERROR_MESSAGE);
                     }
-                } else {
-                    Entrada.muestreMensajeV("ERROR ", javax.swing.JOptionPane.ERROR_MESSAGE);
+
+                } catch (Exception ex) {
+
+                } finally {
+                    Control.con.commit();
+                    Control.con.setAutoCommit(true);
+                    Control.cerrarConexion();
                 }
-                Control.cerrarConexion();
 
             } else {
                 //Entrada.muestreMensajeV("La Cedula  ya existe", javax.swing.JOptionPane.WARNING_MESSAGE);
                 int cod_rol = traerCod();
                 int S = sexo.getSelectedIndex();
-                Control.conectar();
-                String sexo = "";
-                if (S == 1) {
-                    sexo = "M";
-                } else if (S == 2) {
-                    sexo = "F";
-                }
-                boolean r = Control.ejecuteUpdate("update persona set nombre='"+nombre.getText() + "',apellido='"
-                        + apellido.getText() + "', sexo='"
-                        + sexo + "',estado="
-                        + "'A',email='" + email.getText() + "',telefono='" + telefono.getText() + "',celular='" + cedular.getText() + "' "
-                        + "where cedula="+cedula.getText());
-                if (r) {
-
-                    boolean f = Control.ejecuteUpdate("update usuario"
-                            + " set usuario='" + usuario.getText() + "',clave='"+ clave.getText() + "',cod_rol=" + cod_rol + " where cedula=" + cedula.getText());
-                    if (f) {
-                        Entrada.muestreMensajeV("REGISTRO EXITOSO", javax.swing.JOptionPane.INFORMATION_MESSAGE);
-                        Control.cerrarConexion();
-                        this.dispose();
+                try {
+                    Control.conectar();
+                    Control.con.setAutoCommit(false);
+                    String sexo = "";
+                    if (S == 1) {
+                        sexo = "M";
+                    } else if (S == 2) {
+                        sexo = "F";
+                    }
+                    boolean r = Control.ejecuteUpdate("update persona set nombre='" + nombre.getText() + "',apellido='"
+                            + apellido.getText() + "', sexo='"
+                            + sexo + "',estado="
+                            + "'A',email='" + email.getText() + "',telefono='" + telefono.getText() + "',celular='" + cedular.getText() + "' "
+                            + "where cedula=" + cedula.getText());
+                    if (r) {
+                        boolean f = Control.ejecuteUpdate("update usuario"
+                                + " set usuario='" + usuario.getText() + "',clave='" + clave.getText() + "',cod_rol=" + cod_rol + " where cedula=" + cedula.getText());
+                        if (f) {
+                            Entrada.muestreMensajeV("REGISTRO EXITOSO", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+                            Control.cerrarConexion();
+                            this.dispose();
+                        } else {
+                            Entrada.muestreMensajeV("ERROR ", javax.swing.JOptionPane.ERROR_MESSAGE);
+                        }
                     } else {
                         Entrada.muestreMensajeV("ERROR ", javax.swing.JOptionPane.ERROR_MESSAGE);
                     }
-                } else {
-                    Entrada.muestreMensajeV("ERROR ", javax.swing.JOptionPane.ERROR_MESSAGE);
+                } catch (Exception ex) {
+
+                } finally {
+                    Control.con.commit();
+                    Control.con.setAutoCommit(true);
+                    Control.cerrarConexion();
                 }
-                Control.cerrarConexion();
-                
-                
-                
-                
             }
         } else {
             Entrada.muestreMensajeV("Debe llenar Todos los Datos", javax.swing.JOptionPane.WARNING_MESSAGE);
@@ -191,9 +208,9 @@ public class UsuariosRegistrar extends javax.swing.JDialog {
     public int traerCod() throws ClassNotFoundException {
         Control.conectar();
         String nom = rol.getSelectedItem().toString();
-        Control.ejecuteQuery("select cod_rol from rol where descripcion='" + nom + "'");
         int cod = 0;
         try {
+            Control.ejecuteQuery("select cod_rol from rol where descripcion='" + nom + "'");
             while (Control.rs.next()) {
                 cod = Control.rs.getInt(1);
             }
@@ -201,6 +218,8 @@ public class UsuariosRegistrar extends javax.swing.JDialog {
 
         } catch (Exception ex) {
             System.out.println("error " + ex.getMessage());
+        }finally{
+            Control.cerrarConexion();
         }
         return cod;
     }
@@ -482,6 +501,8 @@ public class UsuariosRegistrar extends javax.swing.JDialog {
             try {
                 registrar();
             } catch (ClassNotFoundException ex) {
+                Logger.getLogger(UsuariosRegistrar.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SQLException ex) {
                 Logger.getLogger(UsuariosRegistrar.class.getName()).log(Level.SEVERE, null, ex);
             }
         }

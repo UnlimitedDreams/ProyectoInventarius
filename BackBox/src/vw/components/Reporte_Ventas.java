@@ -253,10 +253,11 @@ public class Reporte_Ventas extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
     public void cargarPersonal() throws ClassNotFoundException {
         Control.conectar();
-        Control.ejecuteQuery("select distinct usuario from usuario U, persona P where U.cedula=P.cedula and P.estado='A'");
-        String nom = "";
-        rol.addItem("Todos");
         try {
+            Control.ejecuteQuery("select distinct usuario from usuario U, persona P where U.cedula=P.cedula and P.estado='A'");
+            String nom = "";
+            rol.addItem("Todos");
+
             while (Control.rs.next()) {
                 rol.addItem(Control.rs.getString(1));
             }
@@ -264,6 +265,8 @@ public class Reporte_Ventas extends javax.swing.JFrame {
 
         } catch (Exception ex) {
 
+        } finally {
+            Control.cerrarConexion();
         }
     }
 
@@ -323,15 +326,18 @@ public class Reporte_Ventas extends javax.swing.JFrame {
             Control.cerrarConexion();
         } catch (Exception ex) {
             System.err.println(ex.toString());
+        } finally {
+            Control.cerrarConexion();
         }
     }
 
     public String cedula(String nom, String ape) throws ClassNotFoundException {
         Control.conectar();
-        Control.ejecuteQuery("select * from persona where nombre='" + nom + "' and "
-                + "apellido='" + ape + "'");
         String ced = "";
         try {
+            Control.ejecuteQuery("select * from persona where nombre='" + nom + "' and "
+                    + "apellido='" + ape + "'");
+
             while (Control.rs.next()) {
                 ced = Control.rs.getString(1);
             }
@@ -339,6 +345,8 @@ public class Reporte_Ventas extends javax.swing.JFrame {
 
         } catch (Exception ex) {
 
+        } finally {
+            Control.cerrarConexion();
         }
         return ced;
     }
@@ -455,8 +463,9 @@ public class Reporte_Ventas extends javax.swing.JFrame {
         int numeroPreguntas;
         ResultSetMetaData rsetMetaData;
         this.jTable1.setModel(modeloEmpleado);
-        boolean r = Control.ejecuteQuery(query);
         try {
+            boolean r = Control.ejecuteQuery(query);
+
             rsetMetaData = Control.rs.getMetaData();
             numeroPreguntas = rsetMetaData.getColumnCount();
             //Establece los nombres de las columnas de las tablas
@@ -483,10 +492,7 @@ public class Reporte_Ventas extends javax.swing.JFrame {
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "ERROR " + e.getMessage());
         } finally {
-            Control.cerrarConexion();
-            try {
-            } catch (Exception e) {;
-            }
+            Control.cerrarConexion();            
         }
     }
 

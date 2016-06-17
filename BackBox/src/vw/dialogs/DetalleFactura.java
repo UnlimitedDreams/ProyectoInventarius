@@ -161,7 +161,7 @@ public class DetalleFactura extends javax.swing.JDialog {
                 iva = Control.rs.getDouble(2);
                 desc = Control.rs.getInt(3);
                 valorDesc = Control.rs.getDouble(4);
-                totalVEnta=Control.rs.getDouble(5);
+                totalVEnta = Control.rs.getDouble(5);
 
             }
             generarFactura(Integer.parseInt(factura), fecha, cone);
@@ -179,10 +179,10 @@ public class DetalleFactura extends javax.swing.JDialog {
             HashMap<String, Object> parametros = new HashMap<String, Object>();
             parametros.put("Cod_fac", cod_factura);
             parametros.put("fec_fac", fecha);
-            parametros.put("desc",desc);
-            parametros.put("Iva",iva);
+            parametros.put("desc", desc);
+            parametros.put("Iva", iva);
             parametros.put("ValorDesc", valorDesc);
-            parametros.put("Total",totalVEnta);
+            parametros.put("Total", totalVEnta);
             JasperReport report = JasperCompileManager.compileReport("Fac.jrxml");
             JasperPrint jasperPrint = JasperFillManager.fillReport(report, parametros, c);
             //Mostrar en pdf   // JasperViewer.viewReport(jasperPrint);   
@@ -193,7 +193,7 @@ public class DetalleFactura extends javax.swing.JDialog {
     }
 
     public void inicio() throws ClassNotFoundException {
-         DecimalFormat formateador = new DecimalFormat("###,###,###");
+        DecimalFormat formateador = new DecimalFormat("###,###,###");
         Control.conectar();
         Producto temp = null;
         String query = "select producto.cod_producto \"Producto\",nombre,precio_venta \"Precio\",venta_pro.cantidad \"Cant\" from venta,venta_pro,producto\n"
@@ -206,9 +206,9 @@ public class DetalleFactura extends javax.swing.JDialog {
         int numeroPreguntas;
         ResultSetMetaData rsetMetaData;
         this.jTable1.setModel(modeloEmpleado);
-        boolean r = Control.ejecuteQuery(query);
-
         try {
+            boolean r = Control.ejecuteQuery(query);
+
             rsetMetaData = Control.rs.getMetaData();
             numeroPreguntas = rsetMetaData.getColumnCount();
             //Establece los nombres de las columnas de las tablas
@@ -236,16 +236,14 @@ public class DetalleFactura extends javax.swing.JDialog {
             while (Control.rs.next()) {
                 totalVenta = Control.rs.getDouble(1);
             }
-            jLabel3.setText("" +  formateador.format(totalVenta));
+            jLabel3.setText("" + formateador.format(totalVenta));
             Control.cerrarConexion();
 
 //            Control.rs.close();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "ERROR " + e.getMessage());
         } finally {
-            try {
-            } catch (Exception e) {;
-            }
+            Control.cerrarConexion();
         }
     }
     /**

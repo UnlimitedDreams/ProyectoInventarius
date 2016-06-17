@@ -72,7 +72,6 @@ public class Acceder extends javax.swing.JFrame {
     private void initComponents() {
 
         panel = new javax.swing.JPanel();
-        social01 = new javax.swing.JLabel();
         social02 = new javax.swing.JLabel();
         acceder = new javax.swing.JButton();
         field01 = new org.edisoncor.gui.textField.TextFieldRectBackground();
@@ -109,11 +108,6 @@ public class Acceder extends javax.swing.JFrame {
         panel.setMinimumSize(new java.awt.Dimension(791, 491));
         panel.setName(""); // NOI18N
         panel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        social01.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-mdpi/ic_share_black_24dp.png"))); // NOI18N
-        social01.setToolTipText("Compartir");
-        social01.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        panel.add(social01, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 470, -1, -1));
 
         social02.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-mdpi/ic_plus_one_black_24dp.png"))); // NOI18N
         social02.setToolTipText("Google+");
@@ -357,7 +351,6 @@ public class Acceder extends javax.swing.JFrame {
     private javax.swing.JLabel label02;
     private javax.swing.JLabel label03;
     private javax.swing.JPanel panel;
-    private javax.swing.JLabel social01;
     private javax.swing.JLabel social02;
     // End of variables declaration//GEN-END:variables
 }

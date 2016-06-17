@@ -7,6 +7,7 @@ package vw.components;
 
 import Control.Control;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.logging.Level;
@@ -49,10 +50,11 @@ public class Registro_producto extends javax.swing.JFrame {
 
     public void Categoria() throws ClassNotFoundException {
         Control.conectar();
-        Control.ejecuteQuery("select * from categoria");
-        String cod = "", nom = "";
-        ArrayList<List_Categoria> cater = new ArrayList();
         try {
+            Control.ejecuteQuery("select * from categoria");
+            String cod = "", nom = "";
+            ArrayList<List_Categoria> cater = new ArrayList();
+
             while (Control.rs.next()) {
                 cater.add(new List_Categoria(Control.rs.getInt(1), Control.rs.getString(2)));
                 categoria.addItem(Control.rs.getString(2) + "-" + Control.rs.getString(4));
@@ -62,6 +64,8 @@ public class Registro_producto extends javax.swing.JFrame {
 
         } catch (Exception ex) {
             System.out.println("Fallo Consulta: " + ex.toString());
+        } finally {
+            Control.cerrarConexion();
         }
     }
 
@@ -257,6 +261,8 @@ public class Registro_producto extends javax.swing.JFrame {
             registrar();
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(Registro_producto.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(Registro_producto.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -273,10 +279,11 @@ public class Registro_producto extends javax.swing.JFrame {
 
     public boolean buscar_cod() throws ClassNotFoundException {
         Control.conectar();
-        Control.ejecuteQuery("select * from producto where "
-                + "cod_producto='" + jTextField2.getText() + "'");
         boolean r = false;
         try {
+            Control.ejecuteQuery("select * from producto where "
+                    + "cod_producto='" + jTextField2.getText() + "'");
+
             while (Control.rs.next()) {
                 r = true;
             }
@@ -284,60 +291,82 @@ public class Registro_producto extends javax.swing.JFrame {
 
         } catch (Exception ex) {
 
+        } finally {
+            Control.cerrarConexion();
         }
         return r;
     }
 
-    public boolean registro_detalle() throws ClassNotFoundException {
+    public boolean registro_detalle() throws ClassNotFoundException, SQLException {
         Date fecha = new Date();
+        boolean r = false;
         int codigo_detalle = Sequence.seque("select max(cod_detalle) from detalle");
-        Control.conectar();
-        boolean r = Control.ejecuteUpdate("insert into detalle values(" + codigo_detalle + ",'" + fecha + "',"
-                + jTextField7.getText() + "," + jTextField4.getText() + ",'" + jTextField2.getText() + "',"
-                + cod + ")");
-
-        if (r = false) {
-            Entrada.muestreMensajeV("ERROR Registro Detalle");
-        }
-        Control.cerrarConexion();
-        return r;
-    }
-
-    public void registrar() throws ClassNotFoundException {
-        if (buscar_cod() == false) {
-            int categoria = traerCod();
+        try {
             Control.conectar();
-            double costo = Double.parseDouble(jTextField4.getText());
-            double precio = Double.parseDouble(jTextField6.getText());
-            String desc = "0";
-            double des = 0;
-            String iva = "0";
-            double ivas = 0;
-            double precioSinDEs = Double.parseDouble(jTextField6.getText());
+            Control.con.setAutoCommit(false);
+            r = Control.ejecuteUpdate("insert into detalle values(" + codigo_detalle + ",'" + fecha + "',"
+                    + jTextField7.getText() + "," + jTextField4.getText() + ",'" + jTextField2.getText() + "',"
+                    + cod + ")");
 
-            if (jTextField8.getText().equalsIgnoreCase("0")) {
-
-            } else {
-                iva = "0." + jTextField8.getText();
-                ivas = costo * Double.parseDouble(iva);
-                precio = precio + ivas;
-                precioSinDEs = precioSinDEs + ivas;
-            }
-
-            boolean r = Control.ejecuteUpdate("insert into producto values('" + jTextField2.getText() + "','" + jTextField3.getText() + "',"
-                    + jTextField4.getText() + "," + jTextField8.getText() + "," + precioSinDEs + ","
-                    + categoria + "," + 0 + ",'A','n',0," + precio + "," + Integer.parseInt(stock.getText()) + ")");
-            if (r) {
-                Entrada.muestreMensajeV("SE AGREGGO PRODUCTO A LA COMPRA");
-                pr.add(new Producto(jTextField2.getText(),
-                jTextField3.getText(), Double.parseDouble(jTextField4.getText()), precio, Integer.parseInt(jTextField7.getText())));
-                Entrada_Nueva ar = new Entrada_Nueva(pr, nom, fac, ListAcciones);
-                this.setVisible(false);
-                ar.setVisible(true);
-            } else {
-                Entrada.muestreMensajeV("ERROR 2");
+            if (r = false) {
+                Entrada.muestreMensajeV("Error Registro Producto");
             }
             Control.cerrarConexion();
+        } catch (Exception ex) {
+
+        } finally {
+            Control.con.commit();
+            Control.con.setAutoCommit(true);
+            Control.cerrarConexion();
+        }
+
+        return r;
+    }
+
+    public void registrar() throws ClassNotFoundException, SQLException {
+        if (buscar_cod() == false) {
+            int categoria = traerCod();
+            try {
+                Control.conectar();
+                Control.con.setAutoCommit(false);
+                double costo = Double.parseDouble(jTextField4.getText());
+                double precio = Double.parseDouble(jTextField6.getText());
+                String desc = "0";
+                double des = 0;
+                String iva = "0";
+                double ivas = 0;
+                double precioSinDEs = Double.parseDouble(jTextField6.getText());
+
+                if (jTextField8.getText().equalsIgnoreCase("0")) {
+
+                } else {
+                    iva = "0." + jTextField8.getText();
+                    ivas = costo * Double.parseDouble(iva);
+                    precio = precio + ivas;
+                    precioSinDEs = precioSinDEs + ivas;
+                }
+
+                boolean r = Control.ejecuteUpdate("insert into producto values('" + jTextField2.getText() + "','" + jTextField3.getText() + "',"
+                        + jTextField4.getText() + "," + jTextField8.getText() + "," + precioSinDEs + ","
+                        + categoria + "," + 0 + ",'A','n',0," + precio + "," + Integer.parseInt(stock.getText()) + ")");
+                if (r) {
+                    Entrada.muestreMensajeV("SE AGREGGO PRODUCTO A LA COMPRA");
+                    pr.add(new Producto(jTextField2.getText(),
+                            jTextField3.getText(), Double.parseDouble(jTextField4.getText()), precio, Integer.parseInt(jTextField7.getText())));
+                    Entrada_Nueva ar = new Entrada_Nueva(pr, nom, fac, ListAcciones);
+                    this.setVisible(false);
+                    ar.setVisible(true);
+                } else {
+                    Entrada.muestreMensajeV("Error al Agregar Producto");
+                }
+                Control.cerrarConexion();
+
+            } catch (NumberFormatException ex) {
+            } finally {
+                Control.con.commit();
+                Control.con.setAutoCommit(true);
+                Control.cerrarConexion();
+            }
 
         } else {
             Entrada.muestreMensajeV("El codigo del producto ya existe");
@@ -348,9 +377,10 @@ public class Registro_producto extends javax.swing.JFrame {
     public int traerCod() throws ClassNotFoundException {
         Control.conectar();
         String nom[] = categoria.getSelectedItem().toString().split("-");
-        Control.ejecuteQuery("select cod_categoria from categoria where descripcion='" + nom[0] + "'");
-        int cod = 0;
         try {
+            Control.ejecuteQuery("select cod_categoria from categoria where descripcion='" + nom[0] + "'");
+            int cod = 0;
+
             while (Control.rs.next()) {
                 cod = Control.rs.getInt(1);
             }
@@ -358,8 +388,9 @@ public class Registro_producto extends javax.swing.JFrame {
 
         } catch (Exception ex) {
             System.out.println("error " + ex.getMessage());
+        } finally {
+            Control.cerrarConexion();
         }
-        System.out.println("codigo cate " + cod);
         return cod;
     }
 

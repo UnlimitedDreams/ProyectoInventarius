@@ -960,36 +960,46 @@ public class Venta extends javax.swing.JFrame {
     public void Vender() throws ClassNotFoundException, JRException, SQLException {
         int codigo_venta = Sequence.seque("select max(cod_factura) from venta");
         int codigo_pro = (Sequence.seque("select max(cod_venta) from venta_pro"));
-
-        Control.conectar();
-        cone = Control.con;
-        int cod_pago = 0;
-        if (medioPago.getSelectedIndex() == 0) {
-            cod_pago = 1;
-        } else if (medioPago.getSelectedIndex() == 1) {
-            cod_pago = 2;
-        }
-        Date fecha = new Date();
-        double valorIva = Double.parseDouble(porcentajeIVA.getText());
-        boolean r = Control.ejecuteUpdate("insert into venta values(" + codigo_venta + ",'" + fecha + "'," + ValorPago
-                + "," + usuario + "," + tipoVenta + "," + cod_pago + "," + valorIva + ""
-                + "," + Integer.parseInt(descIva.getText()) + "," + Double.parseDouble(valorDescuento.getText()) + "," + codigo_cliente + ")");
-        if (r) {
-            Producto pro = null;
-            for (int i = 0; i < productos.size(); i++) {
-                pro = (Producto) productos.get(i);
-                Control.ejecuteUpdate("insert into venta_pro values(" + codigo_pro + ",'" + pro.getCodigo() + "',"
-                        + codigo_venta + "," + pro.getCantidad() + ")");
-                codigo_pro++;
+        try {
+            Control.conectar();
+            Control.con.setAutoCommit(false);
+            cone = Control.con;
+            int cod_pago = 0;
+            if (medioPago.getSelectedIndex() == 0) {
+                cod_pago = 1;
+            } else if (medioPago.getSelectedIndex() == 1) {
+                cod_pago = 2;
             }
-            restar_Bodega();
-            generarFactura(codigo_venta, fecha, cone);
-            Control.cerrarConexion();
-            Restar_Todo();
+            Date fecha = new Date();
+            double valorIva = Double.parseDouble(porcentajeIVA.getText());
+            boolean r = Control.ejecuteUpdate("insert into venta values(" + codigo_venta + ",'" + fecha + "'," + ValorPago
+                    + "," + usuario + "," + tipoVenta + "," + cod_pago + "," + valorIva + ""
+                    + "," + Integer.parseInt(descIva.getText()) + "," + Double.parseDouble(valorDescuento.getText()) + "," + codigo_cliente + ")");
+            if (r) {
+                Producto pro = null;
+                for (int i = 0; i < productos.size(); i++) {
+                    pro = (Producto) productos.get(i);
+                    Control.ejecuteUpdate("insert into venta_pro values(" + codigo_pro + ",'" + pro.getCodigo() + "',"
+                            + codigo_venta + "," + pro.getCantidad() + ")");
+                    codigo_pro++;
+                }
+                restar_Bodega();
+                generarFactura(codigo_venta, fecha, cone);
+                Control.cerrarConexion();
+                Restar_Todo();
 
-        } else {
-            System.out.println("Error en venta");
+            } else {
+                System.out.println("Error en venta");
+            }
+
+        } catch (Exception ex) {
+
+        } finally {
+            Control.con.commit();
+            Control.con.setAutoCommit(true);
+            Control.cerrarConexion();
         }
+
     }
 
     public void Restar_Todo() {
@@ -1082,7 +1092,6 @@ public class Venta extends javax.swing.JFrame {
     private void jTable2KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTable2KeyReleased
 
 
-
     }//GEN-LAST:event_jTable2KeyReleased
 
     private void jTable2KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTable2KeyTyped
@@ -1170,67 +1179,67 @@ public class Venta extends javax.swing.JFrame {
             System.out.println("::: " + condicionfiltro);
             if (evt.getKeyCode() == 10 && condicionfiltro == false) {
                 c.setVisible(false);
-                    this.condicionfiltro = true;
-                    c.setVisible(false);
-                    Producto p = null;
-                    ArrayList<Producto> produc = new ArrayList();
-                    String cod = "";
-                    String can = "";
-                    System.out.println("+++++++++++++ :" + jTextField2.getText());
-                    cod = (String) jTextField2.getText();
-                    System.out.println("Codigo ::: " + cod);
-                    boolean Esta = false;
-                    for (int k = 0; k < productos.size(); k++) {
-                        p = (Producto) productos.get(k);
-                        if (p.getCodigo().equalsIgnoreCase(cod)) {
-                            System.out.println("Agrego cant");
-                            Esta = true;
-                            p.setCantidad(p.getCantidad() + 1);
-                        }
+                this.condicionfiltro = true;
+                c.setVisible(false);
+                Producto p = null;
+                ArrayList<Producto> produc = new ArrayList();
+                String cod = "";
+                String can = "";
+                System.out.println("+++++++++++++ :" + jTextField2.getText());
+                cod = (String) jTextField2.getText();
+                System.out.println("Codigo ::: " + cod);
+                boolean Esta = false;
+                for (int k = 0; k < productos.size(); k++) {
+                    p = (Producto) productos.get(k);
+                    if (p.getCodigo().equalsIgnoreCase(cod)) {
+                        System.out.println("Agrego cant");
+                        Esta = true;
+                        p.setCantidad(p.getCantidad() + 1);
                     }
-                    if (Esta == false) {
-                        try {
-                            Control.conectar();
-                            Producto temp = null;
-                            String query = "select nombre,precio_desc,iva "
-                                    + "from producto\n"
-                                    + "where\n"
-                                    + "producto.estado='A' and cod_producto='" + cod + "'";
-                            Control.ejecuteQuery(query);
-                            String nom = "";
-                            double precio = 0;
-                            double iva = 0;
-                            boolean r = false;
-                            while (Control.rs.next()) {
-                                r = true;
-                                nom = Control.rs.getString(1);
-                                precio = Control.rs.getDouble(2);
-                                iva = Control.rs.getDouble(3);
-                            }
-                            if (r) {
-                                temp = new Producto(cod, nom, precio, 1, iva,1);
-                                productos.add(temp);
-                                jTextField2.setText("");
-                            } else {
-                                Entrada.muestreMensajeV("Codigo  de producto no valido");
-                                jTextField2.setText("");
-
-                            }
-                        } catch (ClassNotFoundException ex) {
-                            Logger.getLogger(Venta.class
-                                    .getName()).log(Level.SEVERE, null, ex);
-
-                        } catch (SQLException ex) {
-                            Logger.getLogger(Venta.class
-                                    .getName()).log(Level.SEVERE, null, ex);
+                }
+                if (Esta == false) {
+                    try {
+                        Control.conectar();
+                        Producto temp = null;
+                        String query = "select nombre,precio_desc,iva "
+                                + "from producto\n"
+                                + "where\n"
+                                + "producto.estado='A' and cod_producto='" + cod + "'";
+                        Control.ejecuteQuery(query);
+                        String nom = "";
+                        double precio = 0;
+                        double iva = 0;
+                        boolean r = false;
+                        while (Control.rs.next()) {
+                            r = true;
+                            nom = Control.rs.getString(1);
+                            precio = Control.rs.getDouble(2);
+                            iva = Control.rs.getDouble(3);
                         }
+                        if (r) {
+                            temp = new Producto(cod, nom, precio, 1, iva, 1);
+                            productos.add(temp);
+                            jTextField2.setText("");
+                        } else {
+                            Entrada.muestreMensajeV("Codigo  de producto no valido");
+                            jTextField2.setText("");
 
-                        //jTable2.requestFocus();
-                    } else {
-                        jTextField2.setText("");
+                        }
+                    } catch (ClassNotFoundException ex) {
+                        Logger.getLogger(Venta.class
+                                .getName()).log(Level.SEVERE, null, ex);
+
+                    } catch (SQLException ex) {
+                        Logger.getLogger(Venta.class
+                                .getName()).log(Level.SEVERE, null, ex);
                     }
-                    iniciar();
-                    rellenar_datos();
+
+                    //jTable2.requestFocus();
+                } else {
+                    jTextField2.setText("");
+                }
+                iniciar();
+                rellenar_datos();
 
             } else {
                 this.condicionfiltro = false;
@@ -1339,7 +1348,7 @@ public class Venta extends javax.swing.JFrame {
                     Control.cerrarConexion();
                     if (r) {
                         System.out.println("Agrego producto : " + cod);
-                        temp = new Producto(cod, nom, precio, 1, iva,1);
+                        temp = new Producto(cod, nom, precio, 1, iva, 1);
                         productos.add(temp);
                     } else {
                         jTable1.setValueAt("", i, 0);
@@ -1487,10 +1496,9 @@ public class Venta extends javax.swing.JFrame {
         boolean r2 = false;
 
         this.jTable1.setModel(modeloEmpleado);
-
-        boolean r = Control.ejecuteQuery(query);
-
         try {
+            boolean r = Control.ejecuteQuery(query);
+
             rsetMetaData = Control.rs.getMetaData();
             numeroPreguntas = rsetMetaData.getColumnCount();
             //Establece los nombres de las columnas de las tablas
@@ -1521,9 +1529,7 @@ public class Venta extends javax.swing.JFrame {
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "ERROR " + e.getMessage());
         } finally {
-            try {
-            } catch (Exception e) {;
-            }
+            Control.cerrarConexion();
         }
     }
 

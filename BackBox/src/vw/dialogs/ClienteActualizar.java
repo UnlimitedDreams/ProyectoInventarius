@@ -7,6 +7,7 @@ package vw.dialogs;
 
 import Control.Control;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
@@ -46,8 +47,8 @@ public class ClienteActualizar extends javax.swing.JDialog {
 
     public void inicio(String cod) throws ClassNotFoundException {
         Control.conectar();
-        Control.ejecuteQuery("select cedula,nombre,apellido,email,telefono,celular,direccion  from clientes where cod_cliente=" + cod);
         try {
+            Control.ejecuteQuery("select cedula,nombre,apellido,email,telefono,celular,direccion  from clientes where cod_cliente=" + cod);
             while (Control.rs.next()) {
                 cedula.setText("" + Control.rs.getString(1));
                 nombre.setText("" + Control.rs.getString(2));
@@ -60,30 +61,40 @@ public class ClienteActualizar extends javax.swing.JDialog {
             Control.cerrarConexion();
         } catch (Exception ex) {
 
+        } finally {
+            Control.cerrarConexion();
         }
     }
 
-    public void update() throws ClassNotFoundException {
+    public void update() throws ClassNotFoundException, SQLException {
         String op[] = new String[2];
         op[0] = "Si";
         op[1] = "No";
         int Condicion = Entrada.menu("BackBox", "¿Esta Seguro que Desea Actualizar el Cliente? ", op);
         if (Condicion == 1) {
-            Control.conectar();
-            boolean r = Control.ejecuteUpdate("update clientes set "
-                    + "nombre='" + nombre.getText() + "',"
-                    + "apellido='" + apellido.getText() + "',"
-                    + "cedula='" + cedula.getText() + "',"
-                    + "email='" + email.getText() + "',"
-                    + " telefono=" + tel.getText() + ","
-                    + " celular=" + CEl.getText() + ","
-                    + "direccion='" + Dir.getText() + "' " + "where "
-                    + "cod_cliente='" + idUsuario + "'");
-            if (r) {
+            try {
+                Control.conectar();
+                Control.con.setAutoCommit(false);
+                boolean r = Control.ejecuteUpdate("update clientes set "
+                        + "nombre='" + nombre.getText() + "',"
+                        + "apellido='" + apellido.getText() + "',"
+                        + "cedula='" + cedula.getText() + "',"
+                        + "email='" + email.getText() + "',"
+                        + " telefono=" + tel.getText() + ","
+                        + " celular=" + CEl.getText() + ","
+                        + "direccion='" + Dir.getText() + "' " + "where "
+                        + "cod_cliente='" + idUsuario + "'");
+                if (r) {
+                    Control.cerrarConexion();
+                    this.dispose();
+                }
+            } catch (Exception ex) {
+
+            } finally {
+                Control.con.commit();
+                Control.con.setAutoCommit(true);
                 Control.cerrarConexion();
-                this.dispose();
             }
-            Control.cerrarConexion();
         }
     }
 

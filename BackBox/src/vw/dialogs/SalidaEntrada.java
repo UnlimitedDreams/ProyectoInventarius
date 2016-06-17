@@ -37,14 +37,14 @@ public class SalidaEntrada extends javax.swing.JDialog {
      * @param cant Cantidad del Producto
      */
     public SalidaEntrada(java.awt.Frame parent, boolean modal,
-            String codigo, String tipo, String Nombre, String cant,ArrayList acciones) {
+            String codigo, String tipo, String Nombre, String cant, ArrayList acciones) {
         super(parent, modal);
         initComponents();
         this.codigo = codigo;
         this.tipo = tipo;
         this.nombre = Nombre;
         this.cant = cant;
-        this.ListAcciones=acciones;
+        this.ListAcciones = acciones;
         this.setLocationRelativeTo(null);
         this.setResizable(false);
         URL url = getClass().getResource("/images/facelet/icon.png");
@@ -71,7 +71,7 @@ public class SalidaEntrada extends javax.swing.JDialog {
         cantidad = new javax.swing.JSpinner();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Inventarius - Salidas/Entradas");
+        setTitle("BackBox - Salidas/Entradas");
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
@@ -165,9 +165,8 @@ public class SalidaEntrada extends javax.swing.JDialog {
     }//GEN-LAST:event_volverActionPerformed
 
     private void cantidadKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cantidadKeyReleased
-      
+
     }//GEN-LAST:event_cantidadKeyReleased
-  
 
     /**
      * Actualizar las cantidades de los productos seleccionados.
@@ -196,7 +195,7 @@ public class SalidaEntrada extends javax.swing.JDialog {
 
                     }
                     if (r) {
-                        Bodega b = new Bodega(nombre,ListAcciones);
+                        Bodega b = new Bodega(nombre, ListAcciones);
                         this.dispose();
 
                     } else {

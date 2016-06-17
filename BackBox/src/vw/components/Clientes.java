@@ -439,7 +439,7 @@ public class Clientes extends javax.swing.JFrame {
         try {
             RegistroCliente r = null;
             ArrayList<Producto> productos = new ArrayList();
-            r = new RegistroCliente(this, true, productos, usuario, List_Menu,2);
+            r = new RegistroCliente(this, true, productos, usuario, List_Menu, 2);
             r.setVisible(true);
         } catch (Exception ex) {
             Logger.getLogger(Clientes.class.getName()).log(Level.SEVERE, null, ex);
@@ -519,9 +519,8 @@ public class Clientes extends javax.swing.JFrame {
         int numeroPreguntas;
         ResultSetMetaData rsetMetaData;
         this.jTable1.setModel(modeloEmpleado);
-        boolean r = Control.ejecuteQuery(query);
-
         try {
+            boolean r = Control.ejecuteQuery(query);
             rsetMetaData = Control.rs.getMetaData();
             numeroPreguntas = rsetMetaData.getColumnCount();
             //Establece los nombres de las columnas de las tablas
@@ -545,14 +544,10 @@ public class Clientes extends javax.swing.JFrame {
                 modeloEmpleado.addRow(registroEmpleado);
             }
             Control.cerrarConexion();
-
-//            Control.rs.close();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "ERROR " + e.getMessage());
         } finally {
-            try {
-            } catch (Exception e) {;
-            }
+            Control.cerrarConexion();
         }
     }
 

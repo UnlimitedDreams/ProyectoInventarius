@@ -37,7 +37,7 @@ public class CategoriaGestion extends javax.swing.JFrame {
     public CategoriaGestion(String Usuario, ArrayList Acciones) {
         initComponents();
         this.List_Menu = Acciones;
-        this.usuario=Usuario;
+        this.usuario = Usuario;
         this.setLocationRelativeTo(null);
         this.setResizable(false);
         URL url = getClass().getResource("/images/facelet/icon.png");
@@ -233,7 +233,7 @@ public class CategoriaGestion extends javax.swing.JFrame {
             Entrada.muestreMensajeV("Favor... seleccione una fila",
                     JOptionPane.WARNING_MESSAGE);
         } else if (JOptionPane.showConfirmDialog(this, "¿Está seguro de borrar esta categoría?", "Inventarius", JOptionPane.YES_NO_OPTION) == 0) {
-            String cod = (String) categoriaLista.getValueAt(i, 0).toString();            
+            String cod = (String) categoriaLista.getValueAt(i, 0).toString();
             boolean r = Control.ejecuteUpdate("update categoria "
                     + "set estado='I' " /*Estado Inactivo*/
                     + "where cod_categoria=" + cod);
@@ -294,15 +294,15 @@ public class CategoriaGestion extends javax.swing.JFrame {
                 + "upper(descripcion) \"Descripción\", "
                 + "serie \"Serie\",serieFinal \"Serie Final\",secuencia \"Secuencia\""
                 + "from categoria where estado='A'";
-        String codCategoria = "", nameCategoria = "", costo = "",serieFinal="";
-        int secuencia=0;
+        String codCategoria = "", nameCategoria = "", costo = "", serieFinal = "";
+        int secuencia = 0;
         DefaultTableModel modeloEmpleado = new DefaultTableModel();
         int numeroPreguntas;
         ResultSetMetaData rsetMetaData;
         this.categoriaLista.setModel(modeloEmpleado);
-        Control.ejecuteQuery(query);
-
         try {
+            Control.ejecuteQuery(query);
+
             rsetMetaData = Control.rs.getMetaData();
             numeroPreguntas = rsetMetaData.getColumnCount();
             //Establece los nombres de las columnas de las tablas
@@ -327,6 +327,8 @@ public class CategoriaGestion extends javax.swing.JFrame {
             Control.cerrarConexion();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "ERROR " + e.getMessage());
+        } finally {
+            Control.cerrarConexion();
         }
     }
 

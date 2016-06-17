@@ -638,15 +638,18 @@ public class Articulo extends javax.swing.JFrame {
     public boolean BuscarEstado(String cod) throws ClassNotFoundException {
         Control.conectar();
         boolean r = false;
-        Control.ejecuteQuery("select * from producto where estado='A' "
-                + "and cod_producto='" + cod + "'");
+
         try {
+            Control.ejecuteQuery("select * from producto where estado='A' "
+                    + "and cod_producto='" + cod + "'");
             while (Control.rs.next()) {
                 r = true;
             }
             Control.cerrarConexion();
         } catch (Exception ex) {
 
+        } finally {
+            Control.cerrarConexion();
         }
         return r;
     }
@@ -702,9 +705,9 @@ public class Articulo extends javax.swing.JFrame {
         ResultSetMetaData rsetMetaData;
         boolean r2 = false;
         this.jTable1.setModel(modeloEmpleado);
-
-        boolean r = Control.ejecuteQuery(query);
         try {
+            boolean r = Control.ejecuteQuery(query);
+
             rsetMetaData = Control.rs.getMetaData();
             numeroPreguntas = rsetMetaData.getColumnCount();
             //Establece los nombres de las columnas de las tablas
@@ -733,9 +736,7 @@ public class Articulo extends javax.swing.JFrame {
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "ERROR " + e.getMessage());
         } finally {
-            try {
-            } catch (Exception e) {;
-            }
+            Control.cerrarConexion();
         }
     }
 
@@ -762,9 +763,9 @@ public class Articulo extends javax.swing.JFrame {
         int numeroPreguntas;
         ResultSetMetaData rsetMetaData;
         this.jTable1.setModel(modeloEmpleado);
-        boolean r = Control.ejecuteQuery(query);
-
         try {
+            boolean r = Control.ejecuteQuery(query);
+
             rsetMetaData = Control.rs.getMetaData();
             numeroPreguntas = rsetMetaData.getColumnCount();
             //Establece los nombres de las columnas de las tablas
@@ -793,9 +794,7 @@ public class Articulo extends javax.swing.JFrame {
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "ERROR " + e.getMessage());
         } finally {
-            try {
-            } catch (Exception e) {;
-            }
+            Control.cerrarConexion();
         }
     }
 

@@ -7,6 +7,7 @@ package vw.dialogs;
 
 import Control.Control;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
@@ -177,22 +178,34 @@ public class CategoriasRegistrar extends javax.swing.JDialog {
             registrar();
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(CategoriasRegistrar.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(CategoriasRegistrar.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    public void registrar() throws ClassNotFoundException {
+    public void registrar() throws ClassNotFoundException, SQLException {
         if (buscarSerie(jTextField5.getText()) == false) {
             int codigo = Sequence.seque("select max(cod_categoria) from categoria");
-            Control.conectar();
-            boolean r = Control.ejecuteUpdate("insert into categoria values(" + codigo + ",'" + jTextField3.getText() + "','A',"                    
-                    + jTextField5.getText() + ","+jTextField2.getText()+","+jTextField5.getText()+")");
-            if (r) {
-                Entrada.muestreMensajeV("Categoria Registrada",
-                        javax.swing.JOptionPane.INFORMATION_MESSAGE);
-                this.dispose();
-            } else {
-                Entrada.muestreMensajeV("ERROR");
+            try {
+                Control.conectar();
+                Control.con.setAutoCommit(false);
+                boolean r = Control.ejecuteUpdate("insert into categoria values(" + codigo + ",'" + jTextField3.getText() + "','A',"
+                        + jTextField5.getText() + "," + jTextField2.getText() + "," + jTextField5.getText() + ")");
+                if (r) {
+                    Entrada.muestreMensajeV("Categoria Registrada",
+                            javax.swing.JOptionPane.INFORMATION_MESSAGE);
+                    this.dispose();
+                } else {
+                    Entrada.muestreMensajeV("ERROR");
+                }
+            } catch (Exception ex) {
+
+            } finally {
+                Control.con.commit();
+                Control.con.setAutoCommit(true);
+                Control.cerrarConexion();
             }
+
         } else {
             Entrada.muestreMensajeV("La Serie ya esta",
                     javax.swing.JOptionPane.WARNING_MESSAGE);
@@ -203,14 +216,19 @@ public class CategoriasRegistrar extends javax.swing.JDialog {
 
     public boolean buscarSerie(String serie) throws ClassNotFoundException {
         Control.conectar();
-        Control.ejecuteQuery("select *  from categoria where serie='" + serie + "'");
         boolean r = false;
+
         try {
+            Control.ejecuteQuery("select *  from categoria where serie='" + serie + "'");
+            r = false;
+
             while (Control.rs.next()) {
                 r = true;
             }
             Control.cerrarConexion();
         } catch (Exception ex) {
+        } finally {
+            Control.cerrarConexion();
         }
         return r;
 

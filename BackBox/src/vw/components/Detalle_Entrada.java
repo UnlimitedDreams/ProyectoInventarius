@@ -52,11 +52,12 @@ public class Detalle_Entrada extends javax.swing.JFrame {
 
     public void recuperarDatos() throws ClassNotFoundException {
         Control.conectar();
-        Control.ejecuteQuery("select distinct  detalle.factura ,provedor.empresa,sum(detalle.costo)from provedor,detalle where \n"
-                + "provedor.cod_provedor=detalle.provedor\n"
-                + "group by\n"
-                + "detalle.factura ,provedor.empresa");
         try {
+            Control.ejecuteQuery("select distinct  detalle.factura ,provedor.empresa,sum(detalle.costo)from provedor,detalle where \n"
+                    + "provedor.cod_provedor=detalle.provedor\n"
+                    + "group by\n"
+                    + "detalle.factura ,provedor.empresa");
+
             while (Control.rs.next()) {
                 jLabel2.setText("Factura :      " + Control.rs.getString(1));
                 provedor = Control.rs.getString(2);
@@ -66,7 +67,10 @@ public class Detalle_Entrada extends javax.swing.JFrame {
             Control.cerrarConexion();
         } catch (Exception ex) {
 
+        } finally {
+            Control.cerrarConexion();
         }
+
     }
 
     /**
@@ -211,9 +215,9 @@ public class Detalle_Entrada extends javax.swing.JFrame {
         int numeroPreguntas;
         ResultSetMetaData rsetMetaData;
         this.jTable1.setModel(modeloEmpleado);
-        boolean r = Control.ejecuteQuery(query);
-
         try {
+            boolean r = Control.ejecuteQuery(query);
+
             rsetMetaData = Control.rs.getMetaData();
             numeroPreguntas = rsetMetaData.getColumnCount();
             //Establece los nombres de las columnas de las tablas
@@ -239,9 +243,7 @@ public class Detalle_Entrada extends javax.swing.JFrame {
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "ERROR " + e.getMessage());
         } finally {
-            try {
-            } catch (Exception e) {;
-            }
+            Control.cerrarConexion();
         }
     }
 

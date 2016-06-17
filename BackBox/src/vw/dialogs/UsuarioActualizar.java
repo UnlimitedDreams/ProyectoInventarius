@@ -7,6 +7,7 @@ package vw.dialogs;
 
 import Control.Control;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
@@ -46,11 +47,12 @@ public class UsuarioActualizar extends javax.swing.JDialog {
 
     public void inicio(String cod) throws ClassNotFoundException {
         Control.conectar();
-        Control.ejecuteQuery("select persona.nombre,apellido,usuario.usuario,clave from usuario,persona\n"
-                + "where\n"
-                + "usuario.cedula=persona.cedula\n"
-                + "and persona.estado='A' and persona.cedula=" + cod);
         try {
+            Control.ejecuteQuery("select persona.nombre,apellido,usuario.usuario,clave from usuario,persona\n"
+                    + "where\n"
+                    + "usuario.cedula=persona.cedula\n"
+                    + "and persona.estado='A' and persona.cedula=" + cod);
+
             while (Control.rs.next()) {
                 nombre.setText("" + Control.rs.getString(1));
                 apellido.setText("" + Control.rs.getString(2));
@@ -60,36 +62,40 @@ public class UsuarioActualizar extends javax.swing.JDialog {
             Control.cerrarConexion();
         } catch (Exception ex) {
 
+        } finally {
+            Control.cerrarConexion();
         }
     }
 
-    public void update() throws ClassNotFoundException {
+    public void update() throws ClassNotFoundException, SQLException {
         String op[] = new String[2];
         op[0] = "Si";
         op[1] = "No";
         int Condicion = Entrada.menu("BackBox", "¿Esta Seguro que Desea Actualizar el Usuario? ", op);
         if (Condicion == 1) {
-            Control.conectar();
-            boolean r = Control.ejecuteUpdate("update persona set "
-                    + "nombre='" + nombre.getText() + "',"
-                    + "apellido='" + apellido.getText() + "' where "
-                    + "cedula=" + idUsuario);
-            System.out.println("update persona set "
-                    + "nombre='" + nombre.getText() + "',"
-                    + "apellido='" + apellido.getText() + "' where "
-                    + "cedula=" + idUsuario);
-            if (r) {
-                boolean f = Control.ejecuteUpdate("update usuario set "
-                        + " usuario='" + usuario.getText() + "',"
-                        + " clave='" + clave.getText() + "' where"
-                        + " cedula=" + idUsuario);
-                if (f) {
-                    this.dispose();
-                } else {
-
+            try {
+                Control.conectar();
+                Control.con.setAutoCommit(false);
+                boolean r = Control.ejecuteUpdate("update persona set "
+                        + "nombre='" + nombre.getText() + "',"
+                        + "apellido='" + apellido.getText() + "' where "
+                        + "cedula=" + idUsuario);
+                if (r) {
+                    boolean f = Control.ejecuteUpdate("update usuario set "
+                            + " usuario='" + usuario.getText() + "',"
+                            + " clave='" + clave.getText() + "' where"
+                            + " cedula=" + idUsuario);
+                    if (f) {
+                        this.dispose();
+                    }
                 }
+            } catch (Exception ex) {
+
+            } finally {
+                Control.con.commit();
+                Control.con.setAutoCommit(true);
+                Control.cerrarConexion();
             }
-            Control.cerrarConexion();
         }
     }
 
