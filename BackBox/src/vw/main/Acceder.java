@@ -7,7 +7,6 @@ package vw.main;
 
 import Control.Control;
 import com.alee.laf.WebLookAndFeel;
-import vw.components.Buscar;
 import vw.components.Entrada;
 import java.awt.Color;
 import java.awt.Image;
@@ -283,40 +282,34 @@ public class Acceder extends javax.swing.JFrame {
 
     public void validarUsuario() throws ClassNotFoundException {
         Control.conectar();
-        boolean r = Control.ejecuteQuery("select "
-                + "rol.cod_rol,"
-                + "persona.nombre, "
-                + "persona.apellido,usuario.cod_usuario "
-                + "from usuario,rol,persona\n"
-                + "where\n"
-                + "usuario.cod_rol=rol.cod_rol and\n"
-                + "persona.cedula=usuario.cedula\n"
-                + "and usuario.usuario=lower('" + field01.getText() + "') and\n"
-                + " usuario.clave=lower('" + field02.getText() + "')");
-        System.out.println("Ejecuto consulta: " + r);
-        int rol = 0;
-        String Usuario = "";
-        String Usu = "";
-        boolean f = false;
         try {
+            boolean r = Control.ejecuteQuery("select "
+                    + "rol.cod_rol,"
+                    + "persona.nombre, "
+                    + "persona.apellido,usuario.cod_usuario "
+                    + "from usuario,rol,persona\n"
+                    + "where\n"
+                    + "usuario.cod_rol=rol.cod_rol and\n"
+                    + "persona.cedula=usuario.cedula\n"
+                    + "and usuario.usuario=lower('" + field01.getText() + "') and\n"
+                    + " usuario.clave=lower('" + field02.getText() + "')");
+            int rol = 0;
+            String Usuario = "";
+            String Usu = "";
+            boolean f = false;
+
             while (Control.rs.next()) {
                 rol = Control.rs.getInt(1);
                 Usuario = Control.rs.getString(2) + " " + Control.rs.getString(3);
                 Usu = Control.rs.getString(4);
                 f = true;
             }
-            Control.cerrarConexion();
-            System.out.println("Usuario : " + Usu);
             if (f) {
                 if (rol >= 1) {
                     Menu newMenu = new Menu(Usu);
                     newMenu.setVisible(true);
                     this.setVisible(false);
-                } else {
-//                    Venta newBuscar = new Venta(Usuario);
-//                    newBuscar.setVisible(true);
-//                    this.setVisible(false);
-                }
+                } 
             } else {
                 Entrada.muestreMensajeV("El usuario o la clave no son correctos",
                         javax.swing.JOptionPane.ERROR_MESSAGE);
@@ -324,6 +317,8 @@ public class Acceder extends javax.swing.JFrame {
 
         } catch (Exception ex) {
 
+        }finally {
+            Control.cerrarConexion();
         }
 
     }
@@ -332,27 +327,13 @@ public class Acceder extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-//        try {
-//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-//                if ("Nimbus".equals(info.getName())) {
-//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-//                    break;
-//                }
-//            }
-//        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
-//            java.util.logging.Logger.getLogger(Acceder.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        }
-
-        /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
-//            @Override
             public void run() {
                 WebLookAndFeel.install();
                 new Acceder().setVisible(true);
             }
         });
     }
-
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -35,12 +35,13 @@ public class Producto {
         this.iva = iva;
     }
 
-    public Producto(String codigo, String nombre, double precio_venta, int cantidad, double iva) {
+    public Producto(String codigo, String nombre, double precio_venta, int cantidad, double iva,int stock) {
         this.codigo = codigo;
         this.nombre = nombre;
         this.precio_venta = precio_venta;
         this.cantidad = cantidad;
         this.iva = iva;
+        this.stock=stock;
     }
 
     public Producto(String codigo, String nombre, double Costo, double precio_venta, int cantidad) {

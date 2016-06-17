@@ -5,26 +5,38 @@
  */
 package vw.components;
 
+import Control.Control;
+import java.sql.SQLException;
+
 /**
  *
  * @author admin
  */
 public class test {
 
-    public static void main(String[] agrs) {
-        String a = "";
-        int b = detectarNumero(a);
-    }
-
-    public static int detectarNumero(String a) {
-        int valor = 0;
+    public static void main(String[] agrs) throws ClassNotFoundException, SQLException {
+        Control.conectar();
+        int a = 1;
+        int b = 0;
         try {
-            valor = Integer.parseInt(a);
-        } catch (Exception ex) {
-            valor = 0;
-            System.out.println("Error sistema");
+            Control.con.setAutoCommit(false);
+
+            Control.ejecuteUpdate("insert into acciones values(100,'papa')");            
+            Control.ejecuteUpdate("insert into acciones values(101," + a + ")");
+            Control.ejecuteUpdate("insert into acciones values(102," + a + ")");
+            b=Integer.parseInt("a");
+
+        } catch (NumberFormatException ex) {
+            System.err.println("--------------");
+            //Control.con.rollback();
+        } 
+        finally {
+            System.out.println("entro ");
+            Control.con.commit();
+            Control.con.setAutoCommit(true);
+            Control.cerrarConexion();
         }
-        return valor;
+
     }
 
 }

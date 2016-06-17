@@ -1080,8 +1080,7 @@ public class Venta extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jTable2KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTable2KeyReleased
-        //System.out.println("entro por aqui");
-        //jTable2.requestFocus();
+
 
 
     }//GEN-LAST:event_jTable2KeyReleased
@@ -1171,7 +1170,6 @@ public class Venta extends javax.swing.JFrame {
             System.out.println("::: " + condicionfiltro);
             if (evt.getKeyCode() == 10 && condicionfiltro == false) {
                 c.setVisible(false);
-                if (SoloNumerosVenta(jTextField2.getText())) {
                     this.condicionfiltro = true;
                     c.setVisible(false);
                     Producto p = null;
@@ -1210,7 +1208,7 @@ public class Venta extends javax.swing.JFrame {
                                 iva = Control.rs.getDouble(3);
                             }
                             if (r) {
-                                temp = new Producto(cod, nom, precio, 1, iva);
+                                temp = new Producto(cod, nom, precio, 1, iva,1);
                                 productos.add(temp);
                                 jTextField2.setText("");
                             } else {
@@ -1233,9 +1231,6 @@ public class Venta extends javax.swing.JFrame {
                     }
                     iniciar();
                     rellenar_datos();
-                } else {
-                    Entrada.muestreMensajeV("Codigo  de producto no valido");
-                }
 
             } else {
                 this.condicionfiltro = false;
@@ -1344,7 +1339,7 @@ public class Venta extends javax.swing.JFrame {
                     Control.cerrarConexion();
                     if (r) {
                         System.out.println("Agrego producto : " + cod);
-                        temp = new Producto(cod, nom, precio, 1, iva);
+                        temp = new Producto(cod, nom, precio, 1, iva,1);
                         productos.add(temp);
                     } else {
                         jTable1.setValueAt("", i, 0);

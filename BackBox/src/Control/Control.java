@@ -37,7 +37,7 @@ public class Control {
     // INDEPENDIENTE DE CUAL SEA 
     // LA TABLA
 
-    public static boolean ejecuteQuery() {
+    public static boolean ejecuteQuery() throws SQLException {
         boolean r = false;
         try {
             rs = stat.executeQuery(query);
@@ -49,12 +49,13 @@ public class Control {
         return r;
     }
 
-    public static boolean ejecuteQuery(String x) {
+    public static boolean ejecuteQuery(String x) throws SQLException {
         boolean r = true;
         try {
             rs = stat.executeQuery(x);
         } catch (SQLException e) {
             System.out.println("ERROR AL HACER QUERY " + e.toString());
+            
             r = false;
         }
         return r;
@@ -156,6 +157,6 @@ public class Control {
 
     public static void main(String[] args) throws ClassNotFoundException {
 //        conectar();
-        System.out.println(KeyStroke.getKeyStroke(KeyEvent.VK_U, (int)ActionEvent.TEXT_EVENT_MASK));
+        System.out.println(KeyStroke.getKeyStroke(KeyEvent.VK_U, (int) ActionEvent.TEXT_EVENT_MASK));
     }
 }

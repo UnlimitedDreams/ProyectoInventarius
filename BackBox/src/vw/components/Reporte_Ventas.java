@@ -128,7 +128,7 @@ public class Reporte_Ventas extends javax.swing.JFrame {
         jPanel1.add(volver, new org.netbeans.lib.awtextra.AbsoluteConstraints(780, 450, -1, -1));
 
         jLabel2.setFont(new java.awt.Font("Segoe UI Light", 1, 14)); // NOI18N
-        jLabel2.setText("Fecha Inicial");
+        jLabel2.setText("Trabajador");
         jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(261, 25, -1, -1));
         jPanel1.add(jDateChooser1, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 24, 133, -1));
 

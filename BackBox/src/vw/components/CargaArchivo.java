@@ -33,7 +33,6 @@ public class CargaArchivo extends javax.swing.JFrame {
         this.nom = nom;
         this.ListAcciones = acciones;
         this.setLocationRelativeTo(null);
-        //setTitle("GALVISOFT REGISTRO DE PRODUCTOS");
         this.setResizable(false);
         this.p = p;
         iniciar();
@@ -63,45 +62,18 @@ public class CargaArchivo extends javax.swing.JFrame {
         Date fecha = new Date();
         int count = 0;
         ArrayList<String> listaError = new ArrayList();
+  
+            
         Control.conectar();
         for (int i = 0; i < p.size(); i++) {
             count++;
             pr = (Producto) p.get(i);
-            double costo = pr.getCosto();
             double precio = pr.getPrecio_venta();
-            String desc = "0";
-            double des = 0;
-            String iva = "0";
-            double ivas = 0;
             double precioSinDEs = pr.getPrecio_venta();
-            if (pr.getDesc() == 0) {
-            } else {
-//                desc = "0." + pr.getDesc();
-//                des = precio * Double.parseDouble(desc);
-//                precio = precio - des;
-            }
-            if (pr.getIva() == 0) {
-
-            } else {
-//                iva = "0." + pr.getIva();
-//                ivas = costo * Double.parseDouble(iva);
-//                precio = precio + ivas;
-//                precioSinDEs = precioSinDEs + ivas;
-            }
-//            int codigo_detalle = Sequence.seque("select max(cod_detalle) from detalle");
             boolean f = Control.ejecuteUpdate("insert into producto values('" + pr.getCodigo() + "','" + pr.getNombre() + "',"
                     + pr.getCosto() + "," + pr.getIva() + "," + precioSinDEs + "," + pr.getCategoria() + ","
                     + pr.getCantidad() + ",'A','n'," + pr.getDesc() + "," + precio + ")");
             if (f) {
-//                boolean r = Control.ejecuteUpdate("insert into detalle values("
-//                        + codigo_detalle + ",'" + fecha + "'," + pr.getCantidad() + ","
-//                        + pr.getCosto() + "," + 1 + ",'Inventario','" + pr.getCodigo() + "')");
-//                if (r) {
-                System.out.println("ok " + i);
-//                } else {
-//                    System.out.println("Error detalle  " + pr.getCodigo());
-//
-//                }
                 Entrada.muestreMensajeV("EXITO AL CARGAR " + count + " REGISTROS");
                 Articulo ar;
                 try {
@@ -112,7 +84,8 @@ public class CargaArchivo extends javax.swing.JFrame {
                 }
                 this.dispose();
             } else {
-                System.out.println("Error producto  " + pr.getCodigo());
+                Entrada.muestreMensajeV("Error al Cargar Archivo  " + pr.getCodigo(),
+                        javax.swing.JOptionPane.INFORMATION_MESSAGE);
             }
 
         }

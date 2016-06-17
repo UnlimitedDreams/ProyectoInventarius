@@ -122,7 +122,6 @@ public class Entrada_Nueva extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable2 = new javax.swing.JTable();
-        agregarProductos = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
         crearProducto = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
@@ -309,7 +308,15 @@ public class Entrada_Nueva extends javax.swing.JFrame {
             new String [] {
                 "Código", "Nombre", "Costo", "Cantidad", "Precio", "Stock"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, true, true, true, true, true
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jTable2.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 jTable2MouseEntered(evt);
@@ -322,31 +329,10 @@ public class Entrada_Nueva extends javax.swing.JFrame {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 jTable2KeyPressed(evt);
             }
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                jTable2KeyReleased(evt);
-            }
         });
         jScrollPane2.setViewportView(jTable2);
 
         jPanel1.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 166, 656, 380));
-
-        agregarProductos.setFont(new java.awt.Font("Segoe UI Light", 0, 11)); // NOI18N
-        agregarProductos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-mdpi/ic_add_black_24dp.png"))); // NOI18N
-        agregarProductos.setText("Agregar");
-        agregarProductos.setBorder(null);
-        agregarProductos.setBorderPainted(false);
-        agregarProductos.setContentAreaFilled(false);
-        agregarProductos.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        agregarProductos.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        agregarProductos.setPreferredSize(new java.awt.Dimension(55, 47));
-        agregarProductos.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
-        agregarProductos.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        agregarProductos.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                agregarProductosActionPerformed(evt);
-            }
-        });
-        jPanel1.add(agregarProductos, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 170, -1, -1));
 
         jLabel6.setFont(new java.awt.Font("Segoe UI Light", 1, 12)); // NOI18N
         jLabel6.setText("Proveedor:");
@@ -369,7 +355,7 @@ public class Entrada_Nueva extends javax.swing.JFrame {
                 crearProductoActionPerformed(evt);
             }
         });
-        jPanel1.add(crearProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 230, -1, -1));
+        jPanel1.add(crearProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 170, -1, -1));
 
         jLabel2.setFont(new java.awt.Font("Segoe UI Light", 1, 12)); // NOI18N
         jLabel2.setText("Fecha:");
@@ -474,7 +460,7 @@ public class Entrada_Nueva extends javax.swing.JFrame {
                 Producto pro = null;
                 String v[] = proveedores.getSelectedItem().toString().split("-");
                 if (jTextField1.getText().equalsIgnoreCase("")) {
-                    Entrada.muestreMensajeV("No Numero de hay Factura");
+                    Entrada.muestreMensajeV("No Registro Numero de hay Factura");
                     jTextField1.requestFocus();
                 } else if (VerificarFactura() == false) {
                     boolean r = false;
@@ -485,12 +471,11 @@ public class Entrada_Nueva extends javax.swing.JFrame {
                         r = Control.ejecuteUpdate("insert into detalle values(" + codigo_detalle + ",'" + fecha + "',"
                                 + pro.getCantidad() + "," + pro.getCosto() + ","
                                 + v[0] + ",'" + jTextField1.getText() + "','" + pro.getCodigo() + "')");
-                        System.out.println("codigo : " + codigo_detalle);
-                        System.out.println("R : " + r);
                         codigo_detalle++;
 
                         if (r) {
-                            boolean r1 = Control.ejecuteUpdate("update producto set cantidad=cantidad+" + pro.getCantidad() + " where cod_producto='" + pro.getCodigo() + "'");
+                            boolean r1 = Control.ejecuteUpdate("update producto set cantidad=cantidad+" + pro.getCantidad() + ","
+                                    + "stock="+pro.getStock()+" where cod_producto='" + pro.getCodigo() + "'");
                             if (r1) {
                                 int cost = costo(pro.getCodigo());
                                 boolean f = promedio_costo(cost, pro.getCosto(), pro.getCodigo());
@@ -617,18 +602,6 @@ public class Entrada_Nueva extends javax.swing.JFrame {
         }
         return r;
     }
-    private void agregarProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_agregarProductosActionPerformed
-        try {
-            String fac = jTextField1.getText();
-            String v[] = proveedores.getSelectedItem().toString().split("-");
-            new Carrito_new(v[0], productos, nom, fac, ListAcciones).setVisible(true);;
-            this.setVisible(false);
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(Entrada_Nueva.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-    }//GEN-LAST:event_agregarProductosActionPerformed
-
     private void jTable2MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable2MouseEntered
 
     }//GEN-LAST:event_jTable2MouseEntered
@@ -671,17 +644,6 @@ public class Entrada_Nueva extends javax.swing.JFrame {
         }
 
     }
-    private void jTable2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTable2KeyPressed
-        try {
-            if (evt.getKeyCode() == 127) {
-                borrar();
-            }
-        } catch (Exception ex) {
-            System.err.println("Error al borrar producto :" + ex.toString());
-        }
-
-    }//GEN-LAST:event_jTable2KeyPressed
-
     private void crearProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_crearProductoActionPerformed
         String proveedor[] = proveedores.getSelectedItem().toString().split("-");
         try {
@@ -709,33 +671,6 @@ public class Entrada_Nueva extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField1ActionPerformed
 
-    private void jTable2KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTable2KeyReleased
-
-//        Producto p = null;
-//        int i = jTable2.getSelectedRow();
-//        ArrayList<Producto> produc = new ArrayList();
-//        String cod = "";
-//        String can = "";
-//        String costo = "";
-//        String cantidad = "";
-//        if (i == -1) {
-//            JOptionPane.showMessageDialog(null, "Favor... seleccione una fila");
-//        } else {
-//            cod = (String) jTable2.getValueAt(i, 0).toString();
-//            costo = (String) jTable2.getValueAt(i, 2).toString();
-//            cantidad = (String) jTable2.getValueAt(i, 3).toString();
-//
-//        }
-//        for (int k = 0; k < productos.size(); k++) {
-//            p = (Producto) productos.get(k);
-//            if (p.getCodigo().equalsIgnoreCase(cod)) {
-//                p.setCosto(Double.parseDouble(costo));
-//                p.setCantidad(Integer.parseInt(cantidad));
-//            }
-//        }
-//        sumarTot();
-    }//GEN-LAST:event_jTable2KeyReleased
-
     private void fechaActualActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fechaActualActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_fechaActualActionPerformed
@@ -750,9 +685,54 @@ public class Entrada_Nueva extends javax.swing.JFrame {
 
     private void jTextField2KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField2KeyReleased
         if (evt.getKeyCode() == 10 && condicionfiltro == false) {
+            c.setVisible(false);  
+            this.condicionfiltro = true;
+            Producto p = null;
+            String cod = "";
+            String can = "";
+            cod = (String) jTextField2.getText();
+            boolean Esta = false;
+            for (int k = 0; k < productos.size(); k++) {
+                p = (Producto) productos.get(k);
+                if (p.getCodigo().equalsIgnoreCase(cod)) {
+                    Esta = true;
+                    p.setCantidad(p.getCantidad() + 1);
+                }
+            }
+            if (Esta == false) {
+                try {
+                    Control.conectar();
+                    Producto temp = null;
+                    String query = "select nombre,precio_desc,iva "
+                            + "from producto\n"
+                            + "where\n"
+                            + "producto.estado='A' and cod_producto='" + cod + "'";
+                    Control.ejecuteQuery(query);
+                    String nom = "";
+                    double precio = 0;
+                    double iva = 0;
+                    boolean r = false;
+                    while (Control.rs.next()) {
+                        r = true;
+                        nom = Control.rs.getString(1);
+                        precio = Control.rs.getDouble(2);
+                        iva = Control.rs.getDouble(3);
+                    }
+                    Control.cerrarConexion();
+                    if (r) {
+                        temp = new Producto(cod, nom, precio, 1, iva,1);
+                        productos.add(temp);
+                    } 
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(Venta.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (SQLException ex) {
+                    Logger.getLogger(Venta.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            } 
             c.setVisible(false);
-            String query = "";
-
+            jTextField2.setText("");
+            iniciar();
+            jTextField2.requestFocus();
         } else {
             this.condicionfiltro = false;
             try {
@@ -883,85 +863,7 @@ public class Entrada_Nueva extends javax.swing.JFrame {
 
     }
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
-        // TODO add your handling code here:
-        System.out.println("click : " + evt.getClickCount());
         if (evt.getClickCount() == 2) {
-            //            Producto p = null;
-            //            int i = jTable1.getSelectedRow();
-            //            int j = jTable1.getSelectedColumn();
-            //            System.out.println("::: " + i);
-            //            ArrayList<Producto> produc = new ArrayList();
-            //            String cod = "";
-            //            String can = "";
-            //            System.out.println("+++");
-            //            if (i == -1) {
-            //                JOptionPane.showMessageDialog(null, "Favor... seleccione una fila -----");
-            //            } else if (j >= 0) {
-            //                System.out.println("--------------------");
-            //                cod = (String) jTable1.getValueAt(i, 0).toString();
-            //                System.out.println("Vamos por aqui");
-            //                System.out.println(":: " + cod);
-            //                boolean Esta = false;
-            //                for (int k = 0; k < productos.size(); k++) {
-            //                    p = (Producto) productos.get(k);
-            //                    if (p.getCodigo().equalsIgnoreCase(cod)) {
-            //                        Esta = true;
-            //                        p.setCantidad(p.getCantidad() + 1);
-            //                    }
-            //                }
-            //                if (Esta == false) {
-            //                    try {
-            //                        Control.conectar();
-            //                        Producto temp = null;
-            //                        String query = "select nombre,precio_desc,iva "
-            //                                + "from producto\n"
-            //                                + "where\n"
-            //                                + "producto.estado='A' and cod_producto='" + cod + "'";
-            //                        Control.ejecuteQuery(query);
-            //                        String nom = "";
-            //                        double precio = 0;
-            //                        double iva = 0;
-            //                        boolean r = false;
-            //                        while (Control.rs.next()) {
-            //                            r = true;
-            //                            nom = Control.rs.getString(1);
-            //                            precio = Control.rs.getDouble(2);
-            //                            iva = Control.rs.getDouble(3);
-            //                        }
-            //                        if (r) {
-            //                            temp = new Producto(cod, nom, precio, 1, iva);
-            //                            productos.add(temp);
-            //                        } else {
-            //                            Entrada.muestreMensajeV("Codigo  de producto no valido");
-            //                            jTable1.setValueAt("", i, 0);
-            //                        }
-            //                    } catch (ClassNotFoundException ex) {
-            //                        Logger.getLogger(Venta.class.getName()).log(Level.SEVERE, null, ex);
-            //                    } catch (SQLException ex) {
-            //                        Logger.getLogger(Venta.class.getName()).log(Level.SEVERE, null, ex);
-            //                    }
-            //                } else {
-            //                    jTable1.setValueAt("", i, 0);
-            //                }
-            //            } else {
-            ////                System.out.println("mayor a cero");
-            ////                cod = (String) jTable1.getValueAt(i, 0).toString();
-            ////                can = "1";
-            ////                for (int k = 0; k < productos.size(); k++) {
-            ////                    p = (Producto) productos.get(k);
-            ////                    if (p.getCodigo().equalsIgnoreCase(cod)) {
-            ////                        p.setCantidad(Integer.parseInt(can));
-            ////                    }
-            ////                }
-            //            } // System.out.println((String)jTable2.getValueAt(i, 0).toString());
-            //            iniciar();
-            //            rellenar_datos();
-            //            jScrollPane1.setVisible(false);
-            //            jTextField2.setText("");
-            //            jTable2.requestFocus();
-            //            jTable2.editCellAt(productos.size(), 0);
-            //            jTable2.transferFocus();
-            System.out.println("agregarProducto");
             int i = jTable1.getSelectedRow();
             AgregarProductos(i);
         }
@@ -976,10 +878,8 @@ public class Entrada_Nueva extends javax.swing.JFrame {
     }//GEN-LAST:event_jTable1MouseExited
     public void AgregarProductos(int i) {
         Producto p = null;
-
         String cod = "";
         String can = "";
-        System.out.println("i:::::::::::::: " + i);
         if (i == -1) {
             System.out.println("FAVORRRR");
             JOptionPane.showMessageDialog(null, "Favor... seleccione una fil");
@@ -1015,41 +915,29 @@ public class Entrada_Nueva extends javax.swing.JFrame {
                         iva = Control.rs.getDouble(3);
                     }
                     Control.cerrarConexion();
-                    System.out.println(".------------ " + r);
                     if (r) {
-                        System.out.println("Agrego producto : " + cod);
-                        temp = new Producto(cod, nom, precio, 1, iva);
+                        temp = new Producto(cod, nom, precio, 1, iva,1);
                         productos.add(temp);
-                    } else {
-                        Entrada.muestreMensajeV("Codigo  de producto no valido");
-                        jTable1.setValueAt("", i, 0);
-                    }
+                    } 
                 } catch (ClassNotFoundException ex) {
                     Logger.getLogger(Venta.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (SQLException ex) {
                     Logger.getLogger(Venta.class.getName()).log(Level.SEVERE, null, ex);
                 }
             } else {
-                System.out.println("poner en cero");
                 jTable1.setValueAt("", i, 0);
             }
         }
 
         c.setVisible(false);
         jTextField2.setText("");
-
         iniciar();
         jTextField2.requestFocus();
-//        jTable2.requestFocus();
-//        jTable2.editCellAt(productos.size(), 0);
-        // jTable2.transferFocus();
-        // jTable2.updateUI();
     }
     private void jTable1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTable1KeyPressed
         try {
             if (evt.getKeyCode() == 10) {
                 int i = jTable1.getSelectedRow();
-                System.out.println("vamos a mandar codigo : " + i);
                 AgregarProductos(i);
             }
         } catch (Exception ex) {
@@ -1057,12 +945,23 @@ public class Entrada_Nueva extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jTable1KeyPressed
 
+    private void jTable2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTable2KeyPressed
+       try {
+            if (evt.getKeyCode() == 127) {
+                borrar();
+            }else if(evt.getKeyCode() == 127){
+                
+            }
+        } catch (Exception ex) {
+            Entrada.muestreMensajeV("Error al borrar producto :" + ex.toString());
+        }
+    }//GEN-LAST:event_jTable2KeyPressed
+
     /**
      * @param args the command line arguments
      */
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton agregarProductos;
     private javax.swing.JScrollPane c;
     private javax.swing.JButton crearProducto;
     private com.alee.extended.date.WebDateField fechaActual;

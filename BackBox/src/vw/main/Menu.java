@@ -246,6 +246,8 @@ public class Menu extends javax.swing.JFrame implements KeyListener {
             Control.cerrarConexion();
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+        }finally {
+            Control.cerrarConexion();
         }
     }
 

@@ -65,9 +65,6 @@ public class Bodega extends javax.swing.JFrame {
         setIconImage(img.getImage());
         ContenedorMenus con_menu = new ContenedorMenus();
         con_menu = (ContenedorMenus) List_Menu.get(0);
-        tablaProductos.setEditingColumn(0);
-        tablaProductos.setEditingRow(0);
-
         listaSeccion = con_menu.getListaSeccion();
         listaaccion = con_menu.getListaAcciones();
         for (seccion object : listaSeccion) {
@@ -150,7 +147,6 @@ public class Bodega extends javax.swing.JFrame {
                                             || e.getActionCommand().equalsIgnoreCase("Crear Usuario")
                                             || e.getActionCommand().equalsIgnoreCase("Crear Proveedor")
                                             || e.getActionCommand().equalsIgnoreCase("Crear Rol")) {
-                                        System.out.println("No cierra Ventana");
                                     } else {
                                         Bodega.this.dispose();
                                     }
@@ -218,14 +214,12 @@ public class Bodega extends javax.swing.JFrame {
                 count++;
             }
             if (count > 0) {
-                //jLabel2.setVisible(true);
                 Entrada.muestreMensajeV("Hay " + count + " productos en cero cantidad",
                         javax.swing.JOptionPane.INFORMATION_MESSAGE);
             }
             Control.cerrarConexion();
         } catch (Exception ex) {
-            System.out.println(""
-                    + "Error " + ex.getMessage());
+            Entrada.muestreMensajeV("Error al Cargar Stock de Productos " + ex.getMessage());
         }
     }
 
@@ -262,7 +256,6 @@ public class Bodega extends javax.swing.JFrame {
         try {
             rsetMetaData = Control.rs.getMetaData();
             numeroPreguntas = rsetMetaData.getColumnCount();
-            //Establece los nombres de las columnas de las tablas
             for (int i = 0; i < numeroPreguntas; i++) {
                 modeloEmpleado.addColumn(rsetMetaData.getColumnLabel(i + 1));
             }
@@ -284,7 +277,6 @@ public class Bodega extends javax.swing.JFrame {
                 modeloEmpleado.addRow(registroEmpleado);
             }
             Control.cerrarConexion();
-//            Control.rs.close();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "ERROR " + e.getMessage());
         } finally {
@@ -526,7 +518,8 @@ public class Bodega extends javax.swing.JFrame {
         try {
             update();
         } catch (Exception ex) {
-            System.out.println("Error update " + ex.toString());
+            Entrada.muestreMensajeV("Error Al Actualizar Datos",
+                        javax.swing.JOptionPane.INFORMATION_MESSAGE);
         }
 
     }//GEN-LAST:event_actualizarActionPerformed
@@ -637,7 +630,6 @@ public class Bodega extends javax.swing.JFrame {
                     + "producto.nombre ILIKE ('%" + jTextField2.getText() + "%') or "
                     + " producto.cod_producto ILIKE ('%" + jTextField2.getText() + "%') )  and producto.estado='A'";
         }
-        System.out.println(query);
         Control.conectar();
         Producto temp = null;
         String cod = "", nom = "", valor = "", cant = "", costo = "", iva = "", precio = "";
@@ -715,13 +707,13 @@ public class Bodega extends javax.swing.JFrame {
         int i = tablaProductos.getSelectedRow();
         int j = tablaProductos.getSelectedColumn();
         if (i == -1) {
-            JOptionPane.showMessageDialog(null, "Favo... seleccione una fila");
+            JOptionPane.showMessageDialog(null, "Favor... Seleccione una Fila");
         } else {
             String cod = (String) tablaProductos.getValueAt(i, 0).toString();
             String op[] = new String[2];
             op[0] = "Si";
             op[1] = "No";
-            int Condicion = Entrada.menu("Inventarius", "¿Esta Seguro que Desea Borrar el Producto? ", op);
+            int Condicion = Entrada.menu("BackBox", "¿Esta Seguro que Desea Borrar el Producto? ", op);
             if (Condicion == 1) {
                 boolean r = Control.ejecuteUpdate("update producto set estado='I' where cod_producto='" + cod + "'");
                 if (r) {
