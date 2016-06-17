@@ -38,7 +38,6 @@ public class Entrada_articulo extends javax.swing.JFrame {
         this.nom = nom;
         this.ListAcciones = acciones;
         this.setLocationRelativeTo(null);
-        // setTitle("GALVISOFT ENTRADA ARTICULO");
         this.setResizable(false);
         System.out.println("----- " + p.getCodigo());
         recuperar_fecha();
