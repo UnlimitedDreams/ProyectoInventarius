@@ -1,11 +1,6 @@
 package Control;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
 import java.sql.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.KeyStroke;
 
 public class Control {
 
@@ -55,7 +50,7 @@ public class Control {
             rs = stat.executeQuery(x);
         } catch (SQLException e) {
             System.out.println("ERROR AL HACER QUERY " + e.toString());
-            
+
             r = false;
         }
         return r;
@@ -156,7 +151,6 @@ public class Control {
     }
 
     public static void main(String[] args) throws ClassNotFoundException {
-//        conectar();
-        System.out.println(KeyStroke.getKeyStroke(KeyEvent.VK_U, (int) ActionEvent.TEXT_EVENT_MASK));
+        conectar();
     }
 }
