@@ -21,6 +21,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -157,6 +158,8 @@ public class Stock extends javax.swing.JFrame {
                                     Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
                                 } catch (URISyntaxException ex) {
                                     Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+                                } catch (ClassNotFoundException ex) {
+                                    Logger.getLogger(Stock.class.getName()).log(Level.SEVERE, null, ex);
                                 }
                             }
                         });
@@ -201,6 +204,8 @@ public class Stock extends javax.swing.JFrame {
                         Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (URISyntaxException ex) {
                         Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (ClassNotFoundException ex) {
+                        Logger.getLogger(Stock.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 });
                 menu.add(menuItem);
@@ -248,7 +253,7 @@ public class Stock extends javax.swing.JFrame {
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "ERROR " + e.getMessage());
         } finally {
-             Control.cerrarConexion();
+            Control.cerrarConexion();
         }
     }
 
@@ -391,9 +396,13 @@ public class Stock extends javax.swing.JFrame {
 
         Bodega m;
         try {
-            m = new Bodega(usuario, List_Menu);
-            this.setVisible(false);
-            m.setVisible(true);
+            try {
+                m = new Bodega(usuario, List_Menu);
+                this.setVisible(false);
+                m.setVisible(true);
+            } catch (SQLException ex) {
+                Logger.getLogger(Stock.class.getName()).log(Level.SEVERE, null, ex);
+            }
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(Stock.class.getName()).log(Level.SEVERE, null, ex);
         }

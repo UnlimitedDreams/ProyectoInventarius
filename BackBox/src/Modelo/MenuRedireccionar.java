@@ -11,6 +11,7 @@ import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -56,7 +57,7 @@ public class MenuRedireccionar {
 
     }
 
-    public void reDireccion() throws IOException, URISyntaxException {
+    public void reDireccion() throws IOException, URISyntaxException, ClassNotFoundException, ClassNotFoundException, ClassNotFoundException {
         try {
             if (CadenaMenu.equalsIgnoreCase("Lista Bodega")) {
                 new Bodega(Usuario, listMenu).setVisible(true);
@@ -114,6 +115,8 @@ public class MenuRedireccionar {
             }
 
         } catch (ClassNotFoundException ex) {
+            Logger.getLogger(MenuRedireccionar.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
             Logger.getLogger(MenuRedireccionar.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

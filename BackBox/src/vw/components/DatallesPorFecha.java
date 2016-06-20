@@ -59,13 +59,14 @@ public class DatallesPorFecha extends javax.swing.JFrame {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         String fecha2 = format2.format(date2);
 
-        query = "select fecha,producto.nombre \"Nombre\""
+        query = "select to_char(fecha, 'dd/mm/yyyy') fecha,to_char(fecha, 'HH24:MI:SS') Hora,producto.nombre \"Nombre\""
                 + ",salida_entrada.nombre \"Tipo\","
                 + "salida_entrada.cant \"Cantidad\",salida_entrada.comentario \"Descripcion\",responsable"
                 + " from salida_entrada,producto where\n"
                 + "salida_entrada.cod_producto=producto.cod_producto and \n"
-                + "  fecha>='" + fecha2 + "' and fecha<='" + fecha + "'\n"
-                + " order by fecha DESC";
+                + "  fecha  between '" + fecha.substring(0, 10).concat(" 00:00:00") + "' and '"
+                    + fecha2.substring(0, 10).concat(" 23:59:59") + "' \n"
+                + " order by 1,2 DESC";
 
         System.out.println(query);
         String codi = "", nom = "", valor = "", cant = "", costo = "";

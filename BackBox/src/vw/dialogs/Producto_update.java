@@ -7,6 +7,7 @@ package vw.dialogs;
 
 import Control.Control;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -287,9 +288,14 @@ public class Producto_update extends javax.swing.JDialog {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         Bodega b;
         try {
-            b = new Bodega(nom, ListAcciones);
-            b.setVisible(true);
-            this.setVisible(false);
+            try {
+                b = new Bodega(nom, ListAcciones);
+                b.setVisible(true);
+                this.setVisible(false);
+            } catch (SQLException ex) {
+                Logger.getLogger(Producto_update.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(Producto_update.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -297,7 +303,11 @@ public class Producto_update extends javax.swing.JDialog {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         try {
-            update();
+            try {
+                update();
+            } catch (SQLException ex) {
+                Logger.getLogger(Producto_update.class.getName()).log(Level.SEVERE, null, ex);
+            }
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(Producto_update.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -381,12 +391,9 @@ public class Producto_update extends javax.swing.JDialog {
 
     private void jTextField12KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField12KeyReleased
         boolean v = SoloNumeros(jTextField12.getText(), 5);
-        if (v == false) {
-            Entrada.muestreMensajeV("Se debe ingresar Numeros");
+        if (v == false) {           
             jTextField12.setText("");
         }
-
-
     }//GEN-LAST:event_jTextField12KeyReleased
 
     private void jTextField8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField8ActionPerformed
@@ -421,7 +428,7 @@ public class Producto_update extends javax.swing.JDialog {
         return valor;
     }
 
-    public void update() throws ClassNotFoundException {
+    public void update() throws ClassNotFoundException, SQLException {
         Control.conectar();
 
         boolean r = Control.ejecuteUpdate("update producto set nombre='" + jTextField3.getText() + "',"

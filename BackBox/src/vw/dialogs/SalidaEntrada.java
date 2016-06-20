@@ -7,8 +7,11 @@ package vw.dialogs;
 
 import Control.Control;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import vw.components.Bodega;
 import vw.components.Entrada;
@@ -24,6 +27,7 @@ public class SalidaEntrada extends javax.swing.JDialog {
     String tipo;
     String nombre;
     String cant;
+    String usuario;
     ArrayList<Integer> ListAcciones = new ArrayList();
 
     /**
@@ -40,9 +44,12 @@ public class SalidaEntrada extends javax.swing.JDialog {
             String codigo, String tipo, String Nombre, String cant, ArrayList acciones) {
         super(parent, modal);
         initComponents();
+        System.out.println("*******************");
         this.codigo = codigo;
         this.tipo = tipo;
-        this.nombre = Nombre;
+        this.usuario = Nombre;
+        System.out.println("Usuario : " + usuario);
+
         this.cant = cant;
         this.ListAcciones = acciones;
         this.setLocationRelativeTo(null);
@@ -50,6 +57,13 @@ public class SalidaEntrada extends javax.swing.JDialog {
         URL url = getClass().getResource("/images/facelet/icon.png");
         ImageIcon img = new ImageIcon(url);
         setIconImage(img.getImage());
+        try {
+            cargarUsuario(usuario);
+        } catch (SQLException ex) {
+            Logger.getLogger(SalidaEntrada.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(SalidaEntrada.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -167,49 +181,81 @@ public class SalidaEntrada extends javax.swing.JDialog {
     private void cantidadKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cantidadKeyReleased
 
     }//GEN-LAST:event_cantidadKeyReleased
+    public void cargarUsuario(String cod) throws SQLException, ClassNotFoundException {
+        Control.conectar();
+        Control.ejecuteQuery("select nombre,apellido from usuario,persona where \n"
+                + "usuario.cedula=persona.cedula and  cod_usuario=" + cod);
+        String nombre = "";
+        while (Control.rs.next()) {
+            nombre = Control.rs.getString(1) + " " + Control.rs.getString(2);
+        }
+        this.nombre = nombre;
+        Control.cerrarConexion();
+
+    }
 
     /**
      * Actualizar las cantidades de los productos seleccionados.
      *
      * @throws ClassNotFoundException
      */
-    public void actualizarCantidad() throws ClassNotFoundException {
+    public void actualizarCantidad() throws ClassNotFoundException, SQLException {
         int cant2 = (int) cantidad.getValue();
-        if (cant2 <= Integer.parseInt(cant) || tipo.equalsIgnoreCase("Devolucion")) {
-            Control.conectar();
+        if (cant2 <= Integer.parseInt(cant) || tipo.equalsIgnoreCase("Entrada")) {
             int codigo_sal = Sequence.seque("select max(cod_entra) from Salida_Entrada");
-            Date fecha = new Date();
-            if (jTextArea1.getText().equalsIgnoreCase("")) {
-                Entrada.muestreMensajeV("Debe escribir algo en comentarios",
-                        javax.swing.JOptionPane.WARNING_MESSAGE);
-            } else {
-                boolean r1 = Control.ejecuteUpdate("insert into Salida_Entrada values("
-                        + codigo_sal + ",'" + tipo + "'," + cantidad.getValue() + ",'" + fecha + "','"
-                        + codigo + "','" + jTextArea1.getText() + "','" + nombre + "')");
-                if (r1) {
-                    boolean r = false;
-                    if (tipo.equalsIgnoreCase("Salida")) {
-                        r = Control.ejecuteUpdate("update producto set cantidad=cantidad-" + cantidad.getValue() + " where cod_producto='" + codigo + "'");
-                    } else {
-                        r = Control.ejecuteUpdate("update producto set cantidad=cantidad+" + cantidad.getValue() + " where cod_producto='" + codigo + "'");
+            try {
+                System.out.println("*******************");
+                System.err.println("Usuario : " + nombre);
 
-                    }
-                    if (r) {
-                        Bodega b = new Bodega(nombre, ListAcciones);
-                        this.dispose();
+                Control.conectar();
+                System.out.println("Commit : " + Control.con.getAutoCommit());
+                Control.con.setAutoCommit(false);
+                Date fecha = new Date();
+                if (jTextArea1.getText().equalsIgnoreCase("")) {
+                    Entrada.muestreMensajeV("Debe escribir algo en comentarios",
+                            javax.swing.JOptionPane.WARNING_MESSAGE);
+                } else {
+                    System.out.println("insert into Salida_Entrada values("
+                            + codigo_sal + ",'" + tipo + "'," + cantidad.getValue() + ",'" + fecha + "','"
+                            + codigo + "','" + jTextArea1.getText() + "','" + nombre + "')");
+                    boolean r1 = Control.ejecuteUpdate("insert into Salida_Entrada values("
+                            + codigo_sal + ",'" + tipo + "'," + cantidad.getValue() + ",'" + fecha + "','"
+                            + codigo + "','" + jTextArea1.getText() + "','" + nombre + "')");
+                    if (r1) {
+                        System.out.println("----------------");
+                        boolean r = false;
+                        if (tipo.equalsIgnoreCase("Salida")) {
+                            r = Control.ejecuteUpdate("update producto set cantidad=cantidad-" + cantidad.getValue() + " where cod_producto='" + codigo + "'");
+                        } else {
+                            System.out.println("Update producto");
+                            r = Control.ejecuteUpdate("update producto set cantidad=cantidad+" + cantidad.getValue() + " where cod_producto='" + codigo + "'");
 
+                        }
+                        if (r) {
+                            Control.con.commit();
+                            Control.con.setAutoCommit(true);
+                            Control.cerrarConexion();
+                            Bodega b = new Bodega(usuario, ListAcciones);
+                            this.dispose();
+
+                        } else {
+                            Entrada.muestreMensajeV("Error Haciendo Cambios a La Bodega",
+                                    javax.swing.JOptionPane.ERROR_MESSAGE);
+                        }
                     } else {
                         Entrada.muestreMensajeV("Error",
                                 javax.swing.JOptionPane.ERROR_MESSAGE);
                     }
-                } else {
-                    Entrada.muestreMensajeV("Error",
-                            javax.swing.JOptionPane.ERROR_MESSAGE);
-
                 }
+            } catch (Exception ex) {
 
+            } finally {
+                System.out.println("cerro");
+                Control.con.commit();
+                Control.con.setAutoCommit(true);
+                Control.cerrarConexion();
             }
-            Control.cerrarConexion();
+
         } else {
             Entrada.muestreMensajeV("No puedes Sacar mas Cantidad de la que ya hay.",
                     javax.swing.JOptionPane.INFORMATION_MESSAGE);

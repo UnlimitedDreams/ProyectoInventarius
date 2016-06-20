@@ -166,6 +166,8 @@ public class VentaDiaria extends javax.swing.JFrame {
                                     Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
                                 } catch (URISyntaxException ex) {
                                     Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+                                } catch (ClassNotFoundException ex) {
+                                    Logger.getLogger(VentaDiaria.class.getName()).log(Level.SEVERE, null, ex);
                                 }
                             }
                         });
@@ -210,6 +212,8 @@ public class VentaDiaria extends javax.swing.JFrame {
                         Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (URISyntaxException ex) {
                         Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (ClassNotFoundException ex) {
+                        Logger.getLogger(VentaDiaria.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 });
                 menu.add(menuItem);

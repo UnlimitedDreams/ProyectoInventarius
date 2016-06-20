@@ -158,6 +158,8 @@ public class Roles extends javax.swing.JFrame {
                                     Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
                                 } catch (URISyntaxException ex) {
                                     Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+                                } catch (ClassNotFoundException ex) {
+                                    Logger.getLogger(Roles.class.getName()).log(Level.SEVERE, null, ex);
                                 }
                             }
                         });
@@ -202,6 +204,8 @@ public class Roles extends javax.swing.JFrame {
                         Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (URISyntaxException ex) {
                         Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (ClassNotFoundException ex) {
+                        Logger.getLogger(Roles.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 });
                 menu.add(menuItem);

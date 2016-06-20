@@ -111,6 +111,7 @@ public class Venta extends javax.swing.JFrame {
         this.tipoVenta = TipoVenta;
         this.cedulaCliente = cliente;
         this.codigo_cliente = 0;
+        this.subtotal.setText("0");
         this.setLocationRelativeTo(null);
         this.setResizable(false);
         URL url = getClass().getResource("/images/facelet/icon.png");
@@ -225,6 +226,8 @@ public class Venta extends javax.swing.JFrame {
                                     Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
                                 } catch (URISyntaxException ex) {
                                     Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+                                } catch (ClassNotFoundException ex) {
+                                    Logger.getLogger(Venta.class.getName()).log(Level.SEVERE, null, ex);
                                 }
                             }
                         });
@@ -280,6 +283,8 @@ public class Venta extends javax.swing.JFrame {
                     } catch (URISyntaxException ex) {
                         Logger.getLogger(Menu.class
                                 .getName()).log(Level.SEVERE, null, ex);
+                    } catch (ClassNotFoundException ex) {
+                        Logger.getLogger(Venta.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 });
                 menu.add(menuItem);
@@ -327,13 +332,18 @@ public class Venta extends javax.swing.JFrame {
         double valor = 0;
         int cant = 0;
         int iva = 0;
+        double valorPorcentaje = 0;
+        int descu = Integer.parseInt(porcentajeDescuento.getText());
+        valorPorcentaje = (double)(Double.parseDouble(subtotal.getText()) * (descu / 100));
+        System.out.println("Valor de DEscuento: " + valorPorcentaje);
         for (int i = 0; i < productos.size(); i++) {
             pro = (Producto) productos.get(i);
             cant = pro.getCantidad();
-            valor = valor + (pro.getPrecio_venta() * cant);
-            iva = iva + (int) ((pro.getPrecio_venta() * cant) * (pro.getIva() / 100));
+            valor = valor + (pro.getPrecio_final() * cant);
+            iva = iva + (int) ((pro.getPrecio_final() * cant) * (pro.getIva() / 100));
         }
-        subtotal.setText("" + formateador.format(valor));
+        //valorPorcentaje = valor * (descu / 100);
+        subtotal.setText("" + formateador.format(valor - valorPorcentaje));
         String d = "";
         int desc = 0;
         if (descIva.getText() == null) {
@@ -395,7 +405,7 @@ public class Venta extends javax.swing.JFrame {
         IVA = new javax.swing.JLabel();
         valorDescuento = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
-        medioPago = new javax.swing.JComboBox<>();
+        medioPago = new javax.swing.JComboBox<String>();
         Descuento = new javax.swing.JLabel();
         porcentajeIVA = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
@@ -604,7 +614,15 @@ public class Venta extends javax.swing.JFrame {
             new String [] {
                 "Codigo", "Descripcion", "Valor", "Cantidad"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, true
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jTable2.setAutoscrolls(false);
         jTable2.setColumnSelectionAllowed(true);
         jTable2.setEditingColumn(0);
@@ -733,7 +751,7 @@ public class Venta extends javax.swing.JFrame {
         jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 340, -1, -1));
 
         medioPago.setFont(new java.awt.Font("Segoe UI Light", 0, 14)); // NOI18N
-        medioPago.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Efectivo", "Tarjeta" }));
+        medioPago.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Efectivo", "Tarjeta" }));
         medioPago.setToolTipText("Método de Pago del Cliente");
         medioPago.setPreferredSize(new java.awt.Dimension(130, 28));
         medioPago.addActionListener(new java.awt.event.ActionListener() {
@@ -985,7 +1003,6 @@ public class Venta extends javax.swing.JFrame {
                 }
                 restar_Bodega();
                 generarFactura(codigo_venta, fecha, cone);
-                Control.cerrarConexion();
                 Restar_Todo();
 
             } else {
@@ -995,6 +1012,7 @@ public class Venta extends javax.swing.JFrame {
         } catch (Exception ex) {
 
         } finally {
+            System.out.println("Cerro Todo");
             Control.con.commit();
             Control.con.setAutoCommit(true);
             Control.cerrarConexion();
@@ -1007,7 +1025,7 @@ public class Venta extends javax.swing.JFrame {
         subtotal.setText("0");
         jLTotal.setText("0");
 
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 5; i++) {
             for (int k = 0; k < productos.size(); k++) {
                 jTable2.setValueAt("", k, i);
             }
@@ -1066,6 +1084,7 @@ public class Venta extends javax.swing.JFrame {
 
     private void jTable2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTable2KeyPressed
         try {
+            System.out.println("Tecla : " + evt.getKeyCode());
             if (evt.getKeyCode() == 127) {
                 borrar();
             }
@@ -1090,6 +1109,28 @@ public class Venta extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jTable2KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTable2KeyReleased
+        if (evt.getKeyCode() == 10) {
+            DecimalFormat formateador = new DecimalFormat("###,###.##");
+            System.out.println("entro a cantidadde producto");
+            int i = jTable2.getSelectedRow();
+            System.out.println("Fila : " + i);
+            String cod = (String) jTable2.getValueAt(i, 0).toString();
+            String precio = (String) jTable2.getValueAt(i, 2).toString();
+            String Cant = (String) jTable2.getValueAt(i, 3).toString();
+            System.out.println("Cod : " + cod);
+            System.out.println("cant " + Cant);
+            double total = 0;
+            for (Producto producto : productos) {
+                if (producto.getCodigo().equalsIgnoreCase(cod)) {
+                    System.out.println("Lo Encontro");
+                    producto.setCantidad(Integer.parseInt(Cant));
+                    producto.setPrecio_venta(producto.getPrecio_final() * producto.getCantidad());
+                    jTable2.setValueAt((producto.getPrecio_final() * producto.getCantidad()), i, 2);
+                }
+                total = total + producto.getPrecio_venta();
+            }
+            jLTotal.setText("" + formateador.format(total));
+        }
 
 
     }//GEN-LAST:event_jTable2KeyReleased
@@ -1195,6 +1236,7 @@ public class Venta extends javax.swing.JFrame {
                         System.out.println("Agrego cant");
                         Esta = true;
                         p.setCantidad(p.getCantidad() + 1);
+                        p.setPrecio_venta(p.getPrecio_final() * p.getCantidad());
                     }
                 }
                 if (Esta == false) {
@@ -1218,6 +1260,7 @@ public class Venta extends javax.swing.JFrame {
                         }
                         if (r) {
                             temp = new Producto(cod, nom, precio, 1, iva, 1);
+                            temp.setPrecio_final((int) precio);
                             productos.add(temp);
                             jTextField2.setText("");
                         } else {
@@ -1393,7 +1436,9 @@ public class Venta extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextField2FocusGained
 
     private void porcentajeDescuentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_porcentajeDescuentoActionPerformed
-        // TODO add your handling code here:
+        System.out.println("entro a descuento");
+        rellenar_datos();
+
     }//GEN-LAST:event_porcentajeDescuentoActionPerformed
 
     private void porcentajeDescuentoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_porcentajeDescuentoKeyReleased
@@ -1577,7 +1622,7 @@ public class Venta extends javax.swing.JFrame {
     private javax.swing.JLabel Descuento;
     private javax.swing.JLabel IVA;
     private javax.swing.JLabel IVA1;
-    private javax.swing.JLabel NomCliente;
+    public javax.swing.JLabel NomCliente;
     private javax.swing.JScrollPane c;
     private javax.swing.JLabel cambio;
     private javax.swing.JMenuItem cerrarSesion;

@@ -174,6 +174,8 @@ public class Menu extends javax.swing.JFrame implements KeyListener {
                                         Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
                                     } catch (URISyntaxException ex) {
                                         Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+                                    } catch (ClassNotFoundException ex) {
+                                        Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
                                     }
                                 }
                             });
@@ -221,6 +223,8 @@ public class Menu extends javax.swing.JFrame implements KeyListener {
                     } catch (IOException ex) {
                         Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (URISyntaxException ex) {
+                        Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (ClassNotFoundException ex) {
                         Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 });

@@ -24,6 +24,7 @@ import java.net.URISyntaxException;
 import vw.model.Articulo;
 import java.net.URL;
 import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -48,21 +49,23 @@ import vw.dialogs.UsuariosRegistrar;
 public class Bodega extends javax.swing.JFrame {
 
     String usuario;
+    String UsuNombre;
     ArrayList<seccion> listaSeccion = new ArrayList();
     ArrayList<acciones> listaaccion = new ArrayList();
     ArrayList<ContenedorMenus> List_Menu = new ArrayList();
 
-    public Bodega(String usuario, ArrayList acciones) throws ClassNotFoundException {
+    public Bodega(String usuario, ArrayList acciones) throws ClassNotFoundException, SQLException {
         initComponents();
         inicio();
-        this.usuario = usuario;
+        this.usuario = usuario;        
         this.List_Menu = acciones;
         this.setLocationRelativeTo(null);
-        this.setResizable(false);
+        this.setResizable(false);        
         Stock();
         URL url = getClass().getResource("/images/facelet/icon.png");
         ImageIcon img = new ImageIcon(url);
         setIconImage(img.getImage());
+        
         ContenedorMenus con_menu = new ContenedorMenus();
         con_menu = (ContenedorMenus) List_Menu.get(0);
         listaSeccion = con_menu.getListaSeccion();
@@ -154,6 +157,8 @@ public class Bodega extends javax.swing.JFrame {
                                     Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
                                 } catch (URISyntaxException ex) {
                                     Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+                                } catch (ClassNotFoundException ex) {
+                                    Logger.getLogger(Bodega.class.getName()).log(Level.SEVERE, null, ex);
                                 }
                             }
                         });
@@ -198,6 +203,8 @@ public class Bodega extends javax.swing.JFrame {
                         Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (URISyntaxException ex) {
                         Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (ClassNotFoundException ex) {
+                        Logger.getLogger(Bodega.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 });
                 menu.add(menuItem);
@@ -286,6 +293,8 @@ public class Bodega extends javax.swing.JFrame {
             Control.cerrarConexion();
         }
     }
+
+   
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -767,7 +776,6 @@ public class Bodega extends javax.swing.JFrame {
     }
 
     public void Entrar() throws ClassNotFoundException {
-        Control.conectar();
         int i = tablaProductos.getSelectedRow();
         int j = tablaProductos.getSelectedColumn();
         if (i == -1) {
@@ -778,7 +786,7 @@ public class Bodega extends javax.swing.JFrame {
             String c = (String) tablaProductos.getValueAt(i, 6).toString();
             int codigo_sal = Sequence.seque("select max(cod_entra) from Salida_Entrada");
             SalidaEntrada newEntrada = new SalidaEntrada(this, true,
-                    cod, "Devolucion", usuario, c, List_Menu);
+                    cod, "Entrada", usuario, c, List_Menu);
             newEntrada.setVisible(true);
 
         }

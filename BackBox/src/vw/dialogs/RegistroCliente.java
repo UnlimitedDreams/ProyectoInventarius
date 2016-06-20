@@ -84,6 +84,7 @@ public class RegistroCliente extends javax.swing.JDialog {
             Control.cerrarConexion();
             if (condicion == 1) {
                 v.Cliente.setText(cedula.getText());
+                v.NomCliente.setText(nombre.getText()+" "+apellido.getText());
             }
 
             this.dispose();
