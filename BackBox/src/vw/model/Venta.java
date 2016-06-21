@@ -334,7 +334,7 @@ public class Venta extends javax.swing.JFrame {
         int iva = 0;
         double valorPorcentaje = 0;
         int descu = Integer.parseInt(porcentajeDescuento.getText());
-        valorPorcentaje = (double)(Double.parseDouble(subtotal.getText()) * (descu / 100));
+        valorPorcentaje = (double) (Double.parseDouble(subtotal.getText()) * (descu / 100));
         System.out.println("Valor de DEscuento: " + valorPorcentaje);
         for (int i = 0; i < productos.size(); i++) {
             pro = (Producto) productos.get(i);
@@ -405,7 +405,7 @@ public class Venta extends javax.swing.JFrame {
         IVA = new javax.swing.JLabel();
         valorDescuento = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
-        medioPago = new javax.swing.JComboBox<String>();
+        medioPago = new javax.swing.JComboBox<>();
         Descuento = new javax.swing.JLabel();
         porcentajeIVA = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
@@ -751,7 +751,7 @@ public class Venta extends javax.swing.JFrame {
         jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 340, -1, -1));
 
         medioPago.setFont(new java.awt.Font("Segoe UI Light", 0, 14)); // NOI18N
-        medioPago.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Efectivo", "Tarjeta" }));
+        medioPago.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Efectivo", "Tarjeta" }));
         medioPago.setToolTipText("Método de Pago del Cliente");
         medioPago.setPreferredSize(new java.awt.Dimension(130, 28));
         medioPago.addActionListener(new java.awt.event.ActionListener() {
@@ -813,6 +813,11 @@ public class Venta extends javax.swing.JFrame {
             }
             public void focusLost(java.awt.event.FocusEvent evt) {
                 jTextField2FocusLost(evt);
+            }
+        });
+        jTextField2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField2ActionPerformed(evt);
             }
         });
         jTextField2.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -1214,10 +1219,31 @@ public class Venta extends javax.swing.JFrame {
             return false;
         }
     }
+
+    public void stock(String codigoProducto) throws ClassNotFoundException {
+        Control.conectar();
+        try {
+            System.out.println("select cantidad from producto where  (cantidad<=0 or stock>=cantidad)  and estado='A' and cod_producto='"+codigoProducto+"'");
+            Control.ejecuteQuery("select cantidad from producto where  (cantidad<=0 or stock>=cantidad)  and estado='A' and cod_producto='"+codigoProducto+"'");            
+            int count = 0;
+            boolean r=false;
+            while (Control.rs.next()) {
+                count=Control.rs.getInt(1);
+                 r=true;
+            }
+            if (r) {
+                Entrada.muestreMensajeV("El producto ya se encuentra en Stock tiene "+count+" Cantidad de productos",
+                        javax.swing.JOptionPane.INFORMATION_MESSAGE);
+            }
+            Control.cerrarConexion();
+        } catch (Exception ex) {
+            Entrada.muestreMensajeV("Error al Cargar Stock de Productos " + ex.getMessage());
+        } finally {
+            Control.cerrarConexion();
+        }
+    }
     private void jTextField2KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField2KeyReleased
         try {
-            System.out.println("******************* INICIO *************************");
-            System.out.println("::: " + condicionfiltro);
             if (evt.getKeyCode() == 10 && condicionfiltro == false) {
                 c.setVisible(false);
                 this.condicionfiltro = true;
@@ -1226,14 +1252,12 @@ public class Venta extends javax.swing.JFrame {
                 ArrayList<Producto> produc = new ArrayList();
                 String cod = "";
                 String can = "";
-                System.out.println("+++++++++++++ :" + jTextField2.getText());
                 cod = (String) jTextField2.getText();
                 System.out.println("Codigo ::: " + cod);
                 boolean Esta = false;
                 for (int k = 0; k < productos.size(); k++) {
                     p = (Producto) productos.get(k);
                     if (p.getCodigo().equalsIgnoreCase(cod)) {
-                        System.out.println("Agrego cant");
                         Esta = true;
                         p.setCantidad(p.getCantidad() + 1);
                         p.setPrecio_venta(p.getPrecio_final() * p.getCantidad());
@@ -1263,6 +1287,7 @@ public class Venta extends javax.swing.JFrame {
                             temp.setPrecio_final((int) precio);
                             productos.add(temp);
                             jTextField2.setText("");
+                            stock(cod);
                         } else {
                             Entrada.muestreMensajeV("Codigo  de producto no valido");
                             jTextField2.setText("");
@@ -1507,6 +1532,10 @@ public class Venta extends javax.swing.JFrame {
     private void montoPagoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_montoPagoKeyTyped
         // TODO add your handling code here:
     }//GEN-LAST:event_montoPagoKeyTyped
+
+    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField2ActionPerformed
     public void Buscar() throws ClassNotFoundException {
         String query = "";
         if (SoloNumeros(jTextField2.getText())) {

@@ -683,9 +683,7 @@ public class Articulo extends javax.swing.JFrame {
                     + "  producto.cod_categoria=categoria.cod_categoria and \n"
                     + "  \n"
                     + "  producto.cod_producto ILIKE ('%" + jTextField2.getText() + "')  and producto.estado='A'"
-                    + "  union "
-                    + "     select  '0'  \"Código\",'' \"Nombre\",'' \"Categoría \", 0  "
-                    + "\"Costo\",0 \"IVA\",0  \"Precio\",0 \"Descuento\",0 \"Cantidad\" limit 40 ";
+                    + " limit 40 ";
         } else {
             query = "select  distinct "
                     + "cod_producto \"Código\","
@@ -698,7 +696,9 @@ public class Articulo extends javax.swing.JFrame {
                     + "cantidad \"Cantidad\"\n"
                     + " from producto,categoria where "
                     + "  producto.cod_categoria=categoria.cod_categoria and "
-                    + "  producto.nombre ILIKE ('%" + jTextField2.getText() + "%')  and producto.estado='A'";
+                    + "   (categoria.descripcion ILIKE ('%" + jTextField2.getText() + "%') or  "
+                    + "producto.nombre ILIKE ('%" + jTextField2.getText() + "%') or "
+                    + " producto.cod_producto ILIKE ('%" + jTextField2.getText() + "%') )  and producto.estado='A'";
         }
         Control.conectar();
         Producto temp = null;

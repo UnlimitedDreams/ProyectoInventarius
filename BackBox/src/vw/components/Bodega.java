@@ -520,8 +520,6 @@ public class Bodega extends javax.swing.JFrame {
         } catch (Exception ex) {
 
         }
-
-
     }//GEN-LAST:event_borrarActionPerformed
 
     private void actualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_actualizarActionPerformed

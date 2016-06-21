@@ -134,8 +134,10 @@ public class Entrada_Nueva extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         fechaActual = new com.alee.extended.date.WebDateField();
-        proveedores = new javax.swing.JComboBox();
+        comprass = new javax.swing.JComboBox();
         jTextField2 = new javax.swing.JTextField();
+        jLabel8 = new javax.swing.JLabel();
+        proveedores = new javax.swing.JComboBox();
 
         jButton3.setText("Nuevo");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
@@ -338,8 +340,8 @@ public class Entrada_Nueva extends javax.swing.JFrame {
         jPanel1.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 166, 656, 380));
 
         jLabel6.setFont(new java.awt.Font("Segoe UI Light", 1, 12)); // NOI18N
-        jLabel6.setText("Proveedor:");
-        jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 20, -1, -1));
+        jLabel6.setText("Compra");
+        jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 50, -1, -1));
 
         crearProducto.setFont(new java.awt.Font("Segoe UI Light", 0, 11)); // NOI18N
         crearProducto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-mdpi/ic_assignment_turned_in_black_24dp.png"))); // NOI18N
@@ -410,9 +412,10 @@ public class Entrada_Nueva extends javax.swing.JFrame {
         });
         jPanel1.add(fechaActual, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 50, 170, -1));
 
-        proveedores.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
-        proveedores.setPreferredSize(new java.awt.Dimension(31, 20));
-        jPanel1.add(proveedores, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 20, 170, 25));
+        comprass.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
+        comprass.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Credito", "De Contado" }));
+        comprass.setPreferredSize(new java.awt.Dimension(31, 20));
+        jPanel1.add(comprass, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 50, 170, 25));
 
         jTextField2.setFont(new java.awt.Font("Segoe UI Light", 0, 18)); // NOI18N
         jTextField2.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -432,6 +435,14 @@ public class Entrada_Nueva extends javax.swing.JFrame {
             }
         });
         jPanel1.add(jTextField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 90, 620, -1));
+
+        jLabel8.setFont(new java.awt.Font("Segoe UI Light", 1, 12)); // NOI18N
+        jLabel8.setText("Proveedor:");
+        jPanel1.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 20, -1, -1));
+
+        proveedores.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
+        proveedores.setPreferredSize(new java.awt.Dimension(31, 20));
+        jPanel1.add(proveedores, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 20, 170, 25));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -461,7 +472,7 @@ public class Entrada_Nueva extends javax.swing.JFrame {
                 SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd");
                 String fecha = format2.format(date);
                 Producto pro = null;
-                String v[] = proveedores.getSelectedItem().toString().split("-");
+                String v[] = comprass.getSelectedItem().toString().split("-");
                 if (jTextField1.getText().equalsIgnoreCase("")) {
                     Entrada.muestreMensajeV("No Registro Numero de hay Factura");
                     jTextField1.requestFocus();
@@ -471,9 +482,14 @@ public class Entrada_Nueva extends javax.swing.JFrame {
                     Control.conectar();
                     for (int i = 0; i < productos.size(); i++) {
                         pro = (Producto) productos.get(i);
+                        System.out.println("insert into detalle values(" + codigo_detalle + ",'" + fecha + "',"
+                                + pro.getCantidad() + "," + pro.getCosto() + ","
+                                + v[0] + ",'" + jTextField1.getText() + "','" + pro.getCodigo() + "'"
+                                + ",'" + comprass.getSelectedItem().toString() + "')");
                         r = Control.ejecuteUpdate("insert into detalle values(" + codigo_detalle + ",'" + fecha + "',"
                                 + pro.getCantidad() + "," + pro.getCosto() + ","
-                                + v[0] + ",'" + jTextField1.getText() + "','" + pro.getCodigo() + "')");
+                                + v[0] + ",'" + jTextField1.getText() + "','" + pro.getCodigo() + "'"
+                                + ",'" + comprass.getSelectedItem().toString() + "')");
                         codigo_detalle++;
 
                         if (r) {
@@ -500,7 +516,7 @@ public class Entrada_Nueva extends javax.swing.JFrame {
                     }
 
                 } else {
-                    Entrada.muestreMensajeV("La Factura ingresada ya se encuentra registrada.");
+                    Entrada.muestreMensajeV("La Factura ingresada ya se encuentra registrada para ese proveedor.");
                 }
 
             } catch (Exception ex) {
@@ -595,7 +611,9 @@ public class Entrada_Nueva extends javax.swing.JFrame {
         Control.conectar();
         boolean r = false;
         try {
-            Control.ejecuteQuery("select factura from detalle where factura='" + jTextField1.getText() + "'");
+            String provedor[] = proveedores.getSelectedItem().toString().split("-");
+            int a = Integer.parseInt(provedor[0]);
+            Control.ejecuteQuery("select factura from detalle where factura='" + jTextField1.getText() + "' and provedor=" + a);
             while (Control.rs.next()) {
                 r = true;
             }
@@ -963,6 +981,7 @@ public class Entrada_Nueva extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane c;
+    private javax.swing.JComboBox comprass;
     private javax.swing.JButton crearProducto;
     private com.alee.extended.date.WebDateField fechaActual;
     private javax.swing.JButton jButton1;
@@ -973,6 +992,7 @@ public class Entrada_Nueva extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable1;
