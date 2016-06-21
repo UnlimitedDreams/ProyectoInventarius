@@ -472,7 +472,7 @@ public class Entrada_Nueva extends javax.swing.JFrame {
                 SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd");
                 String fecha = format2.format(date);
                 Producto pro = null;
-                String v[] = comprass.getSelectedItem().toString().split("-");
+                String v[] = proveedores.getSelectedItem().toString().split("-");
                 if (jTextField1.getText().equalsIgnoreCase("")) {
                     Entrada.muestreMensajeV("No Registro Numero de hay Factura");
                     jTextField1.requestFocus();
