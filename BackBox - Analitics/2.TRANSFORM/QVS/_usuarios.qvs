@@ -1,0 +1,56 @@
+/*
+
+Transformación: 	Usuarios Del sistema
+Descripcon: 		Detalle sobre Usuarios del Sistema
+ProductVersion:	1.0
+Encargado: 		Miguel Angel Lemoz (Miglem0101@gmail.com)
+
+				Historial de Cambios:
+	Usuario		|		Fecha		|			Detalle		
+-----------------------------------------------------------------------------
+1	Miguel		|		24/06/2016	|	Inicio del proyecto
+-----------------------------------------------------------------------------
+
+*/
+
+PersonaEmpresa_Tem:
+	LOAD
+		Upper(Apellido) 		As Apellido,
+		Cedula		 		As Cedula,
+		Text(Celular)			As Celular,
+		Email				As Email,
+		Estado				As Estado,
+		Upper(Nombre)			As Nombre,
+		Upper(Sexo)			As Sexo,
+		Text(Telefono)			As Telefono;
+	LOAD 
+		Apellido, 
+		Cedula, 
+		Celular, 
+		Email, 
+		Estado, 
+		Nombre, 
+		Sexo, 
+		Telefono
+	FROM
+	[..\5.DATA\QVD.ORI\PersonaEmpresa.qvd]
+	(qvd);
+
+
+Usuarios_Temp:
+	LOAD
+		IdRol,
+		IdUsuario,
+		Cedula,
+		Clave,
+		Upper(Usuario)			As Usuario;
+	LOAD 
+		IdRol, 
+		IdUsuario, 
+		Cedula, 
+		Clave, 
+		Usuario
+	FROM
+	[..\5.DATA\QVD.ORI\Usuarios.qvd]
+	(qvd);
+
