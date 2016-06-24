@@ -1,0 +1,34 @@
+/*
+
+DIM TABLE: 	Usuarios
+Descripcon: 	Detalle sobre Usuarios del Sistema
+ProductVersion:	1.0
+Encargado: Miguel Angel Lemoz (Miglem0101@gmail.com)
+
+				Historial de Cambios:
+	Usuario		|		Fecha		|			Detalle		
+-----------------------------------------------------------------------------
+1	Miguel		|		24/06/2016	|	Inicio del proyecto
+-----------------------------------------------------------------------------
+
+*/
+Usuarios:
+	LOAD
+		/* Llaves */
+		"cod_rol"			As IdRol, 
+		"cod_usuario"		As IdUsuario, 
+		/* Campos de Valor */
+		"cedula"			As Cedula, 
+		"clave"				As Clave, 
+		"usuario"			As Usuario;
+	SQL SELECT 
+		"cedula", 
+		"clave", 
+		"cod_rol", 
+		"cod_usuario", 
+		"usuario"
+	FROM "Inventario"."public"."usuario";
+
+
+Store Usuarios Into [$(vRutaOri)Usuarios.qvd];
+DROP TABLE Usuarios;

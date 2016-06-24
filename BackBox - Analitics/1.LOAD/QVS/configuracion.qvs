@@ -1,0 +1,23 @@
+SET ThousandSep=',';
+SET DecimalSep='.';
+SET MoneyThousandSep=',';
+SET MoneyDecimalSep='.';
+SET MoneyFormat='US$#,##0.00;-US$#,##0.00';
+SET TimeFormat='hh:mm:ss TT';
+SET DateFormat='DD/MM/YY';
+SET TimestampFormat='DD/MM/YY hh:mm:ss[.fff] TT';
+SET MonthNames='Ene;Feb;Mar;Abr;Mayo;Jun;Jul;Ago;Sep;Oct;Nov;Dic';
+SET DayNames='Lun;Mar;Mié;Jue;Vie;Sáb;Dom';
+SET LongMonthNames='Enero;Febrero;Marzo;Abril;Mayo;Junio;Julio;Agosto;Septiembre;Octubre;Noviembre;Diciembre';
+SET LongDayNames='Lunes;Martes;Miércoles;Jueves;Viernes;Sábado;Domingo';
+SET FirstWeekDay=0;
+SET BrokenWeeks=1;
+SET ReferenceDay=0;
+SET FirstMonthOfYear=1;
+SET CollationLocale='es-419';
+
+/*	Cadena de Conexión	*/
+ODBC CONNECT TO BackBox (XUserId is bZJaMYdNTDdOGZVMTTJB, XPassword is KVSCJFVOBTbGB);
+
+/*	Ruta de Almacenamiento	*/
+LET vRutaOri = '..\5.DATA\QVD.ORI\';

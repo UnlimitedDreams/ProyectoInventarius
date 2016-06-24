@@ -1,0 +1,26 @@
+/*
+
+DIM TABLE: 	TipoPago
+Descripcon: 	Detalle sobre Medios de Pago 
+ProductVersion:	1.0
+Encargado: Miguel Angel Lemoz (Miglem0101@gmail.com)
+
+				Historial de Cambios:
+	Usuario		|		Fecha		|			Detalle		
+-----------------------------------------------------------------------------
+1	Miguel		|		24/06/2016	|	Inicio del proyecto
+-----------------------------------------------------------------------------
+
+*/
+
+TipoPago:
+	LOAD 
+		"cod_pago"  		As IdTipoPago, 
+		"descripcion"		As TipoPago;
+	SQL SELECT 
+		"cod_pago", 
+		"descripcion"
+	FROM "Inventario"."public"."tipopago";
+
+Store TipoPago Into [$(vRutaOri)TipoPago.qvd];
+DROP TABLE TipoPago;

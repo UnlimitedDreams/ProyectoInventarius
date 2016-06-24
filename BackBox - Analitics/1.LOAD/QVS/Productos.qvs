@@ -1,0 +1,48 @@
+/*
+
+DIM TABLE: 	Productos
+Descripcon: 	Detalle sobre Productos Registrados
+ProductVersion:	1.0
+Encargado: Miguel Angel Lemoz (Miglem0101@gmail.com)
+
+				Historial de Cambios:
+	Usuario		|		Fecha		|			Detalle		
+-----------------------------------------------------------------------------
+1	Miguel		|		22/06/2016	|	Inicio del proyecto
+-----------------------------------------------------------------------------
+
+*/
+
+Productos:
+    LOAD 
+    	 /* Llaves */
+        "cod_categoria"					As IdCategoria,   
+        "cod_producto"                  As IdProducto,
+        /* Campos de Valor */
+        "descu"							As %Descuento,
+        "iva"							As %Iva,    
+        "cantidad"						As Cantidad,
+        "comentario"    				As Comentario,    
+        "costo"                         As Costo,
+        "estado"                        As Estado,
+        "nombre"                        As Nombre,
+        "precio_desc"					As PrecioDescuento,
+        "precio_venta"                  As PrecioVenta,
+        "stock"							As Stok;
+    SQL SELECT 
+    	"cod_producto",
+        "nombre",
+        "costo",
+        "iva",
+        "precio_venta",
+        "cod_categoria",
+        "cantidad",
+        "estado",
+        "comentario",
+        "descu",
+        "precio_desc",
+        "stock"
+    FROM "public"."producto";
+
+Store Productos Into [$(vRutaOri)Productos.qvd];
+DROP TABLE Productos;

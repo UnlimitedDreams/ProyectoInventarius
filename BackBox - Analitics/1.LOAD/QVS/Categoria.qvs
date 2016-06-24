@@ -1,0 +1,36 @@
+/*
+
+DIM TABLE: 	Categoria
+Descripcon: 	Detalle sobre Categoria de los productos
+ProductVersion:	1.0
+Encargado: Miguel Angel Lemoz (Miglem0101@gmail.com)
+
+				Historial de Cambios:
+	Usuario		|		Fecha		|			Detalle		
+-----------------------------------------------------------------------------
+1	Miguel		|		24/06/2016	|	Inicio del proyecto
+-----------------------------------------------------------------------------
+
+*/
+
+Categoria:
+	LOAD 
+		/* Llaves */
+		"cod_categoria" 		As IdCategoria,	
+		/* Campos de Valor */
+		"descripcion"			As Categoria, 
+		"estado"				As Estado, 
+		"secuencia"				As Secuencia, 
+		"serie"					As Serie, 
+	    "seriefinal"			As SerieFinal;
+	SQL SELECT 
+		"cod_categoria", 
+		"descripcion", 
+		"estado", 
+		"secuencia", 
+		"serie", 
+	    "seriefinal"
+	FROM "Inventario"."public"."categoria";
+
+Store Categoria Into [$(vRutaOri)Categoria.qvd];
+DROP TABLE Categoria;

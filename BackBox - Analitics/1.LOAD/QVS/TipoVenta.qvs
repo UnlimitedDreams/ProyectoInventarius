@@ -1,0 +1,25 @@
+/*
+
+DIM TABLE: 	tipo_venta
+Descripcon: 	Detalle sobre tipos de ventas 
+ProductVersion:	1.0
+Encargado: Miguel Angel Lemoz (Miglem0101@gmail.com)
+
+				Historial de Cambios:
+	Usuario		|		Fecha		|			Detalle		
+-----------------------------------------------------------------------------
+1	Miguel		|		24/06/2016	|	Inicio del proyecto
+-----------------------------------------------------------------------------
+
+*/
+TipoVenta:
+	LOAD 
+		"cod_tipo"			As IdTipoVenta, 
+		"descripcion"		As TipoVenta;
+	SQL SELECT 
+		"cod_tipo", 
+		"descripcion"
+	FROM "Inventario"."public"."tipo_venta";
+
+Store TipoVenta Into [$(vRutaOri)TipoVenta.qvd];
+DROP TABLE TipoVenta;
