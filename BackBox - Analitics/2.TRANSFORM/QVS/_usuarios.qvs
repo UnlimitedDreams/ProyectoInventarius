@@ -12,16 +12,17 @@ Encargado: 		Miguel Angel Lemoz (Miglem0101@gmail.com)
 -----------------------------------------------------------------------------
 
 */
-
+TRACE ;
+TRACE *********************	Usuarios 	************************;
 PersonaEmpresa_Tem:
 	LOAD
 		Upper(Apellido) 		As Apellido,
-		Cedula		 		As Cedula,
+		Cedula		 			As Cedula,
 		Text(Celular)			As Celular,
-		Email				As Email,
-		Estado				As Estado,
+		Email					As Email,
+		Estado					As Estado,
 		Upper(Nombre)			As Nombre,
-		Upper(Sexo)			As Sexo,
+		Upper(Sexo)				As Sexo,
 		Text(Telefono)			As Telefono;
 	LOAD 
 		Apellido, 
@@ -33,7 +34,7 @@ PersonaEmpresa_Tem:
 		Sexo, 
 		Telefono
 	FROM
-	[..\5.DATA\QVD.ORI\PersonaEmpresa.qvd]
+	[$(vRutaOri)PersonaEmpresa.qvd]
 	(qvd);
 
 
@@ -51,6 +52,52 @@ Usuarios_Temp:
 		Clave, 
 		Usuario
 	FROM
-	[..\5.DATA\QVD.ORI\Usuarios.qvd]
+	[$(vRutaOri)Usuarios.qvd]
 	(qvd);
 
+/*	Inicia transformación	*/
+NoConcatenate 
+UsuariosTemp1:
+	LOAD
+		Apellido,
+		Cedula,
+		Celular,
+		Email,
+		Estado,
+		Nombre,
+		Sexo,
+		Telefono
+	Resident PersonaEmpresa_Tem;
+	DROP Table PersonaEmpresa_Tem;
+	Join
+	LOAD
+		IdRol,
+		IdUsuario,
+		Cedula,
+		Clave,
+		Usuario
+	Resident Usuarios_Temp;
+	DROP Table Usuarios_Temp;
+
+/*	Terminó transformación	*/
+NoConcatenate	
+_Usuarios:
+	LOAD
+		IdRol			As IdRol,
+		IdUsuario			As IdUsuario,
+				
+		Apellido			As User.Apellido,
+		Celular			As User.Celular,
+		Clave			As User.Clave,
+		Email			As User.Email,
+		Estado			As User.Estado,
+		Cedula			As User.Identificacion,
+		Nombre			As User.Nombre,
+		Sexo				As User.Sexo,
+		Telefono			As User.Telefono,
+		Usuario			As User.Usuario
+	Resident UsuariosTemp1;
+	DROP Table UsuariosTemp1;
+
+Store _Usuarios Into [$(vRutaTra)_Usuarios.qvd];
+DROP TABLE _Usuarios;

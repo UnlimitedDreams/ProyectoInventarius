@@ -20,3 +20,27 @@ SET CollationLocale='es-419';
 /*	Ruta de Almacenamiento	*/
 LET vRutaOri = '..\5.DATA\QVD.ORI\';
 LET vRutaTra = '..\5.DATA\QVD.TRAN\';
+
+/*Mappin para metodo de Pago*/
+Mapping
+	TipoPago:
+	LOAD 
+		IdTipoPago, 
+	    TipoPago
+	FROM
+	[$(vRutaOri)TipoPago.qvd]
+	(qvd);
+
+/*Mappin para Tipo de ejecución de Venta*/
+Mapping
+	TipoVenta:
+	LOAD IdTipoVenta, 
+	     TipoVenta
+	FROM
+	[$(vRutaOri)TipoVenta.qvd]
+	(qvd);
+
+
+
+
+TRACE *********************INICIA TRANSFORMACION************************;

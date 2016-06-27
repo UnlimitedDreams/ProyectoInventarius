@@ -1,0 +1,124 @@
+/*
+
+Transformación: 	Clientes
+Descripcon: 		Información de los Clientes.
+ProductVersion:	1.0
+Encargado: 		Miguel Angel Lemoz (Miglem0101@gmail.com)
+
+				Historial de Cambios:
+	Usuario		|		Fecha		|			Detalle		
+-----------------------------------------------------------------------------
+1	Miguel		|		27/06/2016	|	Inicio del proyecto
+-----------------------------------------------------------------------------
+
+*/
+TRACE ;
+TRACE *********************	Productos 	************************;
+
+ProductosTemp:
+	LOAD
+		IdCategoria, 
+		IdProducto,
+		%Descuento, 
+		%Iva, 
+		Cantidad, 
+		Upper(Comentario) 	As Comentario, 
+		Costo, 
+		Upper(Estado)		As Estado, 
+		Upper(Nombre)		As Nombre, 
+		PrecioDescuento, 
+		PrecioVenta, 
+		Stok;
+	LOAD 
+		IdCategoria, 
+		IdProducto, 
+		%Descuento, 
+		%Iva, 
+		Cantidad, 
+		Comentario, 
+		Costo, 
+		Estado, 
+		Nombre, 
+		PrecioDescuento, 
+		PrecioVenta, 
+		Stok
+	FROM
+	[$(vRutaOri)Productos.qvd]
+	(qvd);
+
+NoConcatenate
+Categorias:
+	LOAD
+		IdCategoria, 
+		Upper(Categoria)	As Categoria, 
+		Upper(Estado)		As EstadoCategoria,	 
+		Secuencia, 
+		Serie, 
+		SerieFinal;
+	LOAD 
+		IdCategoria, 
+		Categoria, 
+		Estado, 
+		Secuencia, 
+		Serie, 
+		SerieFinal
+	FROM
+	[$(vRutaOri)Categoria.qvd]
+	(qvd);
+
+/*	Inicia transformación	*/
+NoConcatenate
+_ProductoTemp1:
+	LOAD
+		IdCategoria, 
+		IdProducto, 
+		%Descuento, 
+		%Iva, 
+		Cantidad, 
+		Comentario, 
+		Costo, 
+		Estado, 
+		Nombre, 
+		PrecioDescuento, 
+		PrecioVenta, 
+		Stok
+	Resident ProductosTemp;
+	DROP Table ProductosTemp;
+	Left Join 
+	LOAD
+		IdCategoria, 
+		Categoria, 
+		EstadoCategoria, 
+		Secuencia, 
+		Serie, 
+		SerieFinal
+	Resident Categorias;
+	DROP Table Categorias;
+
+/*	Fin transformación	*/
+NoConcatenate
+_Productos:
+	LOAD
+		IdCategoria, 
+		IdProducto, 
+		
+		%Descuento					As Producto.%Descuento, 
+		%Iva						As Producto.%Iva,
+		Cantidad					As Producto.Cantidad, 
+		Categoria					As Producto.Categoria, 
+		Comentario					As Producto.Comentario, 
+		Costo						As Producto.Costo, 
+		Estado						As Producto.Estado, 
+		EstadoCategoria				As Producto.EstadoCategoria, 
+		Nombre						As Producto.Nombre, 
+		PrecioDescuento				As Producto.PrecioDescuento, 
+		PrecioVenta					As Producto.PrecioVenta, 
+		Secuencia					As Producto.Secuencia, 
+		Serie						As Producto.Serie, 
+		SerieFinal					As Producto.SerieFinal,
+		Stok						As Producto.Stok
+	Resident _ProductoTemp1;
+	DROP Table _ProductoTemp1;
+
+Store _Productos Into [$(vRutaTra)_Productos.qvd];
+DROP TABLE _Productos;

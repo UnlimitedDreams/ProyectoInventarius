@@ -1,0 +1,59 @@
+/*
+
+Transformación: 	Clientes
+Descripcon: 		Información de los Clientes.
+ProductVersion:	1.0
+Encargado: 		Miguel Angel Lemoz (Miglem0101@gmail.com)
+
+				Historial de Cambios:
+	Usuario		|		Fecha		|			Detalle		
+-----------------------------------------------------------------------------
+1	Miguel		|		27/06/2016	|	Inicio del proyecto
+-----------------------------------------------------------------------------
+
+*/
+TRACE ;
+TRACE *********************	Clientes 	************************;
+
+ClientesTemp:
+	LOAD
+		IdCliente			As IdCliente,
+		Upper(Apellidos)	As Apellidos,
+		Cedula				As Cedula,
+		Celular				As Celular,
+		Upper(Direccion)	As Direccion,
+		Upper(Email)		As Email,
+		Upper(Nombres)		As Nombres,
+		Telefono			As Telefono;
+	LOAD 
+		IdCliente, 
+		Apellidos, 
+		Cedula, 
+		Celular, 
+		Direccion, 
+		Email, 
+		Nombres, 
+		Telefono
+	FROM
+	[$(vRutaOri)Clientes.qvd]
+	(qvd);
+
+
+/*	Fin transformación	*/
+NoConcatenate
+_Clientes:
+	LOAD
+		IdCliente		As IdCliente,
+		Apellidos		As Cliente.Apellidos,
+		Cedula			As Cliente.Cedula,
+		Celular			As Cliente.Celular,
+		Direccion		As Cliente.Direccion,
+		Email			As Cliente.Email,
+		Nombres			As Cliente.Nombres,
+		Telefono		As Cliente.Telefono
+	Resident ClientesTemp;
+	DROP Table ClientesTemp;
+
+Store _Clientes Into [$(vRutaTra)_Clientes.qvd];
+DROP TABLE _Clientes;
+
