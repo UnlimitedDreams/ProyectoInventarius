@@ -1,0 +1,60 @@
+﻿/*
+
+Transformación: 	Entradas y Salidas
+Descripcon: 		Información movimiento de la bodega.
+ProductVersion:	1.0
+Encargado: 		Miguel Angel Lemoz (Miglem0101@gmail.com)
+
+				Historial de Cambios:
+	Usuario		|		Fecha		|			Detalle		
+-----------------------------------------------------------------------------
+1	Miguel		|		28/06/2016	|	Inicio del proyecto
+-----------------------------------------------------------------------------
+
+*/
+TRACE ;
+TRACE *********************	Inventario 	************************;
+
+EntradasSalida:
+	LOAD
+		IdProducto, 
+		IdEntrada, 
+		Comentario, 
+		Procedimiento, 
+		Responsable, 
+		Date(FechaContable,'DD-MM-YYYY')										As FechaContable,
+		Date#(Year(FechaContable)&Num(Month(FechaContable), '00'), 'YYYYMM') 	As PeriodoContable,
+		Month(FechaContable) 													As MesContable, 
+		Year(FechaContable)														As AñoContable;
+	LOAD 
+		IdProducto, 
+		IdEntrada, 
+		Comentario, 
+		Procedimiento, 
+		Responsable, 
+		FechaContable
+	FROM
+	[$(vRutaOri)EntradaSalida.qvd]
+	(qvd);
+
+/*	Inicia transformación	*/
+
+/*	Fin transformación	*/
+_Inventario:
+	LOAD 
+		IdProducto, 
+		IdEntrada, 
+
+		Comentario						As Inventario.Comentario,
+		Procedimiento					As Inventario.Procedimiento,
+		Responsable						As Inventario.Responsable,
+		
+		FechaContable					As Inventario.FechaContable,
+		PeriodoContable					As Inventario.PeriodoContable,
+		MesContable						As Inventario.MesContable,
+		AñoContable						As Inventario.AñoContable
+	Resident EntradasSalida;
+	DROP Table EntradasSalida;
+
+Store _Inventario Into [$(vRutaTra)_Inventario.qvd];
+DROP TABLE _Inventario;

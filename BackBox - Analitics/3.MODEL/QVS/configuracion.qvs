@@ -16,8 +16,7 @@ SET ReferenceDay=0;
 SET FirstMonthOfYear=1;
 SET CollationLocale='es-419';
 
-/*	Cadena de Conexión	*/
-ODBC CONNECT TO BackBox (XUserId is bZJaMYdNTDdOGZVMTTJB, XPassword is KVSCJFVOBTbGB);
 
 /*	Ruta de Almacenamiento	*/
 LET vRutaOri = '..\5.DATA\QVD.ORI\';
+LET vRutaTra = '..\5.DATA\QVD.TRAN\';

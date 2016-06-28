@@ -1,4 +1,4 @@
-/*
+﻿/*
 
 Transformación: 	Ventas
 Descripcon: 		Ajuste de la venta diaria conceptualizada
@@ -46,18 +46,18 @@ VentasTemp1:
 		Date(FechaContable,'DD-MM-YYYY')										As FechaContable,
 		Date#(Year(FechaContable)&Num(Month(FechaContable), '00'), 'YYYYMM') 	As PeriodoContable,
 		Month(FechaContable) 													As MesContable, 
-		Year(FechaContable)														As AñoContable,		
-		Num(%Descuento/100)														As %Descuento, 
-		Num(%IVA/100)															As %IVA; 
+		Year(FechaContable)														As AñoContable;		
+		//Num(%Descuento/100)														As %Descuento, 
+		//Num(%IVA/100)															As %IVA; 
 	LOAD 
 		IdCliente, 
 		IdFactura, 
 		IdUsuario, 
 		IdTipoPago, 
 		IdTipoVenta,
-		FechaContable,  
-		%Descuento, 
-		%IVA 
+		FechaContable  
+		//%Descuento, 
+		//%IVA 
 	FROM
 	[$(vRutaOri)Ventas.qvd]
 	(qvd);
@@ -76,8 +76,8 @@ _ventasTemp1:
 		PeriodoContable,
 		MesContable, 
 		AñoContable,
-		%Descuento, 
-		%IVA, 
+		//%IVA, 
+		//%Descuento, 
 		ApplyMap('TipoPago', IdTipoPago, 'No Aplica')		As TipoPago,  
 		ApplyMap('TipoVenta', IdTipoVenta, 'No Aplica') 	As TipoVenta
 	Resident VentasTemp1;
@@ -114,9 +114,9 @@ _Ventas:
 		MesContable				As Ventas.MesContable, 
 		AñoContable				As Ventas.AñoContable,
 
-		%Descuento				As Ventas.%Descuento, 
+		//%Descuento				As Ventas.%Descuento, 
 		%DescuentoUnit			As Ventas.%DescuentoUnit, 
-		%IVA					As Ventas.%IVA,
+		//%IVA					As Ventas.%IVA,
 		%IvaUnit				As Ventas.%IvaUnit,
 		Cantidad				As Ventas.Cantidad,
 		TipoPago				As Ventas.TipoPago,
