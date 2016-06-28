@@ -42,8 +42,8 @@ EntradasSalida:
 /*	Fin transformación	*/
 _Inventario:
 	LOAD 
-		IdProducto, 
-		IdEntrada, 
+		IdProducto						As Inventario.IdProducto, 
+		IdEntrada						As Inventario.IdEntrada, 
 
 		Comentario						As Inventario.Comentario,
 		Procedimiento					As Inventario.Procedimiento,

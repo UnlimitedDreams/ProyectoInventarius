@@ -83,19 +83,19 @@ UsuariosTemp1:
 NoConcatenate	
 _Usuarios:
 	LOAD
-		IdRol			As IdRol,
-		IdUsuario			As IdUsuario,
+		IdRol				As User.IdRol,
+		IdUsuario			As User.IdUsuario,
 				
 		Apellido			As User.Apellido,
-		Celular			As User.Celular,
-		Clave			As User.Clave,
-		Email			As User.Email,
-		Estado			As User.Estado,
-		Cedula			As User.Identificacion,
-		Nombre			As User.Nombre,
+		Celular				As User.Celular,
+		Clave				As User.Clave,
+		Email				As User.Email,
+		Estado				As User.Estado,
+		Cedula				As User.Identificacion,
+		Nombre				As User.Nombre,
 		Sexo				As User.Sexo,
 		Telefono			As User.Telefono,
-		Usuario			As User.Usuario
+		Usuario				As User.Usuario
 	Resident UsuariosTemp1;
 	DROP Table UsuariosTemp1;
 

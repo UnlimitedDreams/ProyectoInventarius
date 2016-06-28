@@ -99,8 +99,8 @@ _ProductoTemp1:
 NoConcatenate
 _Productos:
 	LOAD
-		IdCategoria, 
-		IdProducto, 
+		IdCategoria					As Producto.IdCategoria, 
+		IdProducto					As Producto.IdProducto, 
 		
 		%Descuento					As Producto.%Descuento, 
 		%Iva						As Producto.%Iva,

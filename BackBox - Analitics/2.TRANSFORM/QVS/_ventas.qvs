@@ -102,21 +102,19 @@ _ventasTemp1:
 
 _Ventas:
 	LOAD
-		IdCliente				As IdCliente, 
-		IdFactura				As IdFactura, 
-		IdUsuario				As IdUsuario, 
-		IdTipoPago				As IdTipoPago, 
-		IdTipoVenta				As IdTipoVenta,
-		IdProducto				As IdProducto,
+		IdCliente				As Ventas.IdCliente, 
+		IdFactura				As Ventas.IdFactura, 
+		IdUsuario				As Ventas.IdUsuario, 
+		IdTipoPago				As Ventas.IdTipoPago, 
+		IdTipoVenta				As Ventas.IdTipoVenta,
+		IdProducto				As Ventas.IdProducto,
 
 		FechaContable			As Ventas.FechaContable,
 		PeriodoContable			As Ventas.PeriodoContable,
 		MesContable				As Ventas.MesContable, 
 		AñoContable				As Ventas.AñoContable,
 
-		//%Descuento				As Ventas.%Descuento, 
 		%DescuentoUnit			As Ventas.%DescuentoUnit, 
-		//%IVA					As Ventas.%IVA,
 		%IvaUnit				As Ventas.%IvaUnit,
 		Cantidad				As Ventas.Cantidad,
 		TipoPago				As Ventas.TipoPago,

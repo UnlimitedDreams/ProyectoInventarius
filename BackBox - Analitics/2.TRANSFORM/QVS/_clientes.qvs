@@ -43,7 +43,7 @@ ClientesTemp:
 NoConcatenate
 _Clientes:
 	LOAD
-		IdCliente		As IdCliente,
+		IdCliente		As Cliente.IdCliente,
 		Apellidos		As Cliente.Apellidos,
 		Cedula			As Cliente.Cedula,
 		Celular			As Cliente.Celular,

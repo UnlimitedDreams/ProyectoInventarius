@@ -1,0 +1,39 @@
+﻿/*
+
+Modelo: 		    Ventas
+ProductVersion:     1.0
+Encargado:          Miguel Angel Lemoz (Miglem0101@gmail.com)
+
+					Historial de Cambios:
+	 Usuario        |         Fecha          |              Detalle        
+-----------------------------------------------------------------------------
+1    Miguel         |         28/06/2016     |    Inicio del proyecto
+-----------------------------------------------------------------------------
+
+*/
+
+Ventas:
+LOAD
+	Ventas.IdCliente			as SK.Cliente,
+	Ventas.IdFactura			as SK.Factura,
+	Ventas.IdUsuario			as SK.Usuario,
+	Ventas.IdProducto 			as SK.Producto,
+
+	Ventas.IdCliente, 
+	Ventas.IdFactura, 
+	Ventas.IdUsuario, 
+	Ventas.IdTipoPago, 
+	Ventas.IdTipoVenta, 
+	Ventas.IdProducto, 
+	Ventas.FechaContable, 
+	Ventas.PeriodoContable, 
+	Ventas.MesContable, 
+	Ventas.AñoContable, 
+	Ventas.%DescuentoUnit, 
+	Ventas.%IvaUnit, 
+	Ventas.Cantidad, 
+	Ventas.TipoPago, 
+	Ventas.TipoVenta
+FROM
+[$(vRutaTra)_Ventas.qvd]
+(qvd);
