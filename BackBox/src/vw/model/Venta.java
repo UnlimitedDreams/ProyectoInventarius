@@ -37,6 +37,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperCompileManager;
@@ -312,6 +313,7 @@ public class Venta extends javax.swing.JFrame {
     }
 
     public void iniciar() {
+        System.out.println("Tamañ de productos " + productos.size());
         Tabla2 t = new Tabla2(productos);
         t.calculeFrecuenciasV();
         muevaLosDatosFre(t);
@@ -1008,7 +1010,14 @@ public class Venta extends javax.swing.JFrame {
                 }
                 restar_Bodega();
                 generarFactura(codigo_venta, fecha, cone);
-                Restar_Todo();
+
+                Control.con.commit();
+                Control.con.setAutoCommit(true);
+                Control.cerrarConexion();
+                ArrayList<Producto> productos = new ArrayList();
+                new Venta(productos, usuario, 1, List_Menu, "1").setVisible(true);
+                this.dispose();
+                //Restar_Todo();
 
             } else {
                 System.out.println("Error en venta");
@@ -1035,7 +1044,10 @@ public class Venta extends javax.swing.JFrame {
                 jTable2.setValueAt("", k, i);
             }
         }
-        productos.clear();
+        this.productos.clear();
+        this.removeAll();
+        this.update(this.getGraphics());
+        // SwingUtilities.updateComponentTreeUI(this);
         iniciar();
     }
 
@@ -1223,16 +1235,16 @@ public class Venta extends javax.swing.JFrame {
     public void stock(String codigoProducto) throws ClassNotFoundException {
         Control.conectar();
         try {
-            System.out.println("select cantidad from producto where  (cantidad<=0 or stock>=cantidad)  and estado='A' and cod_producto='"+codigoProducto+"'");
-            Control.ejecuteQuery("select cantidad from producto where  (cantidad<=0 or stock>=cantidad)  and estado='A' and cod_producto='"+codigoProducto+"'");            
+            System.out.println("select cantidad from producto where  (cantidad<=0 or stock>=cantidad)  and estado='A' and cod_producto='" + codigoProducto + "'");
+            Control.ejecuteQuery("select cantidad from producto where  (cantidad<=0 or stock>=cantidad)  and estado='A' and cod_producto='" + codigoProducto + "'");
             int count = 0;
-            boolean r=false;
+            boolean r = false;
             while (Control.rs.next()) {
-                count=Control.rs.getInt(1);
-                 r=true;
+                count = Control.rs.getInt(1);
+                r = true;
             }
             if (r) {
-                Entrada.muestreMensajeV("El producto ya se encuentra en Stock tiene "+count+" Cantidad de productos",
+                Entrada.muestreMensajeV("El producto ya se encuentra en Stock tiene " + count + " Cantidad de productos",
                         javax.swing.JOptionPane.INFORMATION_MESSAGE);
             }
             Control.cerrarConexion();
@@ -1245,6 +1257,8 @@ public class Venta extends javax.swing.JFrame {
     private void jTextField2KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField2KeyReleased
         try {
             if (evt.getKeyCode() == 10 && condicionfiltro == false) {
+                System.out.println("**************************");
+                System.out.println("Tamaño : " + productos);
                 c.setVisible(false);
                 this.condicionfiltro = true;
                 c.setVisible(false);
@@ -1550,7 +1564,9 @@ public class Venta extends javax.swing.JFrame {
             query = "select distinct  cod_producto \"Codigo\",nombre,precio_desc \"Precio Venta\""
                     + " from producto,categoria where "
                     + "  producto.cod_categoria=categoria.cod_categoria and "
-                    + "  producto.nombre ILIKE ('%" + jTextField2.getText() + "%')  and producto.estado='A'";
+                    + " (categoria.descripcion ILIKE ('%" + jTextField2.getText() + "%') or  "
+                    + "producto.nombre ILIKE ('%" + jTextField2.getText() + "%') or "
+                    + " producto.cod_producto ILIKE ('%" + jTextField2.getText() + "%') )  and producto.estado='A'";
         }
 
         System.out.println(query);

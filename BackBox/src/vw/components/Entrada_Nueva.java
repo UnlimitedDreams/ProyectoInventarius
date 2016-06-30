@@ -334,6 +334,9 @@ public class Entrada_Nueva extends javax.swing.JFrame {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 jTable2KeyPressed(evt);
             }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jTable2KeyReleased(evt);
+            }
         });
         jScrollPane2.setViewportView(jTable2);
 
@@ -974,6 +977,10 @@ public class Entrada_Nueva extends javax.swing.JFrame {
             Entrada.muestreMensajeV("Error al borrar producto :" + ex.toString());
         }
     }//GEN-LAST:event_jTable2KeyPressed
+
+    private void jTable2KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTable2KeyReleased
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTable2KeyReleased
 
     /**
      * @param args the command line arguments
