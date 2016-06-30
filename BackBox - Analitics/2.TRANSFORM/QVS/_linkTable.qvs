@@ -1,0 +1,43 @@
+/*
+
+Transformación: 	LiinkTable
+Descripcon: 		No Desc.
+ProductVersion:	1.0
+Encargado: 		Miguel Angel Lemoz (Miglem0101@gmail.com)
+
+				Historial de Cambios:
+	Usuario		|		Fecha		|			Detalle		
+-----------------------------------------------------------------------------
+1	Miguel		|		29/06/2016	|	Inicio del proyecto
+-----------------------------------------------------------------------------
+
+*/
+NoConcatenate
+_Inventario:
+	LOAD 
+		Inventario.IdProducto			As IdProducto, 
+		Inventario.IdEntrada			As IdEntrada,
+		Inventario.IdUsuario			As IdUsuario, 
+		Inventario.FechaContable		As Fecha
+	FROM
+	[$(vRutaTra)_Inventario.qvd]
+	(qvd);
+
+NoConcatenate
+_Ventas:
+	LOAD 
+		Ventas.IdFactura				As IdFactura, 
+		Ventas.IdProducto				As IdProducto, 
+		Ventas.IdUsuario				As IdUsuario, 
+		Ventas.FechaContable			As Fecha
+	FROM
+	[$(vRutaTra)_Ventas.qvd]
+	(qvd);
+
+	
+CALL Qvc.LinkTable('_LinkTable', '_Inventario', 'IdEntrada, IdProducto, IdUsuario,Fecha');
+CALL Qvc.LinkTable('_LinkTable', '_Ventas', 'IdFactura, IdProducto, IdUsuario,Fecha');
+Store _LinkTable Into [$(vRutaTra)_LinkTable.qvd];
+DROP TABLE _LinkTable;
+DROP Table _Inventario;
+DROP Table _Ventas;

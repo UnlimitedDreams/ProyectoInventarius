@@ -15,13 +15,13 @@ Encargado: 		Miguel Angel Lemoz (Miglem0101@gmail.com)
 TRACE ;
 TRACE *********************	Inventario 	************************;
 
-EntradasSalida:
+EntradasSalidaTemp:
 	LOAD
 		IdProducto, 
 		IdEntrada, 
-		Comentario, 
-		Procedimiento, 
-		Responsable, 
+		Upper(Comentario)														As Comentario, 
+		Upper(Procedimiento)													As Procedimiento,	 
+		Upper(Responsable)														As Responsable, 
 		Date(FechaContable,'DD-MM-YYYY')										As FechaContable,
 		Date#(Year(FechaContable)&Num(Month(FechaContable), '00'), 'YYYYMM') 	As PeriodoContable,
 		Month(FechaContable) 													As MesContable, 
@@ -37,13 +37,40 @@ EntradasSalida:
 	[$(vRutaOri)EntradaSalida.qvd]
 	(qvd);
 
+/*	Mapeo de usuarios por ID*/
+Mapping
+UsuariosTemp:
+	LOAD 
+	    User.Usuario 		As Responsable,
+	    User.IdUsuario		As IdUsuario
+	FROM
+	[$(vRutaTra)_Usuarios.qvd]
+	(qvd);
+
+
+
 /*	Inicia transformación	*/
+EntradasSalida:
+	LOAD
+		IdProducto, 
+		IdEntrada, 
+		ApplyMap('UsuariosTemp', Responsable, '9999999999') 	As IdUsuario,
+		Comentario, 
+		Procedimiento, 
+		Responsable,
+		FechaContable,
+		PeriodoContable,
+		MesContable, 
+		AñoContable
+	Resident EntradasSalidaTemp;
+	DROP Table EntradasSalidaTemp;
 
 /*	Fin transformación	*/
 _Inventario:
 	LOAD 
 		IdProducto						As Inventario.IdProducto, 
 		IdEntrada						As Inventario.IdEntrada, 
+		IdUsuario						As Inventario.IdUsuario,
 
 		Comentario						As Inventario.Comentario,
 		Procedimiento					As Inventario.Procedimiento,

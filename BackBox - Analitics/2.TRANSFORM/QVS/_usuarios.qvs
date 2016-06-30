@@ -19,8 +19,8 @@ PersonaEmpresa_Tem:
 		Upper(Apellido) 		As Apellido,
 		Cedula		 			As Cedula,
 		Text(Celular)			As Celular,
-		Email					As Email,
-		Estado					As Estado,
+		Upper(Email)			As Email,
+		Upper(Estado)			As Estado,
 		Upper(Nombre)			As Nombre,
 		Upper(Sexo)				As Sexo,
 		Text(Telefono)			As Telefono;
