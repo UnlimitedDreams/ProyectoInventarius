@@ -985,6 +985,7 @@ public class Venta extends javax.swing.JFrame {
     public void Vender() throws ClassNotFoundException, JRException, SQLException {
         int codigo_venta = Sequence.seque("select max(cod_factura) from venta");
         int codigo_pro = (Sequence.seque("select max(cod_venta) from venta_pro"));
+        boolean Proceso = false;
         try {
             Control.conectar();
             Control.con.setAutoCommit(false);
@@ -1011,14 +1012,7 @@ public class Venta extends javax.swing.JFrame {
                 restar_Bodega();
                 generarFactura(codigo_venta, fecha, cone);
 
-                Control.con.commit();
-                Control.con.setAutoCommit(true);
-                Control.cerrarConexion();
-                ArrayList<Producto> productos = new ArrayList();
-                new Venta(productos, usuario, 1, List_Menu, "1").setVisible(true);
-                this.dispose();
-                //Restar_Todo();
-
+                Proceso = true;
             } else {
                 System.out.println("Error en venta");
             }
@@ -1031,25 +1025,15 @@ public class Venta extends javax.swing.JFrame {
             Control.con.setAutoCommit(true);
             Control.cerrarConexion();
         }
-
-    }
-
-    public void Restar_Todo() {
-        descIva.setText("0");
-        subtotal.setText("0");
-        jLTotal.setText("0");
-
-        for (int i = 0; i < 5; i++) {
-            for (int k = 0; k < productos.size(); k++) {
-                jTable2.setValueAt("", k, i);
-            }
+        if (Proceso) {
+            ArrayList<Producto> productos = new ArrayList();
+            new Venta(productos, usuario, 1, List_Menu, "1").setVisible(true);
+            this.dispose();
         }
-        this.productos.clear();
-        this.removeAll();
-        this.update(this.getGraphics());
-        // SwingUtilities.updateComponentTreeUI(this);
-        iniciar();
+
     }
+
+   
 
     public void Borrar() {
         System.out.println("+++++");
@@ -1385,7 +1369,7 @@ public class Venta extends javax.swing.JFrame {
     }//GEN-LAST:event_jPanel1FocusLost
 
     private void jTable1FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTable1FocusGained
-        System.out.println("Pierde focus");
+     
     }//GEN-LAST:event_jTable1FocusGained
     public void AgregarProductos(int i) {
         this.condicionfiltro = true;
@@ -1595,8 +1579,7 @@ public class Venta extends javax.swing.JFrame {
             for (int i = 0; i <= numeroPreguntas; i++) {
                 //modeloEmpleado.addColumn(rsetMetaData.getColumnLabel(i + 1));
             }
-            System.out.println("--- " + Control.rs.getRow());
-            System.out.println("---- " + !jTextField2.getText().equals(""));
+
             if (Control.rs.next() && !jTextField2.getText().equals("")) {
                 //System.out.println(":: " + Control.rs.next());
                 while (Control.rs.next()) {

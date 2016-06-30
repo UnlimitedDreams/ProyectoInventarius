@@ -28,6 +28,7 @@ import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperPrintManager;
 import net.sf.jasperreports.engine.JasperReport;
+import vw.dialogs.ProductoRegistrar;
 import vw.model.Venta;
 
 /**
@@ -151,6 +152,11 @@ public class Entrada_Nueva extends javax.swing.JFrame {
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setPreferredSize(new java.awt.Dimension(740, 620));
+        jPanel1.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                jPanel1FocusLost(evt);
+            }
+        });
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jTable1.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
@@ -322,6 +328,14 @@ public class Entrada_Nueva extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        jTable2.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                jTable2FocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                jTable2FocusLost(evt);
+            }
+        });
         jTable2.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 jTable2MouseEntered(evt);
@@ -468,8 +482,7 @@ public class Entrada_Nueva extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         if (productos.size() == 0) {
             Entrada.muestreMensajeV("No hay Productos para Registrar");
-        } else {
-            ajustar_Datos();
+        } else if (ajustar_Datos_CalculoCosto()) {
             try {
                 Date date = fechaActual.getDate();
                 SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd");
@@ -477,7 +490,7 @@ public class Entrada_Nueva extends javax.swing.JFrame {
                 Producto pro = null;
                 String v[] = proveedores.getSelectedItem().toString().split("-");
                 if (jTextField1.getText().equalsIgnoreCase("")) {
-                    Entrada.muestreMensajeV("No Registro Numero de hay Factura");
+                    Entrada.muestreMensajeV("No Registro Numero de Factura");
                     jTextField1.requestFocus();
                 } else if (VerificarFactura() == false) {
                     boolean r = false;
@@ -485,10 +498,6 @@ public class Entrada_Nueva extends javax.swing.JFrame {
                     Control.conectar();
                     for (int i = 0; i < productos.size(); i++) {
                         pro = (Producto) productos.get(i);
-                        System.out.println("insert into detalle values(" + codigo_detalle + ",'" + fecha + "',"
-                                + pro.getCantidad() + "," + pro.getCosto() + ","
-                                + v[0] + ",'" + jTextField1.getText() + "','" + pro.getCodigo() + "'"
-                                + ",'" + comprass.getSelectedItem().toString() + "')");
                         r = Control.ejecuteUpdate("insert into detalle values(" + codigo_detalle + ",'" + fecha + "',"
                                 + pro.getCantidad() + "," + pro.getCosto() + ","
                                 + v[0] + ",'" + jTextField1.getText() + "','" + pro.getCodigo() + "'"
@@ -497,7 +506,7 @@ public class Entrada_Nueva extends javax.swing.JFrame {
 
                         if (r) {
                             boolean r1 = Control.ejecuteUpdate("update producto set cantidad=cantidad+" + pro.getCantidad() + ","
-                                    + "stock=" + pro.getStock() + " where cod_producto='" + pro.getCodigo() + "'");
+                                    + "stock=" + pro.getStock() + ",bandera=1 where cod_producto='" + pro.getCodigo() + "'");
                             if (r1) {
                                 int cost = costo(pro.getCodigo());
                                 boolean f = promedio_costo(cost, pro.getCosto(), pro.getCodigo());
@@ -527,6 +536,8 @@ public class Entrada_Nueva extends javax.swing.JFrame {
             } finally {
                 Control.cerrarConexion();
             }
+        } else {
+            Entrada.muestreMensajeV("El costo de los productos no puede ser $0 (cero)");
         }
 
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -572,8 +583,30 @@ public class Entrada_Nueva extends javax.swing.JFrame {
         return costo;
     }
 
-    public void ajustar_Datos() {
+    public void ValidarDatosEnTabla() {
         Producto prod = null;
+        for (int i = 0; i < 5; i++) {
+            for (int k = 0; k < productos.size(); k++) {
+                prod = (Producto) productos.get(k);
+                if (i == 1) {
+                    prod.setCosto(Double.parseDouble((String) jTable2.getValueAt(k, i)));
+                } else if (i == 2) {
+                    prod.setCantidad(Integer.parseInt((String) jTable2.getValueAt(k, i)));
+                } else if (i == 3) {
+                    prod.setCantidad(Integer.parseInt((String) jTable2.getValueAt(k, i)));
+                } else if (i == 4) {
+                    prod.setCantidad(Integer.parseInt((String) jTable2.getValueAt(k, i)));
+                } else if (i == 5) {
+                    prod.setCantidad(Integer.parseInt((String) jTable2.getValueAt(k, i)));
+                }
+            }
+        }
+    }
+
+    public boolean ajustar_Datos_CalculoCosto() {
+        Producto prod = null;
+        boolean costo = false;
+        double valorCosto = 0;
         for (int i = 0; i < 5; i++) {
             for (int k = 0; k < productos.size(); k++) {
                 prod = (Producto) productos.get(k);
@@ -584,7 +617,13 @@ public class Entrada_Nueva extends javax.swing.JFrame {
                 }
             }
         }
-
+        for (Producto producto : productos) {
+            valorCosto = valorCosto + producto.getCosto();
+        }
+        if (valorCosto > 0) {
+            costo = true;
+        }
+        return costo;
     }
 
     public void Restar_Todo() {
@@ -670,12 +709,13 @@ public class Entrada_Nueva extends javax.swing.JFrame {
     }
     private void crearProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_crearProductoActionPerformed
         String proveedor[] = proveedores.getSelectedItem().toString().split("-");
-        try {
-            String fac = jTextField1.getText();
-            new Registro_producto(Integer.parseInt(proveedor[0]), productos, nom, fac, ListAcciones).setVisible(true);
-            //this.setVisible(false);
-        } catch (ClassNotFoundException ex) {
-        }
+
+        String fac = jTextField1.getText();
+
+        new ProductoRegistrar(this, true).setVisible(true);
+        //this.setVisible(false);
+
+
     }//GEN-LAST:event_crearProductoActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
@@ -819,9 +859,8 @@ public class Entrada_Nueva extends javax.swing.JFrame {
             query = "select distinct  cod_producto \"Codigo\",nombre,precio_desc \"Precio Venta\""
                     + " from producto,categoria where\n"
                     + "  producto.cod_categoria=categoria.cod_categoria and \n"
-                    + "  \n"
                     + "  producto.cod_producto ILIKE ('%" + jTextField2.getText() + "')  and producto.estado='A'"
-                    + "   limit 10 ";
+                    + "  union all select  '0'  \"Código\",'' \"Nombre\",0  \"Precio\" limit 40  ";
         } else {
             query = "select distinct  cod_producto \"Codigo\",nombre,precio_desc \"Precio Venta\""
                     + " from producto,categoria where "
@@ -857,7 +896,7 @@ public class Entrada_Nueva extends javax.swing.JFrame {
             for (int i = 0; i <= numeroPreguntas; i++) {
                 //modeloEmpleado.addColumn(rsetMetaData.getColumnLabel(i + 1));
             }
-            if (Control.rs.next() && !jTextField2.getText().equals("")) {
+            if (!jTextField2.getText().equals("")) {
                 //System.out.println(":: " + Control.rs.next());
                 while (Control.rs.next()) {
                     System.out.println("Trajo datos");
@@ -970,8 +1009,6 @@ public class Entrada_Nueva extends javax.swing.JFrame {
         try {
             if (evt.getKeyCode() == 127) {
                 borrar();
-            } else if (evt.getKeyCode() == 127) {
-
             }
         } catch (Exception ex) {
             Entrada.muestreMensajeV("Error al borrar producto :" + ex.toString());
@@ -979,8 +1016,23 @@ public class Entrada_Nueva extends javax.swing.JFrame {
     }//GEN-LAST:event_jTable2KeyPressed
 
     private void jTable2KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTable2KeyReleased
-        // TODO add your handling code here:
+
     }//GEN-LAST:event_jTable2KeyReleased
+
+    private void jTable2FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTable2FocusGained
+        c.setVisible(false);
+        jTextField2.setText("");
+    }//GEN-LAST:event_jTable2FocusGained
+
+    private void jTable2FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTable2FocusLost
+        c.setVisible(false);
+        jTextField2.setText("");
+    }//GEN-LAST:event_jTable2FocusLost
+
+    private void jPanel1FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jPanel1FocusLost
+        c.setVisible(false);
+        jTextField2.setText("");
+    }//GEN-LAST:event_jPanel1FocusLost
 
     /**
      * @param args the command line arguments

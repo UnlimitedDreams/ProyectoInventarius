@@ -45,6 +45,12 @@ public class ProductoRegistrar extends javax.swing.JDialog {
         ImageIcon img = new ImageIcon(url);
         setIconImage(img.getImage());
         Categoria();
+        codigo.setText("" + 0);
+        costoF.setText("" + 0);
+        ivaF.setText("" + 0);
+        cantidad.setText("" + 0);
+        precioVenta.setText("" + 0);
+        stock.setText("" + 0);
     }
 
     public void Categoria() {
@@ -64,120 +70,92 @@ public class ProductoRegistrar extends javax.swing.JDialog {
         }
     }
 
-    public boolean buscar_cod() throws ClassNotFoundException {
-        Control.conectar();
-        boolean r = false;
+    public int buscar_cod() throws ClassNotFoundException {
+        int cant = 0;
         try {
-            Control.ejecuteQuery("select * from producto where "
+            Control.ejecuteQuery("select count(*) from producto a, venta_pro p , venta v where a.cod_producto=p.cod_prodcuto and p.cod_factura=v.cod_factura and \n"
                     + "cod_producto='" + codigo.getText() + "'");
 
             while (Control.rs.next()) {
-                r = true;
+                cant = Control.rs.getInt(1);
             }
-            Control.cerrarConexion();
 
         } catch (Exception ex) {
 
-        } finally {
-            Control.cerrarConexion();
         }
-        return r;
+        System.out.println("Devuelve : " + cant);
+        return cant;
     }
 
-    public boolean registro_detalle() throws ClassNotFoundException {
-        Control.conectar();
-        Date fecha = new Date();
-        int codigo_detalle = Sequence.seque("select max(cod_detalle) from detalle");
-        boolean r = Control.ejecuteUpdate("insert into detalle values(" + codigo_detalle + ",'" + fecha + "',"
-                + cantidad.getText() + "," + costo.getText() + ",'" + codigo.getText() + "',"
-                + cod + ")");
-
-        if (r) {
-
-        } else {
-            Entrada.muestreMensajeV("ERROR 3");
-
-        }
-        Control.cerrarConexion();
-
-        return r;
-    }
-
-    public void registrar() throws ClassNotFoundException {
-        if (buscar_cod() == false) {
-
-            int categoria = traerCod();
+    public void registrar() throws ClassNotFoundException, SQLException {
+        boolean proceso = false;
+        try {
             Control.conectar();
-            double costo = Double.parseDouble(this.costo.getText());
-            double precio = Double.parseDouble(precioVenta.getText());
-            String desc = "0";
-            double des = 0;
-            String iva = "0";
-            double ivas = 0;
-            double precioSinDEs = Double.parseDouble(precioVenta.getText());
+            Control.con.setAutoCommit(false);
+            if (buscar_cod() == 0) {
+                int categoria = traerCod();
 
-            if (this.iva.getText().equalsIgnoreCase("0")) {
+                double costo = Double.parseDouble(costoF.getText());
+                double precio = Double.parseDouble(precioVenta.getText());
+                String desc = "0";
+                double des = 0;
+                String iva = "0";
+                double ivas = 0;
+                double precioSinDEs = Double.parseDouble(precioVenta.getText());
 
-            } else {
-                iva = "0." + this.iva.getText();
-                ivas = costo * Double.parseDouble(iva);
-                precio = precio + ivas;
-                precioSinDEs = precioSinDEs + ivas;
-            }
+                if (ivaF.getText().equalsIgnoreCase("0")) {
 
-            boolean r = Control.ejecuteUpdate("insert into producto values('"
-                    + codigo.getText() + "','"
-                    + nombre.getText() + "',"
-                    + this.costo.getText() + ","
-                    + this.iva.getText() + ","
-                    + precioSinDEs + ","
-                    + categoria + ","
-                    + 0
-                    + ",'A','n',0,"
-                    + precio + ")");
-            if (r) {
+                } else {
+                    iva = "0." + ivaF.getText();
+                    ivas = costo * Double.parseDouble(iva);
+                    precio = precio + ivas;
+                    precioSinDEs = precioSinDEs + ivas;
+                }
+                System.out.println("::::::::::::::: Cantidad de bonos " + categoria);
+                boolean r = Control.ejecuteUpdate("insert into producto values('" + codigo.getText() + "','" + nombre.getText() + "',"
+                        + costoF.getText() + "," + ivaF.getText() + "," + precioSinDEs + ","
+                        + categoria + "," + 0 + ",'A','n',0," + precio + "," + Integer.parseInt(stock.getText()) + ",0)");
+                if (r) {
+                    Entrada.muestreMensajeV("SE AGREGGO PRODUCTO A LA COMPRA");
+                    pr.add(new Producto(codigo.getText(), nombre.getText(), Double.parseDouble(costoF.getText()), precio,
+                            Integer.parseInt(cantidad.getText())));
+                    System.out.println("Se registro todo bien");
+                    proceso = true;
 
-                Entrada.muestreMensajeV("REGISTRO EXITOSO");
-                pr.add(new Producto(codigo.getText(),
-                        nombre.getText(),
-                        Double.parseDouble(this.costo.getText()),
-                        precio,
-                        Integer.parseInt(cantidad.getText())));
-
-                this.dispose();
+                } else {
+                    Entrada.muestreMensajeV("Error al Agregar Producto");
+                }
 
             } else {
-                Entrada.muestreMensajeV("ERROR 2");
+                Entrada.muestreMensajeV("El producto que esta tratando de registrar ya existe con una Transacccion");
             }
+
+        } catch (NumberFormatException ex) {
+        } finally {
+            Control.con.commit();
+            Control.con.setAutoCommit(true);
             Control.cerrarConexion();
-
-        } else {
-            Entrada.muestreMensajeV("El codigo del producto ya existe");
         }
 
-    }
+        if (proceso) {
+            System.out.println("Entro a nueva ventana");
+            //Entrada_Nueva ar = new Entrada_Nueva(pr, nom, fac, ListAcciones);
+            this.setVisible(false);
+            //ar.setVisible(true);
+        }
 
-    public void borrarTodo() throws ClassNotFoundException {
-        int cod = Sequence.seque("select max(cod_producto) from producto");
-        codigo.setText("" + cod);
-        nombre.setText("");
-        costo.setText("");
-        iva.setText("");
-        precioVenta.setText("");
-        cantidad.setText("");
     }
 
     public int traerCod() throws ClassNotFoundException {
-        Control.conectar();
-        int cod = 0;
         String nom[] = categoria.getSelectedItem().toString().split("-");
+        int cod = 0;
         try {
+            System.out.println("select cod_categoria from categoria where descripcion='" + nom[0] + "'");
             Control.ejecuteQuery("select cod_categoria from categoria where descripcion='" + nom[0] + "'");
+
             while (Control.rs.next()) {
                 cod = Control.rs.getInt(1);
             }
-            Control.cerrarConexion();
-
         } catch (Exception ex) {
             System.out.println("error " + ex.getMessage());
         }
@@ -199,18 +177,23 @@ public class ProductoRegistrar extends javax.swing.JDialog {
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         codigo = new javax.swing.JTextField();
         nombre = new javax.swing.JTextField();
-        costo = new javax.swing.JTextField();
-        iva = new javax.swing.JTextField();
+        costoF = new javax.swing.JTextField();
+        ivaF = new javax.swing.JTextField();
         precioVenta = new javax.swing.JTextField();
         cantidad = new javax.swing.JTextField();
         categoria = new javax.swing.JComboBox();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        stock = new javax.swing.JTextField();
+        jLabel10 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -223,45 +206,41 @@ public class ProductoRegistrar extends javax.swing.JDialog {
 
         jLabel3.setFont(new java.awt.Font("Segoe UI Light", 0, 20)); // NOI18N
         jLabel3.setText("Código");
-        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 80, 70, -1));
+        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 60, 70, -1));
 
         jLabel4.setFont(new java.awt.Font("Segoe UI Light", 0, 20)); // NOI18N
         jLabel4.setText("Nombre");
-        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 140, 70, -1));
+        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 100, 70, -1));
 
         jLabel5.setFont(new java.awt.Font("Segoe UI Light", 0, 20)); // NOI18N
         jLabel5.setText("Costo");
-        jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 200, 60, -1));
+        jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 140, 60, -1));
 
         jLabel6.setFont(new java.awt.Font("Segoe UI Light", 0, 20)); // NOI18N
         jLabel6.setText("% IVA");
-        jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 260, 80, -1));
-
-        jLabel7.setFont(new java.awt.Font("Segoe UI Light", 0, 20)); // NOI18N
-        jLabel7.setText("Precio Venta");
-        jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 390, 110, -1));
+        jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 180, 80, -1));
 
         jLabel8.setFont(new java.awt.Font("Segoe UI Light", 0, 20)); // NOI18N
         jLabel8.setText("Cantidad");
-        jPanel1.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 330, 80, 30));
+        jPanel1.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 220, 80, 30));
 
         codigo.setFont(new java.awt.Font("Segoe UI Light", 0, 18)); // NOI18N
-        jPanel1.add(codigo, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 80, 380, 28));
+        jPanel1.add(codigo, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 60, 380, 32));
 
         nombre.setFont(new java.awt.Font("Segoe UI Light", 0, 18)); // NOI18N
-        jPanel1.add(nombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 140, 380, 32));
+        jPanel1.add(nombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 100, 380, 32));
 
-        costo.setFont(new java.awt.Font("Segoe UI Light", 0, 18)); // NOI18N
-        jPanel1.add(costo, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 200, 380, 32));
+        costoF.setFont(new java.awt.Font("Segoe UI Light", 0, 18)); // NOI18N
+        jPanel1.add(costoF, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 140, 380, 32));
 
-        iva.setFont(new java.awt.Font("Segoe UI Light", 0, 18)); // NOI18N
-        jPanel1.add(iva, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 260, 380, 31));
+        ivaF.setFont(new java.awt.Font("Segoe UI Light", 0, 18)); // NOI18N
+        jPanel1.add(ivaF, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 180, 380, 32));
 
         precioVenta.setFont(new java.awt.Font("Segoe UI Light", 0, 18)); // NOI18N
-        jPanel1.add(precioVenta, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 390, 380, 31));
+        jPanel1.add(precioVenta, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 260, 380, 32));
 
         cantidad.setFont(new java.awt.Font("Segoe UI Light", 0, 18)); // NOI18N
-        jPanel1.add(cantidad, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 330, 380, 32));
+        jPanel1.add(cantidad, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 220, 380, 32));
 
         categoria.setFont(new java.awt.Font("Segoe UI Light", 0, 18)); // NOI18N
         jPanel1.add(categoria, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 20, 380, 32));
@@ -281,7 +260,7 @@ public class ProductoRegistrar extends javax.swing.JDialog {
                 jButton1ActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 450, -1, -1));
+        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 340, -1, -1));
 
         jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-xhdpi/ic_arrow_back_black_24dp.png"))); // NOI18N
         jButton2.setBorder(null);
@@ -297,20 +276,51 @@ public class ProductoRegistrar extends javax.swing.JDialog {
                 jButton2ActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 450, -1, -1));
+        jPanel1.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 340, -1, -1));
+
+        jLabel7.setFont(new java.awt.Font("Segoe UI Light", 0, 20)); // NOI18N
+        jLabel7.setText("Precio Venta");
+
+        jLabel12.setFont(new java.awt.Font("Segoe UI Light", 0, 20)); // NOI18N
+        jLabel12.setText("Stock");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 170, Short.MAX_VALUE)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(26, 26, 26)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(34, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 510, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap(265, Short.MAX_VALUE)
+                .addComponent(jLabel7)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel12)
+                .addGap(180, 180, 180))
         );
 
         jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 170, 510));
+
+        jLabel9.setFont(new java.awt.Font("Segoe UI Light", 0, 20)); // NOI18N
+        jLabel9.setText("Stock");
+        jPanel1.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 60, -1, -1));
+
+        stock.setFont(new java.awt.Font("Segoe UI Light", 0, 18)); // NOI18N
+        jPanel1.add(stock, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 300, 380, 32));
+
+        jLabel10.setFont(new java.awt.Font("Segoe UI Light", 0, 20)); // NOI18N
+        jLabel10.setText("Precio Venta");
+        jPanel1.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 260, 110, -1));
+
+        jLabel11.setFont(new java.awt.Font("Segoe UI Light", 0, 20)); // NOI18N
+        jLabel11.setText("Precio Venta");
+        jPanel1.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 260, 110, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -320,7 +330,9 @@ public class ProductoRegistrar extends javax.swing.JDialog {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 407, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 2, Short.MAX_VALUE))
         );
 
         pack();
@@ -331,6 +343,8 @@ public class ProductoRegistrar extends javax.swing.JDialog {
         try {
             registrar();
         } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ProductoRegistrar.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
             Logger.getLogger(ProductoRegistrar.class.getName()).log(Level.SEVERE, null, ex);
         }
 
@@ -386,10 +400,13 @@ public class ProductoRegistrar extends javax.swing.JDialog {
     private javax.swing.JTextField cantidad;
     private javax.swing.JComboBox categoria;
     private javax.swing.JTextField codigo;
-    private javax.swing.JTextField costo;
-    private javax.swing.JTextField iva;
+    private javax.swing.JTextField costoF;
+    private javax.swing.JTextField ivaF;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -397,9 +414,11 @@ public class ProductoRegistrar extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JTextField nombre;
     private javax.swing.JTextField precioVenta;
+    private javax.swing.JTextField stock;
     // End of variables declaration//GEN-END:variables
 }

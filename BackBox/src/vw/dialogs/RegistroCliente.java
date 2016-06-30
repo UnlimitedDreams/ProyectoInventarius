@@ -28,7 +28,8 @@ public class RegistroCliente extends javax.swing.JDialog {
      * Creates new form UsuariosRegistrar
      */
     int SecuenciaCC;
-
+    int SecuenciaTEL;
+    int SecuenciaCEL;
     /**
      *
      * @param parent
@@ -56,15 +57,22 @@ public class RegistroCliente extends javax.swing.JDialog {
         URL url = getClass().getResource("/images/facelet/icon.png");
         ImageIcon img = new ImageIcon(url);
         setIconImage(img.getImage());
-
+        telefono.setText("" + 0);
+        cedular.setText("" + 0);
+        cedula.setText("" + 0);
     }
 
-    public boolean SoloNumeros(String cadena) {
+    public boolean SoloNumeros(String cadena, int condicion) {
         long num = 0;
         try {
             num = Long.parseLong(cadena);
+            if (this.condicion == 1) {
+                SecuenciaCC = cadena.length();
+            } else if (this.condicion == 2) {
 
-            SecuenciaCC = cadena.length();
+            } else if (this.condicion == 3) {
+
+            }
             return true;
         } catch (Exception ex) {
             return false;
@@ -84,7 +92,7 @@ public class RegistroCliente extends javax.swing.JDialog {
             Control.cerrarConexion();
             if (condicion == 1) {
                 v.Cliente.setText(cedula.getText());
-                v.NomCliente.setText(nombre.getText()+" "+apellido.getText());
+                v.NomCliente.setText(nombre.getText() + " " + apellido.getText());
             }
 
             this.dispose();
@@ -104,6 +112,7 @@ public class RegistroCliente extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jLabel1 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         cedula = new javax.swing.JTextField();
         nombre = new javax.swing.JTextField();
@@ -122,6 +131,8 @@ public class RegistroCliente extends javax.swing.JDialog {
         cedular = new javax.swing.JTextField();
         email = new javax.swing.JTextField();
         telefono = new javax.swing.JTextField();
+
+        jLabel1.setText("jLabel1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Registro de Clientes - BackBox");
@@ -271,6 +282,11 @@ public class RegistroCliente extends javax.swing.JDialog {
                 cedularActionPerformed(evt);
             }
         });
+        cedular.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                cedularKeyReleased(evt);
+            }
+        });
         jPanel1.add(cedular, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 250, 380, -1));
 
         email.setFont(new java.awt.Font("Segoe UI Light", 0, 18)); // NOI18N
@@ -285,6 +301,11 @@ public class RegistroCliente extends javax.swing.JDialog {
         telefono.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 telefonoActionPerformed(evt);
+            }
+        });
+        telefono.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                telefonoKeyReleased(evt);
             }
         });
         jPanel1.add(telefono, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 210, 380, -1));
@@ -312,7 +333,7 @@ public class RegistroCliente extends javax.swing.JDialog {
     }//GEN-LAST:event_cedulaKeyPressed
 
     private void cedulaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cedulaKeyReleased
-        boolean v = SoloNumeros(cedula.getText());
+        boolean v = SoloNumeros(cedula.getText(), 1);
         if (v == false) {
             cedula.setText(cedula.getText().substring(0, SecuenciaCC));
         }
@@ -363,6 +384,20 @@ public class RegistroCliente extends javax.swing.JDialog {
         // TODO add your handling code here:
     }//GEN-LAST:event_telefonoActionPerformed
 
+    private void telefonoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_telefonoKeyReleased
+        boolean v = SoloNumeros(telefono.getText(), 2);
+        if (v == false) {
+            telefono.setText(telefono.getText().substring(0, SecuenciaTEL));
+        }
+    }//GEN-LAST:event_telefonoKeyReleased
+
+    private void cedularKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cedularKeyReleased
+        boolean v = SoloNumeros(cedular.getText(), 3);
+        if (v == false) {
+            cedular.setText(cedular.getText().substring(0, SecuenciaCEL));
+        }
+    }//GEN-LAST:event_cedularKeyReleased
+
     /**
      * @param args the command line arguments
      */
@@ -411,6 +446,7 @@ public class RegistroCliente extends javax.swing.JDialog {
     private javax.swing.JTextField cedula;
     private javax.swing.JTextField cedular;
     private javax.swing.JTextField email;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel3;
