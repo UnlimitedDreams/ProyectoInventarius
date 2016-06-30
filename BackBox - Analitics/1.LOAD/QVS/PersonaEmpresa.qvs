@@ -1,0 +1,38 @@
+﻿/*
+
+DIM TABLE: 	Usuarios
+Descripcon: 	Detalle sobre Usuarios del Sistema
+ProductVersion:	1.0
+Encargado: Miguel Angel Lemoz (Miglem0101@gmail.com)
+
+				Historial de Cambios:
+	Usuario		|		Fecha		|			Detalle		
+-----------------------------------------------------------------------------
+1	Miguel		|		24/06/2016	|	Inicio del proyecto
+-----------------------------------------------------------------------------
+
+*/
+
+PersonaEmpresa:
+	LOAD 
+		"apellido"			As Apellido, 
+		"cedula" 			As Cedula, 
+		"celular"			As Celular, 
+		"email"				As Email, 
+		"estado"			As Estado, 
+		"nombre"			As Nombre, 
+		"sexo"				As Sexo, 
+		"telefono"			As Telefono;
+	SQL SELECT 
+		"apellido", 
+		"cedula", 
+		"celular", 
+		"email", 
+		"estado", 
+		"nombre", 
+		"sexo", 
+		"telefono"
+	FROM "Inventario"."public"."persona";
+
+Store PersonaEmpresa Into [$(vRutaOri)PersonaEmpresa.qvd];
+DROP TABLE PersonaEmpresa;

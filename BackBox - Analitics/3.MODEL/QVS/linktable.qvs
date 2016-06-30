@@ -1,0 +1,46 @@
+﻿/*
+
+Modelo: 		    LinkTable
+ProductVersion:     1.0
+Encargado:          Miguel Angel Lemoz (Miglem0101@gmail.com)
+
+					Historial de Cambios:
+	 Usuario        |         Fecha          |              Detalle        
+-----------------------------------------------------------------------------
+1    Miguel         |         29/06/2016     |    Inicio del proyecto
+-----------------------------------------------------------------------------
+
+*/
+
+
+LinkTable:
+	LOAD 
+		IdEntrada				As SK.Entrada, 
+	    IdProducto				As SK.Producto, 
+	    IdUsuario				As SK.Usuario, 
+	    IdFactura				As SK.Factura,
+	    Fecha					As SK.Fecha
+	FROM
+	[$(vRutaTra)_LinkTable.qvd]
+	(qvd);
+
+NoConcatenate
+Calendario:
+	LOAD 
+		Fecha					As SK.Fecha, 
+		Fecha					As Calendario.Fecha,
+	    Dia						As Calendario.Dia, 
+	    DiaSemana				As Calendario.DiaSemana,		 
+	    Año						As Calendario.Año, 
+	    Mes						As Calendario.Mes, 
+	    Trimestre				As Calendario.Trimestre,		 
+	    _SerieDiaria			As Calendario._SerieDiaria,			 
+	    _SerieMenual			As Calendario._SerieMenual,			 
+	    _SerieTrimestral		As Calendario._SerieTrimestral,				 
+	    _SerieSemanal			As Calendario._SerieSemanal,			 
+	    [Año-Mes]				As [Calendario.Año-Mes]
+	FROM
+	[$(vRutaTra)_Calendario.qvd]
+	(qvd);
+
+
