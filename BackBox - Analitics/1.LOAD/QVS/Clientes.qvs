@@ -1,0 +1,40 @@
+﻿/*
+
+DIM TABLE: 	Clientes
+Descripcon: 	Detalle sobre Clientes
+ProductVersion:	1.0
+Encargado: Miguel Angel Lemoz (Miglem0101@gmail.com)
+
+				Historial de Cambios:
+	Usuario		|		Fecha		|			Detalle		
+-----------------------------------------------------------------------------
+1	Miguel		|		24/06/2016	|	Inicio del proyecto
+-----------------------------------------------------------------------------
+
+*/
+
+Clientes:
+	LOAD 
+		/* Llaves */
+		"cod_cliente"	As IdCliente, 
+		/* Campos de Valor */
+		"apellido"		As Apellidos,
+		"cedula"		As Cedula, 
+		"celular"		As Celular, 
+		"direccion"		As Direccion, 
+		"email"			As Email, 
+		"nombre"		As Nombres, 
+		"telefono"		As Telefono;
+	SQL SELECT 
+		"apellido", 
+		"cedula", 
+		"celular", 
+		"cod_cliente", 
+		"direccion", 
+		"email", 
+	    "nombre", 
+	    "telefono"
+	FROM "Inventario"."public"."clientes";
+
+Store Clientes Into [$(vRutaOri)Clientes.qvd];
+DROP TABLE Clientes;

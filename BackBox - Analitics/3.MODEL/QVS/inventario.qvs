@@ -1,0 +1,31 @@
+﻿/*
+
+Modelo: 		    Inventario
+ProductVersion:     1.0
+Encargado:          Miguel Angel Lemoz (Miglem0101@gmail.com)
+
+					Historial de Cambios:
+	 Usuario        |         Fecha          |              Detalle        
+-----------------------------------------------------------------------------
+1    Miguel         |         29/06/2016     |    Inicio del proyecto
+-----------------------------------------------------------------------------
+
+*/
+
+Inventario:
+LOAD 
+	Inventario.IdEntrada 	As SK.Entrada, 
+
+	Inventario.IdProducto, 
+    Inventario.IdEntrada, 
+    Inventario.IdUsuario, 
+    Inventario.Comentario, 
+    Inventario.Procedimiento, 
+    Inventario.Responsable, 
+    Inventario.FechaContable, 
+    Inventario.PeriodoContable, 
+    Inventario.MesContable, 
+    Inventario.AñoContable
+FROM
+[$(vRutaTra)_Inventario.qvd]
+(qvd);

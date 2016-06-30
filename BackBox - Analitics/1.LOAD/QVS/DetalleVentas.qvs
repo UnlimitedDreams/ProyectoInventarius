@@ -1,0 +1,31 @@
+﻿/*
+
+FACT TABLE:     Detalle Ventas
+Descripcon:     Detalle sobre movimientos de ventas de la empresa.
+ProductVersion: 1.0
+Encargado: Miguel Angel Lemoz (Miglem0101@gmail.com)
+
+                Historial de Cambios:
+    Usuario     |       Fecha       |           Detalle     
+-----------------------------------------------------------------------------
+1   Miguel      |       23/06/2016  |   Inicio del proyecto
+-----------------------------------------------------------------------------
+
+*/
+DetalleVenta:
+LOAD 
+	"cod_venta"        		As IdDetalle, 
+	"cod_prodcuto"       	As IdProducto, 
+	"cod_factura"        	As IdFactura, 
+
+	"cantidad"        		As Cantidad;
+SQL SELECT 
+	"cod_venta", 
+	"cod_prodcuto", 
+	"cod_factura", 
+	"cantidad"
+FROM "Inventario"."public"."venta_pro";
+
+
+Store DetalleVenta Into [$(vRutaOri)DetalleVenta.qvd];
+DROP TABLE DetalleVenta;

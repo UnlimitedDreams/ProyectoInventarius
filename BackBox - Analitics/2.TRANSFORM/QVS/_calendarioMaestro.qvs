@@ -1,0 +1,35 @@
+/*
+
+Transformación: 	Calendario Maestro
+Descripcon: 		Sin Descripcion
+ProductVersion:	1.0
+Encargado: 		Miguel Angel Lemoz (Miglem0101@gmail.com)
+
+				Historial de Cambios:
+	Usuario		|		Fecha		|			Detalle		
+-----------------------------------------------------------------------------
+1	Miguel		|		28/06/2016	|	Inicio del proyecto
+-----------------------------------------------------------------------------
+
+*/
+TRACE ;
+TRACE *********************	Calendario 	************************;
+Data:
+	LOAD  
+		Inventario.FechaContable As MyDate
+	FROM
+	[$(vRutaTra)_Inventario.qvd]
+	(qvd);
+	Concatenate
+	LOAD  
+		Ventas.FechaContable As MyDate
+	FROM
+	[$(vRutaTra)_Ventas.qvd]
+	(qvd);
+
+/*	Master Calendar Using Min - Max Date*/
+CALL Qvc.GetFieldValues('vDates', 'MyDate');
+CALL Qvc.Calendar(vDates.Min, vDates.Max);
+
+Store MasterCalendar Into [$(vRutaTra)_Calendario.qvd];	
+DROP Tables MasterCalendar,Data;

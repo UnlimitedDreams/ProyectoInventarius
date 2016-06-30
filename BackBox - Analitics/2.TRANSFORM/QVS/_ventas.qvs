@@ -1,0 +1,126 @@
+﻿/*
+
+Transformación: 	Ventas
+Descripcon: 		Ajuste de la venta diaria conceptualizada
+ProductVersion:	1.0
+Encargado: 		Miguel Angel Lemoz (Miglem0101@gmail.com)
+
+				Historial de Cambios:
+	Usuario		|		Fecha		|			Detalle		
+-----------------------------------------------------------------------------
+1	Miguel		|		27/06/2016	|	Inicio del proyecto
+-----------------------------------------------------------------------------
+
+*/
+TRACE ;
+TRACE *********************	Ventas 	************************;
+
+ProductosTemp:
+	LOAD 
+		IdProducto, 
+		Num(%Descuento/100)	as %DescuentoUnit, 
+		Num(%Iva/100)		as %IvaUnit
+	FROM
+	[$(vRutaOri)Productos.qvd]
+	(qvd);
+
+NoConcatenate
+DetalleVentaTemp:
+	LOAD 
+		IdDetalle, 
+		IdProducto, 
+		IdFactura, 
+		Cantidad
+	FROM
+	[$(vRutaOri)DetalleVenta.qvd]
+	(qvd);
+
+NoConcatenate
+VentasTemp1:
+	LOAD
+		IdCliente, 
+		IdFactura, 
+		IdUsuario, 
+		IdTipoPago, 
+		IdTipoVenta,		
+		Date(FechaContable,'DD-MM-YYYY')										As FechaContable,
+		Date#(Year(FechaContable)&Num(Month(FechaContable), '00'), 'YYYYMM') 	As PeriodoContable,
+		Month(FechaContable) 													As MesContable, 
+		Year(FechaContable)														As AñoContable;		
+		//Num(%Descuento/100)														As %Descuento, 
+		//Num(%IVA/100)															As %IVA; 
+	LOAD 
+		IdCliente, 
+		IdFactura, 
+		IdUsuario, 
+		IdTipoPago, 
+		IdTipoVenta,
+		FechaContable  
+		//%Descuento, 
+		//%IVA 
+	FROM
+	[$(vRutaOri)Ventas.qvd]
+	(qvd);
+
+/*	Inicia transformación	*/
+Noconcatenate
+
+_ventasTemp1:
+	LOAD
+		IdCliente, 
+		IdFactura, 
+		IdUsuario, 
+		IdTipoPago, 
+		IdTipoVenta,
+		FechaContable,
+		PeriodoContable,
+		MesContable, 
+		AñoContable,
+		//%IVA, 
+		//%Descuento, 
+		ApplyMap('TipoPago', IdTipoPago, 'No Aplica')		As TipoPago,  
+		ApplyMap('TipoVenta', IdTipoVenta, 'No Aplica') 	As TipoVenta
+	Resident VentasTemp1;
+	DROP Table VentasTemp1;
+	Join (_ventasTemp1)
+	LOAD
+		IdDetalle, 
+		IdProducto, 
+		IdFactura, 
+		Cantidad
+	Resident DetalleVentaTemp;
+	DROP Table DetalleVentaTemp;
+	Left Join (_ventasTemp1)
+	LOAD 
+		IdProducto, 
+		%DescuentoUnit, 
+		%IvaUnit
+	Resident ProductosTemp;
+	DROP Table ProductosTemp;
+
+/*	Fin transformación	*/
+
+_Ventas:
+	LOAD
+		IdCliente				As Ventas.IdCliente, 
+		IdFactura				As Ventas.IdFactura, 
+		IdUsuario				As Ventas.IdUsuario, 
+		IdTipoPago				As Ventas.IdTipoPago, 
+		IdTipoVenta				As Ventas.IdTipoVenta,
+		IdProducto				As Ventas.IdProducto,
+
+		FechaContable			As Ventas.FechaContable,
+		PeriodoContable			As Ventas.PeriodoContable,
+		MesContable				As Ventas.MesContable, 
+		AñoContable				As Ventas.AñoContable,
+
+		%DescuentoUnit			As Ventas.%DescuentoUnit, 
+		%IvaUnit				As Ventas.%IvaUnit,
+		Cantidad				As Ventas.Cantidad,
+		TipoPago				As Ventas.TipoPago,
+		TipoVenta				As Ventas.TipoVenta
+	Resident _ventasTemp1;
+	DROP Table _ventasTemp1;
+
+Store _Ventas Into [$(vRutaTra)_Ventas.qvd];
+DROP TABLE _Ventas;

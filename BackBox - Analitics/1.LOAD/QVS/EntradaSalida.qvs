@@ -1,0 +1,35 @@
+﻿/*
+
+FACT TABLE: 	Entradas y Salidas
+Descripcon: 	Detalle sobre movimientos de la bodega de la empresa.
+ProductVersion:	1.0
+Encargado: Miguel Angel Lemoz (Miglem0101@gmail.com)
+
+				Historial de Cambios:
+	Usuario		|		Fecha		|			Detalle		
+-----------------------------------------------------------------------------
+1	Miguel		|		22/06/2016	|	Inicio del proyecto
+-----------------------------------------------------------------------------
+
+*/
+EntradaSalida:
+	LOAD 
+		/* Llaves */
+		"cod_producto"				As IdProducto,
+		"cod_entra" 				As IdEntrada,
+		/* Campos de Valor */
+		"comentario"				As Comentario,    
+		"nombre"					As Procedimiento,
+		"responsable"				As Responsable,
+		/* Campos de Tiempo */
+		"fecha"						As FechaContable;
+	SQL SELECT "cod_entra",
+		"nombre",
+		"fecha",
+		"cod_producto",
+		"comentario",
+		"responsable"
+	FROM "public"."salida_entrada";
+
+Store EntradaSalida Into [$(vRutaOri)EntradaSalida.qvd];
+DROP TABLE EntradaSalida;

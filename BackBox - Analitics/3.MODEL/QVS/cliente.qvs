@@ -1,0 +1,29 @@
+/*
+
+Modelo: 		    Clientes
+ProductVersion:     1.0
+Encargado:          Miguel Angel Lemoz (Miglem0101@gmail.com)
+
+					Historial de Cambios:
+	 Usuario        |         Fecha          |              Detalle        
+-----------------------------------------------------------------------------
+1    Miguel         |         28/06/2016     |    Inicio del proyecto
+-----------------------------------------------------------------------------
+
+*/
+
+Clientes:
+LOAD 
+	Cliente.IdCliente 		As SK.Cliente,
+
+	Cliente.IdCliente, 
+	Cliente.Cedula, 
+	Cliente.Celular, 
+	Cliente.Direccion, 
+	Cliente.Email, 
+	Cliente.Nombres, 
+	Cliente.Telefono
+FROM
+[$(vRutaTra)_Clientes.qvd]
+(qvd);
+
