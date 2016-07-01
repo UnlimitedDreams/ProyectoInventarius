@@ -10,18 +10,17 @@ import Modelo.ContenedorMenus;
 import Modelo.MenuRedireccionar;
 import Modelo.acciones;
 import Modelo.seccion;
-import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.IOException;
-import java.net.URI;
 import java.net.URISyntaxException;
 import vw.model.Articulo;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
@@ -30,20 +29,8 @@ import javax.swing.JMenuItem;
 import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
 import vw.components.Bodega;
-import vw.components.CategoriaGestion;
-import vw.components.Entrada_Nueva;
 import vw.components.Producto;
-import vw.components.Provedores;
-import vw.components.Reporte_Entradas;
-import vw.components.Reporte_Ventas;
-import vw.components.Roles;
 import vw.components.Usuarios;
-import vw.components.VentaDiaria;
-import vw.dialogs.AcercaDe;
-import vw.dialogs.CategoriasRegistrar;
-import vw.dialogs.ProveedoresRegistrar;
-import vw.dialogs.RolRegistrar;
-import vw.dialogs.UsuariosRegistrar;
 import vw.model.Venta;
 
 /**
@@ -64,8 +51,8 @@ public class Menu extends javax.swing.JFrame implements KeyListener {
     int VerVenta;
     int VerUsuario;
 
-    public Menu(String usuario) {
-        initComponents();
+    public Menu(String usuario) {        
+        initComponents(); 
         this.usuario = usuario;
         this.setLocationRelativeTo(null);
         this.setResizable(false);
@@ -297,13 +284,12 @@ public class Menu extends javax.swing.JFrame implements KeyListener {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        C_bodega = new javax.swing.JButton();
-        C_Articulo = new javax.swing.JButton();
-        C_venta = new javax.swing.JButton();
-        C_usuario = new javax.swing.JButton();
+        analitics = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         feld01 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        C_venta1 = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         file = new javax.swing.JMenu();
         inicio = new javax.swing.JMenuItem();
@@ -318,82 +304,23 @@ public class Menu extends javax.swing.JFrame implements KeyListener {
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        C_bodega.setBackground(new java.awt.Color(255, 255, 255));
-        C_bodega.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
-        C_bodega.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-xxxhdpi/ic_archive_gray_24dp.png"))); // NOI18N
-        C_bodega.setText("Ver Bodega");
-        C_bodega.setBorder(null);
-        C_bodega.setBorderPainted(false);
-        C_bodega.setContentAreaFilled(false);
-        C_bodega.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        C_bodega.setDefaultCapable(false);
-        C_bodega.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        C_bodega.setPreferredSize(new java.awt.Dimension(99, 117));
-        C_bodega.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-xxxhdpi/ic_archive_black_24dp.png"))); // NOI18N
-        C_bodega.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
-        C_bodega.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        C_bodega.addActionListener(new java.awt.event.ActionListener() {
+        analitics.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
+        analitics.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-xxxhdpi/sense_24dp.png"))); // NOI18N
+        analitics.setText("BackBox - Analitics");
+        analitics.setBorder(null);
+        analitics.setBorderPainted(false);
+        analitics.setContentAreaFilled(false);
+        analitics.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        analitics.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        analitics.setPreferredSize(new java.awt.Dimension(99, 117));
+        analitics.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
+        analitics.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        analitics.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                C_bodegaActionPerformed(evt);
+                analiticsActionPerformed(evt);
             }
         });
-        jPanel1.add(C_bodega, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 120, 110, -1));
-
-        C_Articulo.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
-        C_Articulo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-xxxhdpi/ic_card_giftcard_gray_24dp.png"))); // NOI18N
-        C_Articulo.setText("Ver Artículos");
-        C_Articulo.setBorder(null);
-        C_Articulo.setBorderPainted(false);
-        C_Articulo.setContentAreaFilled(false);
-        C_Articulo.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        C_Articulo.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        C_Articulo.setPreferredSize(new java.awt.Dimension(99, 117));
-        C_Articulo.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-xxxhdpi/ic_card_giftcard_black_24dp.png"))); // NOI18N
-        C_Articulo.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
-        C_Articulo.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        C_Articulo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                C_ArticuloActionPerformed(evt);
-            }
-        });
-        jPanel1.add(C_Articulo, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 280, -1, -1));
-
-        C_venta.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
-        C_venta.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-xxxhdpi/ic_shopping_cart_gray_24dp.png"))); // NOI18N
-        C_venta.setText("Realizar Venta");
-        C_venta.setBorder(null);
-        C_venta.setBorderPainted(false);
-        C_venta.setContentAreaFilled(false);
-        C_venta.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        C_venta.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        C_venta.setPreferredSize(new java.awt.Dimension(99, 117));
-        C_venta.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-xxxhdpi/ic_shopping_cart_black_24dp.png"))); // NOI18N
-        C_venta.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
-        C_venta.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        C_venta.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                C_ventaActionPerformed(evt);
-            }
-        });
-        jPanel1.add(C_venta, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 280, -1, -1));
-
-        C_usuario.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
-        C_usuario.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-xxxhdpi/ic_account_box_gray_24dp.png"))); // NOI18N
-        C_usuario.setText("Control de Usuarios");
-        C_usuario.setBorder(null);
-        C_usuario.setBorderPainted(false);
-        C_usuario.setContentAreaFilled(false);
-        C_usuario.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        C_usuario.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        C_usuario.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-xxxhdpi/ic_account_box_black_24dp.png"))); // NOI18N
-        C_usuario.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
-        C_usuario.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        C_usuario.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                C_usuarioActionPerformed(evt);
-            }
-        });
-        jPanel1.add(C_usuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 120, -1, -1));
+        jPanel1.add(analitics, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 400, 120, 120));
 
         jPanel2.setBackground(new java.awt.Color(196, 70, 38));
 
@@ -425,6 +352,32 @@ public class Menu extends javax.swing.JFrame implements KeyListener {
         );
 
         jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, 540));
+
+        jLabel3.setFont(new java.awt.Font("Segoe UI Light", 1, 18)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(102, 0, 0));
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel3.setText("Tip: Presiona (CTRL + V). Para hacer una venta");
+        jLabel3.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 10, 400, 30));
+
+        C_venta1.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
+        C_venta1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-xxxhdpi/ic_archive_black_24dp.png"))); // NOI18N
+        C_venta1.setText("Salir");
+        C_venta1.setBorder(null);
+        C_venta1.setBorderPainted(false);
+        C_venta1.setContentAreaFilled(false);
+        C_venta1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        C_venta1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        C_venta1.setPreferredSize(new java.awt.Dimension(99, 117));
+        C_venta1.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-xxxhdpi/ic_archive_gray_24dp.png"))); // NOI18N
+        C_venta1.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
+        C_venta1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        C_venta1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                C_venta1ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(C_venta1, new org.netbeans.lib.awtextra.AbsoluteConstraints(639, 397, 120, 120));
 
         file.setText("Archivo");
         file.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
@@ -479,44 +432,9 @@ public class Menu extends javax.swing.JFrame implements KeyListener {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void C_bodegaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_C_bodegaActionPerformed
-        try {
+    private void analiticsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_analiticsActionPerformed
 
-            new Bodega(usuario, List_Menu).setVisible(true);
-            this.dispose();
-
-        } catch (Exception ex) {
-
-        }
-    }//GEN-LAST:event_C_bodegaActionPerformed
-
-    private void C_ArticuloActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_C_ArticuloActionPerformed
-        try {
-            new Articulo(usuario, List_Menu).setVisible(true);
-            this.dispose();
-        } catch (Exception ex) {
-
-        }
-    }//GEN-LAST:event_C_ArticuloActionPerformed
-
-    private void C_ventaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_C_ventaActionPerformed
-        try {
-            ArrayList<Producto> productos = new ArrayList();
-            new Venta(productos, usuario, 1, List_Menu, "1").setVisible(true);
-            this.dispose();
-        } catch (Exception ex) {
-
-        }
-    }//GEN-LAST:event_C_ventaActionPerformed
-
-    private void C_usuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_C_usuarioActionPerformed
-        try {
-            new Usuarios(usuario, List_Menu).setVisible(true);
-            this.dispose();
-        } catch (Exception ex) {
-
-        }
-    }//GEN-LAST:event_C_usuarioActionPerformed
+    }//GEN-LAST:event_analiticsActionPerformed
 
     private void inicioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inicioActionPerformed
         new Menu(usuario).setVisible(true);
@@ -532,20 +450,23 @@ public class Menu extends javax.swing.JFrame implements KeyListener {
         System.exit(0);
     }//GEN-LAST:event_salirActionPerformed
 
+    private void C_venta1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_C_venta1ActionPerformed
+        System.exit(0);
+    }//GEN-LAST:event_C_venta1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton C_Articulo;
-    private javax.swing.JButton C_bodega;
-    private javax.swing.JButton C_usuario;
-    private javax.swing.JButton C_venta;
+    private javax.swing.JButton C_venta1;
+    private javax.swing.JButton analitics;
     private javax.swing.JMenuItem cerrarSesion;
     private javax.swing.JLabel feld01;
     private javax.swing.JMenu file;
     private javax.swing.JMenuItem inicio;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
