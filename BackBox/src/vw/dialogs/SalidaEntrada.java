@@ -44,12 +44,9 @@ public class SalidaEntrada extends javax.swing.JDialog {
             String codigo, String tipo, String Nombre, String cant, ArrayList acciones) {
         super(parent, modal);
         initComponents();
-        System.out.println("*******************");
         this.codigo = codigo;
         this.tipo = tipo;
         this.usuario = Nombre;
-        System.out.println("Usuario : " + usuario);
-
         this.cant = cant;
         this.ListAcciones = acciones;
         this.setLocationRelativeTo(null);
@@ -204,25 +201,17 @@ public class SalidaEntrada extends javax.swing.JDialog {
         if (cant2 <= Integer.parseInt(cant) || tipo.equalsIgnoreCase("Entrada")) {
             int codigo_sal = Sequence.seque("select max(cod_entra) from Salida_Entrada");
             try {
-                System.out.println("*******************");
-                System.err.println("Usuario : " + nombre);
-
                 Control.conectar();
-                System.out.println("Commit : " + Control.con.getAutoCommit());
                 Control.con.setAutoCommit(false);
                 Date fecha = new Date();
                 if (jTextArea1.getText().equalsIgnoreCase("")) {
-                    Entrada.muestreMensajeV("Debe escribir algo en comentarios",
+                    Entrada.muestreMensajeV("Debe escribir una descripcion en comentarios",
                             javax.swing.JOptionPane.WARNING_MESSAGE);
                 } else {
-                    System.out.println("insert into Salida_Entrada values("
-                            + codigo_sal + ",'" + tipo + "'," + cantidad.getValue() + ",'" + fecha + "','"
-                            + codigo + "','" + jTextArea1.getText() + "','" + nombre + "')");
                     boolean r1 = Control.ejecuteUpdate("insert into Salida_Entrada values("
                             + codigo_sal + ",'" + tipo + "'," + cantidad.getValue() + ",'" + fecha + "','"
                             + codigo + "','" + jTextArea1.getText() + "','" + nombre + "')");
                     if (r1) {
-                        System.out.println("----------------");
                         boolean r = false;
                         if (tipo.equalsIgnoreCase("Salida")) {
                             r = Control.ejecuteUpdate("update producto set cantidad=cantidad-" + cantidad.getValue() + " where cod_producto='" + codigo + "'");
@@ -257,7 +246,7 @@ public class SalidaEntrada extends javax.swing.JDialog {
             }
 
         } else {
-            Entrada.muestreMensajeV("No puedes Sacar mas Cantidad de la que ya hay.",
+            Entrada.muestreMensajeV("No dispone cantidad en stock, para hacer salida de este producto.",
                     javax.swing.JOptionPane.INFORMATION_MESSAGE);
         }
 

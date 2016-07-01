@@ -247,13 +247,8 @@ public class Registro_producto extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        try {
-            Entrada_Nueva ar = new Entrada_Nueva(pr, nom, fac, ListAcciones);
-            this.setVisible(false);
-            ar.setVisible(true);
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(Registro_producto.class.getName()).log(Level.SEVERE, null, ex);
-        }
+
+            this.dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -281,7 +276,7 @@ public class Registro_producto extends javax.swing.JFrame {
         Control.conectar();
         boolean r = false;
         try {
-            Control.ejecuteQuery("select * from producto where "
+            Control.ejecuteQuery("select count(*) from producto a, venta_pro p , venta v where a.cod_producto=p.cod_prodcuto and p.cod_factura=v.cod_factura and \n"
                     + "cod_producto='" + jTextField2.getText() + "'");
 
             while (Control.rs.next()) {
@@ -369,7 +364,7 @@ public class Registro_producto extends javax.swing.JFrame {
             }
 
         } else {
-            Entrada.muestreMensajeV("El codigo del producto ya existe");
+            Entrada.muestreMensajeV("El producto que esta tratando de registrar ya existe con una Transacccion");
         }
 
     }
