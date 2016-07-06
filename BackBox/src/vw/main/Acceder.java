@@ -11,11 +11,11 @@ import vw.components.Entrada;
 import java.awt.Color;
 import java.awt.Image;
 import java.awt.Toolkit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.io.IOException;
 import static java.lang.Math.floor;
+import java.net.URI;
+import java.net.URISyntaxException;
 import vw.dialogs.AcercaDe;
-import vw.model.Venta;
 
 /**
  *
@@ -86,11 +86,11 @@ public class Acceder extends javax.swing.JFrame {
         jMenu1 = new javax.swing.JMenu();
         Salir = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
+        help = new javax.swing.JMenuItem();
         jSeparator2 = new javax.swing.JPopupMenu.Separator();
         atajos = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
-        jMenuItem3 = new javax.swing.JMenuItem();
+        homaPage = new javax.swing.JMenuItem();
         aboutUs = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -112,7 +112,7 @@ public class Acceder extends javax.swing.JFrame {
         social02.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-mdpi/ic_plus_one_black_24dp.png"))); // NOI18N
         social02.setToolTipText("Google+");
         social02.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        panel.add(social02, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 470, -1, -1));
+        panel.add(social02, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 470, -1, -1));
 
         acceder.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-hdpi/acceder_48dp.png"))); // NOI18N
         acceder.setBorder(null);
@@ -170,7 +170,7 @@ public class Acceder extends javax.swing.JFrame {
                 .addContainerGap(102, Short.MAX_VALUE))
         );
 
-        panel.add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 330, 510));
+        panel.add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 330, -1));
 
         label02.setFont(new java.awt.Font("Segoe UI Light", 0, 20)); // NOI18N
         label02.setText("Contraseña");
@@ -206,20 +206,35 @@ public class Acceder extends javax.swing.JFrame {
         jMenu2.setText("Ayuda");
         jMenu2.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
 
-        jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F1, 0));
-        jMenuItem1.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
-        jMenuItem1.setText(" Ayuda en línea");
-        jMenu2.add(jMenuItem1);
+        help.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F1, 0));
+        help.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
+        help.setText(" Ayuda en línea");
+        help.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                helpActionPerformed(evt);
+            }
+        });
+        jMenu2.add(help);
         jMenu2.add(jSeparator2);
 
         atajos.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
         atajos.setText("Atajos");
+        atajos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                atajosActionPerformed(evt);
+            }
+        });
         jMenu2.add(atajos);
         jMenu2.add(jSeparator1);
 
-        jMenuItem3.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
-        jMenuItem3.setText("Pagina de Inico");
-        jMenu2.add(jMenuItem3);
+        homaPage.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
+        homaPage.setText("Pagina de Inico");
+        homaPage.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                homaPageActionPerformed(evt);
+            }
+        });
+        jMenu2.add(homaPage);
 
         aboutUs.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
         aboutUs.setText("Acerca de...");
@@ -274,6 +289,39 @@ public class Acceder extends javax.swing.JFrame {
         new AcercaDe(this, true).setVisible(true);
     }//GEN-LAST:event_aboutUsActionPerformed
 
+    private void helpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_helpActionPerformed
+        if (java.awt.Desktop.isDesktopSupported()) {
+            try {
+                java.awt.Desktop dk = java.awt.Desktop.getDesktop();
+                dk.browse(new URI("https://github.com/UnlimitedDreams/ProyectoInventarius/wiki/1.-Ayuda"));
+            } catch (URISyntaxException | IOException e) {
+                System.out.println("Error al abrir URL: " + e.getMessage());
+            }
+        }
+    }//GEN-LAST:event_helpActionPerformed
+
+    private void homaPageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_homaPageActionPerformed
+        if (java.awt.Desktop.isDesktopSupported()) {
+            try {
+                java.awt.Desktop dk = java.awt.Desktop.getDesktop();
+                dk.browse(new URI("https://github.com/UnlimitedDreams/ProyectoInventarius/wiki/0.-Inicio"));
+            } catch (URISyntaxException | IOException e) {
+                System.out.println("Error al abrir URL: " + e.getMessage());
+            }
+        }
+     }//GEN-LAST:event_homaPageActionPerformed
+
+    private void atajosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_atajosActionPerformed
+        if (java.awt.Desktop.isDesktopSupported()) {
+            try {
+                java.awt.Desktop dk = java.awt.Desktop.getDesktop();
+                dk.browse(new URI("https://github.com/UnlimitedDreams/ProyectoInventarius/wiki/1.-Ayuda"));
+            } catch (URISyntaxException | IOException e) {
+                System.out.println("Error al abrir URL: " + e.getMessage());
+            }
+        }
+    }//GEN-LAST:event_atajosActionPerformed
+
     public void validarUsuario() throws ClassNotFoundException {
         Control.conectar();
         try {
@@ -303,7 +351,7 @@ public class Acceder extends javax.swing.JFrame {
                     Menu newMenu = new Menu(Usu);
                     newMenu.setVisible(true);
                     this.setVisible(false);
-                } 
+                }
             } else {
                 Entrada.muestreMensajeV("El usuario o la clave no son correctos",
                         javax.swing.JOptionPane.ERROR_MESSAGE);
@@ -311,7 +359,7 @@ public class Acceder extends javax.swing.JFrame {
 
         } catch (Exception ex) {
 
-        }finally {
+        } finally {
             Control.cerrarConexion();
         }
 
@@ -321,11 +369,9 @@ public class Acceder extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                WebLookAndFeel.install();
-                new Acceder().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            WebLookAndFeel.install();
+            new Acceder().setVisible(true);
         });
     }
 
@@ -338,12 +384,12 @@ public class Acceder extends javax.swing.JFrame {
     private javax.swing.JMenuItem atajos;
     private org.edisoncor.gui.textField.TextFieldRectBackground field01;
     private org.edisoncor.gui.passwordField.PasswordFieldRectBackground field02;
+    private javax.swing.JMenuItem help;
+    private javax.swing.JMenuItem homaPage;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
