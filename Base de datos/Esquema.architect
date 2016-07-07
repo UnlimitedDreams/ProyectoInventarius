@@ -10,31 +10,31 @@
  <source-databases>
  </source-databases>
  <target-database id="ppdb" dbcs-ref="DS0">
-  <table id="TAB166" populated="true" UUID="4bb4f701-e704-45a7-bf61-9a0f7c23c608" name="Regimen" objectType="TABLE" physicalName="Regimen" >
+  <table id="TAB169" populated="true" UUID="42e6c08d-8892-48be-8101-6d30b11d26d4" name="empresaHistorico" objectType="TABLE" physicalName="empresaHistorico" >
    <remarks></remarks>
-   <folder id="FOLTAB1661" populated="true" name="Columns" physicalName="Columns" type="1">
-    <column id="COL168" populated="true" UUID="da0581cf-f518-4014-a4dd-7ceb7da971ba" autoIncrement="false" autoIncrementSequenceName="Regimen_Descripcion_seq" defaultValue="" name="Descripcion" nullable="0" physicalName="Descripcion" precision="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="12" userDefinedTypeUUID="831ac2d4-0e65-47ec-a0b7-62b7f6b8760a" >
+   <folder id="FOLTAB1691" populated="true" name="Columns" physicalName="Columns" type="1">
+    <column id="COL178" populated="true" UUID="64dc5a40-8aa1-44bf-a169-7772d1dc1109" autoIncrement="false" autoIncrementSequenceName="Empresa_correo_seq" defaultValue="" name="correo" nullable="0" physicalName="correo" precision="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="12" userDefinedTypeUUID="831ac2d4-0e65-47ec-a0b7-62b7f6b8760a" >
      <remarks></remarks>
     </column>
     </folder>
-    <folder id="FOLTAB1664" populated="true" name="Indices" physicalName="Indices" type="4">
-    <index id="IDX169" populated="true" UUID="560ae0dc-317b-41df-b1bf-d8d0e2e94d92" clustered="false" name="Regimen_pk" physicalName="Regimen_pk" primaryKeyIndex="true" unique="false" >
-     <index-column id="IDC170" populated="true" UUID="35e16344-ff9f-4efb-85ad-9f943b14e646" ascendingOrDescending="UNSPECIFIED" column-ref="COL167" name="Cod_Regimen" physicalName="Cod_Regimen" />
+    <folder id="FOLTAB1694" populated="true" name="Indices" physicalName="Indices" type="4">
+    <index id="IDX179" populated="true" UUID="25a78063-a60c-41f0-887e-daa1a2e6c412" clustered="false" name="EmpresaHistorico_pk" physicalName="EmpresaHistorico_pk" primaryKeyIndex="true" unique="false" >
+     <index-column id="IDC180" populated="true" UUID="4cf8e660-c6d6-41f0-9fde-4868769bbecd" ascendingOrDescending="UNSPECIFIED" column-ref="COL170" name="codEmpresa" physicalName="codEmpresa" />
     </index>
    </folder>
   </table>
   <relationships>
-   <relationship id="REL205" populated="true" UUID="c6667d41-9c15-40eb-b7ba-9c2359d66c3f" deferrability="7" deleteRule="3" fk-table-ref="TAB147" fkCardinality="7" identifying="false" name="Regimen_Empresa_fk" physicalName="Regimen_Empresa_fk" pk-table-ref="TAB166" pkCardinality="2" updateRule="3" >
-    <column-mapping id="CMP206" populated="true" UUID="b560bd5d-1460-40e9-b920-e9130931de3a" fk-column-ref="COL157" name="Column Mapping" physicalName="Column Mapping" pk-column-ref="COL167" />
+   <relationship id="REL218" populated="true" UUID="1fee321a-84b2-4d7a-a63f-ada4af1162d8" deferrability="7" deleteRule="3" fk-table-ref="TAB169" fkCardinality="6" identifying="false" name="Regimen_empresaHistorico_fk" physicalName="Regimen_empresaHistorico_fk" pk-table-ref="TAB164" pkCardinality="2" updateRule="3" >
+    <column-mapping id="CMP219" populated="true" UUID="7fa252ac-c284-441b-8b47-fe20bcdcdad4" fk-column-ref="COL171" name="Column Mapping" physicalName="Column Mapping" pk-column-ref="COL165" />
    </relationship>
   </relationships>
  </target-database>
  <ddl-generator type="ca.sqlpower.architect.ddl.GenericDDLGenerator" allow-connection="true"> </ddl-generator>
  <liquibase-settings useSeparateChangeSets="false" generateId="false" idStart="1"/>
  <create-kettle-job-settings filePath="" jobName="" schemaName="" kettleJoinType="0" savingToFile="true" />
- <play-pen zoom="0.8408964152537141" viewportX="0" viewportY="63" relationship-style="rectilinear" names-displayLogicalNames="true" showPrimaryTag="true" showForeignTag="true" showAlternateTag="true" columnVisibility="ALL" relationshipLabelVisibility="true">
-  <table-pane table-ref="TAB166" x="792" y="30" bgColor="0xeeeeee" fgColor="0x000000" rounded="false" dashed="false"/>
-  <table-link relationship-ref="REL205" pkConnection="0.8245614035087719" fkConnection="0.34911242603550297" rLineColor="0x000000" pkLabelText="" fkLabelText="" orientation="33"/>
+ <play-pen zoom="1.0" viewportX="85" viewportY="0" relationship-style="rectilinear" names-displayLogicalNames="true" showPrimaryTag="true" showForeignTag="true" showAlternateTag="true" columnVisibility="ALL" relationshipLabelVisibility="true">
+  <table-pane table-ref="TAB169" x="974" y="28" bgColor="0xeeeeee" fgColor="0x000000" rounded="false" dashed="false"/>
+  <table-link relationship-ref="REL196" pkConnection="0.525" fkConnection="0.4666666666666667" rLineColor="0x000000" pkLabelText="" fkLabelText="" orientation="132"/>
  </play-pen>
  <critic-manager>
   <critic-grouping platformType="SQL Server 2005" enabled="true">
