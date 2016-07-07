@@ -48,25 +48,28 @@ public class MenuRedireccionar {
     private String Usuario;
     private ArrayList<ContenedorMenus> listMenu = new ArrayList();
     private java.awt.Frame parent;
+    private int codEmpresa;
 
-    public MenuRedireccionar(java.awt.Frame parent, String CadenaMenu, ArrayList acciones, String usuario) {
+    public MenuRedireccionar(java.awt.Frame parent, String CadenaMenu, ArrayList acciones, 
+            String usuario,int codigoEmpresa) {
         this.CadenaMenu = CadenaMenu;
         this.listMenu = acciones;
         this.Usuario = usuario;
         this.parent = parent;
+        this.codEmpresa=codigoEmpresa;
 
     }
 
     public void reDireccion() throws IOException, URISyntaxException, ClassNotFoundException, ClassNotFoundException, ClassNotFoundException {
         try {
             if (CadenaMenu.equalsIgnoreCase("Lista Bodega")) {
-                new Bodega(Usuario, listMenu).setVisible(true);
+                new Bodega(Usuario, listMenu,codEmpresa).setVisible(true);
             } else if (CadenaMenu.equalsIgnoreCase("Lista Usuarios")) {
-                new Usuarios(Usuario, listMenu).setVisible(true);
+                new Usuarios(Usuario, listMenu,codEmpresa).setVisible(true);
             } else if (CadenaMenu.equalsIgnoreCase("Crear Usuario")) {
                 new UsuariosRegistrar(this.parent, true).setVisible(true);
             } else if (CadenaMenu.equalsIgnoreCase("Lista Rol")) {
-                new Roles(Usuario, listMenu).setVisible(true);
+                new Roles(Usuario, listMenu,codEmpresa).setVisible(true);
             } else if (CadenaMenu.equalsIgnoreCase("Crear Rol")) {
                 new RolRegistrar(this.parent, true).setVisible(true);
             } else if (CadenaMenu.equalsIgnoreCase("Lista Proveedores")) {
@@ -74,23 +77,23 @@ public class MenuRedireccionar {
             } else if (CadenaMenu.equalsIgnoreCase("Crear Proveedor")) {
                 new ProveedoresRegistrar(this.parent, true).setVisible(true);
             } else if (CadenaMenu.equalsIgnoreCase("Ver Articulos")) {
-                new Articulo(Usuario, listMenu).setVisible(true);
+                new Articulo(Usuario, listMenu,codEmpresa).setVisible(true);
             } else if (CadenaMenu.equalsIgnoreCase("Nueva Compra")) {
                 ArrayList<Producto> pr = new ArrayList();
                 String fac = "";
-                new Entrada_Nueva(pr, Usuario, fac, listMenu).setVisible(true);
+                new Entrada_Nueva(pr, Usuario, fac, listMenu,codEmpresa).setVisible(true);
             } else if (CadenaMenu.equalsIgnoreCase("Ver Categoria")) {
                 new CategoriaGestion(Usuario, listMenu).setVisible(true);
             } else if (CadenaMenu.equalsIgnoreCase("Crear Categoria ")) {
                 new CategoriasRegistrar(this.parent, true).setVisible(true);
             } else if (CadenaMenu.equalsIgnoreCase("Realizar Venta")) {
                 ArrayList<Producto> productos = new ArrayList();
-                new Venta(productos, Usuario, 1, listMenu, "1").setVisible(true);
+                new Venta(productos, Usuario, 1, listMenu, "1",this.codEmpresa).setVisible(true);
             } else if (CadenaMenu.equalsIgnoreCase("Realizar Devolucion")) {
                 ArrayList<Producto> productos = new ArrayList();
-                new Venta(productos, Usuario, 2, listMenu, "1").setVisible(true);
+                new Venta(productos, Usuario, 2, listMenu, "1",this.codEmpresa).setVisible(true);
             } else if (CadenaMenu.equalsIgnoreCase("Ver Venta Diaria")) {
-                new VentaDiaria(Usuario, listMenu).setVisible(true);
+                new VentaDiaria(Usuario, listMenu,codEmpresa).setVisible(true);
             } else if (CadenaMenu.equalsIgnoreCase("Venta")) {
                 new Reporte_Ventas(Usuario, listMenu).setVisible(true);
             } else if (CadenaMenu.equalsIgnoreCase("Compras")) {
@@ -106,7 +109,7 @@ public class MenuRedireccionar {
             } else if (CadenaMenu.equalsIgnoreCase("Acerca De")) {
                 new AcercaDe(this.parent, true).setVisible(true);
             } else if (CadenaMenu.equalsIgnoreCase("Lista Clientes")) {
-                new Clientes(Usuario, listMenu).setVisible(true);
+                new Clientes(Usuario, listMenu,codEmpresa).setVisible(true);
             } else if (CadenaMenu.equalsIgnoreCase("Crear Cliente")) {
                 RegistroCliente r = null;
                 ArrayList<Producto> productos = new ArrayList();

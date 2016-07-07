@@ -55,13 +55,15 @@ public class VentaDiaria extends javax.swing.JFrame {
 
     String usuario;
     String Fecha;
+    int codEmpresa;
     ArrayList<seccion> listaSeccion = new ArrayList();
     ArrayList<acciones> listaaccion = new ArrayList();
     ArrayList<ContenedorMenus> List_Menu = new ArrayList();
 
-    public VentaDiaria(String Usuario, ArrayList acciones) throws ClassNotFoundException {
+    public VentaDiaria(String Usuario, ArrayList acciones,int codEmpresa) throws ClassNotFoundException {
         initComponents();
         this.List_Menu = acciones;
+        this.codEmpresa=codEmpresa;
         Date fec = new Date();
         this.Fecha = new SimpleDateFormat("dd-MM-yyyy").format(fec);
         jLabel4.setText(Fecha);
@@ -151,7 +153,7 @@ public class VentaDiaria extends javax.swing.JFrame {
                         menuItem.addActionListener(new ActionListener() {
                             @Override
                             public void actionPerformed(ActionEvent e) {
-                                MenuRedireccionar MenuF = new MenuRedireccionar(VentaDiaria.this, e.getActionCommand(), List_Menu, usuario);
+                                MenuRedireccionar MenuF = new MenuRedireccionar(VentaDiaria.this, e.getActionCommand(), List_Menu, usuario,codEmpresa);
                                 try {
                                     MenuF.reDireccion();
                                     if (e.getActionCommand().equalsIgnoreCase("Crear Categoria ")
@@ -205,7 +207,7 @@ public class VentaDiaria extends javax.swing.JFrame {
                     menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_2, ActionEvent.ALT_MASK));
                 }
                 menuItem.addActionListener((ActionEvent e) -> {
-                    MenuRedireccionar MenuF = new MenuRedireccionar(this, e.getActionCommand().toString(), List_Menu, usuario);
+                    MenuRedireccionar MenuF = new MenuRedireccionar(this, e.getActionCommand().toString(), List_Menu, usuario,codEmpresa);
                     try {
                         MenuF.reDireccion();
                     } catch (IOException ex) {
@@ -429,7 +431,7 @@ public class VentaDiaria extends javax.swing.JFrame {
     private void ventasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ventasActionPerformed
         ArrayList<Producto> pro = new ArrayList();
         try {
-            new Venta(pro, usuario, 1, List_Menu, "1").setVisible(true);;
+            new Venta(pro, usuario, 1, List_Menu, "1",codEmpresa).setVisible(true);;
             this.setVisible(false);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
@@ -456,7 +458,7 @@ public class VentaDiaria extends javax.swing.JFrame {
     private void devolucionesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_devolucionesActionPerformed
         ArrayList<Producto> pro = new ArrayList();
         try {
-            new Venta(pro, usuario, 2, List_Menu, "1").setVisible(true);;
+            new Venta(pro, usuario, 2, List_Menu, "1",codEmpresa).setVisible(true);;
             this.dispose();
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);

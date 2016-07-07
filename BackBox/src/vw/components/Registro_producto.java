@@ -24,13 +24,15 @@ public class Registro_producto extends javax.swing.JFrame {
     ArrayList<Producto> pr = new ArrayList();
     String nom;
     String fac;
+    int codEmpresa;
     ArrayList<Integer> ListAcciones = new ArrayList();
 
-    public Registro_producto(int cod, ArrayList x, String nom, String fac, ArrayList acciones) throws ClassNotFoundException {
+    public Registro_producto(int cod, ArrayList x, String nom, String fac, ArrayList acciones,int codEmpresa) throws ClassNotFoundException {
         initComponents();
         Categoria();
         this.nom = nom;
         this.fac = fac;
+        this.codEmpresa=codEmpresa;
         this.ListAcciones = acciones;
         this.setLocationRelativeTo(null);
         this.setResizable(false);
@@ -348,7 +350,7 @@ public class Registro_producto extends javax.swing.JFrame {
                     Entrada.muestreMensajeV("SE AGREGGO PRODUCTO A LA COMPRA");
                     pr.add(new Producto(jTextField2.getText(),
                             jTextField3.getText(), Double.parseDouble(jTextField4.getText()), precio, Integer.parseInt(jTextField7.getText())));
-                    Entrada_Nueva ar = new Entrada_Nueva(pr, nom, fac, ListAcciones);
+                    Entrada_Nueva ar = new Entrada_Nueva(pr, nom, fac, ListAcciones,codEmpresa);
                     this.setVisible(false);
                     ar.setVisible(true);
                 } else {

@@ -30,14 +30,16 @@ public class Producto_update extends javax.swing.JDialog {
     int SecuenciaDesc;
     int SecuenciaCant;
     int secuenciaIva;
+    int codEmpresa;
     ArrayList<Integer> ListAcciones = new ArrayList();
 
-    public Producto_update(java.awt.Frame parent, boolean modal, Producto p, String nom, ArrayList acciones) throws ClassNotFoundException {
+    public Producto_update(java.awt.Frame parent, boolean modal, Producto p, String nom, ArrayList acciones,int codEmpresa) throws ClassNotFoundException {
         super(parent, modal);
         initComponents();
         this.p = p;
         this.nom = nom;
         this.ListAcciones = acciones;
+        this.codEmpresa=codEmpresa;
         recuperar();
         this.setLocationRelativeTo(null);
         this.setResizable(false);
@@ -289,7 +291,7 @@ public class Producto_update extends javax.swing.JDialog {
         Bodega b;
         try {
             try {
-                b = new Bodega(nom, ListAcciones);
+                b = new Bodega(nom, ListAcciones,codEmpresa);
                 b.setVisible(true);
                 this.setVisible(false);
             } catch (SQLException ex) {
@@ -442,7 +444,7 @@ public class Producto_update extends javax.swing.JDialog {
         if (r) {
             Entrada.muestreMensajeV("Actualizacion Exitosa",
                     javax.swing.JOptionPane.INFORMATION_MESSAGE);
-            Bodega b = new Bodega(nom, ListAcciones);
+            Bodega b = new Bodega(nom, ListAcciones,codEmpresa);
             this.setVisible(false);
             b.setVisible(true);
         } else {

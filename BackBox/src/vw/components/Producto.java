@@ -24,6 +24,7 @@ public class Producto {
     private int categoria;
     private int precio_final;
     private int stock;
+    private double ValorIva;
 
     public Producto(String codigo, String nombre, int Costo, int iva, int precio_venta, int cantidad, int desc) {
         this.codigo = codigo;
@@ -35,13 +36,14 @@ public class Producto {
         this.iva = iva;
     }
 
-    public Producto(String codigo, String nombre, double precio_venta, int cantidad, double iva,int stock) {
+    public Producto(String codigo, String nombre, double precio_venta, int cantidad, double iva,int stock,double valorIva) {
         this.codigo = codigo;
         this.nombre = nombre;
         this.precio_venta = precio_venta;
         this.cantidad = cantidad;
         this.iva = iva;
         this.stock=stock;
+        this.ValorIva=valorIva;
     }
 
     public Producto(String codigo, String nombre, double Costo, double precio_venta, int cantidad) {
@@ -138,6 +140,14 @@ public class Producto {
 
     public void setStock(int stock) {
         this.stock = stock;
+    }
+
+    public double getValorIva() {
+        return ValorIva;
+    }
+
+    public void setValorIva(double ValorIva) {
+        this.ValorIva = ValorIva;
     }
     
 
