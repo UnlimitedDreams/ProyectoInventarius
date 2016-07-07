@@ -51,15 +51,17 @@ import vw.model.Venta;
 public class Stock extends javax.swing.JFrame {
 
     String usuario;
+    int codEmpresa;
     ArrayList<seccion> listaSeccion = new ArrayList();
     ArrayList<acciones> listaaccion = new ArrayList();
     ArrayList<ContenedorMenus> List_Menu = new ArrayList();
 
-    public Stock(String nom, ArrayList acciones) throws ClassNotFoundException {
+    public Stock(String nom, ArrayList acciones,int codEmpresa) throws ClassNotFoundException {
         initComponents();
         inicio();
         this.List_Menu = acciones;
         this.usuario = nom;
+        this.codEmpresa=codEmpresa;
         this.setLocationRelativeTo(null);
         setTitle("Inventarius Stock");
         this.setResizable(false);
@@ -143,7 +145,7 @@ public class Stock extends javax.swing.JFrame {
                         menuItem.addActionListener(new ActionListener() {
                             @Override
                             public void actionPerformed(ActionEvent e) {
-                                MenuRedireccionar MenuF = new MenuRedireccionar(Stock.this, e.getActionCommand(), List_Menu, usuario);
+                                MenuRedireccionar MenuF = new MenuRedireccionar(Stock.this, e.getActionCommand(), List_Menu, usuario,codEmpresa);
                                 try {
                                     MenuF.reDireccion();
                                     if (e.getActionCommand().equalsIgnoreCase("Crear Categoria ")
@@ -197,7 +199,7 @@ public class Stock extends javax.swing.JFrame {
                     menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_2, ActionEvent.ALT_MASK));
                 }
                 menuItem.addActionListener((ActionEvent e) -> {
-                    MenuRedireccionar MenuF = new MenuRedireccionar(this, e.getActionCommand().toString(), List_Menu, usuario);
+                    MenuRedireccionar MenuF = new MenuRedireccionar(this, e.getActionCommand().toString(), List_Menu, usuario,codEmpresa);
                     try {
                         MenuF.reDireccion();
                     } catch (IOException ex) {
@@ -397,7 +399,7 @@ public class Stock extends javax.swing.JFrame {
         Bodega m;
         try {
             try {
-                m = new Bodega(usuario, List_Menu);
+                m = new Bodega(usuario, List_Menu,codEmpresa);
                 this.setVisible(false);
                 m.setVisible(true);
             } catch (SQLException ex) {

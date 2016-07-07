@@ -63,6 +63,7 @@ public class Menu extends javax.swing.JFrame implements KeyListener {
     int VerArticulos;
     int VerVenta;
     int VerUsuario;
+    int codigoEmpresa;
 
     public Menu(String usuario) {
         initComponents();
@@ -77,6 +78,7 @@ public class Menu extends javax.swing.JFrame implements KeyListener {
         VerArticulos = 0;
         VerVenta = 0;
         VerUsuario = 0;
+        this.codigoEmpresa=0;
         List_Menu.clear();
         try {
             cargarUsuario(usuario);
@@ -159,7 +161,7 @@ public class Menu extends javax.swing.JFrame implements KeyListener {
                             menuItem.addActionListener(new ActionListener() {
                                 @Override
                                 public void actionPerformed(ActionEvent e) {
-                                    MenuRedireccionar MenuF = new MenuRedireccionar(Menu.this, e.getActionCommand().toString(), List_Menu, usuario);
+                                    MenuRedireccionar MenuF = new MenuRedireccionar(Menu.this, e.getActionCommand().toString(), List_Menu, usuario,codigoEmpresa);
                                     try {
                                         MenuF.reDireccion();
                                         if (e.getActionCommand().equalsIgnoreCase("Crear Categoria ")
@@ -217,7 +219,7 @@ public class Menu extends javax.swing.JFrame implements KeyListener {
                     menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_2, ActionEvent.ALT_MASK));
                 }
                 menuItem.addActionListener((ActionEvent e) -> {
-                    MenuRedireccionar MenuF = new MenuRedireccionar(this, e.getActionCommand().toString(), List_Menu, usuario);
+                    MenuRedireccionar MenuF = new MenuRedireccionar(this, e.getActionCommand().toString(), List_Menu, usuario,codigoEmpresa);
                     try {
                         MenuF.reDireccion();
                     } catch (IOException ex) {
@@ -246,7 +248,7 @@ public class Menu extends javax.swing.JFrame implements KeyListener {
             while (Control.rs.next()) {
                 listaSeccion.add(new seccion(Control.rs.getInt(1), Control.rs.getString(2)));
             }
-            System.out.println("seccion : " + listaSeccion.size());
+            
             Control.cerrarConexion();
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
@@ -276,12 +278,15 @@ public class Menu extends javax.swing.JFrame implements KeyListener {
 
     public void cargarUsuario(String cod) throws SQLException, ClassNotFoundException {
         Control.conectar();
-        Control.ejecuteQuery("select nombre,apellido from usuario,persona where \n"
+        Control.ejecuteQuery("select nombre,apellido,codempresa from usuario,persona where \n"
                 + "usuario.cedula=persona.cedula and  cod_usuario=" + cod);
         String nombre = "";
+        int empresa=0;
         while (Control.rs.next()) {
             nombre = Control.rs.getString(1) + " " + Control.rs.getString(2);
+            empresa=Control.rs.getInt(3);
         }
+        this.codigoEmpresa=empresa;
         this.feld01.setText("Bienvenido " + nombre);
         Control.cerrarConexion();
 
@@ -482,7 +487,7 @@ public class Menu extends javax.swing.JFrame implements KeyListener {
     private void C_bodegaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_C_bodegaActionPerformed
         try {
 
-            new Bodega(usuario, List_Menu).setVisible(true);
+            new Bodega(usuario, List_Menu,codigoEmpresa).setVisible(true);
             this.dispose();
 
         } catch (Exception ex) {
@@ -492,7 +497,7 @@ public class Menu extends javax.swing.JFrame implements KeyListener {
 
     private void C_ArticuloActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_C_ArticuloActionPerformed
         try {
-            new Articulo(usuario, List_Menu).setVisible(true);
+            new Articulo(usuario, List_Menu,codigoEmpresa).setVisible(true);
             this.dispose();
         } catch (Exception ex) {
 
@@ -502,7 +507,7 @@ public class Menu extends javax.swing.JFrame implements KeyListener {
     private void C_ventaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_C_ventaActionPerformed
         try {
             ArrayList<Producto> productos = new ArrayList();
-            new Venta(productos, usuario, 1, List_Menu, "1").setVisible(true);
+            new Venta(productos, usuario, 1, List_Menu, "1", this.codigoEmpresa).setVisible(true);
             this.dispose();
         } catch (Exception ex) {
 
@@ -511,7 +516,7 @@ public class Menu extends javax.swing.JFrame implements KeyListener {
 
     private void C_usuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_C_usuarioActionPerformed
         try {
-            new Usuarios(usuario, List_Menu).setVisible(true);
+            new Usuarios(usuario, List_Menu,codigoEmpresa).setVisible(true);
             this.dispose();
         } catch (Exception ex) {
 

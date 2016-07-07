@@ -40,16 +40,17 @@ public class Entrada_Nueva extends javax.swing.JFrame {
     ArrayList<Producto> productos = new ArrayList();
     String nom;
     boolean condicionfiltro;
+    int codEmpresa;
     ArrayList<Integer> ListAcciones = new ArrayList();
 
-    public Entrada_Nueva(ArrayList x, String nom, String fac, ArrayList acciones) throws ClassNotFoundException {
+    public Entrada_Nueva(ArrayList x, String nom, String fac, ArrayList acciones,int codEmpresa) throws ClassNotFoundException {
         initComponents();
         URL url = getClass().getResource("/images/facelet/icon.png");
         ImageIcon img = new ImageIcon(url);
         setIconImage(img.getImage());
         c.setVisible(false);
         this.nom = nom;
-
+        this.codEmpresa=codEmpresa;
         this.condicionfiltro = false;
         this.ListAcciones = acciones;
         this.setLocationRelativeTo(null);
@@ -520,7 +521,7 @@ public class Entrada_Nueva extends javax.swing.JFrame {
                         Connection con = Control.con;
                         generarFactura(jTextField1.getText(), fecha, con, v[1]);
                         Control.cerrarConexion();
-                        Articulo a = new Articulo(nom, ListAcciones);
+                        Articulo a = new Articulo(nom, ListAcciones,codEmpresa);
                         this.dispose();
                         a.setVisible(true);
                     } else {
@@ -722,7 +723,7 @@ public class Entrada_Nueva extends javax.swing.JFrame {
 
         Articulo ar;
         try {
-            ar = new Articulo(nom, ListAcciones);
+            ar = new Articulo(nom, ListAcciones,codEmpresa);
             ar.setVisible(true);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(Entrada_Nueva.class.getName()).log(Level.SEVERE, null, ex);
@@ -784,7 +785,7 @@ public class Entrada_Nueva extends javax.swing.JFrame {
                     }
                     Control.cerrarConexion();
                     if (r) {
-                        temp = new Producto(cod, nom, precio, 1, iva, 1);
+                        temp = new Producto(cod, nom, precio, 1, iva, 1,0);
                         productos.add(temp);
                     }
                 } catch (ClassNotFoundException ex) {
@@ -976,7 +977,7 @@ public class Entrada_Nueva extends javax.swing.JFrame {
                     }
                     Control.cerrarConexion();
                     if (r) {
-                        temp = new Producto(cod, nom, precio, 1, iva, 1);
+                        temp = new Producto(cod, nom, precio, 1, iva, 1,0);
                         productos.add(temp);
                     }
                 } catch (ClassNotFoundException ex) {
