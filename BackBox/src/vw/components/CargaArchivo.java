@@ -77,7 +77,7 @@ public class CargaArchivo extends javax.swing.JFrame {
                 Entrada.muestreMensajeV("EXITO AL CARGAR " + count + " REGISTROS");
                 Articulo ar;
                 try {
-                    ar = new Articulo(nom, ListAcciones);
+                    ar = new Articulo(nom, ListAcciones,1);
                     ar.setVisible(true);
                 } catch (ClassNotFoundException ex) {
                     Logger.getLogger(Entrada_Nueva.class.getName()).log(Level.SEVERE, null, ex);

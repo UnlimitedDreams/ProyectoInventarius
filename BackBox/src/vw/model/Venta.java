@@ -82,6 +82,8 @@ public class Venta extends javax.swing.JFrame {
     boolean condicionfiltro;
     String cedulaCliente;
     int codigo_cliente;
+    int codigo_empresa;
+    int regimen;
     ArrayList<seccion> listaSeccion = new ArrayList();
     ArrayList<acciones> listaaccion = new ArrayList();
     ArrayList<ContenedorMenus> List_Menu = new ArrayList();
@@ -101,7 +103,7 @@ public class Venta extends javax.swing.JFrame {
     public Venta(ArrayList Acciones,
             String usuario,
             int TipoVenta,
-            ArrayList acciones, String cliente)
+            ArrayList acciones, String cliente, int empresa)
             throws ClassNotFoundException {
         initComponents();
         c.setVisible(false);
@@ -112,15 +114,17 @@ public class Venta extends javax.swing.JFrame {
         this.tipoVenta = TipoVenta;
         this.cedulaCliente = cliente;
         this.codigo_cliente = 0;
+        this.codigo_empresa = empresa;
         this.subtotal.setText("0");
         this.setLocationRelativeTo(null);
         this.setResizable(false);
+        this.regimen = 0;
         URL url = getClass().getResource("/images/facelet/icon.png");
         ImageIcon img = new ImageIcon(url);
         setIconImage(img.getImage());
         this.productos = Acciones;
         iniciar();
-        descIva.setText("" + 0);
+
         porcentajeDescuento.setText("" + 0);
         Date fechaMostrar = new Date();
         SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
@@ -132,7 +136,7 @@ public class Venta extends javax.swing.JFrame {
             this.setTitle("Realizar Venta - BackBox");
         } else if (TipoVenta == 2) {
             this.setTitle("Realizar Devolución - BackBox");
-            descIva.setEditable(false);
+
         }
         this.SecuenciaDesc = 0;
         ContenedorMenus con_menu = new ContenedorMenus();
@@ -212,7 +216,7 @@ public class Venta extends javax.swing.JFrame {
                         menuItem.addActionListener(new ActionListener() {
                             @Override
                             public void actionPerformed(ActionEvent e) {
-                                MenuRedireccionar MenuF = new MenuRedireccionar(Venta.this, e.getActionCommand(), List_Menu, usuario);
+                                MenuRedireccionar MenuF = new MenuRedireccionar(Venta.this, e.getActionCommand(), List_Menu, usuario, codigo_empresa);
                                 try {
                                     MenuF.reDireccion();
                                     if (e.getActionCommand().equalsIgnoreCase("Crear Categoria ")
@@ -274,7 +278,7 @@ public class Venta extends javax.swing.JFrame {
                     menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_2, ActionEvent.ALT_MASK));
                 }
                 menuItem.addActionListener((ActionEvent e) -> {
-                    MenuRedireccionar MenuF = new MenuRedireccionar(this, e.getActionCommand().toString(), List_Menu, usuario);
+                    MenuRedireccionar MenuF = new MenuRedireccionar(this, e.getActionCommand().toString(), List_Menu, usuario, codigo_empresa);
                     try {
                         MenuF.reDireccion();
 
@@ -290,6 +294,28 @@ public class Venta extends javax.swing.JFrame {
                 });
                 menu.add(menuItem);
             }
+        }
+    }
+
+    public void ConfigurarIva() throws SQLException {
+        try {
+            Control.conectar();
+            Control.ejecuteQuery("select Regimen.codregimen from Empresa , empresaHistorico,Regimen\n"
+                    + "where Empresa.codEmpresa=empresaHistorico.codEmpresa\n"
+                    + "and empresaHistorico.codregimen=Regimen.codregimen\n"
+                    + "and Empresa.codEmpresa=" + codigo_empresa);
+            int codRegimen = 0;
+            while (Control.rs.next()) {
+                codRegimen = Control.rs.getInt(1);
+            }
+            Control.cerrarConexion();
+            if (codRegimen <= 1) {
+                porcentajeIVA.setEnabled(false);
+            }
+            this.regimen = codRegimen;
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Venta.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -337,38 +363,28 @@ public class Venta extends javax.swing.JFrame {
         double valorPorcentaje = 0;
         int descu = Integer.parseInt(porcentajeDescuento.getText());
         valorPorcentaje = (double) (Double.parseDouble(subtotal.getText()) * (descu / 100));
-        System.out.println("Valor de DEscuento: " + valorPorcentaje);
+
         for (int i = 0; i < productos.size(); i++) {
             pro = (Producto) productos.get(i);
             cant = pro.getCantidad();
             valor = valor + (pro.getPrecio_final() * cant);
-            iva = iva + (int) ((pro.getPrecio_final() * cant) * (pro.getIva() / 100));
+            iva = iva + (int) pro.getValorIva();
         }
         //valorPorcentaje = valor * (descu / 100);
         subtotal.setText("" + formateador.format(valor - valorPorcentaje));
         String d = "";
         int desc = 0;
-        if (descIva.getText() == null) {
-            d = "0";
-        } else {
-            desc = Integer.parseInt(descIva.getText());
 
-        }
-        if (descIva.getText().length() == 1) {
-            d = "0.0" + desc;
-
-        } else if (descIva.getText().length() == 2) {
-            d = "0." + desc;
-
-        }
-        double de = Double.parseDouble(d);
         double valor_f = 0;
+        valor_f=Double.parseDouble(subtotal.getText());
         if (tipoVenta == 1) {
-            valor_f = valor - (valor * de);
             valor_f = valor_f + iva;
-            valorDescuento.setText("" + formateador.format(valor * de));
-            porcentajeIVA.setText("" + formateador.format(iva));
-
+            valorDescuento.setText("" + formateador.format(valorPorcentaje));
+            if (regimen > 1) {
+                porcentajeIVA.setText("" + formateador.format(iva));
+            } else {
+                porcentajeIVA.setText("" +0);
+            }
         } else {
             valor_f = -1 * (valor);
             valorDescuento.setText("" + 0);
@@ -397,17 +413,15 @@ public class Venta extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable2 = new javax.swing.JTable();
         descuento = new javax.swing.JLabel();
-        descIva = new javax.swing.JTextField();
         medioDePago = new javax.swing.JLabel();
         subtotal = new javax.swing.JTextField();
         labelCambio = new javax.swing.JLabel();
         jLTotal = new javax.swing.JLabel();
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
-        IVA = new javax.swing.JLabel();
         valorDescuento = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
-        medioPago = new javax.swing.JComboBox<>();
+        medioPago = new javax.swing.JComboBox<String>();
         Descuento = new javax.swing.JLabel();
         porcentajeIVA = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
@@ -666,20 +680,7 @@ public class Venta extends javax.swing.JFrame {
 
         descuento.setFont(new java.awt.Font("Segoe UI Light", 1, 18)); // NOI18N
         descuento.setText("Descuento ($):");
-        jPanel1.add(descuento, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 480, -1, -1));
-
-        descIva.setFont(new java.awt.Font("Segoe UI Light", 0, 14)); // NOI18N
-        descIva.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                descIvaActionPerformed(evt);
-            }
-        });
-        descIva.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                descIvaKeyReleased(evt);
-            }
-        });
-        jPanel1.add(descIva, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 445, 135, 28));
+        jPanel1.add(descuento, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 445, -1, -1));
 
         medioDePago.setFont(new java.awt.Font("Segoe UI Light", 1, 18)); // NOI18N
         medioDePago.setText("CC. Cliente :");
@@ -735,10 +736,6 @@ public class Venta extends javax.swing.JFrame {
         });
         jPanel1.add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 90, -1, 70));
 
-        IVA.setFont(new java.awt.Font("Segoe UI Light", 1, 18)); // NOI18N
-        IVA.setText("IVA (%):");
-        jPanel1.add(IVA, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 445, 120, -1));
-
         valorDescuento.setFont(new java.awt.Font("Segoe UI Light", 0, 14)); // NOI18N
         valorDescuento.setEnabled(false);
         valorDescuento.addActionListener(new java.awt.event.ActionListener() {
@@ -746,14 +743,14 @@ public class Venta extends javax.swing.JFrame {
                 valorDescuentoActionPerformed(evt);
             }
         });
-        jPanel1.add(valorDescuento, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 480, 135, 28));
+        jPanel1.add(valorDescuento, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 445, 135, 28));
 
         jLabel7.setFont(new java.awt.Font("Segoe UI Light", 1, 18)); // NOI18N
         jLabel7.setText("Sub Total:");
         jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 340, -1, -1));
 
         medioPago.setFont(new java.awt.Font("Segoe UI Light", 0, 14)); // NOI18N
-        medioPago.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Efectivo", "Tarjeta" }));
+        medioPago.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Efectivo", "Tarjeta" }));
         medioPago.setToolTipText("Método de Pago del Cliente");
         medioPago.setPreferredSize(new java.awt.Dimension(130, 28));
         medioPago.addActionListener(new java.awt.event.ActionListener() {
@@ -774,7 +771,7 @@ public class Venta extends javax.swing.JFrame {
                 porcentajeIVAActionPerformed(evt);
             }
         });
-        jPanel1.add(porcentajeIVA, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 515, 135, 28));
+        jPanel1.add(porcentajeIVA, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 480, 135, 28));
 
         jLabel5.setFont(new java.awt.Font("Segoe UI Light", 1, 36)); // NOI18N
         jLabel5.setText("Total:");
@@ -837,7 +834,7 @@ public class Venta extends javax.swing.JFrame {
 
         IVA1.setFont(new java.awt.Font("Segoe UI Light", 1, 18)); // NOI18N
         IVA1.setText("IVA ($):");
-        jPanel1.add(IVA1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 515, -1, -1));
+        jPanel1.add(IVA1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 480, -1, -1));
 
         porcentajeDescuento.setFont(new java.awt.Font("Segoe UI Light", 0, 14)); // NOI18N
         porcentajeDescuento.addActionListener(new java.awt.event.ActionListener() {
@@ -969,7 +966,7 @@ public class Venta extends javax.swing.JFrame {
             HashMap<String, Object> parametros = new HashMap<String, Object>();
             parametros.put("Cod_fac", cod_factura);
             parametros.put("fec_fac", fecha);
-            parametros.put("desc", Integer.parseInt(descIva.getText()));
+            parametros.put("desc", 0);
             parametros.put("Iva", Double.parseDouble(porcentajeIVA.getText()));
             parametros.put("ValorDesc", Double.parseDouble(valorDescuento.getText()));
             parametros.put("Total", ValorPago);
@@ -1000,13 +997,15 @@ public class Venta extends javax.swing.JFrame {
             double valorIva = Double.parseDouble(porcentajeIVA.getText());
             boolean r = Control.ejecuteUpdate("insert into venta values(" + codigo_venta + ",'" + fecha + "'," + ValorPago
                     + "," + usuario + "," + tipoVenta + "," + cod_pago + "," + valorIva + ""
-                    + "," + Integer.parseInt(descIva.getText()) + "," + Double.parseDouble(valorDescuento.getText()) + "," + codigo_cliente + ")");
+                    + "," + Integer.parseInt(porcentajeDescuento.getText()) + ","
+                    + Double.parseDouble(valorDescuento.getText()) + "," + codigo_cliente + ","
+                    + Double.parseDouble(subtotal.getText()) + "," + codigo_empresa + ")");
             if (r) {
                 Producto pro = null;
                 for (int i = 0; i < productos.size(); i++) {
                     pro = (Producto) productos.get(i);
                     Control.ejecuteUpdate("insert into venta_pro values(" + codigo_pro + ",'" + pro.getCodigo() + "',"
-                            + codigo_venta + "," + pro.getCantidad() + ")");
+                            + codigo_venta + "," + pro.getCantidad() + "," + pro.getIva() + "," + pro.getValorIva() + ")");
                     codigo_pro++;
                 }
                 restar_Bodega();
@@ -1027,13 +1026,11 @@ public class Venta extends javax.swing.JFrame {
         }
         if (Proceso) {
             ArrayList<Producto> productos = new ArrayList();
-            new Venta(productos, usuario, 1, List_Menu, "1").setVisible(true);
+            new Venta(productos, usuario, 1, List_Menu, "1", codigo_empresa).setVisible(true);
             this.dispose();
         }
 
     }
-
-   
 
     public void Borrar() {
         System.out.println("+++++");
@@ -1093,10 +1090,6 @@ public class Venta extends javax.swing.JFrame {
             System.err.println("Error al borrar producto :" + ex.toString());
         }
     }//GEN-LAST:event_jTable2KeyPressed
-
-    private void descIvaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_descIvaActionPerformed
-        rellenar_datos();
-    }//GEN-LAST:event_descIvaActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         new Menu(usuario).setVisible(true);;
@@ -1159,10 +1152,6 @@ public class Venta extends javax.swing.JFrame {
     private void porcentajeIVAActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_porcentajeIVAActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_porcentajeIVAActionPerformed
-
-    private void descIvaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_descIvaKeyReleased
-        // TODO add your handling code here:
-    }//GEN-LAST:event_descIvaKeyReleased
 
     private void medioPagoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_medioPagoActionPerformed
         if (medioPago.getSelectedIndex() == 0) {
@@ -1241,8 +1230,6 @@ public class Venta extends javax.swing.JFrame {
     private void jTextField2KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField2KeyReleased
         try {
             if (evt.getKeyCode() == 10 && condicionfiltro == false) {
-                System.out.println("**************************");
-                System.out.println("Tamaño : " + productos);
                 c.setVisible(false);
                 this.condicionfiltro = true;
                 c.setVisible(false);
@@ -1265,23 +1252,25 @@ public class Venta extends javax.swing.JFrame {
                     try {
                         Control.conectar();
                         Producto temp = null;
-                        String query = "select nombre,precio_desc,iva "
+                        String query = "select nombre,precio_desc,iva,cast((precio_venta*(iva/100)) as numeric(10)) valorIva "
                                 + "from producto\n"
                                 + "where\n"
                                 + "producto.estado='A' and cod_producto='" + cod + "'";
+                        System.out.println("query : " + query);
                         Control.ejecuteQuery(query);
                         String nom = "";
                         double precio = 0;
-                        double iva = 0;
+                        double iva = 0, valorIva = 0;
                         boolean r = false;
                         while (Control.rs.next()) {
                             r = true;
                             nom = Control.rs.getString(1);
                             precio = Control.rs.getDouble(2);
                             iva = Control.rs.getDouble(3);
+                            valorIva = Control.rs.getDouble(4);
                         }
                         if (r) {
-                            temp = new Producto(cod, nom, precio, 1, iva, 1);
+                            temp = new Producto(cod, nom, precio, 1, iva, 1, valorIva);
                             temp.setPrecio_final((int) precio);
                             productos.add(temp);
                             jTextField2.setText("");
@@ -1369,7 +1358,7 @@ public class Venta extends javax.swing.JFrame {
     }//GEN-LAST:event_jPanel1FocusLost
 
     private void jTable1FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTable1FocusGained
-     
+
     }//GEN-LAST:event_jTable1FocusGained
     public void AgregarProductos(int i) {
         this.condicionfiltro = true;
@@ -1396,25 +1385,26 @@ public class Venta extends javax.swing.JFrame {
                 try {
                     Control.conectar();
                     Producto temp = null;
-                    String query = "select nombre,precio_desc,iva "
+                    String query = "select nombre,precio_desc,iva,cast((precio_venta*(iva/100)) as numeric(10)) "
                             + "from producto\n"
                             + "where\n"
                             + "producto.estado='A' and cod_producto='" + cod + "'";
                     Control.ejecuteQuery(query);
                     String nom = "";
                     double precio = 0;
-                    double iva = 0;
+                    double iva = 0, valorIva = 0;
                     boolean r = false;
                     while (Control.rs.next()) {
                         r = true;
                         nom = Control.rs.getString(1);
                         precio = Control.rs.getDouble(2);
                         iva = Control.rs.getDouble(3);
+                        valorIva = Control.rs.getDouble(4);
                     }
                     Control.cerrarConexion();
                     if (r) {
                         System.out.println("Agrego producto : " + cod);
-                        temp = new Producto(cod, nom, precio, 1, iva, 1);
+                        temp = new Producto(cod, nom, precio, 1, iva, 1, valorIva);
                         productos.add(temp);
                     } else {
                         jTable1.setValueAt("", i, 0);
@@ -1648,13 +1638,11 @@ public class Venta extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public javax.swing.JTextField Cliente;
     private javax.swing.JLabel Descuento;
-    private javax.swing.JLabel IVA;
     private javax.swing.JLabel IVA1;
     public javax.swing.JLabel NomCliente;
     private javax.swing.JScrollPane c;
     private javax.swing.JLabel cambio;
     private javax.swing.JMenuItem cerrarSesion;
-    private javax.swing.JTextField descIva;
     private javax.swing.JLabel descuento;
     private javax.swing.JLabel fecha;
     private javax.swing.JMenu file;

@@ -28,6 +28,7 @@ public class SalidaEntrada extends javax.swing.JDialog {
     String nombre;
     String cant;
     String usuario;
+    int codEmpresa;
     ArrayList<Integer> ListAcciones = new ArrayList();
 
     /**
@@ -41,7 +42,7 @@ public class SalidaEntrada extends javax.swing.JDialog {
      * @param cant Cantidad del Producto
      */
     public SalidaEntrada(java.awt.Frame parent, boolean modal,
-            String codigo, String tipo, String Nombre, String cant, ArrayList acciones) {
+            String codigo, String tipo, String Nombre, String cant, ArrayList acciones,int codEmpresa) {
         super(parent, modal);
         initComponents();
         this.codigo = codigo;
@@ -49,6 +50,7 @@ public class SalidaEntrada extends javax.swing.JDialog {
         this.usuario = Nombre;
         this.cant = cant;
         this.ListAcciones = acciones;
+        this.codEmpresa=codEmpresa;
         this.setLocationRelativeTo(null);
         this.setResizable(false);
         URL url = getClass().getResource("/images/facelet/icon.png");
@@ -224,7 +226,7 @@ public class SalidaEntrada extends javax.swing.JDialog {
                             Control.con.commit();
                             Control.con.setAutoCommit(true);
                             Control.cerrarConexion();
-                            Bodega b = new Bodega(usuario, ListAcciones);
+                            Bodega b = new Bodega(usuario, ListAcciones,codEmpresa);
                             this.dispose();
 
                         } else {

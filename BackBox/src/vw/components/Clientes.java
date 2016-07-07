@@ -52,13 +52,15 @@ public class Clientes extends javax.swing.JFrame {
      * Creates new form Articulo
      */
     String usuario;
+    int codEmpresa;
     ArrayList<seccion> listaSeccion = new ArrayList();
     ArrayList<acciones> listaaccion = new ArrayList();
     ArrayList<ContenedorMenus> List_Menu = new ArrayList();
 
-    public Clientes(String nom, ArrayList acciones) throws ClassNotFoundException {
+    public Clientes(String nom, ArrayList acciones,int codEmpresa) throws ClassNotFoundException {
         initComponents();
         this.List_Menu = acciones;
+        this.codEmpresa=codEmpresa;
         inicio();
         this.usuario = nom;
         this.setLocationRelativeTo(null);
@@ -143,7 +145,7 @@ public class Clientes extends javax.swing.JFrame {
                         menuItem.addActionListener(new ActionListener() {
                             @Override
                             public void actionPerformed(ActionEvent e) {
-                                MenuRedireccionar MenuF = new MenuRedireccionar(Clientes.this, e.getActionCommand(), List_Menu, usuario);
+                                MenuRedireccionar MenuF = new MenuRedireccionar(Clientes.this, e.getActionCommand(), List_Menu, usuario,codEmpresa);
                                 try {
                                     MenuF.reDireccion();
                                     if (e.getActionCommand().equalsIgnoreCase("Crear Categoria ")
@@ -197,7 +199,7 @@ public class Clientes extends javax.swing.JFrame {
                     menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_2, ActionEvent.ALT_MASK));
                 }
                 menuItem.addActionListener((ActionEvent e) -> {
-                    MenuRedireccionar MenuF = new MenuRedireccionar(this, e.getActionCommand().toString(), List_Menu, usuario);
+                    MenuRedireccionar MenuF = new MenuRedireccionar(this, e.getActionCommand().toString(), List_Menu, usuario,codEmpresa);
                     try {
                         MenuF.reDireccion();
                     } catch (IOException ex) {

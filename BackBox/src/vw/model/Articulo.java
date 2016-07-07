@@ -66,16 +66,18 @@ public class Articulo extends javax.swing.JFrame {
      * Creates new form Articulo
      */
     String usuario;
+    int codEmpresa;
     ArrayList<seccion> listaSeccion = new ArrayList();
     ArrayList<acciones> listaaccion = new ArrayList();
     ArrayList<ContenedorMenus> List_Menu = new ArrayList();
 
-    public Articulo(String nom, ArrayList acciones) throws ClassNotFoundException {
+    public Articulo(String nom, ArrayList acciones,int codEmpresa) throws ClassNotFoundException {
         initComponents();
         inicio();
 //        jButton6.setVisible(false);
         this.List_Menu = acciones;
         this.usuario = nom;
+        this.codEmpresa=codEmpresa;
         this.setLocationRelativeTo(null);
         this.setResizable(false);
         URL url = getClass().getResource("/images/facelet/icon.png");
@@ -158,7 +160,7 @@ public class Articulo extends javax.swing.JFrame {
                         menuItem.addActionListener(new ActionListener() {
                             @Override
                             public void actionPerformed(ActionEvent e) {
-                                MenuRedireccionar MenuF = new MenuRedireccionar(Articulo.this, e.getActionCommand(), List_Menu, usuario);
+                                MenuRedireccionar MenuF = new MenuRedireccionar(Articulo.this, e.getActionCommand(), List_Menu, usuario,codEmpresa);
                                 try {
                                     MenuF.reDireccion();
                                     if (e.getActionCommand().equalsIgnoreCase("Crear Categoria ")
@@ -212,7 +214,7 @@ public class Articulo extends javax.swing.JFrame {
                     menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_2, ActionEvent.ALT_MASK));
                 }
                 menuItem.addActionListener((ActionEvent e) -> {
-                    MenuRedireccionar MenuF = new MenuRedireccionar(this, e.getActionCommand().toString(), List_Menu, usuario);
+                    MenuRedireccionar MenuF = new MenuRedireccionar(this, e.getActionCommand().toString(), List_Menu, usuario,codEmpresa);
                     try {
                         MenuF.reDireccion();
                     } catch (IOException ex) {
@@ -505,7 +507,7 @@ public class Articulo extends javax.swing.JFrame {
     public void Entradas() throws ClassNotFoundException {
         String fac = "";
         ArrayList<Producto> pr = new ArrayList();
-        Entrada_Nueva rp = new Entrada_Nueva(pr, usuario, fac, List_Menu);
+        Entrada_Nueva rp = new Entrada_Nueva(pr, usuario, fac, List_Menu,codEmpresa);
         this.setVisible(false);
         rp.setVisible(true);
 

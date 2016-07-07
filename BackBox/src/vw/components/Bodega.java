@@ -50,15 +50,17 @@ public class Bodega extends javax.swing.JFrame {
 
     String usuario;
     String UsuNombre;
+    int codEmpresa;
     ArrayList<seccion> listaSeccion = new ArrayList();
     ArrayList<acciones> listaaccion = new ArrayList();
     ArrayList<ContenedorMenus> List_Menu = new ArrayList();
 
-    public Bodega(String usuario, ArrayList acciones) throws ClassNotFoundException, SQLException {
+    public Bodega(String usuario, ArrayList acciones,int codEmpresa) throws ClassNotFoundException, SQLException {
         initComponents();
         inicio();
         this.usuario = usuario;        
         this.List_Menu = acciones;
+        this.codEmpresa=codEmpresa;
         this.setLocationRelativeTo(null);
         this.setResizable(false);        
         Stock();
@@ -143,7 +145,7 @@ public class Bodega extends javax.swing.JFrame {
                         menuItem.addActionListener(new ActionListener() {
                             @Override
                             public void actionPerformed(ActionEvent e) {
-                                MenuRedireccionar MenuF = new MenuRedireccionar(Bodega.this, e.getActionCommand(), List_Menu, usuario);
+                                MenuRedireccionar MenuF = new MenuRedireccionar(Bodega.this, e.getActionCommand(), List_Menu, usuario,codEmpresa);
                                 try {
                                     MenuF.reDireccion();
                                     if (e.getActionCommand().equalsIgnoreCase("Crear Categoria ")
@@ -196,7 +198,7 @@ public class Bodega extends javax.swing.JFrame {
                     menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_2, ActionEvent.ALT_MASK));
                 }
                 menuItem.addActionListener((ActionEvent e) -> {
-                    MenuRedireccionar MenuF = new MenuRedireccionar(this, e.getActionCommand().toString(), List_Menu, usuario);
+                    MenuRedireccionar MenuF = new MenuRedireccionar(this, e.getActionCommand().toString(), List_Menu, usuario,codEmpresa);
                     try {
                         MenuF.reDireccion();
                     } catch (IOException ex) {
@@ -569,7 +571,7 @@ public class Bodega extends javax.swing.JFrame {
 
     private void stockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stockActionPerformed
         try {
-            Stock st = new Stock(usuario, List_Menu);
+            Stock st = new Stock(usuario, List_Menu,codEmpresa);
             this.setVisible(false);
             st.setVisible(true);
         } catch (Exception ex) {
@@ -703,7 +705,7 @@ public class Bodega extends javax.swing.JFrame {
             producto.setDesc(Integer.parseInt(Desc));
             producto.setPrecio_venta(Double.parseDouble(Precio));
             producto.setCantidad(Integer.parseInt(cant));
-            Producto_update p = new Producto_update(this, true, producto, usuario, List_Menu);
+            Producto_update p = new Producto_update(this, true, producto, usuario, List_Menu,codEmpresa);
             p.setVisible(true);
             this.setVisible(false);
         }
@@ -743,7 +745,7 @@ public class Bodega extends javax.swing.JFrame {
             String cod = (String) tablaProductos.getValueAt(i, 0).toString();
             String c = (String) tablaProductos.getValueAt(i, 7).toString();
             SalidaEntrada newSalida = new SalidaEntrada(this, true,
-                    cod, "Salida", usuario, c, List_Menu);
+                    cod, "Salida", usuario, c, List_Menu,codEmpresa);
             newSalida.setVisible(true);
 
         }
@@ -784,7 +786,7 @@ public class Bodega extends javax.swing.JFrame {
             String c = (String) tablaProductos.getValueAt(i, 6).toString();
             int codigo_sal = Sequence.seque("select max(cod_entra) from Salida_Entrada");
             SalidaEntrada newEntrada = new SalidaEntrada(this, true,
-                    cod, "Entrada", usuario, c, List_Menu);
+                    cod, "Entrada", usuario, c, List_Menu,codEmpresa);
             newEntrada.setVisible(true);
 
         }
