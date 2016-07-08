@@ -10,15 +10,12 @@ import Modelo.ContenedorMenus;
 import Modelo.MenuRedireccionar;
 import Modelo.acciones;
 import Modelo.seccion;
-import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.IOException;
-import java.net.URI;
 import java.net.URISyntaxException;
-import vw.model.Articulo;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -29,22 +26,6 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
-import vw.components.Bodega;
-import vw.components.CategoriaGestion;
-import vw.components.Entrada_Nueva;
-import vw.components.Producto;
-import vw.components.Provedores;
-import vw.components.Reporte_Entradas;
-import vw.components.Reporte_Ventas;
-import vw.components.Roles;
-import vw.components.Usuarios;
-import vw.components.VentaDiaria;
-import vw.dialogs.AcercaDe;
-import vw.dialogs.CategoriasRegistrar;
-import vw.dialogs.ProveedoresRegistrar;
-import vw.dialogs.RolRegistrar;
-import vw.dialogs.UsuariosRegistrar;
-import vw.model.Venta;
 
 /**
  *
@@ -78,7 +59,7 @@ public class Menu extends javax.swing.JFrame implements KeyListener {
         VerArticulos = 0;
         VerVenta = 0;
         VerUsuario = 0;
-        this.codigoEmpresa=0;
+        this.codigoEmpresa = 0;
         List_Menu.clear();
         try {
             cargarUsuario(usuario);
@@ -161,7 +142,7 @@ public class Menu extends javax.swing.JFrame implements KeyListener {
                             menuItem.addActionListener(new ActionListener() {
                                 @Override
                                 public void actionPerformed(ActionEvent e) {
-                                    MenuRedireccionar MenuF = new MenuRedireccionar(Menu.this, e.getActionCommand().toString(), List_Menu, usuario,codigoEmpresa);
+                                    MenuRedireccionar MenuF = new MenuRedireccionar(Menu.this, e.getActionCommand().toString(), List_Menu, usuario, codigoEmpresa);
                                     try {
                                         MenuF.reDireccion();
                                         if (e.getActionCommand().equalsIgnoreCase("Crear Categoria ")
@@ -219,7 +200,7 @@ public class Menu extends javax.swing.JFrame implements KeyListener {
                     menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_2, ActionEvent.ALT_MASK));
                 }
                 menuItem.addActionListener((ActionEvent e) -> {
-                    MenuRedireccionar MenuF = new MenuRedireccionar(this, e.getActionCommand().toString(), List_Menu, usuario,codigoEmpresa);
+                    MenuRedireccionar MenuF = new MenuRedireccionar(this, e.getActionCommand().toString(), List_Menu, usuario, codigoEmpresa);
                     try {
                         MenuF.reDireccion();
                     } catch (IOException ex) {
@@ -248,11 +229,11 @@ public class Menu extends javax.swing.JFrame implements KeyListener {
             while (Control.rs.next()) {
                 listaSeccion.add(new seccion(Control.rs.getInt(1), Control.rs.getString(2)));
             }
-            
+
             Control.cerrarConexion();
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
-        }finally {
+        } finally {
             Control.cerrarConexion();
         }
     }
@@ -281,17 +262,16 @@ public class Menu extends javax.swing.JFrame implements KeyListener {
         Control.ejecuteQuery("select nombre,apellido,codempresa from usuario,persona where \n"
                 + "usuario.cedula=persona.cedula and  cod_usuario=" + cod);
         String nombre = "";
-        int empresa=0;
+        int empresa = 0;
         while (Control.rs.next()) {
             nombre = Control.rs.getString(1) + " " + Control.rs.getString(2);
-            empresa=Control.rs.getInt(3);
+            empresa = Control.rs.getInt(3);
         }
-        this.codigoEmpresa=empresa;
+        this.codigoEmpresa = empresa;
         this.feld01.setText("Bienvenido " + nombre);
         Control.cerrarConexion();
 
     }
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -302,13 +282,12 @@ public class Menu extends javax.swing.JFrame implements KeyListener {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        C_bodega = new javax.swing.JButton();
-        C_Articulo = new javax.swing.JButton();
-        C_venta = new javax.swing.JButton();
-        C_usuario = new javax.swing.JButton();
+        bntAnalitics = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         feld01 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        btnSalir = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         file = new javax.swing.JMenu();
         inicio = new javax.swing.JMenuItem();
@@ -323,82 +302,23 @@ public class Menu extends javax.swing.JFrame implements KeyListener {
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        C_bodega.setBackground(new java.awt.Color(255, 255, 255));
-        C_bodega.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
-        C_bodega.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-xxxhdpi/ic_archive_gray_24dp.png"))); // NOI18N
-        C_bodega.setText("Ver Bodega");
-        C_bodega.setBorder(null);
-        C_bodega.setBorderPainted(false);
-        C_bodega.setContentAreaFilled(false);
-        C_bodega.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        C_bodega.setDefaultCapable(false);
-        C_bodega.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        C_bodega.setPreferredSize(new java.awt.Dimension(99, 117));
-        C_bodega.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-xxxhdpi/ic_archive_black_24dp.png"))); // NOI18N
-        C_bodega.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
-        C_bodega.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        C_bodega.addActionListener(new java.awt.event.ActionListener() {
+        bntAnalitics.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
+        bntAnalitics.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-xxxhdpi/sense_24dp.png"))); // NOI18N
+        bntAnalitics.setText("BackBox - Analitics");
+        bntAnalitics.setBorder(null);
+        bntAnalitics.setBorderPainted(false);
+        bntAnalitics.setContentAreaFilled(false);
+        bntAnalitics.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        bntAnalitics.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        bntAnalitics.setPreferredSize(new java.awt.Dimension(99, 117));
+        bntAnalitics.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
+        bntAnalitics.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        bntAnalitics.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                C_bodegaActionPerformed(evt);
+                bntAnaliticsActionPerformed(evt);
             }
         });
-        jPanel1.add(C_bodega, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 120, 110, -1));
-
-        C_Articulo.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
-        C_Articulo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-xxxhdpi/ic_card_giftcard_gray_24dp.png"))); // NOI18N
-        C_Articulo.setText("Ver Artículos");
-        C_Articulo.setBorder(null);
-        C_Articulo.setBorderPainted(false);
-        C_Articulo.setContentAreaFilled(false);
-        C_Articulo.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        C_Articulo.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        C_Articulo.setPreferredSize(new java.awt.Dimension(99, 117));
-        C_Articulo.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-xxxhdpi/ic_card_giftcard_black_24dp.png"))); // NOI18N
-        C_Articulo.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
-        C_Articulo.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        C_Articulo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                C_ArticuloActionPerformed(evt);
-            }
-        });
-        jPanel1.add(C_Articulo, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 280, -1, -1));
-
-        C_venta.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
-        C_venta.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-xxxhdpi/ic_shopping_cart_gray_24dp.png"))); // NOI18N
-        C_venta.setText("Realizar Venta");
-        C_venta.setBorder(null);
-        C_venta.setBorderPainted(false);
-        C_venta.setContentAreaFilled(false);
-        C_venta.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        C_venta.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        C_venta.setPreferredSize(new java.awt.Dimension(99, 117));
-        C_venta.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-xxxhdpi/ic_shopping_cart_black_24dp.png"))); // NOI18N
-        C_venta.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
-        C_venta.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        C_venta.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                C_ventaActionPerformed(evt);
-            }
-        });
-        jPanel1.add(C_venta, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 280, -1, -1));
-
-        C_usuario.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
-        C_usuario.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-xxxhdpi/ic_account_box_gray_24dp.png"))); // NOI18N
-        C_usuario.setText("Control de Usuarios");
-        C_usuario.setBorder(null);
-        C_usuario.setBorderPainted(false);
-        C_usuario.setContentAreaFilled(false);
-        C_usuario.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        C_usuario.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        C_usuario.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-xxxhdpi/ic_account_box_black_24dp.png"))); // NOI18N
-        C_usuario.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
-        C_usuario.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        C_usuario.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                C_usuarioActionPerformed(evt);
-            }
-        });
-        jPanel1.add(C_usuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 120, -1, -1));
+        jPanel1.add(bntAnalitics, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 400, 120, 120));
 
         jPanel2.setBackground(new java.awt.Color(196, 70, 38));
 
@@ -429,7 +349,33 @@ public class Menu extends javax.swing.JFrame implements KeyListener {
                 .addContainerGap())
         );
 
-        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, 540));
+        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
+
+        jLabel3.setFont(new java.awt.Font("Segoe UI Light", 1, 18)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(102, 0, 0));
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel3.setText("Tip: Presiona (CTRL + V). Para hacer una venta");
+        jLabel3.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 10, 400, 30));
+
+        btnSalir.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
+        btnSalir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-xxxhdpi/ic_archive_black_24dp.png"))); // NOI18N
+        btnSalir.setText("Salir");
+        btnSalir.setBorder(null);
+        btnSalir.setBorderPainted(false);
+        btnSalir.setContentAreaFilled(false);
+        btnSalir.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnSalir.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnSalir.setPreferredSize(new java.awt.Dimension(99, 117));
+        btnSalir.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-xxxhdpi/ic_archive_gray_24dp.png"))); // NOI18N
+        btnSalir.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
+        btnSalir.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnSalir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSalirActionPerformed(evt);
+            }
+        });
+        jPanel1.add(btnSalir, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 400, 120, 120));
 
         file.setText("Archivo");
         file.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
@@ -477,51 +423,16 @@ public class Menu extends javax.swing.JFrame implements KeyListener {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 529, Short.MAX_VALUE)
-                .addGap(3, 3, 3))
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void C_bodegaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_C_bodegaActionPerformed
-        try {
+    private void bntAnaliticsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntAnaliticsActionPerformed
 
-            new Bodega(usuario, List_Menu,codigoEmpresa).setVisible(true);
-            this.dispose();
-
-        } catch (Exception ex) {
-
-        }
-    }//GEN-LAST:event_C_bodegaActionPerformed
-
-    private void C_ArticuloActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_C_ArticuloActionPerformed
-        try {
-            new Articulo(usuario, List_Menu,codigoEmpresa).setVisible(true);
-            this.dispose();
-        } catch (Exception ex) {
-
-        }
-    }//GEN-LAST:event_C_ArticuloActionPerformed
-
-    private void C_ventaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_C_ventaActionPerformed
-        try {
-            ArrayList<Producto> productos = new ArrayList();
-            new Venta(productos, usuario, 1, List_Menu, "1", this.codigoEmpresa).setVisible(true);
-            this.dispose();
-        } catch (Exception ex) {
-
-        }
-    }//GEN-LAST:event_C_ventaActionPerformed
-
-    private void C_usuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_C_usuarioActionPerformed
-        try {
-            new Usuarios(usuario, List_Menu,codigoEmpresa).setVisible(true);
-            this.dispose();
-        } catch (Exception ex) {
-
-        }
-    }//GEN-LAST:event_C_usuarioActionPerformed
+    }//GEN-LAST:event_bntAnaliticsActionPerformed
 
     private void inicioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inicioActionPerformed
         new Menu(usuario).setVisible(true);
@@ -537,20 +448,23 @@ public class Menu extends javax.swing.JFrame implements KeyListener {
         System.exit(0);
     }//GEN-LAST:event_salirActionPerformed
 
+    private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
+        cerrarSesionActionPerformed(evt);
+    }//GEN-LAST:event_btnSalirActionPerformed
+
     /**
      * @param args the command line arguments
      */
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton C_Articulo;
-    private javax.swing.JButton C_bodega;
-    private javax.swing.JButton C_usuario;
-    private javax.swing.JButton C_venta;
+    private javax.swing.JButton bntAnalitics;
+    private javax.swing.JButton btnSalir;
     private javax.swing.JMenuItem cerrarSesion;
     private javax.swing.JLabel feld01;
     private javax.swing.JMenu file;
     private javax.swing.JMenuItem inicio;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
@@ -574,5 +488,4 @@ public class Menu extends javax.swing.JFrame implements KeyListener {
     public void keyPressed(KeyEvent e) {
         System.out.println("--.- " + e.getKeyChar());
     }
-
 }

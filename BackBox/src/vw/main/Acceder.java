@@ -35,7 +35,6 @@ public class Acceder extends javax.swing.JFrame {
         img = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/facelet/icon.png"));
         setIconImage(img);
         probarConexion();
-
     }
 
     public void probarConexion() {
