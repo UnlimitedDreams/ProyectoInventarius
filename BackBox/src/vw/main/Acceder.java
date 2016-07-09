@@ -11,11 +11,11 @@ import vw.components.Entrada;
 import java.awt.Color;
 import java.awt.Image;
 import java.awt.Toolkit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.io.IOException;
 import static java.lang.Math.floor;
+import java.net.URI;
+import java.net.URISyntaxException;
 import vw.dialogs.AcercaDe;
-import vw.model.Venta;
 
 /**
  *
@@ -35,10 +35,11 @@ public class Acceder extends javax.swing.JFrame {
         img = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/facelet/icon.png"));
         setIconImage(img);
         probarConexion();
-
     }
 
     public void probarConexion() {
+        text05.setVisible(false);
+        text06.setVisible(false);
         try {
             if (Control.conectar()) {
                 alerta.setText("Conectado...");
@@ -49,7 +50,9 @@ public class Acceder extends javax.swing.JFrame {
                 Entrada.muestreMensajeV("No hay Conecion a la Base de Datos Comunicarse con soporte");
             }
         } catch (ClassNotFoundException ex) {
-//            Logger.getLogger(Acceder.class.getName()).log(Level.SEVERE, null, "-------------"+ex);
+            System.out.println("Error:" + ex.toString());
+        } finally {
+            Control.cerrarConexion();
         }
     }
 
@@ -57,7 +60,7 @@ public class Acceder extends javax.swing.JFrame {
         alerta = new javax.swing.JLabel();
         alerta.setFont(new java.awt.Font("Segoe UI Light", 1, 12)); // NOI18N
         alerta.setText("jLabel4");
-        panel.add(alerta, new org.netbeans.lib.awtextra.AbsoluteConstraints(
+        container01.add(alerta, new org.netbeans.lib.awtextra.AbsoluteConstraints(
                 (int) floor((this.getSize().width * 0.7) + 130),
                 (int) floor((this.getSize().height * 0.80) + 20), 130, 20));
     }
@@ -71,26 +74,28 @@ public class Acceder extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        panel = new javax.swing.JPanel();
-        social02 = new javax.swing.JLabel();
-        acceder = new javax.swing.JButton();
+        container01 = new javax.swing.JPanel();
         field01 = new org.edisoncor.gui.textField.TextFieldRectBackground();
         field02 = new org.edisoncor.gui.passwordField.PasswordFieldRectBackground();
-        jPanel1 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        label02 = new javax.swing.JLabel();
-        label01 = new javax.swing.JLabel();
-        label03 = new javax.swing.JLabel();
+        container02 = new javax.swing.JPanel();
+        img001 = new javax.swing.JLabel();
+        text04 = new javax.swing.JLabel();
+        text03 = new javax.swing.JLabel();
+        text02 = new javax.swing.JLabel();
         alerta = new javax.swing.JLabel();
+        acceder = new javax.swing.JLabel();
+        text01 = new javax.swing.JLabel();
+        text05 = new javax.swing.JLabel();
+        text06 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         Salir = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
+        help = new javax.swing.JMenuItem();
         jSeparator2 = new javax.swing.JPopupMenu.Separator();
         atajos = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
-        jMenuItem3 = new javax.swing.JMenuItem();
+        homaPage = new javax.swing.JMenuItem();
         aboutUs = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -104,87 +109,110 @@ public class Acceder extends javax.swing.JFrame {
             }
         });
 
-        panel.setBackground(new java.awt.Color(255, 255, 255));
-        panel.setMinimumSize(new java.awt.Dimension(791, 491));
-        panel.setName(""); // NOI18N
-        panel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        container01.setBackground(new java.awt.Color(255, 255, 255));
+        container01.setMinimumSize(new java.awt.Dimension(791, 491));
+        container01.setName(""); // NOI18N
+        container01.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        social02.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-mdpi/ic_plus_one_black_24dp.png"))); // NOI18N
-        social02.setToolTipText("Google+");
-        social02.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        panel.add(social02, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 470, -1, -1));
-
-        acceder.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-hdpi/acceder_48dp.png"))); // NOI18N
-        acceder.setBorder(null);
-        acceder.setBorderPainted(false);
-        acceder.setContentAreaFilled(false);
-        acceder.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        acceder.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        acceder.setPreferredSize(new java.awt.Dimension(59, 30));
-        acceder.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-hdpi/acceder_rollover_48dp.png"))); // NOI18N
-        acceder.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
-        acceder.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        acceder.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                accederActionPerformed(evt);
-            }
-        });
-        panel.add(acceder, new org.netbeans.lib.awtextra.AbsoluteConstraints(660, 300, -1, -1));
-
-        field01.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        field01.setToolTipText("Ingrese su número de cedula");
+        field01.setBackground(new java.awt.Color(254, 254, 254));
+        field01.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED));
+        field01.setHorizontalAlignment(javax.swing.JTextField.LEFT);
+        field01.setToolTipText("Ingrese su nombre de Usuario");
         field01.setDescripcion("Ingrese Usuario");
         field01.setFont(new java.awt.Font("Segoe UI Light", 0, 14)); // NOI18N
+        field01.setMargin(new java.awt.Insets(3, 3, 3, 3));
         field01.setPreferredSize(new java.awt.Dimension(160, 30));
-        panel.add(field01, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 200, -1, -1));
+        container01.add(field01, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 180, 410, -1));
         field01.getAccessibleContext().setAccessibleName("");
 
-        field02.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        field02.setBackground(new java.awt.Color(254, 254, 254));
+        field02.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        field02.setHorizontalAlignment(javax.swing.JTextField.LEFT);
+        field02.setToolTipText("Ingrese su clave de usuario");
         field02.setDescripcion("Ingrese Clave");
-        field02.setFont(new java.awt.Font("Segoe UI Light", 1, 14)); // NOI18N
+        field02.setFont(new java.awt.Font("Segoe UI Light", 0, 14)); // NOI18N
+        field02.setMargin(new java.awt.Insets(3, 3, 3, 3));
         field02.setPreferredSize(new java.awt.Dimension(160, 30));
         field02.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 field02ActionPerformed(evt);
             }
         });
-        panel.add(field02, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 250, -1, -1));
+        container01.add(field02, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 270, 410, -1));
 
-        jPanel1.setBackground(new java.awt.Color(196, 70, 38));
+        container02.setBackground(new java.awt.Color(196, 70, 38));
 
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/facelet/img001.png"))); // NOI18N
+        img001.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/facelet/img001.png"))); // NOI18N
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jLabel1)
-                .addGap(0, 0, Short.MAX_VALUE))
+        javax.swing.GroupLayout container02Layout = new javax.swing.GroupLayout(container02);
+        container02.setLayout(container02Layout);
+        container02Layout.setHorizontalGroup(
+            container02Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(container02Layout.createSequentialGroup()
+                .addComponent(img001, javax.swing.GroupLayout.PREFERRED_SIZE, 324, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 6, Short.MAX_VALUE))
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        container02Layout.setVerticalGroup(
+            container02Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(container02Layout.createSequentialGroup()
                 .addGap(58, 58, 58)
-                .addComponent(jLabel1)
+                .addComponent(img001)
                 .addContainerGap(102, Short.MAX_VALUE))
         );
 
-        panel.add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 330, 510));
+        container01.add(container02, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 330, -1));
 
-        label02.setFont(new java.awt.Font("Segoe UI Light", 0, 20)); // NOI18N
-        label02.setText("Contraseña");
-        panel.add(label02, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 250, -1, -1));
+        text04.setFont(new java.awt.Font("Segoe UI Light", 0, 24)); // NOI18N
+        text04.setText("Contraseña:");
+        container01.add(text04, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 230, -1, -1));
 
-        label01.setFont(new java.awt.Font("Segoe UI Light", 0, 20)); // NOI18N
-        label01.setText("Usuario");
-        panel.add(label01, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 200, -1, -1));
+        text03.setFont(new java.awt.Font("Segoe UI Light", 0, 24)); // NOI18N
+        text03.setText("Nombre de Usuario:");
+        container01.add(text03, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 140, -1, -1));
 
-        label03.setFont(new java.awt.Font("Segoe UI Light", 1, 30)); // NOI18N
-        label03.setText("Guarda todo en la Caja");
-        label03.setPreferredSize(new java.awt.Dimension(194, 41));
-        panel.add(label03, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 10, 350, -1));
-        panel.add(alerta, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 460, 110, 40));
+        text02.setFont(new java.awt.Font("Segoe UI Light", 1, 30)); // NOI18N
+        text02.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        text02.setText("guardar todo en la Caja");
+        text02.setPreferredSize(new java.awt.Dimension(194, 41));
+        container01.add(text02, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 60, 350, -1));
+        container01.add(alerta, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 460, 110, 40));
+
+        acceder.setBackground(new java.awt.Color(153, 153, 153));
+        acceder.setFont(new java.awt.Font("Segoe UI Light", 1, 24)); // NOI18N
+        acceder.setForeground(new java.awt.Color(255, 255, 255));
+        acceder.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        acceder.setText("Acceder");
+        acceder.setToolTipText("Ingresa al sistema");
+        acceder.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        acceder.setOpaque(true);
+        acceder.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                accederMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                accederMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                accederMouseExited(evt);
+            }
+        });
+        container01.add(acceder, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 370, 410, -1));
+
+        text01.setFont(new java.awt.Font("Segoe UI Light", 1, 30)); // NOI18N
+        text01.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        text01.setText("Ingresa para ");
+        text01.setPreferredSize(new java.awt.Dimension(194, 41));
+        container01.add(text01, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 10, 350, -1));
+
+        text05.setFont(new java.awt.Font("Segoe UI Light", 1, 11)); // NOI18N
+        text05.setForeground(java.awt.Color.red);
+        text05.setText("**Este Campo es requerido");
+        container01.add(text05, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 210, 410, -1));
+
+        text06.setFont(new java.awt.Font("Segoe UI Light", 1, 11)); // NOI18N
+        text06.setForeground(java.awt.Color.red);
+        text06.setText("**Este Campo es requerido");
+        container01.add(text06, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 300, 410, -1));
 
         jMenuBar1.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
 
@@ -206,20 +234,35 @@ public class Acceder extends javax.swing.JFrame {
         jMenu2.setText("Ayuda");
         jMenu2.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
 
-        jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F1, 0));
-        jMenuItem1.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
-        jMenuItem1.setText(" Ayuda en línea");
-        jMenu2.add(jMenuItem1);
+        help.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F1, 0));
+        help.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
+        help.setText(" Ayuda en línea");
+        help.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                helpActionPerformed(evt);
+            }
+        });
+        jMenu2.add(help);
         jMenu2.add(jSeparator2);
 
         atajos.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
         atajos.setText("Atajos");
+        atajos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                atajosActionPerformed(evt);
+            }
+        });
         jMenu2.add(atajos);
         jMenu2.add(jSeparator1);
 
-        jMenuItem3.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
-        jMenuItem3.setText("Pagina de Inico");
-        jMenu2.add(jMenuItem3);
+        homaPage.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
+        homaPage.setText("Pagina de Inico");
+        homaPage.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                homaPageActionPerformed(evt);
+            }
+        });
+        jMenu2.add(homaPage);
 
         aboutUs.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
         aboutUs.setText("Acerca de...");
@@ -238,19 +281,19 @@ public class Acceder extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(panel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(container01, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(panel, javax.swing.GroupLayout.DEFAULT_SIZE, 511, Short.MAX_VALUE)
+            .addComponent(container01, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
-        panel.setSize(this.getSize());
-        panel.setLayout(panel.getLayout());
+        container01.setSize(this.getSize());
+        container01.setLayout(container01.getLayout());
     }//GEN-LAST:event_formComponentResized
 
     private void SalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SalirActionPerformed
@@ -258,74 +301,120 @@ public class Acceder extends javax.swing.JFrame {
         System.exit(0);
     }//GEN-LAST:event_SalirActionPerformed
 
-    private void accederActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_accederActionPerformed
+    private void field02ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_field02ActionPerformed
         try {
             validarUsuario();
         } catch (Exception ex) {
             //Nothing Here
         }
-    }//GEN-LAST:event_accederActionPerformed
-
-    private void field02ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_field02ActionPerformed
-        accederActionPerformed(evt);
     }//GEN-LAST:event_field02ActionPerformed
 
     private void aboutUsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aboutUsActionPerformed
         new AcercaDe(this, true).setVisible(true);
     }//GEN-LAST:event_aboutUsActionPerformed
 
-    public void validarUsuario() throws ClassNotFoundException {
-        Control.conectar();
-        try {
-            boolean r = Control.ejecuteQuery("select "
-                    + "rol.cod_rol,"
-                    + "persona.nombre, "
-                    + "persona.apellido,usuario.cod_usuario "
-                    + "from usuario,rol,persona\n"
-                    + "where\n"
-                    + "usuario.cod_rol=rol.cod_rol and\n"
-                    + "persona.cedula=usuario.cedula\n"
-                    + "and usuario.usuario=lower('" + field01.getText() + "') and\n"
-                    + " usuario.clave=lower('" + field02.getText() + "')");
-            int rol = 0;
-            String Usuario = "";
-            String Usu = "";
-            boolean f = false;
-
-            while (Control.rs.next()) {
-                rol = Control.rs.getInt(1);
-                Usuario = Control.rs.getString(2) + " " + Control.rs.getString(3);
-                Usu = Control.rs.getString(4);
-                f = true;
+    private void helpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_helpActionPerformed
+        if (java.awt.Desktop.isDesktopSupported()) {
+            try {
+                java.awt.Desktop dk = java.awt.Desktop.getDesktop();
+                dk.browse(new URI("https://github.com/UnlimitedDreams/ProyectoInventarius/wiki/1.-Ayuda"));
+            } catch (URISyntaxException | IOException e) {
+                System.out.println("Error al abrir URL: " + e.getMessage());
             }
-            if (f) {
-                if (rol >= 1) {
-                    Menu newMenu = new Menu(Usu);
-                    newMenu.setVisible(true);
-                    this.setVisible(false);
-                } 
-            } else {
-                Entrada.muestreMensajeV("El usuario o la clave no son correctos",
-                        javax.swing.JOptionPane.ERROR_MESSAGE);
-            }
-
-        } catch (Exception ex) {
-
-        }finally {
-            Control.cerrarConexion();
         }
+    }//GEN-LAST:event_helpActionPerformed
 
+    private void homaPageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_homaPageActionPerformed
+        if (java.awt.Desktop.isDesktopSupported()) {
+            try {
+                java.awt.Desktop dk = java.awt.Desktop.getDesktop();
+                dk.browse(new URI("https://github.com/UnlimitedDreams/ProyectoInventarius/wiki/0.-Inicio"));
+            } catch (URISyntaxException | IOException e) {
+                System.out.println("Error al abrir URL: " + e.getMessage());
+            }
+        }
+     }//GEN-LAST:event_homaPageActionPerformed
+
+    private void atajosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_atajosActionPerformed
+        if (java.awt.Desktop.isDesktopSupported()) {
+            try {
+                java.awt.Desktop dk = java.awt.Desktop.getDesktop();
+                dk.browse(new URI("https://github.com/UnlimitedDreams/ProyectoInventarius/wiki/1.-Ayuda"));
+            } catch (URISyntaxException | IOException e) {
+                System.out.println("Error al abrir URL: " + e.getMessage());
+            }
+        }
+    }//GEN-LAST:event_atajosActionPerformed
+
+    private void accederMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_accederMouseClicked
+        try {
+            validarUsuario();
+        } catch (Exception ex) {
+            //Nothing Here
+        }
+    }//GEN-LAST:event_accederMouseClicked
+
+    private void accederMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_accederMouseEntered
+        acceder.setBackground(new Color(196, 70, 38));
+    }//GEN-LAST:event_accederMouseEntered
+
+    private void accederMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_accederMouseExited
+        acceder.setBackground(new Color(153, 153, 153));
+    }//GEN-LAST:event_accederMouseExited
+
+    public void validarUsuario() throws ClassNotFoundException {
+        if (field01.getText().isEmpty() | field02.getText().isEmpty()) {
+            text05.setVisible(true);
+            text06.setVisible(true);
+        } else {
+            Control.conectar();
+            try {
+                boolean r = Control.ejecuteQuery("select "
+                        + "rol.cod_rol,"
+                        + "persona.nombre, "
+                        + "persona.apellido,usuario.cod_usuario "
+                        + "from usuario,rol,persona\n"
+                        + "where\n"
+                        + "usuario.cod_rol=rol.cod_rol and\n"
+                        + "persona.cedula=usuario.cedula\n"
+                        + "and usuario.usuario=lower('" + field01.getText() + "') and\n"
+                        + " usuario.clave=lower('" + field02.getText() + "')");
+                int rol = 0;
+                String Usuario = "";
+                String Usu = "";
+                boolean f = false;
+
+                while (Control.rs.next()) {
+                    rol = Control.rs.getInt(1);
+                    Usuario = Control.rs.getString(2) + " " + Control.rs.getString(3);
+                    Usu = Control.rs.getString(4);
+                    f = true;
+                }
+                if (f) {
+                    if (rol >= 1) {
+                        Menu newMenu = new Menu(Usu);
+                        newMenu.setVisible(true);
+                        this.setVisible(false);
+                    }
+                } else {
+                    Entrada.muestreMensajeV("El usuario o la clave no son correctos",
+                            javax.swing.JOptionPane.ERROR_MESSAGE);
+                }
+            } catch (Exception ex) {
+                System.out.println("Error: " + ex.toString());
+            } finally {
+                Control.cerrarConexion();
+            }
+        }
     }
 
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                WebLookAndFeel.install();
-                new Acceder().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            WebLookAndFeel.install();
+            new Acceder().setVisible(true);
         });
     }
 
@@ -333,24 +422,26 @@ public class Acceder extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem Salir;
     private javax.swing.JMenuItem aboutUs;
-    private javax.swing.JButton acceder;
+    private javax.swing.JLabel acceder;
     private javax.swing.JLabel alerta;
     private javax.swing.JMenuItem atajos;
+    private javax.swing.JPanel container01;
+    private javax.swing.JPanel container02;
     private org.edisoncor.gui.textField.TextFieldRectBackground field01;
     private org.edisoncor.gui.passwordField.PasswordFieldRectBackground field02;
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JMenuItem help;
+    private javax.swing.JMenuItem homaPage;
+    private javax.swing.JLabel img001;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JMenuItem jMenuItem3;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
-    private javax.swing.JLabel label01;
-    private javax.swing.JLabel label02;
-    private javax.swing.JLabel label03;
-    private javax.swing.JPanel panel;
-    private javax.swing.JLabel social02;
+    private javax.swing.JLabel text01;
+    private javax.swing.JLabel text02;
+    private javax.swing.JLabel text03;
+    private javax.swing.JLabel text04;
+    private javax.swing.JLabel text05;
+    private javax.swing.JLabel text06;
     // End of variables declaration//GEN-END:variables
 }
