@@ -29,18 +29,11 @@ import javax.swing.JOptionPane;
 import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
 import javax.swing.table.DefaultTableModel;
-import vw.dialogs.AcercaDe;
-import vw.dialogs.CategoriasRegistrar;
 import vw.dialogs.ClienteActualizar;
-import vw.dialogs.ProveedoresRegistrar;
 import vw.dialogs.RegistroCliente;
-import vw.dialogs.RolRegistrar;
-import vw.dialogs.UsuarioActualizar;
-import vw.dialogs.UsuariosRegistrar;
 import vw.main.Acceder;
 import vw.main.Menu;
-import vw.model.Articulo;
-import vw.model.Venta;
+
 
 /**
  *

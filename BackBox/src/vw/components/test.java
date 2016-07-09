@@ -15,9 +15,13 @@ import java.sql.SQLException;
 public class test {
 
     public static void main(String[] agrs) throws ClassNotFoundException, SQLException {
-        int valor=0;
-        valor = Integer.parseInt("7900.0");
-        System.out.println("valor : "  + valor);
+        int valor=1;
+        int valor2=2;
+       if(valor==1 && valor2==2){
+           System.out.println("b");
+       }else if(valor==1){
+           System.out.println("a");
+       }
 //        Control.conectar();
 //        int a = 1;
 //        int b = 0;

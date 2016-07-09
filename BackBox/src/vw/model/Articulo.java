@@ -46,15 +46,6 @@ import javax.swing.JSeparator;
 import javax.swing.JTable;
 import javax.swing.KeyStroke;
 import javax.swing.table.DefaultTableModel;
-import vw.components.Reporte_Entradas;
-import vw.components.Reporte_Ventas;
-import vw.components.Roles;
-import vw.components.VentaDiaria;
-import vw.dialogs.AcercaDe;
-import vw.dialogs.CategoriasRegistrar;
-import vw.dialogs.ProveedoresRegistrar;
-import vw.dialogs.RolRegistrar;
-import vw.dialogs.UsuariosRegistrar;
 
 /**
  *
