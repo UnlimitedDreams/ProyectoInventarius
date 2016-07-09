@@ -181,7 +181,7 @@ public class Venta extends javax.swing.JFrame {
                         if (object1.getAccion().equalsIgnoreCase("Ver Articulos")) {
                             menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, 10));
                         }
-                        if (object1.getAccion().equalsIgnoreCase("Nuevo Articulo")) {
+                        if (object1.getAccion().equalsIgnoreCase("Nueva Compra")) {
                             menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, ActionEvent.CTRL_MASK));
                         }
                         if (object1.getAccion().equalsIgnoreCase("Ver Categoria")) {
@@ -1131,25 +1131,21 @@ public class Venta extends javax.swing.JFrame {
     private void jTable2KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTable2KeyReleased
         if (evt.getKeyCode() == 10) {
             DecimalFormat formateador = new DecimalFormat("###,###.##");
-            System.out.println("entro a cantidadde producto");
             int i = jTable2.getSelectedRow();
-            System.out.println("Fila : " + i);
             String cod = (String) jTable2.getValueAt(i, 0).toString();
             String precio = (String) jTable2.getValueAt(i, 2).toString();
             String Cant = (String) jTable2.getValueAt(i, 3).toString();
-            System.out.println("Cod : " + cod);
-            System.out.println("cant " + Cant);
             double total = 0;
             for (Producto producto : productos) {
                 if (producto.getCodigo().equalsIgnoreCase(cod)) {
-                    System.out.println("Lo Encontro");
                     producto.setCantidad(Integer.parseInt(Cant));
                     producto.setPrecio_venta(producto.getPrecio_final() * producto.getCantidad());
                     jTable2.setValueAt((producto.getPrecio_final() * producto.getCantidad()), i, 2);
                 }
                 total = total + producto.getPrecio_venta();
             }
-            jLTotal.setText("" + formateador.format(total));
+            subtotal.setText("" + formateador.format(total));
+            rellenar_datos();
         }
 
 
@@ -1506,7 +1502,6 @@ public class Venta extends javax.swing.JFrame {
     }
     private void ClienteKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_ClienteKeyPressed
         try {
-            System.out.println("entroo al cliente enter " + evt.getKeyCode());
             if (evt.getKeyCode() == 10) {
                 Control.conectar();
                 boolean r = false;
@@ -1516,10 +1511,12 @@ public class Venta extends javax.swing.JFrame {
                     r = true;
                     NomCliente.setText("Cliente : " + Control.rs.getString(1));
                 }
-                System.out.println("--- " + r);
+                
                 if (r == false) {
                     Entrada.muestreMensajeV("La cedula ingresada no esta registrada como cliente");
                     Cliente.setText(this.cedulaCliente);
+                }else{
+                    codigo_cliente=Integer.parseInt(Cliente.getText());
                 }
                 Control.cerrarConexion();
             }

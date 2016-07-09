@@ -25,7 +25,7 @@ import vw.components.Sequence;
 public class RolActualizar extends javax.swing.JDialog {
 
     String ced = "";
-    String nomRol="";
+    String nomRol = "";
     ArrayList<seccion> listaSeccion = new ArrayList();
     ArrayList<acciones> listaaccion = new ArrayList();
     ArrayList<ContenedorMenus> List_Menu = new ArrayList();
@@ -37,20 +37,20 @@ public class RolActualizar extends javax.swing.JDialog {
      * @param modal
      * @param cod
      */
-    public RolActualizar(java.awt.Frame parent, boolean modal, String cod, ArrayList menu,String NomRol) {
+    public RolActualizar(java.awt.Frame parent, boolean modal, String cod, ArrayList menu, String NomRol) {
         super(parent, modal);
         initComponents();
         this.List_Menu = menu;
-        this.nomRol=NomRol;
+        this.nomRol = NomRol;
         jTextField3.setText(nomRol);
         ContenedorMenus con_menu = new ContenedorMenus();
         con_menu = (ContenedorMenus) List_Menu.get(0);
         listaSeccion = con_menu.getListaSeccion();
         listaaccion = con_menu.getListaAcciones();
         for (seccion object : listaSeccion) {
-            if(object.getCod_seccion()==1){
+            if (object.getCod_seccion() == 1) {
                 jCheckBox3.setSelected(true);
-            }else  if(object.getCod_seccion()==2){
+            } else if (object.getCod_seccion() == 2) {
                 jCheckBox14.setSelected(true);
             }
         }
@@ -63,99 +63,124 @@ public class RolActualizar extends javax.swing.JDialog {
     }
 
     public void update() throws ClassNotFoundException {
+        boolean cerrar = false;
         String op[] = new String[2];
         op[0] = "Si";
         op[1] = "No";
         int Condicion = Entrada.menu("BackBox", "¿Esta Seguro que Desea Actualizar el Rol? ", op);
         if (Condicion == 1) {
+
             int codigoAct = Sequence.seque("select max(cod_detalleAc) from detalleactividad");
-            Control.conectar();
-            boolean r = Control.ejecuteUpdate("update rol set "
-                    + "descripcion='" + jTextField3.getText() + "' where "
-                    + "cod_rol=" + ced);
-            if (r) {
+            try {
+                Control.conectar();
+                Control.con.setAutoCommit(false);
+                boolean r = Control.ejecuteUpdate("update rol set "
+                        + "descripcion='" + jTextField3.getText() + "' where "
+                        + "cod_rol=" + ced);
+                if (r) {
 
-                Control.ejecuteUpdate("delete from detalleactividad where cod_rol=" + ced);
-                Control.ejecuteUpdate("update rol set descripcion='"+jTextField3.getText()+"' where cod_rol=" + ced);
+                    Control.ejecuteUpdate("delete from detalleactividad where cod_rol=" + ced);
+                    Control.ejecuteUpdate("update rol set descripcion='" + jTextField3.getText() + "' where cod_rol=" + ced);
 
-                if (jCheckBox3.isSelected()) {
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + ced + ",4)");
-                    codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + ced + ",3)");
-                    codigoAct++;
+                    if (LisBodega.isSelected()) {
+                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + ced + ",4)");
+                        codigoAct++;
+                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + ced + ",3)");
+                        codigoAct++;
+                    }
+                    if (ListArti.isSelected() && NewCompra.isSelected()) {
+                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + ced + ",9)");
+                        codigoAct++;
+                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + ced + ",10)");
+                        codigoAct++;
+                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + ced + ",3)");
+                        codigoAct++;
+                    } else if (ListArti.isSelected()) {
+                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + ced + ",9)");
+                        codigoAct++;
+                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + ced + ",3)");
+                        codigoAct++;
+
+                    } else if (NewCompra.isSelected()) {
+                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + ced + ",10)");
+                        codigoAct++;
+                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + ced + ",3)");
+                        codigoAct++;
+
+                    }
+
+                    if (ListCate.isSelected()) {
+                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + ced + ",11)");
+                        codigoAct++;
+                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + ced + ",12)");
+                        codigoAct++;
+                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + ced + ",3)");
+                        codigoAct++;
+                    }
+//                    if (jCheckBox23.isSelected()) {
+//                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + ced + ",1)");
+//                        codigoAct++;
+//                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + ced + ",2)");
+//                        codigoAct++;
+//                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + ced + ",3)");
+//                        codigoAct++;
+//                    }
+                    if (jCheckBox17.isSelected()) {
+                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",3," + ced + ",20)");
+                        codigoAct++;
+                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",3," + ced + ",21)");
+                        codigoAct++;
+                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",3," + ced + ",22)");
+                        codigoAct++;
+                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",3," + ced + ",3)");
+                        codigoAct++;
+                    }
+                    if (jCheckBox14.isSelected()) {
+                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",2," + ced + ",16)");
+                        codigoAct++;
+                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",2," + ced + ",17)");
+                        codigoAct++;
+                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",2," + ced + ",18)");
+                        codigoAct++;
+                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",2," + ced + ",3)");
+                        codigoAct++;
+                    }
+//                    if (jCheckBox25.isSelected()) {
+//                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + ced + ",5)");
+//                        codigoAct++;
+//                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + ced + ",6)");
+//                        codigoAct++;
+//                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + ced + ",3)");
+//                        codigoAct++;
+//                    }
+//                    if (role.isSelected()) {
+//                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + ced + ",7)");
+//                        codigoAct++;
+//                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + ced + ",8)");
+//                        codigoAct++;
+//                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + ced + ",3)");
+//                        codigoAct++;
+//                    }
+//                    if (jCheckBox15.isSelected()) {
+//                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + ced + ",30)");
+//                        codigoAct++;
+//                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + ced + ",31)");
+//                        codigoAct++;
+//                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + ced + ",3)");
+//                        codigoAct++;
+//                    }
                 }
-                if (jCheckBox13.isSelected()) {
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + ced + ",9)");
-                    codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + ced + ",10)");
-                    codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + ced + ",3)");
-                    codigoAct++;
-                }
-                if (jCheckBox12.isSelected()) {
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + ced + ",11)");
-                    codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + ced + ",12)");
-                    codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + ced + ",3)");
-                    codigoAct++;
-                }
-                if (jCheckBox23.isSelected()) {
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + ced + ",1)");
-                    codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + ced + ",2)");
-                    codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + ced + ",3)");
-                    codigoAct++;
-                }
-                if (jCheckBox17.isSelected()) {
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",3," + ced + ",20)");
-                    codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",3," + ced + ",21)");
-                    codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",3," + ced + ",22)");
-                    codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",3," + ced + ",3)");
-                    codigoAct++;
-                }
-                if (jCheckBox14.isSelected()) {
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",2," + ced + ",16)");
-                    codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",2," + ced + ",17)");
-                    codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",2," + ced + ",18)");
-                    codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",2," + ced + ",3)");
-                    codigoAct++;
-                }
-                if (jCheckBox25.isSelected()) {
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + ced + ",5)");
-                    codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + ced + ",6)");
-                    codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + ced + ",3)");
-                    codigoAct++;
-                }
-                if (role.isSelected()) {
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + ced + ",7)");
-                    codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + ced + ",8)");
-                    codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + ced + ",3)");
-                    codigoAct++;
-                }
-                 if (jCheckBox15.isSelected()) {
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + ced + ",30)");
-                    codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + ced + ",31)");
-                    codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + ced + ",3)");
-                    codigoAct++;
-                }
-                
-                this.dispose();
+                cerrar = true;
+            } catch (Exception ex) {
+                cerrar = false;
+            } finally {
+//                Control.con.commit();
+//                Control.con.setAutoCommit(true);
+//                Control.cerrarConexion();
             }
-            Control.cerrarConexion();
+        }
+        if (cerrar) {
+            this.dispose();
         }
     }
 
@@ -168,26 +193,41 @@ public class RolActualizar extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jCheckBox2 = new javax.swing.JCheckBox();
         jPanel1 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         jTextField3 = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
-        jCheckBox15 = new javax.swing.JCheckBox();
         jCheckBox3 = new javax.swing.JCheckBox();
         jCheckBox13 = new javax.swing.JCheckBox();
-        jCheckBox12 = new javax.swing.JCheckBox();
+        ListCate = new javax.swing.JCheckBox();
         jCheckBox14 = new javax.swing.JCheckBox();
-        role = new javax.swing.JCheckBox();
-        jCheckBox23 = new javax.swing.JCheckBox();
         jCheckBox17 = new javax.swing.JCheckBox();
         jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jCheckBox25 = new javax.swing.JCheckBox();
+        LisBodega = new javax.swing.JCheckBox();
+        NewCompra = new javax.swing.JCheckBox();
+        ListArti = new javax.swing.JCheckBox();
+        NewCate = new javax.swing.JCheckBox();
+        ListUsu = new javax.swing.JCheckBox();
+        NewUsu = new javax.swing.JCheckBox();
+        ListPro = new javax.swing.JCheckBox();
+        NewPro = new javax.swing.JCheckBox();
+        ListRol = new javax.swing.JCheckBox();
+        NewRol = new javax.swing.JCheckBox();
+        ListClientes = new javax.swing.JCheckBox();
+        Rentradas = new javax.swing.JCheckBox();
+        VDiaria = new javax.swing.JCheckBox();
+        rcompras = new javax.swing.JCheckBox();
+        RVentas = new javax.swing.JCheckBox();
+        VVentas = new javax.swing.JCheckBox();
+        VDevol = new javax.swing.JCheckBox();
+
+        jCheckBox2.setText("jCheckBox2");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Modificar Rol - BackBox");
-        setPreferredSize(new java.awt.Dimension(500, 370));
+        setPreferredSize(new java.awt.Dimension(700, 430));
         setResizable(false);
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
@@ -195,10 +235,10 @@ public class RolActualizar extends javax.swing.JDialog {
 
         jLabel4.setFont(new java.awt.Font("Segoe UI Light", 1, 23)); // NOI18N
         jLabel4.setText("Nombre:");
-        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, -1));
+        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 20, -1, -1));
 
         jTextField3.setFont(new java.awt.Font("Segoe UI Light", 0, 18)); // NOI18N
-        jPanel1.add(jTextField3, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 10, 330, -1));
+        jPanel1.add(jTextField3, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 20, 330, -1));
 
         jButton1.setFont(new java.awt.Font("Segoe UI Light", 0, 11)); // NOI18N
         jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-mdpi/ic_update_black_24dp.png"))); // NOI18N
@@ -216,7 +256,7 @@ public class RolActualizar extends javax.swing.JDialog {
                 jButton1ActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 280, -1, -1));
+        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 340, -1, -1));
 
         jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-xhdpi/ic_arrow_back_black_24dp.png"))); // NOI18N
         jButton2.setBorder(null);
@@ -232,91 +272,158 @@ public class RolActualizar extends javax.swing.JDialog {
                 jButton2ActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 280, -1, -1));
-
-        jCheckBox15.setBackground(new java.awt.Color(255, 255, 255));
-        jCheckBox15.setFont(new java.awt.Font("Segoe UI Light", 0, 14)); // NOI18N
-        jCheckBox15.setSelected(true);
-        jCheckBox15.setText("Clientes");
-        jCheckBox15.setOpaque(false);
-        jCheckBox15.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBox15ActionPerformed(evt);
-            }
-        });
-        jPanel1.add(jCheckBox15, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 230, -1, -1));
+        jPanel1.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 340, -1, -1));
 
         jCheckBox3.setBackground(new java.awt.Color(255, 255, 255));
         jCheckBox3.setFont(new java.awt.Font("Segoe UI Light", 0, 14)); // NOI18N
         jCheckBox3.setSelected(true);
         jCheckBox3.setText("Bodega");
-        jPanel1.add(jCheckBox3, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 110, -1, -1));
+        jCheckBox3.setOpaque(false);
+        jCheckBox3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBox3ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(jCheckBox3, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 100, -1, -1));
 
         jCheckBox13.setBackground(new java.awt.Color(255, 255, 255));
         jCheckBox13.setFont(new java.awt.Font("Segoe UI Light", 0, 14)); // NOI18N
         jCheckBox13.setSelected(true);
-        jCheckBox13.setText("Articulos");
+        jCheckBox13.setText("Stakeholders");
         jCheckBox13.setOpaque(false);
-        jPanel1.add(jCheckBox13, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 140, -1, -1));
+        jCheckBox13.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBox13ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(jCheckBox13, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 100, -1, -1));
 
-        jCheckBox12.setBackground(new java.awt.Color(255, 255, 255));
-        jCheckBox12.setFont(new java.awt.Font("Segoe UI Light", 0, 14)); // NOI18N
-        jCheckBox12.setSelected(true);
-        jCheckBox12.setText("Categoria");
-        jCheckBox12.setOpaque(false);
-        jPanel1.add(jCheckBox12, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 170, -1, -1));
+        ListCate.setBackground(new java.awt.Color(255, 255, 255));
+        ListCate.setFont(new java.awt.Font("Segoe UI Light", 0, 14)); // NOI18N
+        ListCate.setSelected(true);
+        ListCate.setText("Lista Categoria");
+        ListCate.setOpaque(false);
+        jPanel1.add(ListCate, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 230, -1, -1));
 
         jCheckBox14.setBackground(new java.awt.Color(255, 255, 255));
         jCheckBox14.setFont(new java.awt.Font("Segoe UI Light", 0, 14)); // NOI18N
         jCheckBox14.setSelected(true);
         jCheckBox14.setText("Venta");
         jCheckBox14.setOpaque(false);
-        jPanel1.add(jCheckBox14, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 200, -1, -1));
-
-        role.setBackground(new java.awt.Color(255, 255, 255));
-        role.setFont(new java.awt.Font("Segoe UI Light", 0, 14)); // NOI18N
-        role.setSelected(true);
-        role.setText("Roles");
-        role.setOpaque(false);
-        jPanel1.add(role, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 200, -1, -1));
-
-        jCheckBox23.setBackground(new java.awt.Color(255, 255, 255));
-        jCheckBox23.setFont(new java.awt.Font("Segoe UI Light", 0, 14)); // NOI18N
-        jCheckBox23.setSelected(true);
-        jCheckBox23.setText("Usuario");
-        jCheckBox23.setOpaque(false);
-        jPanel1.add(jCheckBox23, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 140, -1, -1));
+        jCheckBox14.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBox14ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(jCheckBox14, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 100, -1, -1));
 
         jCheckBox17.setBackground(new java.awt.Color(255, 255, 255));
         jCheckBox17.setFont(new java.awt.Font("Segoe UI Light", 0, 14)); // NOI18N
         jCheckBox17.setSelected(true);
-        jCheckBox17.setText("Reporte");
+        jCheckBox17.setText("Reportes");
         jCheckBox17.setOpaque(false);
-        jPanel1.add(jCheckBox17, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 110, -1, -1));
+        jCheckBox17.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBox17ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(jCheckBox17, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 100, -1, -1));
 
         jLabel1.setFont(new java.awt.Font("Segoe UI Light", 1, 18)); // NOI18N
-        jLabel1.setText("Acciones");
-        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 70, -1, -1));
+        jLabel1.setText("Acciones Menu");
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 60, -1, -1));
 
-        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/facelet/triangulo.gif"))); // NOI18N
-        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(-200, 0, -1, -1));
+        LisBodega.setSelected(true);
+        LisBodega.setText("Lista Bodega");
+        LisBodega.setOpaque(false);
+        jPanel1.add(LisBodega, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 140, -1, -1));
 
-        jCheckBox25.setBackground(new java.awt.Color(255, 255, 255));
-        jCheckBox25.setFont(new java.awt.Font("Segoe UI Light", 0, 14)); // NOI18N
-        jCheckBox25.setSelected(true);
-        jCheckBox25.setText("Provedores");
-        jCheckBox25.setOpaque(false);
-        jPanel1.add(jCheckBox25, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 170, -1, -1));
+        NewCompra.setSelected(true);
+        NewCompra.setText("Nueva Compra");
+        NewCompra.setOpaque(false);
+        NewCompra.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                NewCompraActionPerformed(evt);
+            }
+        });
+        jPanel1.add(NewCompra, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 200, -1, -1));
+
+        ListArti.setSelected(true);
+        ListArti.setText("Lista Articulos");
+        ListArti.setOpaque(false);
+        jPanel1.add(ListArti, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 170, -1, -1));
+
+        NewCate.setSelected(true);
+        NewCate.setText("Crear Categoria");
+        NewCate.setOpaque(false);
+        jPanel1.add(NewCate, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 260, -1, -1));
+
+        ListUsu.setSelected(true);
+        ListUsu.setText("Lista Usuarios");
+        jPanel1.add(ListUsu, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 140, -1, -1));
+
+        NewUsu.setSelected(true);
+        NewUsu.setText("Crear Usuarios");
+        jPanel1.add(NewUsu, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 170, -1, -1));
+
+        ListPro.setSelected(true);
+        ListPro.setText("Lista Proveedores");
+        jPanel1.add(ListPro, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 200, -1, -1));
+
+        NewPro.setSelected(true);
+        NewPro.setText("Crear Proveedor");
+        jPanel1.add(NewPro, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 230, -1, -1));
+
+        ListRol.setSelected(true);
+        ListRol.setText("Lista Roles");
+        jPanel1.add(ListRol, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 260, -1, -1));
+
+        NewRol.setSelected(true);
+        NewRol.setText("Crear Rol");
+        jPanel1.add(NewRol, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 290, -1, -1));
+
+        ListClientes.setSelected(true);
+        ListClientes.setText("Lista Clientes");
+        jPanel1.add(ListClientes, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 320, -1, -1));
+
+        Rentradas.setSelected(true);
+        Rentradas.setText("E/S");
+        jPanel1.add(Rentradas, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 200, -1, -1));
+
+        VDiaria.setSelected(true);
+        VDiaria.setText("Venta Diaria");
+        jPanel1.add(VDiaria, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 200, -1, -1));
+
+        rcompras.setSelected(true);
+        rcompras.setText("Compras");
+        jPanel1.add(rcompras, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 170, -1, -1));
+
+        RVentas.setSelected(true);
+        RVentas.setText("Ventas");
+        jPanel1.add(RVentas, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 140, -1, -1));
+
+        VVentas.setSelected(true);
+        VVentas.setText("Realizar Venta");
+        jPanel1.add(VVentas, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 140, -1, -1));
+
+        VDevol.setSelected(true);
+        VDevol.setText("Realizar Devolucion");
+        VDevol.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                VDevolActionPerformed(evt);
+            }
+        });
+        jPanel1.add(VDevol, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 170, -1, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 510, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 697, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 403, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
@@ -334,9 +441,77 @@ public class RolActualizar extends javax.swing.JDialog {
         this.dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
 
-    private void jCheckBox15ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox15ActionPerformed
+    private void jCheckBox13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox13ActionPerformed
+        if (jCheckBox13.isSelected()) {
+            ListClientes.setSelected(true);
+            ListPro.setSelected(true);
+            ListRol.setSelected(true);
+            ListUsu.setSelected(true);
+            NewUsu.setSelected(true);
+            NewPro.setSelected(true);
+            NewRol.setSelected(true);
+        } else {
+            ListClientes.setSelected(false);
+            ListPro.setSelected(false);
+            ListRol.setSelected(false);
+            ListUsu.setSelected(false);
+            NewUsu.setSelected(false);
+            NewPro.setSelected(false);
+            NewRol.setSelected(false);
+        }
+
+    }//GEN-LAST:event_jCheckBox13ActionPerformed
+
+    private void NewCompraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NewCompraActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBox15ActionPerformed
+    }//GEN-LAST:event_NewCompraActionPerformed
+
+    private void jCheckBox3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox3ActionPerformed
+        if (jCheckBox3.isSelected()) {
+            LisBodega.setSelected(true);
+            ListArti.setSelected(true);
+            NewCompra.setSelected(true);
+            ListCate.setSelected(true);
+            NewCate.setSelected(true);
+        } else {
+            LisBodega.setSelected(false);
+            ListArti.setSelected(false);
+            NewCompra.setSelected(false);
+            ListCate.setSelected(false);
+            NewCate.setSelected(false);
+        }
+    }//GEN-LAST:event_jCheckBox3ActionPerformed
+
+    private void jCheckBox17ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox17ActionPerformed
+        if (jCheckBox17.isSelected()) {
+            rcompras.setSelected(true);
+            Rentradas.setSelected(true);
+            RVentas.setSelected(true);
+        } else {
+            rcompras.setSelected(false);
+            Rentradas.setSelected(false);
+            RVentas.setSelected(false);
+        }
+
+
+    }//GEN-LAST:event_jCheckBox17ActionPerformed
+
+    private void VDevolActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_VDevolActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_VDevolActionPerformed
+
+    private void jCheckBox14ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox14ActionPerformed
+        if (jCheckBox14.isSelected()) {
+            VDiaria.setSelected(true);
+            VDevol.setSelected(true);
+            VVentas.setSelected(true);
+        } else {
+            VDiaria.setSelected(false);
+            VDevol.setSelected(false);
+            VVentas.setSelected(false);
+        }
+
+    }//GEN-LAST:event_jCheckBox14ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -381,21 +556,34 @@ public class RolActualizar extends javax.swing.JDialog {
 //    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JCheckBox LisBodega;
+    private javax.swing.JCheckBox ListArti;
+    private javax.swing.JCheckBox ListCate;
+    private javax.swing.JCheckBox ListClientes;
+    private javax.swing.JCheckBox ListPro;
+    private javax.swing.JCheckBox ListRol;
+    private javax.swing.JCheckBox ListUsu;
+    private javax.swing.JCheckBox NewCate;
+    private javax.swing.JCheckBox NewCompra;
+    private javax.swing.JCheckBox NewPro;
+    private javax.swing.JCheckBox NewRol;
+    private javax.swing.JCheckBox NewUsu;
+    private javax.swing.JCheckBox RVentas;
+    private javax.swing.JCheckBox Rentradas;
+    private javax.swing.JCheckBox VDevol;
+    private javax.swing.JCheckBox VDiaria;
+    private javax.swing.JCheckBox VVentas;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
-    private javax.swing.JCheckBox jCheckBox12;
     private javax.swing.JCheckBox jCheckBox13;
     private javax.swing.JCheckBox jCheckBox14;
-    private javax.swing.JCheckBox jCheckBox15;
     private javax.swing.JCheckBox jCheckBox17;
-    private javax.swing.JCheckBox jCheckBox23;
-    private javax.swing.JCheckBox jCheckBox25;
+    private javax.swing.JCheckBox jCheckBox2;
     private javax.swing.JCheckBox jCheckBox3;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JTextField jTextField3;
-    private javax.swing.JCheckBox role;
+    private javax.swing.JCheckBox rcompras;
     // End of variables declaration//GEN-END:variables
 }
