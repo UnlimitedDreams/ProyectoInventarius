@@ -25,9 +25,9 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperPrintManager;
 import net.sf.jasperreports.engine.JasperReport;
 import vw.components.Bodega;
-import vw.components.Entrada;
-import vw.components.Producto;
-import vw.components.Sequence;
+import Control.Entrada;
+import Modelo.Producto;
+import Control.Sequence;
 
 /**
  *

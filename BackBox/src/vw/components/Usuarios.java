@@ -5,6 +5,8 @@
  */
 package vw.components;
 
+import Control.Entrada;
+import Modelo.Producto;
 import vw.main.Menu;
 import vw.main.Acceder;
 import vw.model.Venta;

@@ -13,8 +13,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import vw.components.Bodega;
-import vw.components.Entrada;
-import vw.components.Producto;
+import Control.Entrada;
+import Modelo.Producto;
 
 /**
  *

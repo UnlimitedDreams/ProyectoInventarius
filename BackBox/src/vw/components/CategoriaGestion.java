@@ -5,6 +5,7 @@
  */
 package vw.components;
 
+import Control.Entrada;
 import Control.Control;
 import Modelo.ContenedorMenus;
 import Modelo.acciones;

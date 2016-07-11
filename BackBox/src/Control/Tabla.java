@@ -4,7 +4,7 @@
  */
 package Control;
 
-import vw.components.Producto;
+import Modelo.Producto;
 import java.util.ArrayList;
 
 

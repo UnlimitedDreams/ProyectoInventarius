@@ -7,7 +7,7 @@ package vw.main;
 
 import Control.Control;
 import com.alee.laf.WebLookAndFeel;
-import vw.components.Entrada;
+import Control.Entrada;
 import java.awt.Color;
 import java.awt.Image;
 import java.awt.Toolkit;
