@@ -25,7 +25,7 @@ import vw.components.Sequence;
  */
 public class RolRegistrarF extends javax.swing.JDialog {
 
-    String ced = "";
+
     String nomRol = "";
     ArrayList<seccion> listaSeccion = new ArrayList();
     ArrayList<acciones> listaaccion = new ArrayList();
@@ -41,18 +41,18 @@ public class RolRegistrarF extends javax.swing.JDialog {
     public RolRegistrarF(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        jTextField3.setText(nomRol);
-        ContenedorMenus con_menu = new ContenedorMenus();
-        con_menu = (ContenedorMenus) List_Menu.get(0);
-        listaSeccion = con_menu.getListaSeccion();
-        listaaccion = con_menu.getListaAcciones();
-        for (seccion object : listaSeccion) {
-            if (object.getCod_seccion() == 1) {
-                jCheckBox3.setSelected(true);
-            } else if (object.getCod_seccion() == 2) {
-                jCheckBox14.setSelected(true);
-            }
-        }
+
+//        ContenedorMenus con_menu = new ContenedorMenus();
+//        con_menu = (ContenedorMenus) List_Menu.get(0);
+//        listaSeccion = con_menu.getListaSeccion();
+//        listaaccion = con_menu.getListaAcciones();
+//        for (seccion object : listaSeccion) {
+//            if (object.getCod_seccion() == 1) {
+//                jCheckBox3.setSelected(true);
+//            } else if (object.getCod_seccion() == 2) {
+//                jCheckBox14.setSelected(true);
+//            }
+//        }
         this.setLocationRelativeTo(null);
         this.setResizable(false);
         URL url = getClass().getResource("/images/facelet/icon.png");
@@ -67,161 +67,169 @@ public class RolRegistrarF extends javax.swing.JDialog {
             int codigoAct = Sequence.seque("select max(cod_detalleAc) from detalleactividad");
             Control.conectar();
             Control.con.setAutoCommit(false);
+            int a = 0;
             boolean r = Control.ejecuteUpdate("insert into rol values(" + codigo + ",'" + jTextField3.getText() + "','A')");
             if (r) {
+                System.out.println("insert rol");
                 if (LisBodega.isSelected()) {
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + ced + ",4)");
+                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",4)");
                     codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + ced + ",3)");
+                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",3)");
                     codigoAct++;
                 }
+                System.out.println("- " + a++);
                 if (ListArti.isSelected() && NewCompra.isSelected()) {
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + ced + ",9)");
+                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",9)");
                     codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + ced + ",10)");
+                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",10)");
                     codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + ced + ",3)");
+                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",3)");
                     codigoAct++;
                 } else if (ListArti.isSelected()) {
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + ced + ",9)");
+                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",9)");
                     codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + ced + ",3)");
+                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",3)");
                     codigoAct++;
 
                 } else if (NewCompra.isSelected()) {
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + ced + ",10)");
+                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",10)");
                     codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + ced + ",3)");
+                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",3)");
                     codigoAct++;
 
                 }
-
+                System.out.println("- " + a++);
                 if (ListCate.isSelected() && NewCate.isSelected()) {
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + ced + ",11)");
+                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",11)");
                     codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + ced + ",12)");
+                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",12)");
                     codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + ced + ",3)");
+                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",3)");
                     codigoAct++;
                 } else if (ListCate.isSelected()) {
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + ced + ",11)");
+                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",11)");
                     codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + ced + ",3)");
+                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",3)");
                     codigoAct++;
                 } else if (NewCate.isSelected()) {
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + ced + ",12)");
+                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",12)");
                     codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + ced + ",3)");
+                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",3)");
                     codigoAct++;
                 }
+                System.out.println("- " + a++);
                 if (ListUsu.isSelected() && NewUsu.isSelected()) {
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + ced + ",1)");
+                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",1)");
                     codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + ced + ",2)");
+                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",2)");
                     codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + ced + ",3)");
+                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",3)");
                     codigoAct++;
                 } else if (ListUsu.isSelected()) {
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + ced + ",1)");
+                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",1)");
                     codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + ced + ",3)");
+                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",3)");
                     codigoAct++;
                 } else if (NewUsu.isSelected()) {
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + ced + ",2)");
+                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",2)");
                     codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + ced + ",3)");
+                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",3)");
                     codigoAct++;
                 }
-
+                System.out.println("- " + a++);
                 if (jCheckBox17.isSelected()) {
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",3," + ced + ",20)");
+                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",3," + codigo + ",20)");
                     codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",3," + ced + ",21)");
+                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",3," + codigo + ",21)");
                     codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",3," + ced + ",22)");
+                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",3," + codigo + ",22)");
                     codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",3," + ced + ",3)");
+                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",3," + codigo + ",3)");
                     codigoAct++;
                 }
+                System.out.println("- " + a++);
                 if (VVentas.isSelected()) {
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",2," + ced + ",16)");
+                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",2," + codigo + ",16)");
                     codigoAct++;
                 }
-
+                System.out.println("- " + a++);
                 if (VDevol.isSelected()) {
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",2," + ced + ",17)");
+                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",2," + codigo + ",17)");
                     codigoAct++;
                 }
 
                 if (VDiaria.isSelected()) {
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",2," + ced + ",18)");
+                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",2," + codigo + ",18)");
                     codigoAct++;
                 }
-                Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",2," + ced + ",3)");
+                System.out.println("- " + a++);
+                Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",2," + codigo + ",3)");
                 codigoAct++;
-
+                System.out.println("- " + a++);
                 if (RVentas.isSelected()) {
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",3," + ced + ",20)");
+                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",3," + codigo + ",20)");
                     codigoAct++;
                 }
 
                 if (rcompras.isSelected()) {
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",3," + ced + ",21)");
+                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",3," + codigo + ",21)");
                     codigoAct++;
                 }
 
                 if (Rentradas.isSelected()) {
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",3," + ced + ",22)");
+                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",3," + codigo + ",22)");
                     codigoAct++;
                 }
-                Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",3," + ced + ",3)");
+                Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",3," + codigo + ",3)");
                 codigoAct++;
-
+                System.out.println("- " + a++);
                 if (ListPro.isSelected() && NewPro.isSelected()) {
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + ced + ",5)");
+                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",5)");
                     codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + ced + ",6)");
+                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",6)");
                     codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + ced + ",3)");
+                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",3)");
                     codigoAct++;
                 } else if (ListPro.isSelected()) {
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + ced + ",5)");
+                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",5)");
                     codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + ced + ",3)");
+                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",3)");
                     codigoAct++;
                 } else if (NewPro.isSelected()) {
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + ced + ",6)");
+                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",6)");
                     codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + ced + ",3)");
+                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",3)");
                     codigoAct++;
                 }
+                System.out.println("- " + a++);
                 if (ListRol.isSelected() && NewRol.isSelected()) {
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + ced + ",7)");
+                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",7)");
                     codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + ced + ",8)");
+                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",8)");
                     codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + ced + ",3)");
+                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",3)");
                     codigoAct++;
                 } else if (ListRol.isSelected()) {
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + ced + ",7)");
+                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",7)");
                     codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + ced + ",3)");
+                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",3)");
                     codigoAct++;
                 } else if (NewRol.isSelected()) {
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + ced + ",8)");
+                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",8)");
                     codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + ced + ",3)");
+                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",3)");
                     codigoAct++;
                 }
                 if (ListClientes.isSelected()) {
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + ced + ",30)");
+                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",30)");
                     codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + ced + ",3)");
+                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",3)");
                     codigoAct++;
                 }
             }
             cerrar = true;
-        } catch (Exception ex) {
+        } catch (SQLException ex) {
+            System.out.println("Error : " + ex.toString());
             cerrar = false;
         } finally {
             Control.con.commit();
@@ -570,7 +578,7 @@ public class RolRegistrarF extends javax.swing.JDialog {
 //    public static void main(String args[]) {
 //        /* Set the Nimbus look and feel */
 //        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+//        /* If Nimbus (introducodigo in Java SE 6) is not available, stay with the default look and feel.
 //         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
 //         */
 //        try {
