@@ -45,25 +45,10 @@ import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperPrintManager;
 import net.sf.jasperreports.engine.JasperReport;
-import vw.components.Bodega;
-import vw.components.CategoriaGestion;
 import vw.components.Entrada;
-import vw.components.Entrada_Nueva;
 import vw.components.Producto;
-import vw.components.Provedores;
-import vw.components.Reporte_Entradas;
-import vw.components.Reporte_Ventas;
-import vw.components.Roles;
 import vw.components.Sequence;
-import vw.components.Usuarios;
-import vw.components.VentaDiaria;
-import vw.dialogs.AcercaDe;
-import vw.dialogs.CategoriasRegistrar;
-import vw.dialogs.ProveedoresRegistrar;
 import vw.dialogs.RegistroCliente;
-import vw.dialogs.ReporteDetalleVenta;
-import vw.dialogs.RolRegistrar;
-import vw.dialogs.UsuariosRegistrar;
 import vw.main.Acceder;
 import vw.main.Menu;
 
@@ -79,6 +64,8 @@ public class Venta extends javax.swing.JFrame {
     int tipoVenta;
     int SecuenciaDesc;
     double ValorPago;
+    double ValorNeto;
+    double ValorDesc;
     boolean condicionfiltro;
     String cedulaCliente;
     int codigo_cliente;
@@ -109,6 +96,8 @@ public class Venta extends javax.swing.JFrame {
         c.setVisible(false);
         this.condicionfiltro = false;
         this.ValorPago = 0;
+        this.ValorNeto = 0;
+        this.ValorDesc = 0;
         this.List_Menu = acciones;
         this.usuario = usuario;
         this.tipoVenta = TipoVenta;
@@ -177,7 +166,7 @@ public class Venta extends javax.swing.JFrame {
                         if (object1.getAccion().equalsIgnoreCase("Ver Articulos")) {
                             menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, 10));
                         }
-                        if (object1.getAccion().equalsIgnoreCase("Nuevo Articulo")) {
+                        if (object1.getAccion().equalsIgnoreCase("Nueva Compra")) {
                             menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, ActionEvent.CTRL_MASK));
                         }
                         if (object1.getAccion().equalsIgnoreCase("Ver Categoria")) {
@@ -361,35 +350,47 @@ public class Venta extends javax.swing.JFrame {
         int cant = 0;
         int iva = 0;
         double valorPorcentaje = 0;
-        int descu = Integer.parseInt(porcentajeDescuento.getText());
-        valorPorcentaje = (double) (Double.parseDouble(subtotal.getText()) * (descu / 100));
+        double descu = 0;
+        if (porcentajeDescuento.getText().isEmpty()) {
+            descu = 0;
+        } else {
+            descu = Integer.parseInt(porcentajeDescuento.getText());
+        }
 
         for (int i = 0; i < productos.size(); i++) {
             pro = (Producto) productos.get(i);
+            System.out.println("Producto :  " + pro.getCodigo());
             cant = pro.getCantidad();
             valor = valor + (pro.getPrecio_final() * cant);
             iva = iva + (int) pro.getValorIva();
         }
-        //valorPorcentaje = valor * (descu / 100);
-        subtotal.setText("" + formateador.format(valor - valorPorcentaje));
+        System.out.println("-------------------------");
+        System.out.println("Valor : " + valor);
+        valorPorcentaje = ((valor) * (descu / 100));
+        subtotal.setText("" + formateador.format(valor));
         String d = "";
         int desc = 0;
 
         double valor_f = 0;
-        valor_f=Double.parseDouble(subtotal.getText());
+        this.ValorNeto = valor;
+
+        valor_f = (valor - valorPorcentaje);
+
         if (tipoVenta == 1) {
-            valor_f = valor_f + iva;
+            this.ValorDesc = valorPorcentaje;
             valorDescuento.setText("" + formateador.format(valorPorcentaje));
             if (regimen > 1) {
+                valor_f = valor_f + iva;
                 porcentajeIVA.setText("" + formateador.format(iva));
             } else {
-                porcentajeIVA.setText("" +0);
+                porcentajeIVA.setText("" + 0);
             }
         } else {
             valor_f = -1 * (valor);
             valorDescuento.setText("" + 0);
         }
         ValorPago = valor_f;
+        System.out.println("Valor :-----  " + valor_f);
         jLTotal.setText("" + formateador.format(valor_f));
 
 //        
@@ -843,6 +844,9 @@ public class Venta extends javax.swing.JFrame {
             }
         });
         porcentajeDescuento.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                porcentajeDescuentoKeyPressed(evt);
+            }
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 porcentajeDescuentoKeyReleased(evt);
             }
@@ -952,9 +956,11 @@ public class Venta extends javax.swing.JFrame {
                 if (r) {
                     Entrada.muestreMensajeV("Los Productos no pueden Tener Precio en Cero");
                 } else {
+                    if (porcentajeDescuento.getText().isEmpty()) {
+                        porcentajeDescuento.setText("" + 0);
+                    }
                     Vender();
                 }
-
             }
         } catch (Exception ex) {
             System.err.println("error : " + ex.toString());
@@ -984,6 +990,8 @@ public class Venta extends javax.swing.JFrame {
         int codigo_pro = (Sequence.seque("select max(cod_venta) from venta_pro"));
         boolean Proceso = false;
         try {
+            DecimalFormat formateador = new DecimalFormat("#############");
+            System.out.println("1");
             Control.conectar();
             Control.con.setAutoCommit(false);
             cone = Control.con;
@@ -995,11 +1003,13 @@ public class Venta extends javax.swing.JFrame {
             }
             Date fecha = new Date();
             double valorIva = Double.parseDouble(porcentajeIVA.getText());
+            System.out.println("2");
+            System.out.println("valor pago : " + ValorPago);
             boolean r = Control.ejecuteUpdate("insert into venta values(" + codigo_venta + ",'" + fecha + "'," + ValorPago
                     + "," + usuario + "," + tipoVenta + "," + cod_pago + "," + valorIva + ""
                     + "," + Integer.parseInt(porcentajeDescuento.getText()) + ","
-                    + Double.parseDouble(valorDescuento.getText()) + "," + codigo_cliente + ","
-                    + Double.parseDouble(subtotal.getText()) + "," + codigo_empresa + ")");
+                    + this.ValorDesc + "," + codigo_cliente + ","
+                    + this.ValorNeto + "," + codigo_empresa + ")");
             if (r) {
                 Producto pro = null;
                 for (int i = 0; i < productos.size(); i++) {
@@ -1017,9 +1027,10 @@ public class Venta extends javax.swing.JFrame {
             }
 
         } catch (Exception ex) {
-
+            System.out.println("Error : " + ex.toString());
         } finally {
             System.out.println("Cerro Todo");
+
             Control.con.commit();
             Control.con.setAutoCommit(true);
             Control.cerrarConexion();
@@ -1105,25 +1116,21 @@ public class Venta extends javax.swing.JFrame {
     private void jTable2KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTable2KeyReleased
         if (evt.getKeyCode() == 10) {
             DecimalFormat formateador = new DecimalFormat("###,###.##");
-            System.out.println("entro a cantidadde producto");
             int i = jTable2.getSelectedRow();
-            System.out.println("Fila : " + i);
             String cod = (String) jTable2.getValueAt(i, 0).toString();
             String precio = (String) jTable2.getValueAt(i, 2).toString();
             String Cant = (String) jTable2.getValueAt(i, 3).toString();
-            System.out.println("Cod : " + cod);
-            System.out.println("cant " + Cant);
             double total = 0;
             for (Producto producto : productos) {
                 if (producto.getCodigo().equalsIgnoreCase(cod)) {
-                    System.out.println("Lo Encontro");
                     producto.setCantidad(Integer.parseInt(Cant));
                     producto.setPrecio_venta(producto.getPrecio_final() * producto.getCantidad());
                     jTable2.setValueAt((producto.getPrecio_final() * producto.getCantidad()), i, 2);
                 }
                 total = total + producto.getPrecio_venta();
             }
-            jLTotal.setText("" + formateador.format(total));
+            subtotal.setText("" + formateador.format(total));
+            rellenar_datos();
         }
 
 
@@ -1271,7 +1278,7 @@ public class Venta extends javax.swing.JFrame {
                         }
                         if (r) {
                             temp = new Producto(cod, nom, precio, 1, iva, 1, valorIva);
-                            temp.setPrecio_final((int) precio);
+                            temp.setPrecio_final(precio);
                             productos.add(temp);
                             jTextField2.setText("");
                             stock(cod);
@@ -1405,6 +1412,7 @@ public class Venta extends javax.swing.JFrame {
                     if (r) {
                         System.out.println("Agrego producto : " + cod);
                         temp = new Producto(cod, nom, precio, 1, iva, 1, valorIva);
+                        temp.setPrecio_final(precio);
                         productos.add(temp);
                     } else {
                         jTable1.setValueAt("", i, 0);
@@ -1455,7 +1463,18 @@ public class Venta extends javax.swing.JFrame {
     }//GEN-LAST:event_porcentajeDescuentoActionPerformed
 
     private void porcentajeDescuentoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_porcentajeDescuentoKeyReleased
-        // TODO add your handling code here:
+        if (!SoloNumeros(porcentajeDescuento.getText())) {
+            try {
+                porcentajeDescuento.setText(porcentajeDescuento.getText().substring(0, (porcentajeDescuento.getText().length() - 1)));
+            } catch (StringIndexOutOfBoundsException e) {
+                /*Error Normal*/
+            }
+        } else {
+            if (Integer.parseInt(porcentajeDescuento.getText()) > 100) {
+                Entrada.muestreMensajeV("El % del descuento no puede ser mayor a 100");
+                porcentajeDescuento.setText("" + 0);
+            }
+        }
     }//GEN-LAST:event_porcentajeDescuentoKeyReleased
     public boolean SoloNumeros(String cadena) {
         double valor = 0;
@@ -1468,7 +1487,6 @@ public class Venta extends javax.swing.JFrame {
     }
     private void ClienteKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_ClienteKeyPressed
         try {
-            System.out.println("entroo al cliente enter " + evt.getKeyCode());
             if (evt.getKeyCode() == 10) {
                 Control.conectar();
                 boolean r = false;
@@ -1478,10 +1496,12 @@ public class Venta extends javax.swing.JFrame {
                     r = true;
                     NomCliente.setText("Cliente : " + Control.rs.getString(1));
                 }
-                System.out.println("--- " + r);
+                
                 if (r == false) {
                     Entrada.muestreMensajeV("La cedula ingresada no esta registrada como cliente");
                     Cliente.setText(this.cedulaCliente);
+                }else{
+                    codigo_cliente=Integer.parseInt(Cliente.getText());
                 }
                 Control.cerrarConexion();
             }
@@ -1510,6 +1530,7 @@ public class Venta extends javax.swing.JFrame {
                     /*Error Normal*/
                 }
             } else {
+
                 cambio.setText("$ " + formateador.format((Double.parseDouble(montoPago.getText())) - ValorPago));
             }
         } else {
@@ -1524,6 +1545,10 @@ public class Venta extends javax.swing.JFrame {
     private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField2ActionPerformed
+
+    private void porcentajeDescuentoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_porcentajeDescuentoKeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_porcentajeDescuentoKeyPressed
     public void Buscar() throws ClassNotFoundException {
         String query = "";
         if (SoloNumeros(jTextField2.getText())) {

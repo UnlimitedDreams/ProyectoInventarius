@@ -92,7 +92,7 @@ public class ReporteDetalleVenta extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Inventarius - Detalle de la Venta\n");
-        setPreferredSize(new java.awt.Dimension(550, 350));
+        setPreferredSize(new java.awt.Dimension(550, 400));
         setResizable(false);
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
@@ -185,7 +185,7 @@ public class ReporteDetalleVenta extends javax.swing.JDialog {
         Producto temp = null;
         String query = "select to_char(fecha_venta, 'HH24:MI:SS')  \"Hora\",producto.cod_producto \"Codigo\""
                 + ",producto.nombre \"Nombre\",venta_pro.cantidad\"Cantidad\""
-                + ",producto.precio_desc\"Precio\" from venta,usuario,persona,venta_pro,producto\n"
+                + ",producto.precio_desc\"Precio\",(venta_pro.cantidad*producto.precio_desc) Total from venta,usuario,persona,venta_pro,producto\n"
                 + "where\n"
                 + "venta.cod_usuario=usuario.cod_usuario\n"
                 + "and usuario.cedula=persona.cedula\n"
@@ -195,9 +195,8 @@ public class ReporteDetalleVenta extends javax.swing.JDialog {
                 + "and venta.fecha_venta between '" + fec.substring(0, 10).concat(" 00:00:00") + "' and '"
                 + fec.substring(0, 10).concat(" 23:59:59") + "'"
                 + "order by fecha_venta ";
-        System.out.println(query);
         String cod = "", nom = "", valor = "", cant = "", costo = "", iva = "", precio = "", hora = "";
-        String cate = "";
+        String cate = "",ValorTot="";
         DefaultTableModel modeloEmpleado = new DefaultTableModel();
         int numeroPreguntas;
         ResultSetMetaData rsetMetaData;
@@ -217,6 +216,7 @@ public class ReporteDetalleVenta extends javax.swing.JDialog {
                 nom = Control.rs.getString(3);
                 costo = Control.rs.getString(4);
                 cant = Control.rs.getString(5);
+                ValorTot = Control.rs.getString(6);
 
                 Object[] registroEmpleado = new Object[numeroPreguntas];
 

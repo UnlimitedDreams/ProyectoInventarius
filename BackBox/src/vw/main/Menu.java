@@ -103,7 +103,7 @@ public class Menu extends javax.swing.JFrame implements KeyListener {
                             if (object1.getAccion().equalsIgnoreCase("Ver Articulos")) {
                                 menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, 10));
                             }
-                            if (object1.getAccion().equalsIgnoreCase("Nuevo Articulo")) {
+                            if (object1.getAccion().equalsIgnoreCase("Nueva Compra")) {
                                 menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, ActionEvent.CTRL_MASK));
                             }
                             if (object1.getAccion().equalsIgnoreCase("Ver Categoria")) {

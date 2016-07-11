@@ -34,15 +34,8 @@ import javax.swing.JSeparator;
 import javax.swing.JTable;
 import javax.swing.KeyStroke;
 import javax.swing.table.DefaultTableModel;
-import vw.dialogs.AcercaDe;
-import vw.dialogs.CategoriasRegistrar;
-import vw.dialogs.ProveedoresRegistrar;
-import vw.dialogs.RolRegistrar;
-import vw.dialogs.UsuariosRegistrar;
 import vw.main.Acceder;
 import vw.main.Menu;
-import vw.model.Articulo;
-import vw.model.Venta;
 
 /**
  *
@@ -106,7 +99,7 @@ public class Stock extends javax.swing.JFrame {
                         if (object1.getAccion().equalsIgnoreCase("Ver Articulos")) {
                             menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, 10));
                         }
-                        if (object1.getAccion().equalsIgnoreCase("Nuevo Articulo")) {
+                        if (object1.getAccion().equalsIgnoreCase("Nueva Compra")) {
                             menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, ActionEvent.CTRL_MASK));
                         }
                         if (object1.getAccion().equalsIgnoreCase("Ver Categoria")) {

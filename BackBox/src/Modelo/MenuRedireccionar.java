@@ -31,7 +31,7 @@ import vw.dialogs.AcercaDe;
 import vw.dialogs.CategoriasRegistrar;
 import vw.dialogs.ProveedoresRegistrar;
 import vw.dialogs.RegistroCliente;
-import vw.dialogs.RolRegistrar;
+import vw.dialogs.RolRegistrarF;
 import vw.dialogs.UsuariosRegistrar;
 import vw.main.Acceder;
 import vw.main.Menu;
@@ -71,7 +71,7 @@ public class MenuRedireccionar {
             } else if (CadenaMenu.equalsIgnoreCase("Lista Rol")) {
                 new Roles(Usuario, listMenu,codEmpresa).setVisible(true);
             } else if (CadenaMenu.equalsIgnoreCase("Crear Rol")) {
-                new RolRegistrar(this.parent, true).setVisible(true);
+                new RolRegistrarF(this.parent, true).setVisible(true);
             } else if (CadenaMenu.equalsIgnoreCase("Lista Proveedores")) {
                 new Provedores(Usuario, listMenu).setVisible(true);
             } else if (CadenaMenu.equalsIgnoreCase("Crear Proveedor")) {

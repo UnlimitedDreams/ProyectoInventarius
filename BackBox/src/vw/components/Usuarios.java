@@ -33,10 +33,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
 import javax.swing.table.DefaultTableModel;
-import vw.dialogs.AcercaDe;
-import vw.dialogs.CategoriasRegistrar;
-import vw.dialogs.ProveedoresRegistrar;
-import vw.dialogs.RolRegistrar;
 import vw.dialogs.UsuarioActualizar;
 import vw.dialogs.UsuariosRegistrar;
 
@@ -104,7 +100,7 @@ public class Usuarios extends javax.swing.JFrame {
                         if (object1.getAccion().equalsIgnoreCase("Ver Articulos")) {
                             menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, 10));
                         }
-                        if (object1.getAccion().equalsIgnoreCase("Nuevo Articulo")) {
+                        if (object1.getAccion().equalsIgnoreCase("Nueva Compra")) {
                             menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, ActionEvent.CTRL_MASK));
                         }
                         if (object1.getAccion().equalsIgnoreCase("Ver Categoria")) {

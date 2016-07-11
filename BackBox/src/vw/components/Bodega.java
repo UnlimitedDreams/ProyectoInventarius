@@ -5,10 +5,6 @@
  */
 package vw.components;
 
-import vw.dialogs.Producto_update;
-import vw.main.Menu;
-import vw.main.Acceder;
-import vw.model.Venta;
 import Control.Control;
 import Modelo.ContenedorMenus;
 import Modelo.MenuRedireccionar;
@@ -21,7 +17,6 @@ import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import vw.model.Articulo;
 import java.net.URL;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -36,11 +31,11 @@ import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
 import javax.swing.table.DefaultTableModel;
 import vw.dialogs.AcercaDe;
-import vw.dialogs.CategoriasRegistrar;
-import vw.dialogs.ProveedoresRegistrar;
-import vw.dialogs.RolRegistrar;
+import vw.dialogs.Producto_update;
 import vw.dialogs.SalidaEntrada;
-import vw.dialogs.UsuariosRegistrar;
+import vw.main.Acceder;
+import vw.main.Menu;
+import vw.model.Articulo;
 
 /**
  *
