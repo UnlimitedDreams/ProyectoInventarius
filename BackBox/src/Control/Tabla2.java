@@ -5,7 +5,7 @@
 package Control;
 
 import java.awt.Component;
-import vw.components.Producto;
+import Modelo.Producto;
 import java.util.ArrayList;
 import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;

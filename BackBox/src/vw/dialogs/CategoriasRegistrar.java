@@ -11,8 +11,8 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
-import vw.components.Entrada;
-import vw.components.Sequence;
+import Control.Entrada;
+import Control.Sequence;
 
 /**
  *

@@ -5,6 +5,10 @@
  */
 package vw.components;
 
+import Control.Sequence;
+import Control.Entrada;
+import Modelo.Producto;
+import Modelo.List_Categoria;
 import Control.Tabla3;
 import Control.Control;
 import com.alee.extended.date.WebCalendar;

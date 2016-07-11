@@ -3,14 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
-package vw.components;
+package Modelo;
 
 /**
  *
  * @author Family
  */
 public class List_Categoria {
+
     private int cod;
     private String nom;
 
@@ -37,6 +37,5 @@ public class List_Categoria {
     public void setNom(String nom) {
         this.nom = nom;
     }
-    
-    
+
 }

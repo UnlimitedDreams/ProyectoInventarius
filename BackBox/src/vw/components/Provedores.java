@@ -5,6 +5,7 @@
  */
 package vw.components;
 
+import Control.Entrada;
 import vw.main.Menu;
 import Control.Control;
 import java.net.URL;
