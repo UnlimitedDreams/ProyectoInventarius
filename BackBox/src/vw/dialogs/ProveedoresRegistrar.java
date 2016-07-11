@@ -43,7 +43,6 @@ public class ProveedoresRegistrar extends javax.swing.JDialog {
             while (Control.rs.next()) {
                 r = true;
             }
-
             Control.cerrarConexion();
         } catch (Exception ex) {
 
@@ -74,9 +73,8 @@ public class ProveedoresRegistrar extends javax.swing.JDialog {
                     Entrada.muestreMensajeV("ERROR",
                             javax.swing.JOptionPane.ERROR_MESSAGE);
                 }
-                Control.cerrarConexion();
-            } catch (Exception ex) {
-
+            } catch (ClassNotFoundException | SQLException ex) {
+                System.out.println("Error:" + ex.toString());
             } finally {
                 Control.con.commit();
                 Control.con.setAutoCommit(true);
@@ -86,7 +84,6 @@ public class ProveedoresRegistrar extends javax.swing.JDialog {
             Entrada.muestreMensajeV("La cedula  ya existe",
                     javax.swing.JOptionPane.WARNING_MESSAGE);
         }
-
     }
 
     /**
