@@ -10,10 +10,12 @@ import Modelo.ContenedorMenus;
 import Modelo.MenuRedireccionar;
 import Modelo.acciones;
 import Modelo.seccion;
+import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.sql.ResultSetMetaData;
@@ -32,6 +34,7 @@ import vw.dialogs.RegistroCliente;
 import vw.main.Acceder;
 import vw.main.Menu;
 
+
 /**
  *
  * @author Britany
@@ -47,10 +50,10 @@ public class Clientes extends javax.swing.JFrame {
     ArrayList<acciones> listaaccion = new ArrayList();
     ArrayList<ContenedorMenus> List_Menu = new ArrayList();
 
-    public Clientes(String nom, ArrayList acciones, int codEmpresa) throws ClassNotFoundException {
+    public Clientes(String nom, ArrayList acciones,int codEmpresa) throws ClassNotFoundException {
         initComponents();
         this.List_Menu = acciones;
-        this.codEmpresa = codEmpresa;
+        this.codEmpresa=codEmpresa;
         inicio();
         this.usuario = nom;
         this.setLocationRelativeTo(null);
@@ -135,7 +138,7 @@ public class Clientes extends javax.swing.JFrame {
                         menuItem.addActionListener(new ActionListener() {
                             @Override
                             public void actionPerformed(ActionEvent e) {
-                                MenuRedireccionar MenuF = new MenuRedireccionar(Clientes.this, e.getActionCommand(), List_Menu, usuario, codEmpresa);
+                                MenuRedireccionar MenuF = new MenuRedireccionar(Clientes.this, e.getActionCommand(), List_Menu, usuario,codEmpresa);
                                 try {
                                     MenuF.reDireccion();
                                     if (e.getActionCommand().equalsIgnoreCase("Crear Categoria ")
@@ -189,7 +192,7 @@ public class Clientes extends javax.swing.JFrame {
                     menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_2, ActionEvent.ALT_MASK));
                 }
                 menuItem.addActionListener((ActionEvent e) -> {
-                    MenuRedireccionar MenuF = new MenuRedireccionar(this, e.getActionCommand().toString(), List_Menu, usuario, codEmpresa);
+                    MenuRedireccionar MenuF = new MenuRedireccionar(this, e.getActionCommand().toString(), List_Menu, usuario,codEmpresa);
                     try {
                         MenuF.reDireccion();
                     } catch (IOException ex) {
@@ -314,12 +317,12 @@ public class Clientes extends javax.swing.JFrame {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+            .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane1)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 786, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(0, 439, Short.MAX_VALUE)
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(agregarUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -332,8 +335,8 @@ public class Clientes extends javax.swing.JFrame {
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 430, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(37, 37, 37)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(volver, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -388,7 +391,7 @@ public class Clientes extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
@@ -508,15 +511,7 @@ public class Clientes extends javax.swing.JFrame {
     public void inicio() throws ClassNotFoundException {
         Control.conectar();
         Producto temp = null;
-        String query = "select "
-                + "cedula           \"Cédula\","
-                + "upper(nombre)    \"Nombre\","
-                + "upper(apellido)  \"Apellido\","
-                + "upper(email)     \"eMail\","
-                + "telefono         \"Teléfono\","
-                + "celular          \"Celular\","
-                + "direccion        \"Dirección\" "
-                + "from clientes";
+        String query = "select cedula,nombre,apellido,email,telefono,celular,direccion from clientes";
         String cod = "", nom = "", valor = "", cant = "", costo = "", iva = "", precio = "";
         String cate = "";
         DefaultTableModel modeloEmpleado = new DefaultTableModel();

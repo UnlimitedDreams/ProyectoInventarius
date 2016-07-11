@@ -43,14 +43,14 @@ public class Entrada_Nueva extends javax.swing.JFrame {
     int codEmpresa;
     ArrayList<Integer> ListAcciones = new ArrayList();
 
-    public Entrada_Nueva(ArrayList x, String nom, String fac, ArrayList acciones,int codEmpresa) throws ClassNotFoundException {
+    public Entrada_Nueva(ArrayList x, String nom, String fac, ArrayList acciones, int codEmpresa) throws ClassNotFoundException {
         initComponents();
         URL url = getClass().getResource("/images/facelet/icon.png");
         ImageIcon img = new ImageIcon(url);
         setIconImage(img.getImage());
         c.setVisible(false);
         this.nom = nom;
-        this.codEmpresa=codEmpresa;
+        this.codEmpresa = codEmpresa;
         this.condicionfiltro = false;
         this.ListAcciones = acciones;
         this.setLocationRelativeTo(null);
@@ -483,62 +483,81 @@ public class Entrada_Nueva extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         if (productos.size() == 0) {
             Entrada.muestreMensajeV("No hay Productos para Registrar");
-        } else if (ajustar_Datos_CalculoCosto()) {
-            try {
-                Date date = fechaActual.getDate();
-                SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd");
-                String fecha = format2.format(date);
-                Producto pro = null;
-                String v[] = proveedores.getSelectedItem().toString().split("-");
-                if (jTextField1.getText().equalsIgnoreCase("")) {
-                    Entrada.muestreMensajeV("No Registro Numero de Factura");
-                    jTextField1.requestFocus();
-                } else if (VerificarFactura() == false) {
-                    boolean r = false;
-                    int codigo_detalle = Sequence.seque("select max(cod_detalle) from detalle");
-                    Control.conectar();
-                    for (int i = 0; i < productos.size(); i++) {
-                        pro = (Producto) productos.get(i);
-                        r = Control.ejecuteUpdate("insert into detalle values(" + codigo_detalle + ",'" + fecha + "',"
-                                + pro.getCantidad() + "," + pro.getCosto() + ","
-                                + v[0] + ",'" + jTextField1.getText() + "','" + pro.getCodigo() + "'"
-                                + ",'" + comprass.getSelectedItem().toString() + "')");
-                        codigo_detalle++;
+        } else if (jTextField1.getText().isEmpty()) {
+            Entrada.muestreMensajeV("No Registro Numero de Factura");
+            jTextField1.requestFocus();
+        } else if (ValidarDatosEnTabla()) {
+            boolean Rfinal = false;
+            if (ajustar_Datos_CalculoCosto()) {
+                try {
+                    Date date = fechaActual.getDate();
+                    SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd");
+                    String fecha = format2.format(date);
+                    Producto pro = null;
+                    String v[] = proveedores.getSelectedItem().toString().split("-");
+                    if (VerificarFactura() == false) {
+                        boolean r = false;
+                        boolean r1 = false;
+                        int codigo_detalle = Sequence.seque("select max(cod_detalle) from detalle");
+                        Control.conectar();
+                        Control.con.setAutoCommit(false);
+                        for (int i = 0; i < productos.size(); i++) {
+                            pro = (Producto) productos.get(i);
+                            r = Control.ejecuteUpdate("insert into detalle values(" + codigo_detalle + ",'" + fecha + "',"
+                                    + pro.getCantidad() + "," + pro.getCosto() + ","
+                                    + v[0] + ",'" + jTextField1.getText() + "','" + pro.getCodigo() + "'"
+                                    + ",'" + comprass.getSelectedItem().toString() + "')");
+                            codigo_detalle++;
 
-                        if (r) {
-                            boolean r1 = Control.ejecuteUpdate("update producto set cantidad=cantidad+" + pro.getCantidad() + ","
-                                    + "stock=" + pro.getStock() + ",bandera=1 where cod_producto='" + pro.getCodigo() + "'");
-                            if (r1) {
-                                int cost = costo(pro.getCodigo());
-                                boolean f = promedio_costo(cost, pro.getCosto(), pro.getCodigo());
-                            }
-                        } else {
-                            Entrada.muestreMensajeV("Error al Registrar Prodcuto Pongase en contacto con Soporte");
+                            if (r) {
+                                r1 = Control.ejecuteUpdate("update producto set cantidad=cantidad+" + pro.getCantidad() + ","
+                                        + "stock=" + pro.getStock() + ",bandera=1,nombre='" + pro.getNombre() + "',"
+                                        + "precio_venta=" + pro.getPrecio_final()
+                                        + " where cod_producto='" + pro.getCodigo() + "'");
+                                if (r1) {
+                                    int cost = costo(pro.getCodigo());
+                                    boolean f = promedio_costo(cost, pro.getCosto(), pro.getCodigo());
+                                }
+                            } 
                         }
-                    }
-                    if (r) {
+                        if (r == true && r1 == true) {
+                            Connection con = Control.con;
+                            generarFactura(jTextField1.getText(), fecha, con, v[1]);
+                            Rfinal = true;
 
-                        Connection con = Control.con;
-                        generarFactura(jTextField1.getText(), fecha, con, v[1]);
-                        Control.cerrarConexion();
-                        Articulo a = new Articulo(nom, ListAcciones,codEmpresa);
-                        this.dispose();
-                        a.setVisible(true);
+                        } else {
+                            Entrada.muestreMensajeV("Error al Registrar Producto Pongase en contacto con Soporte");
+                        }
+
                     } else {
-                        Entrada.muestreMensajeV("Error al Registrar Prodcuto Pongase en contacto con Soporte");
+                        Entrada.muestreMensajeV("La Factura ingresada ya se encuentra registrada para ese proveedor.");
                     }
 
-                } else {
-                    Entrada.muestreMensajeV("La Factura ingresada ya se encuentra registrada para ese proveedor.");
+                } catch (Exception ex) {
+                    System.out.println("Error ----- : " + ex.toString());
+                } finally {
+                    try {
+                        Control.con.commit();
+                        Control.con.setAutoCommit(true);
+                        Control.cerrarConexion();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(Entrada_Nueva.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
 
-            } catch (Exception ex) {
-                System.out.println("Error : " + ex.toString());
-            } finally {
-                Control.cerrarConexion();
+                if (Rfinal) {
+                    try {
+                        Articulo a = new Articulo(nom, ListAcciones, codEmpresa);
+                        this.dispose();
+                        a.setVisible(true);
+                    } catch (ClassNotFoundException ex) {
+                        Logger.getLogger(Entrada_Nueva.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            } else {
+                Entrada.muestreMensajeV("El costo de los productos no puede ser $0 (cero)");
             }
-        } else {
-            Entrada.muestreMensajeV("El costo de los productos no puede ser $0 (cero)");
+
         }
 
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -584,37 +603,97 @@ public class Entrada_Nueva extends javax.swing.JFrame {
         return costo;
     }
 
-    public void ValidarDatosEnTabla() {
-        Producto prod = null;
-        for (int i = 0; i < 5; i++) {
-            for (int k = 0; k < productos.size(); k++) {
-                prod = (Producto) productos.get(k);
-                if (i == 1) {
-                    prod.setCosto(Double.parseDouble((String) jTable2.getValueAt(k, i)));
-                } else if (i == 2) {
-                    prod.setCantidad(Integer.parseInt((String) jTable2.getValueAt(k, i)));
-                } else if (i == 3) {
-                    prod.setCantidad(Integer.parseInt((String) jTable2.getValueAt(k, i)));
-                } else if (i == 4) {
-                    prod.setCantidad(Integer.parseInt((String) jTable2.getValueAt(k, i)));
-                } else if (i == 5) {
-                    prod.setCantidad(Integer.parseInt((String) jTable2.getValueAt(k, i)));
-                }
+    public boolean SoloNumeros(String cadena, int condicion) {
+        double valorD = 0;
+        int valorI = 0;
+        try {
+            if (condicion == 1) {
+                valorD = Double.parseDouble(cadena);
+            } else if (condicion == 2) {
+                valorI = Integer.parseInt(cadena);
             }
+            return true;
+        } catch (Exception ex) {
+            return false;
         }
     }
 
-    public boolean ajustar_Datos_CalculoCosto() {
+    public boolean ValidarDatosEnTabla() {
         Producto prod = null;
-        boolean costo = false;
-        double valorCosto = 0;
-        for (int i = 0; i < 5; i++) {
+        String mnserror = "N";
+        boolean r = true;
+        int cant = 0;
+        double costo = 0;
+        double precio = 0;
+        for (int i = 0; i < 6; i++) {
             for (int k = 0; k < productos.size(); k++) {
                 prod = (Producto) productos.get(k);
-                if (i == 2) {
+                cant = 0;
+                costo = 0;
+                precio = 0;
+                if (i == 2 && SoloNumeros((String) jTable2.getValueAt(k, i), 1) == false) {
+                    mnserror = "El valor del costo debe ser Numerico";
+                    r = false;
+                    break;
+                } else if (i == 2 && SoloNumeros((String) jTable2.getValueAt(k, i), 1)) {
+                    costo = Double.parseDouble((String) jTable2.getValueAt(k, i));
+                    if (costo <= 0) {
+                        mnserror = "El valor del costo Debe ser mayor a cero (0)";
+                        r = false;
+                        break;
+                    }
+                } else if (i == 3 && SoloNumeros((String) jTable2.getValueAt(k, i), 2) == false) {
+                    mnserror = "La cantidad debe ser Numerica";
+                    r = false;
+                    break;
+                } else if (i == 3 && SoloNumeros((String) jTable2.getValueAt(k, i), 2)) {
+                    cant = Integer.parseInt((String) jTable2.getValueAt(k, i));
+                    if (cant <= 0) {
+                        mnserror = "La cantidad debe ser mayor a cero (0)";
+                        r = false;
+                        break;
+                    }
+                } else if (i == 4 && SoloNumeros((String) jTable2.getValueAt(k, i), 1) == false) {
+                    mnserror = "El valor del Precio debe ser Numerico";
+                    r = false;
+                    break;
+                } else if (i == 4 && SoloNumeros((String) jTable2.getValueAt(k, i), 1)) {
+                    precio = Double.parseDouble((String) jTable2.getValueAt(k, i));
+                    if (precio <= 0) {
+                        mnserror = "El valor del Precio Debe ser mayor a cero (0)";
+                        r = false;
+                        break;
+                    }
+                } else if (i == 5 && SoloNumeros((String) jTable2.getValueAt(k, i), 2) == false) {
+                    mnserror = "La cantidad del Stock debe ser Numerico";
+                    r = false;
+                    break;
+                }
+            }
+        }
+        if (mnserror != "N") {
+            Entrada.muestreMensajeV(mnserror);
+        }
+        return r;
+    }
+
+    public boolean ajustar_Datos_CalculoCosto() {
+        boolean costo = false;
+        Producto prod = null;
+        double valorCosto = 0;
+        for (int i = 0; i < 6; i++) {
+            for (int k = 0; k < productos.size(); k++) {
+                prod = (Producto) productos.get(k);
+                if (i == 1) {
+                    prod.setNombre((String) jTable2.getValueAt(k, i));
+                } else if (i == 2) {
                     prod.setCosto(Double.parseDouble((String) jTable2.getValueAt(k, i)));
                 } else if (i == 3) {
                     prod.setCantidad(Integer.parseInt((String) jTable2.getValueAt(k, i)));
+                } else if (i == 4) {
+                    prod.setPrecio_final(Double.parseDouble((String) jTable2.getValueAt(k, i)));
+                } else if (i == 5) {
+                    prod.setStock(Integer.parseInt((String) jTable2.getValueAt(k, i)));
                 }
             }
         }
@@ -723,7 +802,7 @@ public class Entrada_Nueva extends javax.swing.JFrame {
 
         Articulo ar;
         try {
-            ar = new Articulo(nom, ListAcciones,codEmpresa);
+            ar = new Articulo(nom, ListAcciones, codEmpresa);
             ar.setVisible(true);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(Entrada_Nueva.class.getName()).log(Level.SEVERE, null, ex);
@@ -785,7 +864,7 @@ public class Entrada_Nueva extends javax.swing.JFrame {
                     }
                     Control.cerrarConexion();
                     if (r) {
-                        temp = new Producto(cod, nom, precio, 1, iva, 1,0);
+                        temp = new Producto(cod, nom, precio, 1, iva, 1, 0);
                         productos.add(temp);
                     }
                 } catch (ClassNotFoundException ex) {
@@ -977,7 +1056,7 @@ public class Entrada_Nueva extends javax.swing.JFrame {
                     }
                     Control.cerrarConexion();
                     if (r) {
-                        temp = new Producto(cod, nom, precio, 1, iva, 1,0);
+                        temp = new Producto(cod, nom, precio, 1, iva, 1, 0);
                         productos.add(temp);
                     }
                 } catch (ClassNotFoundException ex) {

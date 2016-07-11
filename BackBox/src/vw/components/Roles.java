@@ -37,7 +37,7 @@ import vw.dialogs.AcercaDe;
 import vw.dialogs.CategoriasRegistrar;
 import vw.dialogs.ProveedoresRegistrar;
 import vw.dialogs.RolActualizar;
-import vw.dialogs.RolRegistrar;
+import vw.dialogs.RolRegistrarF;
 import vw.dialogs.UsuariosRegistrar;
 
 /**
@@ -105,7 +105,7 @@ public class Roles extends javax.swing.JFrame {
                         if (object1.getAccion().equalsIgnoreCase("Ver Articulos")) {
                             menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, 10));
                         }
-                        if (object1.getAccion().equalsIgnoreCase("Nuevo Articulo")) {
+                        if (object1.getAccion().equalsIgnoreCase("Nueva Compra")) {
                             menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, ActionEvent.CTRL_MASK));
                         }
                         if (object1.getAccion().equalsIgnoreCase("Ver Categoria")) {
@@ -448,7 +448,7 @@ public class Roles extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         try {
-            new RolRegistrar(this, true).setVisible(true);
+            new RolRegistrarF(this, true).setVisible(true);
         } catch (Exception e) {
             System.out.println("Error: " + e.toString());
         } finally {

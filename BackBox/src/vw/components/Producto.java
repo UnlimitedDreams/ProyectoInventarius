@@ -22,7 +22,7 @@ public class Producto {
     private int cantidad;
     private int desc;
     private int categoria;
-    private int precio_final;
+    private double precio_final;
     private int stock;
     private double ValorIva;
 
@@ -126,11 +126,11 @@ public class Producto {
         return "Producto{" + "codigo=" + codigo + ", nombre=" + nombre + ", Costo=" + Costo + ", iva=" + iva + ", precio_venta=" + precio_venta + ", cantidad=" + cantidad + ", desc=" + desc + ", categoria=" + categoria + '}';
     }
 
-    public int getPrecio_final() {
+    public double getPrecio_final() {
         return precio_final;
     }
 
-    public void setPrecio_final(int precio_final) {
+    public void setPrecio_final(double precio_final) {
         this.precio_final = precio_final;
     }
 
