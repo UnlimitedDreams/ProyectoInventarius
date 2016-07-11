@@ -80,7 +80,7 @@ public class AcercaDe extends javax.swing.JDialog {
         jPanel2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         jLabel7.setFont(new java.awt.Font("Segoe UI Light", 0, 14)); // NOI18N
-        jLabel7.setText("Build: (BackBox) Project Inventarius 0.1.6 Beta");
+        jLabel7.setText("Build: (BackBox) Project Inventarius 0.1.7. 34 Beta");
 
         jLabel8.setFont(new java.awt.Font("Segoe UI Light", 0, 14)); // NOI18N
         jLabel8.setText("Buscar Actualizaciones");
