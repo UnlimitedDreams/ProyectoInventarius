@@ -5,6 +5,10 @@
  */
 package vw.components;
 
+import Control.Sequence;
+import Control.Entrada;
+import Modelo.Producto;
+import Modelo.List_Categoria;
 import Control.Control;
 import java.net.URL;
 import java.sql.SQLException;

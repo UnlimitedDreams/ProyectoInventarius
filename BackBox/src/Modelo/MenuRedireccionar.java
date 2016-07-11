@@ -6,8 +6,6 @@
 package Modelo;
 
 import java.awt.Desktop;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -20,7 +18,6 @@ import vw.components.CategoriaGestion;
 import vw.components.Clientes;
 import vw.components.DatallesPorFecha;
 import vw.components.Entrada_Nueva;
-import vw.components.Producto;
 import vw.components.Provedores;
 import vw.components.Reporte_Entradas;
 import vw.components.Reporte_Ventas;
@@ -33,8 +30,6 @@ import vw.dialogs.ProveedoresRegistrar;
 import vw.dialogs.RegistroCliente;
 import vw.dialogs.RolRegistrarF;
 import vw.dialogs.UsuariosRegistrar;
-import vw.main.Acceder;
-import vw.main.Menu;
 import vw.model.Articulo;
 import vw.model.Venta;
 

@@ -5,6 +5,7 @@
  */
 package vw.components;
 
+import Modelo.Producto;
 import Control.Control;
 import java.awt.Toolkit;
 import java.sql.Connection;

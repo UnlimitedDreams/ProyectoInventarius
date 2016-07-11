@@ -12,9 +12,9 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
-import vw.components.Entrada;
-import vw.components.List_Categoria;
-import vw.components.Sequence;
+import Control.Entrada;
+import Modelo.List_Categoria;
+import Control.Sequence;
 
 /**
  *

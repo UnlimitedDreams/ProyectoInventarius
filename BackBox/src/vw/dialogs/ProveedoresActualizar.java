@@ -10,7 +10,7 @@ import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
-import vw.components.Entrada;
+import Control.Entrada;
 
 /**
  *
