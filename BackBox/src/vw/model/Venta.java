@@ -242,6 +242,15 @@ public class Venta extends javax.swing.JFrame {
         //jTable2.changeSelection(0, 0, false, false);
     }
 
+    public void EliminarBandera() throws ClassNotFoundException {
+        Control.conectar();
+        Control.ejecuteUpdate("delete from detalle a, producto b \n"
+                + "where a.cod_producto=b.cod_producto\n"
+                + "and b.bandera=0");
+        Control.ejecuteUpdate("delete from producto where bandera=0");
+        Control.cerrarConexion();
+    }
+
     public void MenuAyuda() {
         ArrayList<String> Ayuda = new ArrayList();
         Ayuda.add("Ayuda en Linea");
@@ -1034,6 +1043,7 @@ public class Venta extends javax.swing.JFrame {
             Control.con.commit();
             Control.con.setAutoCommit(true);
             Control.cerrarConexion();
+            EliminarBandera();
         }
         if (Proceso) {
             ArrayList<Producto> productos = new ArrayList();
@@ -1496,12 +1506,12 @@ public class Venta extends javax.swing.JFrame {
                     r = true;
                     NomCliente.setText("Cliente : " + Control.rs.getString(1));
                 }
-                
+
                 if (r == false) {
                     Entrada.muestreMensajeV("La cedula ingresada no esta registrada como cliente");
                     Cliente.setText(this.cedulaCliente);
-                }else{
-                    codigo_cliente=Integer.parseInt(Cliente.getText());
+                } else {
+                    codigo_cliente = Integer.parseInt(Cliente.getText());
                 }
                 Control.cerrarConexion();
             }

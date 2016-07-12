@@ -25,6 +25,7 @@ import java.net.URISyntaxException;
 import vw.model.Articulo;
 import java.net.URL;
 import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -173,7 +174,44 @@ public class Roles extends javax.swing.JFrame {
             }
         }
         MenuAyuda();
+        Permisos();
 
+    }
+    
+    public void Permisos() throws ClassNotFoundException {
+        Control.conectar();
+        try {
+            ArrayList<String> acciones = new ArrayList();
+            Control.ejecuteQuery("select c.accion from usuario a, persona b , permisos c\n"
+                    + "where\n"
+                    + "a.cedula=b.cedula and \n"
+                    + "a.cod_usuario=c.cod_usuario\n"
+                    + "and c.panel='Roles'\n"
+                    + "and a.cod_usuario=" + usuario);
+            while (Control.rs.next()) {
+                acciones.add(Control.rs.getString(1));
+            }
+            jButton1.setEnabled(false);
+            jButton2.setEnabled(false);
+            actualizar.setEnabled(false);
+            
+            String acci="";
+            for (String accione : acciones) {
+                acci=(String)accione;
+                if (acci.equalsIgnoreCase("RolCrear")) {
+                    jButton1.setEnabled(true);
+                } else if (acci.equalsIgnoreCase("RolEditar")) {
+                    actualizar.setEnabled(true);
+                } else if (acci.equalsIgnoreCase("Rolborrar")) {
+                    jButton2.setEnabled(true);
+                }
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(Bodega.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            Control.cerrarConexion();
+        }
     }
 
     public void MenuAyuda() {

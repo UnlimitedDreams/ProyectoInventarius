@@ -20,7 +20,7 @@ import Modelo.Producto;
  *
  * @author Microinformatica
  */
-public class Producto_update extends javax.swing.JDialog {
+public class ProductoUpdate extends javax.swing.JDialog {
 
     private int cod;
     Producto p;
@@ -33,7 +33,7 @@ public class Producto_update extends javax.swing.JDialog {
     int codEmpresa;
     ArrayList<Integer> ListAcciones = new ArrayList();
 
-    public Producto_update(java.awt.Frame parent, boolean modal, Producto p, String nom, ArrayList acciones,int codEmpresa) throws ClassNotFoundException {
+    public ProductoUpdate(java.awt.Frame parent, boolean modal, Producto p, String nom, ArrayList acciones,int codEmpresa) throws ClassNotFoundException {
         super(parent, modal);
         initComponents();
         this.p = p;
@@ -86,7 +86,6 @@ public class Producto_update extends javax.swing.JDialog {
         jTextField10 = new javax.swing.JTextField();
 
         setTitle("Actualizar Producto - Inventarius");
-        setPreferredSize(new java.awt.Dimension(669, 550));
         setResizable(false);
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
@@ -295,11 +294,11 @@ public class Producto_update extends javax.swing.JDialog {
                 b.setVisible(true);
                 this.setVisible(false);
             } catch (SQLException ex) {
-                Logger.getLogger(Producto_update.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(ProductoUpdate.class.getName()).log(Level.SEVERE, null, ex);
             }
 
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(Producto_update.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ProductoUpdate.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jButton2ActionPerformed
 
@@ -308,10 +307,10 @@ public class Producto_update extends javax.swing.JDialog {
             try {
                 update();
             } catch (SQLException ex) {
-                Logger.getLogger(Producto_update.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(ProductoUpdate.class.getName()).log(Level.SEVERE, null, ex);
             }
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(Producto_update.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ProductoUpdate.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
