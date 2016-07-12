@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -40,6 +41,7 @@ import javax.swing.JSeparator;
 import javax.swing.JTable;
 import javax.swing.KeyStroke;
 import javax.swing.table.DefaultTableModel;
+import vw.components.Bodega;
 
 /**
  *
@@ -56,13 +58,13 @@ public class Articulo extends javax.swing.JFrame {
     ArrayList<acciones> listaaccion = new ArrayList();
     ArrayList<ContenedorMenus> List_Menu = new ArrayList();
 
-    public Articulo(String nom, ArrayList acciones,int codEmpresa) throws ClassNotFoundException {
+    public Articulo(String nom, ArrayList acciones, int codEmpresa) throws ClassNotFoundException {
         initComponents();
         inicio();
 //        jButton6.setVisible(false);
         this.List_Menu = acciones;
         this.usuario = nom;
-        this.codEmpresa=codEmpresa;
+        this.codEmpresa = codEmpresa;
         this.setLocationRelativeTo(null);
         this.setResizable(false);
         URL url = getClass().getResource("/images/facelet/icon.png");
@@ -145,7 +147,7 @@ public class Articulo extends javax.swing.JFrame {
                         menuItem.addActionListener(new ActionListener() {
                             @Override
                             public void actionPerformed(ActionEvent e) {
-                                MenuRedireccionar MenuF = new MenuRedireccionar(Articulo.this, e.getActionCommand(), List_Menu, usuario,codEmpresa);
+                                MenuRedireccionar MenuF = new MenuRedireccionar(Articulo.this, e.getActionCommand(), List_Menu, usuario, codEmpresa);
                                 try {
                                     MenuF.reDireccion();
                                     if (e.getActionCommand().equalsIgnoreCase("Crear Categoria ")
@@ -171,6 +173,7 @@ public class Articulo extends javax.swing.JFrame {
             }
         }
         MenuAyuda();
+        Permisos();
 
     }
 
@@ -199,7 +202,7 @@ public class Articulo extends javax.swing.JFrame {
                     menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_2, ActionEvent.ALT_MASK));
                 }
                 menuItem.addActionListener((ActionEvent e) -> {
-                    MenuRedireccionar MenuF = new MenuRedireccionar(this, e.getActionCommand().toString(), List_Menu, usuario,codEmpresa);
+                    MenuRedireccionar MenuF = new MenuRedireccionar(this, e.getActionCommand().toString(), List_Menu, usuario, codEmpresa);
                     try {
                         MenuF.reDireccion();
                     } catch (IOException ex) {
@@ -212,6 +215,41 @@ public class Articulo extends javax.swing.JFrame {
                 });
                 menu.add(menuItem);
             }
+        }
+    }
+
+    public void Permisos() throws ClassNotFoundException {
+        Control.conectar();
+        try {
+            ArrayList<String> acciones = new ArrayList();
+            Control.ejecuteQuery("select c.accion from usuario a, persona b , permisos c\n"
+                    + "where\n"
+                    + "a.cedula=b.cedula and \n"
+                    + "a.cod_usuario=c.cod_usuario\n"
+                    + "and c.panel='Articulo'\n"
+                    + "and a.cod_usuario=" + usuario);
+            while (Control.rs.next()) {
+                acciones.add(Control.rs.getString(1));
+            }
+            jButton1.setEnabled(false);
+            jButton6.setEnabled(false);
+            jButton5.setEnabled(false);
+            String acci = "";
+            for (String accione : acciones) {
+                acci = (String) accione;
+                if (acci.equalsIgnoreCase("NuevaCompra")) {
+                    jButton1.setEnabled(true);
+                } else if (acci.equalsIgnoreCase("ArtiuloCarga")) {
+                    jButton6.setEnabled(true);
+                } else if (acci.equalsIgnoreCase("ArticuloReporte")) {
+                    jButton5.setEnabled(true);
+                }
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(Bodega.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            Control.cerrarConexion();
         }
     }
 
@@ -492,7 +530,7 @@ public class Articulo extends javax.swing.JFrame {
     public void Entradas() throws ClassNotFoundException {
         String fac = "";
         ArrayList<Producto> pr = new ArrayList();
-        Entrada_Nueva rp = new Entrada_Nueva(pr, usuario, fac, List_Menu,codEmpresa);
+        Entrada_Nueva rp = new Entrada_Nueva(pr, usuario, fac, List_Menu, codEmpresa);
         this.setVisible(false);
         rp.setVisible(true);
 
