@@ -53,19 +53,19 @@ public class Bodega extends javax.swing.JFrame {
     ArrayList<acciones> listaaccion = new ArrayList();
     ArrayList<ContenedorMenus> List_Menu = new ArrayList();
 
-    public Bodega(String usuario, ArrayList acciones,int codEmpresa) throws ClassNotFoundException, SQLException {
+    public Bodega(String usuario, ArrayList acciones, int codEmpresa) throws ClassNotFoundException, SQLException {
         initComponents();
         inicio();
-        this.usuario = usuario;        
+        this.usuario = usuario;
+        System.out.println("USUARIO : " + usuario);
         this.List_Menu = acciones;
-        this.codEmpresa=codEmpresa;
+        this.codEmpresa = codEmpresa;
         this.setLocationRelativeTo(null);
-        this.setResizable(false);        
+        this.setResizable(false);
         Stock();
         URL url = getClass().getResource("/images/facelet/icon.png");
         ImageIcon img = new ImageIcon(url);
         setIconImage(img.getImage());
-        
         ContenedorMenus con_menu = new ContenedorMenus();
         con_menu = (ContenedorMenus) List_Menu.get(0);
         listaSeccion = con_menu.getListaSeccion();
@@ -143,7 +143,7 @@ public class Bodega extends javax.swing.JFrame {
                         menuItem.addActionListener(new ActionListener() {
                             @Override
                             public void actionPerformed(ActionEvent e) {
-                                MenuRedireccionar MenuF = new MenuRedireccionar(Bodega.this, e.getActionCommand(), List_Menu, usuario,codEmpresa);
+                                MenuRedireccionar MenuF = new MenuRedireccionar(Bodega.this, e.getActionCommand(), List_Menu, usuario, codEmpresa);
                                 try {
                                     MenuF.reDireccion();
                                     if (e.getActionCommand().equalsIgnoreCase("Crear Categoria ")
@@ -168,6 +168,7 @@ public class Bodega extends javax.swing.JFrame {
             }
         }
         MenuAyuda();
+        Permisos();
 
     }
 
@@ -196,7 +197,7 @@ public class Bodega extends javax.swing.JFrame {
                     menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_2, ActionEvent.ALT_MASK));
                 }
                 menuItem.addActionListener((ActionEvent e) -> {
-                    MenuRedireccionar MenuF = new MenuRedireccionar(this, e.getActionCommand().toString(), List_Menu, usuario,codEmpresa);
+                    MenuRedireccionar MenuF = new MenuRedireccionar(this, e.getActionCommand().toString(), List_Menu, usuario, codEmpresa);
                     try {
                         MenuF.reDireccion();
                     } catch (IOException ex) {
@@ -209,6 +210,47 @@ public class Bodega extends javax.swing.JFrame {
                 });
                 menu.add(menuItem);
             }
+        }
+    }
+
+    public void Permisos() throws ClassNotFoundException {
+        Control.conectar();
+        try {
+            ArrayList<String> acciones = new ArrayList();
+            Control.ejecuteQuery("select c.accion from usuario a, persona b , permisos c\n"
+                    + "where\n"
+                    + "a.cedula=b.cedula and \n"
+                    + "a.cod_usuario=c.cod_usuario\n"
+                    + "and c.panel='Bodega'\n"
+                    + "and a.cod_usuario=" + usuario);
+            while (Control.rs.next()) {
+                acciones.add(Control.rs.getString(1));
+            }
+            salida.setEnabled(false);
+            entrada.setEnabled(false);
+            borrar.setEnabled(false);
+            actualizar.setEnabled(false);
+            stock.setEnabled(false);
+            String acci="";
+            for (String accione : acciones) {
+                acci=(String)accione;
+                if (acci.equalsIgnoreCase("EntradaSalida")) {
+                    System.out.println("entro");
+                    salida.setEnabled(true);
+                    entrada.setEnabled(true);
+                } else if (acci.equalsIgnoreCase("BodegaBorrar")) {
+                    borrar.setEnabled(true);
+                } else if (acci.equalsIgnoreCase("BodegaActualizar")) {
+                    actualizar.setEnabled(true);
+                } else if (acci.equalsIgnoreCase("BodegaStock")) {
+                    stock.setEnabled(true);
+                }
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(Bodega.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            Control.cerrarConexion();
         }
     }
 
@@ -293,8 +335,6 @@ public class Bodega extends javax.swing.JFrame {
             Control.cerrarConexion();
         }
     }
-
-   
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -569,7 +609,7 @@ public class Bodega extends javax.swing.JFrame {
 
     private void stockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stockActionPerformed
         try {
-            Stock st = new Stock(usuario, List_Menu,codEmpresa);
+            Stock st = new Stock(usuario, List_Menu, codEmpresa);
             this.setVisible(false);
             st.setVisible(true);
         } catch (Exception ex) {
@@ -743,7 +783,7 @@ public class Bodega extends javax.swing.JFrame {
             String cod = (String) tablaProductos.getValueAt(i, 0).toString();
             String c = (String) tablaProductos.getValueAt(i, 7).toString();
             SalidaEntrada newSalida = new SalidaEntrada(this, true,
-                    cod, "Salida", usuario, c, List_Menu,codEmpresa);
+                    cod, "Salida", usuario, c, List_Menu, codEmpresa);
             newSalida.setVisible(true);
 
         }
@@ -784,7 +824,7 @@ public class Bodega extends javax.swing.JFrame {
             String c = (String) tablaProductos.getValueAt(i, 6).toString();
             int codigo_sal = Sequence.seque("select max(cod_entra) from Salida_Entrada");
             SalidaEntrada newEntrada = new SalidaEntrada(this, true,
-                    cod, "Entrada", usuario, c, List_Menu,codEmpresa);
+                    cod, "Entrada", usuario, c, List_Menu, codEmpresa);
             newEntrada.setVisible(true);
 
         }
