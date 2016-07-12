@@ -25,6 +25,7 @@ import java.net.URISyntaxException;
 import vw.model.Articulo;
 import java.net.URL;
 import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -36,6 +37,7 @@ import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
 import javax.swing.table.DefaultTableModel;
 import vw.dialogs.UsuarioActualizar;
+import vw.dialogs.UsuarioPermiso;
 import vw.dialogs.UsuariosRegistrar;
 
 /**
@@ -168,6 +170,7 @@ public class Usuarios extends javax.swing.JFrame {
             }
         }
         MenuAyuda();
+        Permisos();
 
     }
 
@@ -212,6 +215,44 @@ public class Usuarios extends javax.swing.JFrame {
         }
     }
 
+      public void Permisos() throws ClassNotFoundException {
+        Control.conectar();
+        try {
+            ArrayList<String> acciones = new ArrayList();
+            Control.ejecuteQuery("select c.accion from usuario a, persona b , permisos c\n"
+                    + "where\n"
+                    + "a.cedula=b.cedula and \n"
+                    + "a.cod_usuario=c.cod_usuario\n"
+                    + "and c.panel='Usuarios'\n"
+                    + "and a.cod_usuario=" + usuario);
+            while (Control.rs.next()) {
+                acciones.add(Control.rs.getString(1));
+            }
+            agregarUsuario.setEnabled(false);
+            jButton2.setEnabled(false);
+            jButton5.setEnabled(false);
+            actualizar1.setEnabled(false);
+            String acci="";
+            for (String accione : acciones) {
+                acci=(String)accione;
+                if (acci.equalsIgnoreCase("UsuCrear")) {
+                    agregarUsuario.setEnabled(true);
+                } else if (acci.equalsIgnoreCase("UsuEditar")) {
+                    jButton5.setEnabled(true);
+                } else if (acci.equalsIgnoreCase("UsuBorrar")) {
+                    jButton2.setEnabled(true);
+                } else if (acci.equalsIgnoreCase("UsuPermisos")) {
+                    actualizar1.setEnabled(true);
+                }
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(Bodega.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            Control.cerrarConexion();
+        }
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -229,6 +270,7 @@ public class Usuarios extends javax.swing.JFrame {
         agregarUsuario = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
+        actualizar1 = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         file = new javax.swing.JMenu();
         inicio = new javax.swing.JMenuItem();
@@ -318,6 +360,23 @@ public class Usuarios extends javax.swing.JFrame {
             }
         });
 
+        actualizar1.setFont(new java.awt.Font("Segoe UI Light", 0, 11)); // NOI18N
+        actualizar1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-mdpi/ic_update_black_24dp.png"))); // NOI18N
+        actualizar1.setText("Permisos");
+        actualizar1.setBorder(null);
+        actualizar1.setBorderPainted(false);
+        actualizar1.setContentAreaFilled(false);
+        actualizar1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        actualizar1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        actualizar1.setPreferredSize(new java.awt.Dimension(55, 47));
+        actualizar1.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
+        actualizar1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        actualizar1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                actualizar1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -333,7 +392,9 @@ public class Usuarios extends javax.swing.JFrame {
                         .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(91, 91, 91)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(actualizar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(30, 30, 30)
                         .addComponent(volver, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
@@ -347,7 +408,8 @@ public class Usuarios extends javax.swing.JFrame {
                     .addComponent(volver, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(agregarUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(agregarUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(actualizar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -467,6 +529,29 @@ public class Usuarios extends javax.swing.JFrame {
     private void salirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_salirActionPerformed
         System.exit(0);
     }//GEN-LAST:event_salirActionPerformed
+
+    private void actualizar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_actualizar1ActionPerformed
+        String cod = "";
+        String Nom = "";
+        try {
+            int i = jTable1.getSelectedRow();
+            if (i == -1) {
+                JOptionPane.showMessageDialog(null, "Favor... seleccione una fila");
+            } else {
+                cod = (String) jTable1.getValueAt(i, 0).toString();
+                Nom = (String) jTable1.getValueAt(i, 1).toString();
+                new UsuarioPermiso(this, true, cod, List_Menu).setVisible(true);
+            }
+        } catch (Exception ex) {
+            System.out.println("Error: " + ex.toString());
+        } finally {
+            try {
+                inicio();
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(Roles.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_actualizar1ActionPerformed
     public void borrar() throws ClassNotFoundException {
         int i = jTable1.getSelectedRow();
         if (i == -1) {
@@ -566,6 +651,7 @@ public class Usuarios extends javax.swing.JFrame {
      */
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton actualizar1;
     private javax.swing.JButton agregarUsuario;
     private javax.swing.JMenuItem cerrarSesion;
     private javax.swing.JMenu file;

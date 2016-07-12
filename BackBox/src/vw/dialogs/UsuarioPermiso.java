@@ -26,7 +26,6 @@ import Control.Sequence;
 public class UsuarioPermiso extends javax.swing.JDialog {
 
     String ced = "";
-    String nomRol = "";
     ArrayList<seccion> listaSeccion = new ArrayList();
     ArrayList<acciones> listaaccion = new ArrayList();
     ArrayList<ContenedorMenus> List_Menu = new ArrayList();
@@ -38,12 +37,10 @@ public class UsuarioPermiso extends javax.swing.JDialog {
      * @param modal
      * @param cod
      */
-    public UsuarioPermiso(java.awt.Frame parent, boolean modal, String cod, ArrayList menu, String NomRol) {
+    public UsuarioPermiso(java.awt.Frame parent, boolean modal, String cod, ArrayList menu) {
         super(parent, modal);
         initComponents();
         this.List_Menu = menu;
-        this.nomRol = NomRol;
-        jTextField3.setText(nomRol);
         ContenedorMenus con_menu = new ContenedorMenus();
         con_menu = (ContenedorMenus) List_Menu.get(0);
         listaSeccion = con_menu.getListaSeccion();
@@ -61,6 +58,30 @@ public class UsuarioPermiso extends javax.swing.JDialog {
         URL url = getClass().getResource("/images/facelet/icon.png");
         ImageIcon img = new ImageIcon(url);
         setIconImage(img.getImage());
+        try {
+            RecuperarCodigoUsu();
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(UsuarioPermiso.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        System.out.println("Usuarioo : " + ced);
+    }
+
+    public void RecuperarCodigoUsu() throws ClassNotFoundException {
+
+        try {
+            Control.conectar();
+            Control.ejecuteQuery("select cod_usuario from usuario where cedula=" + ced);
+            int cod_usu=0;
+            while (Control.rs.next()) {
+                cod_usu=Control.rs.getInt(1);                
+            }
+            this.ced=""+cod_usu;
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(UsuarioPermiso.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            Control.cerrarConexion();
+        }
     }
 
     public void Insert() throws ClassNotFoundException, SQLException {
@@ -71,7 +92,7 @@ public class UsuarioPermiso extends javax.swing.JDialog {
         int Condicion = Entrada.menu("BackBox", "¿Esta Seguro que Desea Crear Los permisos? ", op);
         if (Condicion == 1) {
 
-            int codigoAct = Sequence.seque("select max(cod_permisos) from permisos");
+            int codigoAct = Sequence.seque("select max(cod_permiso) from permisos");
             try {
                 Control.conectar();
                 Control.con.setAutoCommit(false);
@@ -91,7 +112,7 @@ public class UsuarioPermiso extends javax.swing.JDialog {
                     codigoAct++;
                 }
                 if (BReporte.isSelected()) {
-                    Control.ejecuteUpdate("insert into permisos values(" + codigoAct + ",'Bodega','BodegaReporte'," + ced + ")");
+                    Control.ejecuteUpdate("insert into permisos values(" + codigoAct + ",'Bodega','BodegaStock'," + ced + ")");
                     codigoAct++;
                 }
                 if (ACompra.isSelected()) {
@@ -137,156 +158,31 @@ public class UsuarioPermiso extends javax.swing.JDialog {
                     codigoAct++;
                 }
 
-                if (UPermiso.isSelected()) {
-                    Control.ejecuteUpdate("insert into permisos values(" + codigoAct + ",'Usuarios','UsuPermisos'," + ced + ")");
+                if (RCrear.isSelected()) {
+                    Control.ejecuteUpdate("insert into permisos values(" + codigoAct + ",'Roles','RolCrear'," + ced + ")");
+                    codigoAct++;
+                }
+                if (REditar.isSelected()) {
+                    Control.ejecuteUpdate("insert into permisos values(" + codigoAct + ",'Roles','RolEditar'," + ced + ")");
+                    codigoAct++;
+                }
+                if (RBorrar.isSelected()) {
+                    Control.ejecuteUpdate("insert into permisos values(" + codigoAct + ",'Roles','Rolborrar'," + ced + ")");
+                    codigoAct++;
+                }
+                if (CCrear.isSelected()) {
+                    Control.ejecuteUpdate("insert into permisos values(" + codigoAct + ",'Cliente','CliCrear'," + ced + ")");
+                    codigoAct++;
+                }
+                if (CEditar.isSelected()) {
+                    Control.ejecuteUpdate("insert into permisos values(" + codigoAct + ",'Cliente','CliEditar'," + ced + ")");
+                    codigoAct++;
+                }
+                if (CBorrar.isSelected()) {
+                    Control.ejecuteUpdate("insert into permisos values(" + codigoAct + ",'Cliente','CliBorrar'," + ced + ")");
                     codigoAct++;
                 }
 
-                if (BBorrar.isSelected() && BActualizar.isSelected()) {
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + ced + ",9)");
-                    codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + ced + ",10)");
-                    codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + ced + ",3)");
-                    codigoAct++;
-                } else if (BBorrar.isSelected()) {
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + ced + ",9)");
-                    codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + ced + ",3)");
-                    codigoAct++;
-
-                } else if (BActualizar.isSelected()) {
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + ced + ",10)");
-                    codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + ced + ",3)");
-                    codigoAct++;
-
-                }
-
-                if (BReporte.isSelected() && NewCate.isSelected()) {
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + ced + ",11)");
-                    codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + ced + ",12)");
-                    codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + ced + ",3)");
-                    codigoAct++;
-                } else if (BReporte.isSelected()) {
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + ced + ",11)");
-                    codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + ced + ",3)");
-                    codigoAct++;
-                } else if (NewCate.isSelected()) {
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + ced + ",12)");
-                    codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + ced + ",3)");
-                    codigoAct++;
-                }
-                if (ACompra.isSelected() && ACarga.isSelected()) {
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + ced + ",1)");
-                    codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + ced + ",2)");
-                    codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + ced + ",3)");
-                    codigoAct++;
-                } else if (ACompra.isSelected()) {
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + ced + ",1)");
-                    codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + ced + ",3)");
-                    codigoAct++;
-                } else if (ACarga.isSelected()) {
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + ced + ",2)");
-                    codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + ced + ",3)");
-                    codigoAct++;
-                }
-
-                if (jCheckBox17.isSelected()) {
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",3," + ced + ",20)");
-                    codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",3," + ced + ",21)");
-                    codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",3," + ced + ",22)");
-                    codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",3," + ced + ",3)");
-                    codigoAct++;
-                }
-//                    if (VVentas.isSelected()) {
-//                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",2," + ced + ",16)");
-//                        codigoAct++;
-//                    }
-
-//                    if (VDevol.isSelected()) {
-//                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",2," + ced + ",17)");
-//                        codigoAct++;
-//                    }
-//
-//                    if (VDiaria.isSelected()) {
-//                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",2," + ced + ",18)");
-//                        codigoAct++;
-//                    }
-                Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",2," + ced + ",3)");
-                codigoAct++;
-
-                if (UCrear.isSelected()) {
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",3," + ced + ",20)");
-                    codigoAct++;
-                }
-
-                if (UEditar.isSelected()) {
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",3," + ced + ",21)");
-                    codigoAct++;
-                }
-
-                if (UBorrar.isSelected()) {
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",3," + ced + ",22)");
-                    codigoAct++;
-                }
-                Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",3," + ced + ",3)");
-                codigoAct++;
-
-                if (AReporte.isSelected() && NewPro.isSelected()) {
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + ced + ",5)");
-                    codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + ced + ",6)");
-                    codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + ced + ",3)");
-                    codigoAct++;
-                } else if (AReporte.isSelected()) {
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + ced + ",5)");
-                    codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + ced + ",3)");
-                    codigoAct++;
-                } else if (NewPro.isSelected()) {
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + ced + ",6)");
-                    codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + ced + ",3)");
-                    codigoAct++;
-                }
-//                    if (ListRol.isSelected() && UPermiso.isSelected()) {
-//                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + ced + ",7)");
-//                        codigoAct++;
-//                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + ced + ",8)");
-//                        codigoAct++;
-//                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + ced + ",3)");
-//                        codigoAct++;
-//                    } else if (ListRol.isSelected()) {
-//                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + ced + ",7)");
-//                        codigoAct++;
-//                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + ced + ",3)");
-//                        codigoAct++;
-//                    } else if (UPermiso.isSelected()) {
-//                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + ced + ",8)");
-//                        codigoAct++;
-
-//                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + ced + ",3)");
-//                        codigoAct++;
-//                    }
-//                    if (ListClientes.isSelected()) {
-//                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + ced + ",30)");
-//                        codigoAct++;
-//                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + ced + ",3)");
-//                        codigoAct++;
-//                    }
                 cerrar = true;
             } catch (Exception ex) {
                 cerrar = false;
@@ -314,8 +210,6 @@ public class UsuarioPermiso extends javax.swing.JDialog {
 
         jCheckBox2 = new javax.swing.JCheckBox();
         jPanel1 = new javax.swing.JPanel();
-        jLabel4 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         Bodega = new javax.swing.JCheckBox();
@@ -355,16 +249,9 @@ public class UsuarioPermiso extends javax.swing.JDialog {
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel4.setFont(new java.awt.Font("Segoe UI Light", 1, 23)); // NOI18N
-        jLabel4.setText("Nombre:");
-        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 20, -1, -1));
-
-        jTextField3.setFont(new java.awt.Font("Segoe UI Light", 0, 18)); // NOI18N
-        jPanel1.add(jTextField3, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 20, 330, -1));
-
         jButton1.setFont(new java.awt.Font("Segoe UI Light", 0, 11)); // NOI18N
         jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-mdpi/ic_update_black_24dp.png"))); // NOI18N
-        jButton1.setText("Actualizar");
+        jButton1.setText("Crear");
         jButton1.setBorder(null);
         jButton1.setBorderPainted(false);
         jButton1.setContentAreaFilled(false);
@@ -422,7 +309,7 @@ public class UsuarioPermiso extends javax.swing.JDialog {
 
         BReporte.setBackground(new java.awt.Color(255, 255, 255));
         BReporte.setSelected(true);
-        BReporte.setText("Reporte Excel");
+        BReporte.setText("Stock");
         BReporte.setOpaque(false);
         BReporte.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -456,8 +343,8 @@ public class UsuarioPermiso extends javax.swing.JDialog {
         jPanel1.add(jCheckBox17, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 100, -1, -1));
 
         jLabel1.setFont(new java.awt.Font("Segoe UI Light", 1, 18)); // NOI18N
-        jLabel1.setText("Acciones Menu");
-        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 60, -1, -1));
+        jLabel1.setText("Permisos");
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 20, -1, -1));
 
         BEntradaSalida.setSelected(true);
         BEntradaSalida.setText("E / S");
@@ -760,8 +647,6 @@ public class UsuarioPermiso extends javax.swing.JDialog {
     private javax.swing.JCheckBox jCheckBox17;
     private javax.swing.JCheckBox jCheckBox2;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JTextField jTextField3;
     // End of variables declaration//GEN-END:variables
 }

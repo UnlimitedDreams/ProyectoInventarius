@@ -21,6 +21,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -35,7 +36,6 @@ import vw.dialogs.ClienteActualizar;
 import vw.dialogs.RegistroCliente;
 import vw.main.Acceder;
 import vw.main.Menu;
-
 
 /**
  *
@@ -52,10 +52,10 @@ public class Clientes extends javax.swing.JFrame {
     ArrayList<acciones> listaaccion = new ArrayList();
     ArrayList<ContenedorMenus> List_Menu = new ArrayList();
 
-    public Clientes(String nom, ArrayList acciones,int codEmpresa) throws ClassNotFoundException {
+    public Clientes(String nom, ArrayList acciones, int codEmpresa) throws ClassNotFoundException {
         initComponents();
         this.List_Menu = acciones;
-        this.codEmpresa=codEmpresa;
+        this.codEmpresa = codEmpresa;
         inicio();
         this.usuario = nom;
         this.setLocationRelativeTo(null);
@@ -140,7 +140,7 @@ public class Clientes extends javax.swing.JFrame {
                         menuItem.addActionListener(new ActionListener() {
                             @Override
                             public void actionPerformed(ActionEvent e) {
-                                MenuRedireccionar MenuF = new MenuRedireccionar(Clientes.this, e.getActionCommand(), List_Menu, usuario,codEmpresa);
+                                MenuRedireccionar MenuF = new MenuRedireccionar(Clientes.this, e.getActionCommand(), List_Menu, usuario, codEmpresa);
                                 try {
                                     MenuF.reDireccion();
                                     if (e.getActionCommand().equalsIgnoreCase("Crear Categoria ")
@@ -166,7 +166,43 @@ public class Clientes extends javax.swing.JFrame {
             }
         }
         MenuAyuda();
+        Permisos();
+    }
 
+    public void Permisos() throws ClassNotFoundException {
+        Control.conectar();
+        try {
+            ArrayList<String> acciones = new ArrayList();
+            Control.ejecuteQuery("select c.accion from usuario a, persona b , permisos c\n"
+                    + "where\n"
+                    + "a.cedula=b.cedula and \n"
+                    + "a.cod_usuario=c.cod_usuario\n"
+                    + "and c.panel='Cliente'\n"
+                    + "and a.cod_usuario=" + usuario);
+            while (Control.rs.next()) {
+                acciones.add(Control.rs.getString(1));
+            }
+            agregarUsuario.setEnabled(false);
+            jButton2.setEnabled(false);
+            jButton5.setEnabled(false);
+
+            String acci = "";
+            for (String accione : acciones) {
+                acci = (String) accione;
+                if (acci.equalsIgnoreCase("CliCrear")) {
+                    agregarUsuario.setEnabled(true);
+                } else if (acci.equalsIgnoreCase("CliEditar")) {
+                    jButton5.setEnabled(true);
+                } else if (acci.equalsIgnoreCase("CliBorrar")) {
+                    jButton2.setEnabled(true);
+                }
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(Bodega.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            Control.cerrarConexion();
+        }
     }
 
     public void MenuAyuda() {
@@ -194,7 +230,7 @@ public class Clientes extends javax.swing.JFrame {
                     menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_2, ActionEvent.ALT_MASK));
                 }
                 menuItem.addActionListener((ActionEvent e) -> {
-                    MenuRedireccionar MenuF = new MenuRedireccionar(this, e.getActionCommand().toString(), List_Menu, usuario,codEmpresa);
+                    MenuRedireccionar MenuF = new MenuRedireccionar(this, e.getActionCommand().toString(), List_Menu, usuario, codEmpresa);
                     try {
                         MenuF.reDireccion();
                     } catch (IOException ex) {

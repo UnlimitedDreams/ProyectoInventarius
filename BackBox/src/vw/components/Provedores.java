@@ -10,6 +10,7 @@ import vw.main.Menu;
 import Control.Control;
 import java.net.URL;
 import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -41,7 +42,44 @@ public class Provedores extends javax.swing.JFrame {
         URL url = getClass().getResource("/images/facelet/icon.png");
         ImageIcon img = new ImageIcon(url);
         setIconImage(img.getImage());
+        Permisos();
     }
+    public void Permisos() throws ClassNotFoundException {
+        Control.conectar();
+        try {
+            ArrayList<String> acciones = new ArrayList();
+            Control.ejecuteQuery("select c.accion from usuario a, persona b , permisos c\n"
+                    + "where\n"
+                    + "a.cedula=b.cedula and \n"
+                    + "a.cod_usuario=c.cod_usuario\n"
+                    + "and c.panel='Proveedores'\n"
+                    + "and a.cod_usuario=" + nom);
+            while (Control.rs.next()) {
+                acciones.add(Control.rs.getString(1));
+            }
+            nuevo.setEnabled(false);
+            borrar.setEnabled(false);
+            actualizar.setEnabled(false);
+            
+            String acci="";
+            for (String accione : acciones) {
+                acci=(String)accione;
+                if (acci.equalsIgnoreCase("ProCrear")) {
+                    nuevo.setEnabled(true);
+                } else if (acci.equalsIgnoreCase("ProEditar")) {
+                    actualizar.setEnabled(true);
+                } else if (acci.equalsIgnoreCase("ProBorrar")) {
+                    borrar.setEnabled(true);
+                }
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(Bodega.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            Control.cerrarConexion();
+        }
+    }
+
 
     /**
      * This method is called from within the constructor to initialize the form.

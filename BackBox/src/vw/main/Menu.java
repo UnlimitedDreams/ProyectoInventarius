@@ -168,6 +168,7 @@ public class Menu extends javax.swing.JFrame implements KeyListener {
                 }
             }
             MenuAyuda();
+            EliminarBandera();
         } catch (SQLException ex) {
             Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
@@ -272,6 +273,16 @@ public class Menu extends javax.swing.JFrame implements KeyListener {
         Control.cerrarConexion();
 
     }
+
+    public void EliminarBandera() throws ClassNotFoundException {
+        Control.conectar();
+        Control.ejecuteUpdate("delete from detalle a, producto b \n"
+                + "where a.cod_producto=b.cod_producto\n"
+                + "and b.bandera=0");
+        Control.ejecuteUpdate("delete from producto where bandera=0");
+        Control.cerrarConexion();
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
