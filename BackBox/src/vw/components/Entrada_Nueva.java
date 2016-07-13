@@ -522,7 +522,7 @@ public class Entrada_Nueva extends javax.swing.JFrame {
                                     int cost = costo(pro.getCodigo());
                                     boolean f = promedio_costo(cost, pro.getCosto(), pro.getCodigo());
                                 }
-                            } 
+                            }
                         }
                         if (r == true && r1 == true) {
                             Connection con = Control.con;
@@ -796,12 +796,12 @@ public class Entrada_Nueva extends javax.swing.JFrame {
 
         String fac = jTextField1.getText();
 
-        new ProductoRegistrar(this, true).setVisible(true);
+        new ProductoRegistrar(this, true, productos).setVisible(true);
         //this.setVisible(false);
 
 
     }//GEN-LAST:event_crearProductoActionPerformed
-
+ 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
 
         Articulo ar;
@@ -1139,7 +1139,7 @@ public class Entrada_Nueva extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable1;
-    private javax.swing.JTable jTable2;
+    public javax.swing.JTable jTable2;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JComboBox proveedores;

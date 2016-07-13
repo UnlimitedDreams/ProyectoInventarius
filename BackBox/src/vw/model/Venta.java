@@ -91,7 +91,7 @@ public class Venta extends javax.swing.JFrame {
             String usuario,
             int TipoVenta,
             ArrayList acciones, String cliente, int empresa)
-            throws ClassNotFoundException {
+            throws ClassNotFoundException, SQLException {
         initComponents();
         c.setVisible(false);
         this.condicionfiltro = false;
@@ -231,6 +231,7 @@ public class Venta extends javax.swing.JFrame {
             }
         }
         MenuAyuda();
+        ConfigurarIva();
         try {
             RecuperarNombreCliente(Cliente.getText());
         } catch (Exception ex) {
@@ -298,6 +299,10 @@ public class Venta extends javax.swing.JFrame {
     public void ConfigurarIva() throws SQLException {
         try {
             Control.conectar();
+            System.out.println("select Regimen.codregimen from Empresa , empresaHistorico,Regimen\n"
+                    + "where Empresa.codEmpresa=empresaHistorico.codEmpresa\n"
+                    + "and empresaHistorico.codregimen=Regimen.codregimen\n"
+                    + "and Empresa.codEmpresa=" + codigo_empresa);
             Control.ejecuteQuery("select Regimen.codregimen from Empresa , empresaHistorico,Regimen\n"
                     + "where Empresa.codEmpresa=empresaHistorico.codEmpresa\n"
                     + "and empresaHistorico.codregimen=Regimen.codregimen\n"
@@ -310,6 +315,8 @@ public class Venta extends javax.swing.JFrame {
             if (codRegimen <= 1) {
                 porcentajeIVA.setEnabled(false);
             }
+            System.out.println("REGIMEN ::::::::::::::::::::");
+            System.out.println(""+regimen);
             this.regimen = codRegimen;
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(Venta.class

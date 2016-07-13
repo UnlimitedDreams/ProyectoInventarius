@@ -17,6 +17,9 @@ import Control.Entrada;
 import Modelo.List_Categoria;
 import Modelo.Producto;
 import Control.Sequence;
+import Control.Tabla3;
+import vw.components.Entrada_Nueva;
+import vw.model.Venta;
 
 /**
  *
@@ -28,6 +31,7 @@ public class ProductoRegistrar extends javax.swing.JDialog {
     ArrayList<Producto> pr = new ArrayList();
     String nom;
     String fac;
+    Entrada_Nueva v = null;
     ArrayList<Integer> ListAcciones = new ArrayList();
 
     /**
@@ -36,7 +40,7 @@ public class ProductoRegistrar extends javax.swing.JDialog {
      * @param parent
      * @param modal
      */
-    public ProductoRegistrar(java.awt.Frame parent, boolean modal) {
+    public ProductoRegistrar(java.awt.Frame parent, boolean modal, ArrayList pro) {
         super(parent, modal);
         initComponents();
         this.setLocationRelativeTo(null);
@@ -51,6 +55,8 @@ public class ProductoRegistrar extends javax.swing.JDialog {
         cantidad.setText("" + 0);
         precioVenta.setText("" + 0);
         stock.setText("" + 0);
+        this.v = (Entrada_Nueva) parent;
+        this.pr = pro;
     }
 
     public void Categoria() {
@@ -97,28 +103,19 @@ public class ProductoRegistrar extends javax.swing.JDialog {
 
                 double costo = Double.parseDouble(costoF.getText());
                 double precio = Double.parseDouble(precioVenta.getText());
-                String desc = "0";
-                double des = 0;
                 String iva = "0";
                 double ivas = 0;
-                double precioSinDEs = Double.parseDouble(precioVenta.getText());
+               
 
-                if (ivaF.getText().equalsIgnoreCase("0")) {
-
-                } else {
-                    iva = "0." + ivaF.getText();
-                    ivas = costo * Double.parseDouble(iva);
-                    precio = precio + ivas;
-                    precioSinDEs = precioSinDEs + ivas;
-                }
+                
                 System.out.println("::::::::::::::: Cantidad de bonos " + categoria);
                 boolean r = Control.ejecuteUpdate("insert into producto values('" + codigo.getText() + "','" + nombre.getText() + "',"
-                        + costoF.getText() + "," + ivaF.getText() + "," + precioSinDEs + ","
-                        + categoria + "," + 0 + ",'A','n',0," + precio + "," + Integer.parseInt(stock.getText()) + ",0)");
+                        + costoF.getText() + "," + ivaF.getText() + "," + precio + ","
+                        + categoria + "," + Integer.parseInt(cantidad.getText()) + ",'A','n',0," + precio + "," + Integer.parseInt(stock.getText()) + ",0)");
                 if (r) {
                     Entrada.muestreMensajeV("SE AGREGGO PRODUCTO A LA COMPRA");
                     pr.add(new Producto(codigo.getText(), nombre.getText(), Double.parseDouble(costoF.getText()), precio,
-                            Integer.parseInt(cantidad.getText())));
+                            0,Integer.parseInt(stock.getText())));
                     System.out.println("Se registro todo bien");
                     proceso = true;
 
@@ -139,9 +136,18 @@ public class ProductoRegistrar extends javax.swing.JDialog {
 
         if (proceso) {
             System.out.println("Entro a nueva ventana");
-            //Entrada_Nueva ar = new Entrada_Nueva(pr, nom, fac, ListAcciones);
-            this.setVisible(false);
-            //ar.setVisible(true);
+
+            Tabla3 t = new Tabla3(pr);
+            t.calculeFrecuenciasV();
+
+            v.jTable2.getDefaultEditor(null);
+            for (int i = 0; i < 6; i++) {
+                for (int k = 0; k < t.getNrofreq(); k++) {
+                    v.jTable2.setValueAt(t.frecuencias[i][k], k, i);
+
+                }
+            }
+            this.dispose();
         }
 
     }
@@ -342,10 +348,14 @@ public class ProductoRegistrar extends javax.swing.JDialog {
 
         try {
             registrar();
+
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ProductoRegistrar.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ProductoRegistrar.class
+                    .getName()).log(Level.SEVERE, null, ex);
+
         } catch (SQLException ex) {
-            Logger.getLogger(ProductoRegistrar.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ProductoRegistrar.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
 
     }//GEN-LAST:event_jButton1ActionPerformed

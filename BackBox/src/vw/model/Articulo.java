@@ -586,43 +586,52 @@ public class Articulo extends javax.swing.JFrame {
     }
 
     public void pasar_datos(String ruta) throws ClassNotFoundException {
+        System.out.println("Entro");
         String movimiento[] = null;
-        int costo[] = null;
-        int iva[] = null;
-        int precio[] = null;
-        int categoria[] = null;
-        int cantidad[] = null;
-        int descuento[] = null;
+        String costo[] = null;
+        String iva[] = null;
+        String precio[] = null;
+        String categoria[] = null;
+        String cantidad[] = null;
+        String descuento[] = null;
         String nombres[] = null;
         LeerExcel Hoja = new LeerExcel();
-        Hoja.f_datos_1(ruta, "codigo");
-        movimiento = Hoja.Nombres();
-        Hoja.f_datos_1(ruta, "nombre");
-        nombres = Hoja.Nombres();
-        Hoja.f_datos_1(ruta, "costo");
-        costo = Hoja.Num_moviento();
-        Hoja.f_datos_1(ruta, "iva");
-        iva = Hoja.Num_moviento();
-        Hoja.f_datos_1(ruta, "precio");
-        precio = Hoja.Num_moviento();
-        Hoja.f_datos_1(ruta, "categoria");
-        categoria = Hoja.Num_moviento();
-        Hoja.f_datos_1(ruta, "cantidad");
-        cantidad = Hoja.Num_moviento();
-        Hoja.f_datos_1(ruta, "descuento");
-        descuento = Hoja.Num_moviento();
-        ArrayList dat = null;
-        System.out.println("Vamos");
-        dat = DatosPersona(movimiento, nombres, costo, iva, precio, categoria, cantidad, descuento);
-        System.out.println("vamos aqui");
-        System.out.println("Tamaño arreglo : " + dat.size());
-        CargaArchivo car = new CargaArchivo(dat, usuario, List_Menu);
-//        car.insertarLibro();
-        this.setVisible(false);
-        car.setVisible(true);
+        Hoja.f_datos_1(ruta, 0);//codigo
+        movimiento = Hoja.Carga();
+        Hoja.f_datos_1(ruta, 1);//Nombre
+        nombres = Hoja.Carga();
+        Hoja.f_datos_1(ruta, 2);//costo
+        costo = Hoja.Carga();
+        Hoja.f_datos_1(ruta, 3);//iva
+        iva = Hoja.Carga();
+        Hoja.f_datos_1(ruta, 4);//precio
+        precio = Hoja.Carga();
+        Hoja.f_datos_1(ruta, 5);//categoria
+        categoria = Hoja.Carga();
+        Hoja.f_datos_1(ruta, 6);//cantidad
+        cantidad = Hoja.Carga();
+        Hoja.f_datos_1(ruta, 7); //descuento
+        descuento = Hoja.Carga();
+        ArrayList datos = null;
+        for (Object dato : costo) {
+            System.out.println("costos : " + dato);
+        }
+        if(ValidarDatosEnTabla(costo,1)){
+            if(ValidarDatosEnTabla(iva,2)){
+                
+            }
+            
+        }
+//        datos = DatosPersona(movimiento, nombres, costo, iva, precio, categoria, cantidad, descuento);
+//        System.out.println("vamos aqui");
+//        System.out.println("Tamaño arreglo : " + datos.size());
+//        CargaArchivo car = new CargaArchivo(datos, usuario, List_Menu);
+////        car.insertarLibro();
+//        this.setVisible(false);
+//        car.setVisible(true);
     }
 
-    public String[] compilarLetras2(String x[]) {
+    public String[] compilarLetras(String x[]) {
         String n[] = new String[x.length - 1];
         for (int i = 0; i < n.length; i++) {
             n[i] = x[i + 1];
@@ -630,39 +639,112 @@ public class Articulo extends javax.swing.JFrame {
         return n;
     }
 
-    public int[] compilarDesc(int x[]) {
-        int n[] = new int[954];
-        for (int i = 0; i < n.length; i++) {
-            n[i] = 0;
-        }
-        return n;
-    }
-
-    public ArrayList DatosPersona(String cod[], String nom[], int cos[], int iva[], int precio[], int cat[], int cant[], int desc[]) {
-        System.err.println("cod : " + cod.length);
-        String nom2[] = compilarLetras2(nom);
-        String cod2[] = compilarLetras2(cod);
-        System.out.println("datosPersona : " + cod2.length);
-        int des[] = compilarDesc(desc);
-        String codi = "";
-        ArrayList<Producto> pro = new ArrayList();
-
-        for (int i = 0; i < cos.length; i++) {
-            System.out.println("-- : " + i);
-            System.err.println("cod2 : " + cod2[i]);
-            if (cod2[i].substring(0, 1).equalsIgnoreCase("#")) {
-                codi = cod2[i].substring(1, cod2[i].length());
-            } else {
-                codi = cod2[i];
+    public boolean isnumero(String x, int condicion) {
+        int a = 0;
+        double b = 0;
+        boolean r = false;
+        try {
+            if (condicion == 1) {
+                a = Integer.parseInt(x);
+                r = true;
+            } else if (condicion == 2) {
+                b = Double.parseDouble(x);
+                r = true;
             }
-            System.out.println("Cod : " + codi);
-            Producto p = new Producto("" + codi, nom2[i], cos[i], iva[i], precio[i], cant[i], des[i]);
-            System.out.println("Producto: " + p.toString());
-            p.setCategoria(cat[i]);
-            pro.add(p);
+
+            System.out.println("Valor r : " + r);
+            return r;
+        } catch (Exception ex) {
+            return r;
         }
-        return pro;
     }
+
+    public boolean ValidarDatosEnTabla(String []o, int condi) {
+        String mnserror = "N";
+        boolean r = true;
+        String valor = "";
+        for (Object object : o) {
+            valor = (String) object;
+            if (condi == 1 && isnumero(valor, 2) == false) {
+                mnserror = "El valor del costo debe ser Numerico";
+                r = false;
+                break;
+            }else if (condi == 2 && isnumero(valor, 1) == false) {
+                mnserror = "El valor del iva debe ser Numerico";
+                r = false;
+                break;
+            }
+        }
+
+//        Producto prod = null;
+//
+//        int cant = 0;
+//        double costo = 0;
+//        double precio = 0;
+//        for (int k = 0; k < productos.size(); k++) {
+//            prod = (Producto) productos.get(k);
+//            cant = 0;
+//            costo = 0;
+//            precio = 0;
+//            if (i == 2 && SoloNumeros((String) jTable2.getValueAt(k, i), 1) == false) {
+//                mnserror = "El valor del costo debe ser Numerico";
+//                r = false;
+//                break;
+//            } else if (i == 2 && SoloNumeros((String) jTable2.getValueAt(k, i), 1)) {
+//                costo = Double.parseDouble((String) jTable2.getValueAt(k, i));
+//                if (costo <= 0) {
+//                    mnserror = "El valor del costo Debe ser mayor a cero (0)";
+//                    r = false;
+//                    break;
+//                }
+//            } else if (i == 3 && SoloNumeros((String) jTable2.getValueAt(k, i), 2) == false) {
+//                mnserror = "La cantidad debe ser Numerica";
+//                r = false;
+//                break;
+//            } else if (i == 3 && SoloNumeros((String) jTable2.getValueAt(k, i), 2)) {
+//                cant = Integer.parseInt((String) jTable2.getValueAt(k, i));
+//                if (cant <= 0) {
+//                    mnserror = "La cantidad debe ser mayor a cero (0)";
+//                    r = false;
+//                    break;
+//                }
+//            } else if (i == 4 && SoloNumeros((String) jTable2.getValueAt(k, i), 1) == false) {
+//                mnserror = "El valor del Precio debe ser Numerico";
+//                r = false;
+//                break;
+//            } else if (i == 4 && SoloNumeros((String) jTable2.getValueAt(k, i), 1)) {
+//                precio = Double.parseDouble((String) jTable2.getValueAt(k, i));
+//                if (precio <= 0) {
+//                    mnserror = "El valor del Precio Debe ser mayor a cero (0)";
+//                    r = false;
+//                    break;
+//                }
+//            } else if (i == 5 && SoloNumeros((String) jTable2.getValueAt(k, i), 2) == false) {
+//                mnserror = "La cantidad del Stock debe ser Numerico";
+//                r = false;
+//                break;
+//            }
+//        }
+
+        if (mnserror != "N") {
+            Entrada.muestreMensajeV(mnserror);
+        }
+        return r;
+    }
+
+//    public ArrayList DatosPersona(String cod[], String nom[], String cos[], String iva[], String precio[], String cat[], String cant[], String desc[]) {
+//        String codi = "";
+//        ArrayList<Producto> pro = new ArrayList();
+//
+//        for (int i = 0; i < cod.length; i++) {
+//            System.out.println("Cod : " + codi);
+//            Producto p = new Producto("" + codi, nom[i], cos[i], iva[i], precio[i], cant[i], Integer.parseInt(desc[i]));
+//            System.out.println("Producto: " + p.toString());
+//            p.setCategoria(cat[i]);
+//            pro.add(p);
+//        }
+//        return pro;
+//    }
 
     public boolean BuscarEstado(String cod) throws ClassNotFoundException {
         Control.conectar();

@@ -34,7 +34,7 @@ import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
 import javax.swing.table.DefaultTableModel;
 import vw.dialogs.AcercaDe;
-import vw.dialogs.Producto_update;
+import vw.dialogs.ProductoUpdate;
 import vw.dialogs.SalidaEntrada;
 import vw.main.Acceder;
 import vw.main.Menu;
@@ -743,7 +743,7 @@ public class Bodega extends javax.swing.JFrame {
             producto.setDesc(Integer.parseInt(Desc));
             producto.setPrecio_venta(Double.parseDouble(Precio));
             producto.setCantidad(Integer.parseInt(cant));
-            Producto_update p = new Producto_update(this, true, producto, usuario, List_Menu, codEmpresa);
+            ProductoUpdate p = new ProductoUpdate(this, true, producto, usuario, List_Menu, codEmpresa);
             p.setVisible(true);
             this.setVisible(false);
         }
