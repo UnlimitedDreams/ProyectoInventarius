@@ -54,9 +54,11 @@ public class Articulo extends javax.swing.JFrame {
      */
     String usuario;
     int codEmpresa;
+    int regimen;
     ArrayList<seccion> listaSeccion = new ArrayList();
     ArrayList<acciones> listaaccion = new ArrayList();
     ArrayList<ContenedorMenus> List_Menu = new ArrayList();
+    ArrayList<Integer> listIvas = new ArrayList();
 
     public Articulo(String nom, ArrayList acciones, int codEmpresa) throws ClassNotFoundException {
         initComponents();
@@ -64,6 +66,7 @@ public class Articulo extends javax.swing.JFrame {
 //        jButton6.setVisible(false);
         this.List_Menu = acciones;
         this.usuario = nom;
+        this.regimen = 0;
         this.codEmpresa = codEmpresa;
         this.setLocationRelativeTo(null);
         this.setResizable(false);
@@ -215,6 +218,21 @@ public class Articulo extends javax.swing.JFrame {
                 });
                 menu.add(menuItem);
             }
+        }
+    }
+
+    public void ConfigurarIva() throws SQLException {
+        try {
+            listIvas.clear();
+            Control.conectar();
+            Control.ejecuteQuery("select * from maestro_iva");
+            while (Control.rs.next()) {
+                listIvas.add(Control.rs.getInt(1));
+            }
+            Control.cerrarConexion();
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Venta.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -477,10 +495,12 @@ public class Articulo extends javax.swing.JFrame {
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
         try {
+
             JFileChooser dlg = new JFileChooser();
             int option = dlg.showOpenDialog(this);
             if (option == JFileChooser.APPROVE_OPTION) {
                 String file = dlg.getSelectedFile().getPath();
+                ConfigurarIva();
                 pasar_datos(file);
             }
         } catch (Exception ex) {
@@ -616,11 +636,10 @@ public class Articulo extends javax.swing.JFrame {
         for (Object dato : costo) {
             System.out.println("costos : " + dato);
         }
-        if(ValidarDatosEnTabla(costo,1)){
-            if(ValidarDatosEnTabla(iva,2)){
-                
+        if (ValidarDatosEnTabla(costo, 1)) {
+            if (ValidarDatosEnTabla(iva, 2)) {
+
             }
-            
         }
 //        datos = DatosPersona(movimiento, nombres, costo, iva, precio, categoria, cantidad, descuento);
 //        System.out.println("vamos aqui");
@@ -659,21 +678,41 @@ public class Articulo extends javax.swing.JFrame {
         }
     }
 
-    public boolean ValidarDatosEnTabla(String []o, int condi) {
+    public boolean ValidarDatosEnTabla(String[] o, int condi) {
         String mnserror = "N";
         boolean r = true;
+        boolean iva = false;
         String valor = "";
+        //listIvas
         for (Object object : o) {
             valor = (String) object;
             if (condi == 1 && isnumero(valor, 2) == false) {
                 mnserror = "El valor del costo debe ser Numerico";
                 r = false;
                 break;
-            }else if (condi == 2 && isnumero(valor, 1) == false) {
+            } else if (condi == 1 && isnumero(valor, 2)) {
+                if (Integer.parseInt(valor) <= 0) {
+                    mnserror = "El valor del costo debe ser mayor a 0 (Cero))";
+                    r = false;
+                    break;
+                }
+            } else if (condi == 2 && isnumero(valor, 1) == false) {
                 mnserror = "El valor del iva debe ser Numerico";
                 r = false;
                 break;
+            } else if (condi == 2 && isnumero(valor, 1)) {
+                for (int Valoriva : listIvas) {
+                    if (Integer.parseInt(valor) == Valoriva) {
+                        iva = true;
+                    }
+                }
+                if (iva != false) {
+                    mnserror = "El valor del iva debe estar dentro de los parametros del iva permitido";
+                    r = false;
+                    break;
+                }
             }
+
         }
 
 //        Producto prod = null;
@@ -725,7 +764,6 @@ public class Articulo extends javax.swing.JFrame {
 //                break;
 //            }
 //        }
-
         if (mnserror != "N") {
             Entrada.muestreMensajeV(mnserror);
         }
@@ -745,7 +783,6 @@ public class Articulo extends javax.swing.JFrame {
 //        }
 //        return pro;
 //    }
-
     public boolean BuscarEstado(String cod) throws ClassNotFoundException {
         Control.conectar();
         boolean r = false;
