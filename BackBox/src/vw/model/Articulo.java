@@ -59,6 +59,7 @@ public class Articulo extends javax.swing.JFrame {
     ArrayList<acciones> listaaccion = new ArrayList();
     ArrayList<ContenedorMenus> List_Menu = new ArrayList();
     ArrayList<Integer> listIvas = new ArrayList();
+    ArrayList<Integer> listCategorias = new ArrayList();
 
     public Articulo(String nom, ArrayList acciones, int codEmpresa) throws ClassNotFoundException {
         initComponents();
@@ -225,9 +226,24 @@ public class Articulo extends javax.swing.JFrame {
         try {
             listIvas.clear();
             Control.conectar();
-            Control.ejecuteQuery("select * from maestro_iva");
+            Control.ejecuteQuery("select codiva from maestro_iva");
             while (Control.rs.next()) {
                 listIvas.add(Control.rs.getInt(1));
+            }
+            Control.cerrarConexion();
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Venta.class
+                    .getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void ListaCategoria() throws SQLException {
+        try {
+            listCategorias.clear();
+            Control.conectar();            
+            Control.ejecuteQuery("select cod_categoria from categoria where estado='A'");
+            while (Control.rs.next()) {
+                listCategorias.add(Control.rs.getInt(1));
             }
             Control.cerrarConexion();
         } catch (ClassNotFoundException ex) {
@@ -500,10 +516,12 @@ public class Articulo extends javax.swing.JFrame {
             int option = dlg.showOpenDialog(this);
             if (option == JFileChooser.APPROVE_OPTION) {
                 String file = dlg.getSelectedFile().getPath();
+                ListaCategoria();
                 ConfigurarIva();
                 pasar_datos(file);
             }
         } catch (Exception ex) {
+            System.err.println("Error : " + ex.toString());
             Entrada.muestreMensajeV("Documento no valido");
 
         }
@@ -612,8 +630,7 @@ public class Articulo extends javax.swing.JFrame {
         String iva[] = null;
         String precio[] = null;
         String categoria[] = null;
-        String cantidad[] = null;
-        String descuento[] = null;
+        String cantidad[] = null;        
         String nombres[] = null;
         LeerExcel Hoja = new LeerExcel();
         Hoja.f_datos_1(ruta, 0);//codigo
@@ -630,24 +647,25 @@ public class Articulo extends javax.swing.JFrame {
         categoria = Hoja.Carga();
         Hoja.f_datos_1(ruta, 6);//cantidad
         cantidad = Hoja.Carga();
-        Hoja.f_datos_1(ruta, 7); //descuento
-        descuento = Hoja.Carga();
         ArrayList datos = null;
-        for (Object dato : costo) {
-            System.out.println("costos : " + dato);
-        }
         if (ValidarDatosEnTabla(costo, 1)) {
             if (ValidarDatosEnTabla(iva, 2)) {
-
+                if (ValidarDatosEnTabla(precio, 3)) {
+                    if (ValidarDatosEnTabla(categoria, 4)) {
+                        if (ValidarDatosEnTabla(cantidad, 5)) {
+                            System.out.println("Paso todos los filtros");
+                            datos = DatosPersona(movimiento, nombres, costo, iva, precio, categoria, cantidad);
+                            System.out.println("vamos aqui");
+                            System.out.println("Tamaño arreglo : " + datos.size());
+                            CargaArchivo car = new CargaArchivo(datos, usuario, List_Menu);
+                            this.dispose();
+                            car.setVisible(true);
+                        }
+                    }
+                }
             }
         }
-//        datos = DatosPersona(movimiento, nombres, costo, iva, precio, categoria, cantidad, descuento);
-//        System.out.println("vamos aqui");
-//        System.out.println("Tamaño arreglo : " + datos.size());
-//        CargaArchivo car = new CargaArchivo(datos, usuario, List_Menu);
-////        car.insertarLibro();
-//        this.setVisible(false);
-//        car.setVisible(true);
+
     }
 
     public String[] compilarLetras(String x[]) {
@@ -671,7 +689,7 @@ public class Articulo extends javax.swing.JFrame {
                 r = true;
             }
 
-            System.out.println("Valor r : " + r);
+            System.out.println("Valor  : " + x+ " boolean : " + r);
             return r;
         } catch (Exception ex) {
             return r;
@@ -686,23 +704,25 @@ public class Articulo extends javax.swing.JFrame {
         //listIvas
         for (Object object : o) {
             valor = (String) object;
+            System.out.println("::: " + valor);
             if (condi == 1 && isnumero(valor, 2) == false) {
                 mnserror = "El valor del costo debe ser Numerico";
                 r = false;
                 break;
             } else if (condi == 1 && isnumero(valor, 2)) {
-                if (Integer.parseInt(valor) <= 0) {
+                System.out.println("entro por aqi");
+                if (Double.parseDouble(valor) <= 0) {
                     mnserror = "El valor del costo debe ser mayor a 0 (Cero))";
                     r = false;
                     break;
                 }
-            } else if (condi == 2 && isnumero(valor, 1) == false) {
+            } else if (condi == 2 && isnumero(valor, 2) == false) {
                 mnserror = "El valor del iva debe ser Numerico";
                 r = false;
                 break;
-            } else if (condi == 2 && isnumero(valor, 1)) {
+            } else if (condi == 2 && isnumero(valor, 2)) {
                 for (int Valoriva : listIvas) {
-                    if (Integer.parseInt(valor) == Valoriva) {
+                    if (Double.parseDouble(valor) == Valoriva) {
                         iva = true;
                     }
                 }
@@ -711,78 +731,65 @@ public class Articulo extends javax.swing.JFrame {
                     r = false;
                     break;
                 }
-            }
+            } else if (condi == 3 && isnumero(valor, 2) == false) {
+                mnserror = "El valor del Precio debe ser Numerico";
+                r = false;
+                break;
+            } else if (condi == 3 && isnumero(valor, 2)) {
+                if (Double.parseDouble(valor) <= 0) {
+                    mnserror = "El valor del Precio debe ser Numerico";
+                    r = false;
+                    break;
+                }
+            } else if (condi == 4 && isnumero(valor, 1) == false) {
+                mnserror = "El codigo de la categoria debe ser Numerico";
+                r = false;
+                break;
+            } else if (condi == 4 && isnumero(valor, 1)) {
 
+                for (Integer cate : listCategorias) {
+                    if (Integer.parseInt(valor) == cate) {
+                        iva = true;
+                    }
+                }
+                if (iva == false) {
+                    mnserror = "El codigo de la categoria No pertenece a una categoria del sistema";
+                    r = false;
+                    break;
+                }
+            } else if (condi == 5 && isnumero(valor, 1) == false) {
+                mnserror = "La cantidad del producto debe ser numerica";
+                r = false;
+                break;
+            } else if (condi == 5 && isnumero(valor, 1)) {
+                if (Integer.parseInt(valor) <= 0) {
+                    mnserror = "La cantidad del producto debe ser mayor a Cero (0)";
+                    r = false;
+                    break;
+                }
+            }
         }
 
-//        Producto prod = null;
-//
-//        int cant = 0;
-//        double costo = 0;
-//        double precio = 0;
-//        for (int k = 0; k < productos.size(); k++) {
-//            prod = (Producto) productos.get(k);
-//            cant = 0;
-//            costo = 0;
-//            precio = 0;
-//            if (i == 2 && SoloNumeros((String) jTable2.getValueAt(k, i), 1) == false) {
-//                mnserror = "El valor del costo debe ser Numerico";
-//                r = false;
-//                break;
-//            } else if (i == 2 && SoloNumeros((String) jTable2.getValueAt(k, i), 1)) {
-//                costo = Double.parseDouble((String) jTable2.getValueAt(k, i));
-//                if (costo <= 0) {
-//                    mnserror = "El valor del costo Debe ser mayor a cero (0)";
-//                    r = false;
-//                    break;
-//                }
-//            } else if (i == 3 && SoloNumeros((String) jTable2.getValueAt(k, i), 2) == false) {
-//                mnserror = "La cantidad debe ser Numerica";
-//                r = false;
-//                break;
-//            } else if (i == 3 && SoloNumeros((String) jTable2.getValueAt(k, i), 2)) {
-//                cant = Integer.parseInt((String) jTable2.getValueAt(k, i));
-//                if (cant <= 0) {
-//                    mnserror = "La cantidad debe ser mayor a cero (0)";
-//                    r = false;
-//                    break;
-//                }
-//            } else if (i == 4 && SoloNumeros((String) jTable2.getValueAt(k, i), 1) == false) {
-//                mnserror = "El valor del Precio debe ser Numerico";
-//                r = false;
-//                break;
-//            } else if (i == 4 && SoloNumeros((String) jTable2.getValueAt(k, i), 1)) {
-//                precio = Double.parseDouble((String) jTable2.getValueAt(k, i));
-//                if (precio <= 0) {
-//                    mnserror = "El valor del Precio Debe ser mayor a cero (0)";
-//                    r = false;
-//                    break;
-//                }
-//            } else if (i == 5 && SoloNumeros((String) jTable2.getValueAt(k, i), 2) == false) {
-//                mnserror = "La cantidad del Stock debe ser Numerico";
-//                r = false;
-//                break;
-//            }
-//        }
+//      
         if (mnserror != "N") {
             Entrada.muestreMensajeV(mnserror);
         }
         return r;
     }
 
-//    public ArrayList DatosPersona(String cod[], String nom[], String cos[], String iva[], String precio[], String cat[], String cant[], String desc[]) {
-//        String codi = "";
-//        ArrayList<Producto> pro = new ArrayList();
-//
-//        for (int i = 0; i < cod.length; i++) {
-//            System.out.println("Cod : " + codi);
-//            Producto p = new Producto("" + codi, nom[i], cos[i], iva[i], precio[i], cant[i], Integer.parseInt(desc[i]));
-//            System.out.println("Producto: " + p.toString());
-//            p.setCategoria(cat[i]);
-//            pro.add(p);
-//        }
-//        return pro;
-//    }
+    public ArrayList DatosPersona(String cod[], String nom[], String cos[], String iva[], String precio[], String cat[], String cant[]) {
+        String codi = "";
+        ArrayList<Producto> pro = new ArrayList();
+
+        for (int i = 0; i < cod.length; i++) {            
+            Producto p = new Producto("" + codi, nom[i],Double.parseDouble(cos[i]),Integer.parseInt(iva[i]),
+                    Double.parseDouble(precio[i]), Integer.parseInt(cant[i]), 0);            
+            p.setCategoria(Integer.parseInt(cat[i]));
+            System.out.println("-"+p.toString());
+            pro.add(p);
+        }
+        return pro;
+    }
     public boolean BuscarEstado(String cod) throws ClassNotFoundException {
         Control.conectar();
         boolean r = false;
