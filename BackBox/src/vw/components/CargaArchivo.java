@@ -11,6 +11,7 @@ import vw.main.Menu;
 import Control.Tabla;
 import Control.Control;
 import java.awt.Toolkit;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.logging.Level;
@@ -31,19 +32,45 @@ public class CargaArchivo extends javax.swing.JFrame {
     ArrayList<Integer> ListAcciones = new ArrayList();
 
     public CargaArchivo(ArrayList p, String nom, ArrayList acciones) throws ClassNotFoundException {
-        initComponents();
-        this.nom = nom;
-        this.ListAcciones = acciones;
-        this.setLocationRelativeTo(null);
-        this.setResizable(false);
-        this.p = p;
-        iniciar();
-        jTextField1.setText("" + p.size());
-        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/facelet/icon.png")));
+        try {
+            initComponents();
+            this.nom = nom;
+            this.ListAcciones = acciones;
+            this.setLocationRelativeTo(null);
+            this.setResizable(false);
+            this.p = p;
+            iniciar();
+            jTextField1.setText("" + p.size());
+            setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/facelet/icon.png")));
+        } catch (SQLException ex) {
+            Logger.getLogger(CargaArchivo.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
     }
 
-    public void iniciar() {
+    public void iniciar() throws SQLException {
+        try {
+            String r = "";
+            Control.conectar();
+            Control.con.setAutoCommit(false);
+            Producto temp = null;
+            for (int i = 0; i < p.size(); i++) {
+                temp = (Producto) p.get(i);
+                Control.ejecuteQuery("select * from producto where cod_producto='" + temp.getCodigo() + "'");
+                if (Control.rs.next()) {
+                    temp.setEsta("Existe");
+                } else {
+                    temp.setEsta("");
+                }
+            }
+
+        } catch (Exception ex) {
+
+        } finally {
+            Control.con.commit();
+            Control.con.setAutoCommit(true);
+            Control.cerrarConexion();
+        }
         Tabla t = new Tabla(p);
         t.calculeFrecuenciasV();
         muevaLosDatosFre(t);
@@ -64,22 +91,21 @@ public class CargaArchivo extends javax.swing.JFrame {
         Date fecha = new Date();
         int count = 0;
         ArrayList<String> listaError = new ArrayList();
-  
-            
+
         Control.conectar();
         for (int i = 0; i < p.size(); i++) {
             count++;
             pr = (Producto) p.get(i);
             double precio = pr.getPrecio_venta();
-            double precioSinDEs = pr.getPrecio_venta();
+
             boolean f = Control.ejecuteUpdate("insert into producto values('" + pr.getCodigo() + "','" + pr.getNombre() + "',"
-                    + pr.getCosto() + "," + pr.getIva() + "," + precioSinDEs + "," + pr.getCategoria() + ","
+                    + pr.getCosto() + "," + pr.getIva() + "," + precio + "," + pr.getCategoria() + ","
                     + pr.getCantidad() + ",'A','n'," + pr.getDesc() + "," + precio + ")");
             if (f) {
                 Entrada.muestreMensajeV("EXITO AL CARGAR " + count + " REGISTROS");
                 Articulo ar;
                 try {
-                    ar = new Articulo(nom, ListAcciones,1);
+                    ar = new Articulo(nom, ListAcciones, 1);
                     ar.setVisible(true);
                 } catch (ClassNotFoundException ex) {
                     Logger.getLogger(Entrada_Nueva.class.getName()).log(Level.SEVERE, null, ex);
@@ -1153,7 +1179,7 @@ public class CargaArchivo extends javax.swing.JFrame {
                 {null, null, null, null, null, null, null}
             },
             new String [] {
-                "Codigo", "Nombre", "Costo", "Iva", "Precio", "Descuento", "Cantidad"
+                "Codigo", "Nombre", "Costo", "Iva", "Precio", "Cantidad", "Estado"
             }
         ));
         jTable1.setDropMode(javax.swing.DropMode.INSERT_ROWS);

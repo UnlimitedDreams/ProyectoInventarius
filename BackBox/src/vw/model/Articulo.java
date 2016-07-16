@@ -226,7 +226,7 @@ public class Articulo extends javax.swing.JFrame {
         try {
             listIvas.clear();
             Control.conectar();
-            Control.ejecuteQuery("select codiva from maestro_iva");
+            Control.ejecuteQuery("select porcentaje from maestro_iva");
             while (Control.rs.next()) {
                 listIvas.add(Control.rs.getInt(1));
             }
@@ -240,7 +240,7 @@ public class Articulo extends javax.swing.JFrame {
     public void ListaCategoria() throws SQLException {
         try {
             listCategorias.clear();
-            Control.conectar();            
+            Control.conectar();
             Control.ejecuteQuery("select cod_categoria from categoria where estado='A'");
             while (Control.rs.next()) {
                 listCategorias.add(Control.rs.getInt(1));
@@ -630,7 +630,7 @@ public class Articulo extends javax.swing.JFrame {
         String iva[] = null;
         String precio[] = null;
         String categoria[] = null;
-        String cantidad[] = null;        
+        String cantidad[] = null;
         String nombres[] = null;
         LeerExcel Hoja = new LeerExcel();
         Hoja.f_datos_1(ruta, 0);//codigo
@@ -648,22 +648,28 @@ public class Articulo extends javax.swing.JFrame {
         Hoja.f_datos_1(ruta, 6);//cantidad
         cantidad = Hoja.Carga();
         ArrayList datos = null;
-        if (ValidarDatosEnTabla(costo, 1)) {
-            if (ValidarDatosEnTabla(iva, 2)) {
-                if (ValidarDatosEnTabla(precio, 3)) {
-                    if (ValidarDatosEnTabla(categoria, 4)) {
-                        if (ValidarDatosEnTabla(cantidad, 5)) {
-                            System.out.println("Paso todos los filtros");
-                            datos = DatosPersona(movimiento, nombres, costo, iva, precio, categoria, cantidad);
-                            System.out.println("vamos aqui");
-                            System.out.println("Tamaño arreglo : " + datos.size());
-                            CargaArchivo car = new CargaArchivo(datos, usuario, List_Menu);
-                            this.dispose();
-                            car.setVisible(true);
+        for (String object : movimiento) {
+            System.out.println("- "+ object);
+        }
+        
+        if ((movimiento.length == costo.length) && (iva.length == precio.length) && (categoria.length == cantidad.length
+                && nombres.length == movimiento.length)) {
+            if (ValidarDatosEnTabla(costo, 1)) {
+                if (ValidarDatosEnTabla(iva, 2)) {
+                    if (ValidarDatosEnTabla(precio, 3)) {
+                        if (ValidarDatosEnTabla(categoria, 4)) {
+                            if (ValidarDatosEnTabla(cantidad, 5)) {                                
+                                datos = DatosPersona(movimiento, nombres, costo, iva, precio, categoria, cantidad);
+                                CargaArchivo car = new CargaArchivo(datos, usuario, List_Menu);
+                                this.dispose();
+                                car.setVisible(true);
+                            }
                         }
                     }
                 }
             }
+        } else {
+            Entrada.muestreMensajeV("Verifique la cantidad de filas del archivo deben ser iguales");
         }
 
     }
@@ -689,7 +695,7 @@ public class Articulo extends javax.swing.JFrame {
                 r = true;
             }
 
-            System.out.println("Valor  : " + x+ " boolean : " + r);
+            System.out.println("Valor  : " + x + " boolean : " + r);
             return r;
         } catch (Exception ex) {
             return r;
@@ -702,9 +708,10 @@ public class Articulo extends javax.swing.JFrame {
         boolean iva = false;
         String valor = "";
         //listIvas
+        System.out.println("Size : " + o.length);
         for (Object object : o) {
             valor = (String) object;
-            System.out.println("::: " + valor);
+            System.out.println(" Valor " + valor + " Condicion : " + condi);
             if (condi == 1 && isnumero(valor, 2) == false) {
                 mnserror = "El valor del costo debe ser Numerico";
                 r = false;
@@ -716,28 +723,31 @@ public class Articulo extends javax.swing.JFrame {
                     r = false;
                     break;
                 }
-            } else if (condi == 2 && isnumero(valor, 2) == false) {
+            } else if (condi == 2 && isnumero(valor, 1) == false) {
                 mnserror = "El valor del iva debe ser Numerico";
                 r = false;
                 break;
-            } else if (condi == 2 && isnumero(valor, 2)) {
+            } else if (condi == 2 && isnumero(valor, 1)) {
                 for (int Valoriva : listIvas) {
-                    if (Double.parseDouble(valor) == Valoriva) {
+                    System.out.println("iva  : " + Valoriva + " valor : " + valor);
+                    if (Integer.parseInt(valor) == Valoriva) {
+
                         iva = true;
                     }
                 }
-                if (iva != false) {
+                if (iva == false) {
                     mnserror = "El valor del iva debe estar dentro de los parametros del iva permitido";
                     r = false;
                     break;
                 }
-            } else if (condi == 3 && isnumero(valor, 2) == false) {
+            } else if (condi == 3 && isnumero(valor, 1) == false) {
+                System.out.println("Entro valor del precio numerico");
                 mnserror = "El valor del Precio debe ser Numerico";
                 r = false;
                 break;
             } else if (condi == 3 && isnumero(valor, 2)) {
                 if (Double.parseDouble(valor) <= 0) {
-                    mnserror = "El valor del Precio debe ser Numerico";
+                    mnserror = "El valor del Precio debe ser mayor a cero";
                     r = false;
                     break;
                 }
@@ -777,19 +787,19 @@ public class Articulo extends javax.swing.JFrame {
         return r;
     }
 
-    public ArrayList DatosPersona(String cod[], String nom[], String cos[], String iva[], String precio[], String cat[], String cant[]) {
-        String codi = "";
+    public ArrayList DatosPersona(String cod[], String nom[], String cos[], String iva[], String precio[], String cat[], String cant[]) {        
         ArrayList<Producto> pro = new ArrayList();
 
-        for (int i = 0; i < cod.length; i++) {            
-            Producto p = new Producto("" + codi, nom[i],Double.parseDouble(cos[i]),Integer.parseInt(iva[i]),
-                    Double.parseDouble(precio[i]), Integer.parseInt(cant[i]), 0);            
+        for (int i = 0; i < cod.length; i++) {
+            Producto p = new Producto("" + cod[i], nom[i], Double.parseDouble(cos[i]), Integer.parseInt(iva[i]),
+                    Double.parseDouble(precio[i]), Integer.parseInt(cant[i]), 0);
             p.setCategoria(Integer.parseInt(cat[i]));
-            System.out.println("-"+p.toString());
+            System.out.println("-" + p.toString());
             pro.add(p);
         }
         return pro;
     }
+
     public boolean BuscarEstado(String cod) throws ClassNotFoundException {
         Control.conectar();
         boolean r = false;

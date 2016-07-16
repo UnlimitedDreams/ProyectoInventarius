@@ -156,8 +156,8 @@
                     <Column editable="true" title="Costo" type="java.lang.Object"/>
                     <Column editable="true" title="Iva" type="java.lang.Object"/>
                     <Column editable="true" title="Precio" type="java.lang.Object"/>
-                    <Column editable="true" title="Descuento" type="java.lang.Object"/>
                     <Column editable="true" title="Cantidad" type="java.lang.Object"/>
+                    <Column editable="true" title="Estado" type="java.lang.Object"/>
                   </Table>
                 </Property>
                 <Property name="dropMode" type="javax.swing.DropMode" editor="org.netbeans.modules.form.editors.EnumEditor">

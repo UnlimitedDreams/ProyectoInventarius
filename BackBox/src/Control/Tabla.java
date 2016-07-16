@@ -5,8 +5,8 @@
 package Control;
 
 import Modelo.Producto;
+import java.sql.SQLException;
 import java.util.ArrayList;
-
 
 public class Tabla {
 
@@ -25,29 +25,31 @@ public class Tabla {
         }
     }
 
-   
-
     public void calculeFrecuenciasV() {
         Producto temp = null;
-            for (int i = 0; i < pro.size(); i++) {
-                temp = (Producto) pro.get(i);
-                frecuencias[0][nrofreq] = "" + pro.get(i).getCodigo();
-                frecuencias[1][nrofreq] = "" + pro.get(i).getNombre();
-                frecuencias[2][nrofreq] = ""+pro.get(i).getCosto();
-                frecuencias[3][nrofreq] = "" + pro.get(i).getIva();
-                frecuencias[4][nrofreq] = "" + pro.get(i).getPrecio_venta();
-                frecuencias[5][nrofreq] = ""+pro.get(i).getDesc();
-                frecuencias[6][nrofreq] = ""+pro.get(i).getCantidad();
-                nrofreq++;
-            }      
+        
+        for (int i = 0; i < pro.size(); i++) {
+            temp = (Producto) pro.get(i);
+            frecuencias[0][nrofreq] = "" + pro.get(i).getCodigo();
+            frecuencias[1][nrofreq] = "" + pro.get(i).getNombre();
+            frecuencias[2][nrofreq] = "" + pro.get(i).getCosto();
+            frecuencias[3][nrofreq] = "" + pro.get(i).getIva();
+            frecuencias[4][nrofreq] = "" + pro.get(i).getPrecio_venta();
+            frecuencias[5][nrofreq] = "" + pro.get(i).getCantidad();    
+            frecuencias[6][nrofreq] = "" + pro.get(i).getEsta();;
+            nrofreq++;                     
+        }
+
     }
 
     public void nuevo() {
         pro.clear();
     }
+
     public int getNrofreq() {
         return nrofreq;
     }
+
     public void setNrofreq(int nrofreq) {
         this.nrofreq = nrofreq;
     }
