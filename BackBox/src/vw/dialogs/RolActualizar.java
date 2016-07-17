@@ -144,16 +144,7 @@ public class RolActualizar extends javax.swing.JDialog {
                         codigoAct++;
                     }
 
-                    if (jCheckBox17.isSelected()) {
-                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",3," + ced + ",20)");
-                        codigoAct++;
-                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",3," + ced + ",21)");
-                        codigoAct++;
-                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",3," + ced + ",22)");
-                        codigoAct++;
-                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",3," + ced + ",3)");
-                        codigoAct++;
-                    }
+                   
                     if (VVentas.isSelected()) {
                         Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",2," + ced + ",16)");
                         codigoAct++;

@@ -37,10 +37,8 @@ public class LeerExcel {
         }
     }
 
-    public boolean f_datos_1(String archivo, int columna) {
-        System.out.println(archivo);
-        File file = new File(archivo);
-        System.out.println("entro al metodo");
+    public boolean f_datos_1(String archivo, int columna) {        
+        File file = new File(archivo);        
         int fecha = 0, ve = 0;
         boolean r = false;
         try {
@@ -57,8 +55,7 @@ public class LeerExcel {
                 while (iterator.hasNext()) {
                     XSSFCell hssfCell = (XSSFCell) iterator.next();
                     cellTempList.add(hssfCell);
-                }
-                System.out.println("Columna : " + columna);
+                }                
                 for (int j = 0; j < cellTempList.size(); j++) {
                     //System.out.println("--- : " + cellTempList.get(j));
 
@@ -67,14 +64,11 @@ public class LeerExcel {
                         String v2 = hssfCell.toString();
                        // System.out.println("ColumnH : " +hssfCell.getColumnIndex());
                         
-                        if (hssfCell.getColumnIndex() == columna && hssfCell.getRowIndex()!=0) {
-                            System.out.println("" + 1 + " valor : " + cellTempList.get(j));
+                        if (hssfCell.getColumnIndex() == columna && hssfCell.getRowIndex()!=0) {                            
                             value.add("" + cellTempList.get(j));
-                        } else if (hssfCell.getColumnIndex() == columna && hssfCell.getRowIndex()!=0) {
-                            System.out.println("" + 2);
+                        } else if (hssfCell.getColumnIndex() == columna && hssfCell.getRowIndex()!=0) {                           
                             value.add("" + cellTempList.get(j));
-                        } else if (hssfCell.getColumnIndex() == columna && hssfCell.getRowIndex()!=0) {
-                            System.out.println("" + 3);
+                        } else if (hssfCell.getColumnIndex() == columna && hssfCell.getRowIndex()!=0) {                            
                             value.add("" + cellTempList.get(j));;
                         } else if (hssfCell.getColumnIndex() == columna && hssfCell.getRowIndex()!=0) {
                             System.out.println("" + 4);
@@ -133,7 +127,7 @@ public class LeerExcel {
     }
 
     public static void main(String[] args) throws SQLException {
-        String fileName = "C:\\Users\\ASUS_01\\Desktop\\libro1.xlsx";
+        String fileName = "C:\\Users\\ASUS_01\\Desktop\\DATOS_EXPORTADOS.xlsx";
 //        System.out.println(fileName);
         String movimiento[] = null;
         int costo[] = null;
@@ -142,12 +136,14 @@ public class LeerExcel {
         LeerExcel Hoja = new LeerExcel();
 //        Hoja.f_datos_1(fileName, 0);
 //        movimiento2 = Hoja.Carga();
-        Hoja.f_datos_1(fileName, 4);
+        Hoja.f_datos_1(fileName, 7);
         movimiento = Hoja.Carga();
 
         System.out.println(" Mov " + movimiento.length);
         for (String string : movimiento) {
+            if(Integer.parseInt(string)<=0){
             System.out.println("- :" + string);
+            }
         }
 
 //        System.out.println(" COS " + movimiento2.length);

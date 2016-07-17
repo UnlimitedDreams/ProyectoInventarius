@@ -589,7 +589,9 @@ public class Articulo extends javax.swing.JFrame {
     private void getBto_exportar() {
         try {
             List<JTable> tb = new ArrayList<JTable>();
-            tb.add(jTable1);
+            JTable table = new javax.swing.JTable();
+            table = CargaInventario();
+            tb.add(table);
             exportar_excel excelExporter = new exportar_excel(tb, new File("DATOS_EXPORTADOS.xls"));
             if (excelExporter.export()) {
                 JOptionPane.showMessageDialog(null, "DATOS EXPORTADOS CON EXITO!");
@@ -632,25 +634,37 @@ public class Articulo extends javax.swing.JFrame {
         String categoria[] = null;
         String cantidad[] = null;
         String nombres[] = null;
+        String stock[] = null;
         LeerExcel Hoja = new LeerExcel();
         Hoja.f_datos_1(ruta, 0);//codigo
         movimiento = Hoja.Carga();
         Hoja.f_datos_1(ruta, 1);//Nombre
         nombres = Hoja.Carga();
-        Hoja.f_datos_1(ruta, 2);//costo
-        costo = Hoja.Carga();
-        Hoja.f_datos_1(ruta, 3);//iva
-        iva = Hoja.Carga();
-        Hoja.f_datos_1(ruta, 4);//precio
-        precio = Hoja.Carga();
-        Hoja.f_datos_1(ruta, 5);//categoria
+        Hoja.f_datos_1(ruta, 2);//categoria
         categoria = Hoja.Carga();
-        Hoja.f_datos_1(ruta, 6);//cantidad
+        Hoja.f_datos_1(ruta, 3);//costo
+        costo = Hoja.Carga();
+        Hoja.f_datos_1(ruta, 4);//iva
+        iva = Hoja.Carga();
+        Hoja.f_datos_1(ruta, 5);//precio
+        precio = Hoja.Carga();
+        Hoja.f_datos_1(ruta, 6);//stock
+        precio = Hoja.Carga();
+        Hoja.f_datos_1(ruta, 7);//cantidad
         cantidad = Hoja.Carga();
         ArrayList datos = null;
-        for (String object : movimiento) {
-            System.out.println("- "+ object);
+        for (String object : iva) {
+            System.out.println("- " + object);
         }
+        System.out.println("- : "+movimiento.length);
+        System.out.println("- : "+costo.length);
+        System.out.println("- : "+iva.length);
+        System.out.println("- : "+precio.length);
+        System.out.println("- : "+categoria.length);
+        System.out.println("- : "+cantidad.length);
+        System.out.println("- : "+nombres.length );
+        
+        
         
         if ((movimiento.length == costo.length) && (iva.length == precio.length) && (categoria.length == cantidad.length
                 && nombres.length == movimiento.length)) {
@@ -658,8 +672,10 @@ public class Articulo extends javax.swing.JFrame {
                 if (ValidarDatosEnTabla(iva, 2)) {
                     if (ValidarDatosEnTabla(precio, 3)) {
                         if (ValidarDatosEnTabla(categoria, 4)) {
-                            if (ValidarDatosEnTabla(cantidad, 5)) {                                
+                            if (ValidarDatosEnTabla(cantidad, 5)) {
                                 datos = DatosPersona(movimiento, nombres, costo, iva, precio, categoria, cantidad);
+                                System.out.println("Paso la prueba");
+                                System.out.println("Size : " + datos.size());
                                 CargaArchivo car = new CargaArchivo(datos, usuario, List_Menu);
                                 this.dispose();
                                 car.setVisible(true);
@@ -695,7 +711,7 @@ public class Articulo extends javax.swing.JFrame {
                 r = true;
             }
 
-            System.out.println("Valor  : " + x + " boolean : " + r);
+            
             return r;
         } catch (Exception ex) {
             return r;
@@ -716,8 +732,7 @@ public class Articulo extends javax.swing.JFrame {
                 mnserror = "El valor del costo debe ser Numerico";
                 r = false;
                 break;
-            } else if (condi == 1 && isnumero(valor, 2)) {
-                System.out.println("entro por aqi");
+            } else if (condi == 1 && isnumero(valor, 2)) {                
                 if (Double.parseDouble(valor) <= 0) {
                     mnserror = "El valor del costo debe ser mayor a 0 (Cero))";
                     r = false;
@@ -771,13 +786,14 @@ public class Articulo extends javax.swing.JFrame {
                 mnserror = "La cantidad del producto debe ser numerica";
                 r = false;
                 break;
-            } else if (condi == 5 && isnumero(valor, 1)) {
-                if (Integer.parseInt(valor) <= 0) {
-                    mnserror = "La cantidad del producto debe ser mayor a Cero (0)";
-                    r = false;
-                    break;
-                }
-            }
+            } 
+//            else if (condi == 5 && isnumero(valor, 1)) {
+//                if (Integer.parseInt(valor) == 0) {
+//                    mnserror = "La cantidad del producto debe ser mayor a Cero (0)";
+//                    r = false;
+//                    break;
+//                }
+//            }
         }
 
 //      
@@ -787,7 +803,7 @@ public class Articulo extends javax.swing.JFrame {
         return r;
     }
 
-    public ArrayList DatosPersona(String cod[], String nom[], String cos[], String iva[], String precio[], String cat[], String cant[]) {        
+    public ArrayList DatosPersona(String cod[], String nom[], String cos[], String iva[], String precio[], String cat[], String cant[]) {
         ArrayList<Producto> pro = new ArrayList();
 
         for (int i = 0; i < cod.length; i++) {
@@ -834,15 +850,15 @@ public class Articulo extends javax.swing.JFrame {
             query = "select  distinct "
                     + "cod_producto \"Código\","
                     + "upper(nombre)\"Nombre\","
-                    + "upper(categoria.descripcion) \"Categoría \","
+                    + "categoria.cod_categoria \"Categoría \","
                     + "costo \"Costo\","
-                    + "iva \"IVA\","
+                    + "maestro_iva.porcentaje \"IVA\","
                     + "precio_desc \"Precio\","
-                    + "descu \"Descuento\","
+                    + "stock \"stock\","
                     + "cantidad \"Cantidad\"\n"
-                    + " from producto,categoria where\n"
+                    + " from producto,categoria,maestro_iva where\n"
                     + "  producto.cod_categoria=categoria.cod_categoria and \n"
-                    + "  \n"
+                    + "  producto.iva=maestro_iva.codiva and \n"
                     + "  producto.cod_producto ILIKE ('%" + jTextField2.getText() + "')  and producto.estado='A'"
                     + " limit 40 ";
         } else {
@@ -911,17 +927,19 @@ public class Articulo extends javax.swing.JFrame {
         String query = "select "
                 + "cod_producto \"Código\","
                 + "upper(nombre) \"Nombre\","
-                + "categoria.cod_categoria \"Categoría\","
+                + "upper(categoria.descripcion) \"Categoría\","
                 + "costo \"Costo\","
-                + "iva \"IVA\","
+                + "maestro_iva.porcentaje \"IVA\","
                 + "precio_desc \"Precio Venta\","
                 + "stock \"stock\","
                 + "cantidad \"Cantidad\""
-                + "from producto,categoria\n"
-                + "where\n"
-                + "producto.cod_categoria=categoria.cod_categoria\n"
-                + "and  producto.estado='A'"
+                + "from producto,categoria,maestro_iva\n"
+                + " where\n"
+                + " producto.cod_categoria=categoria.cod_categoria"
+                + " and producto.iva=maestro_iva.codiva\n"
+                + " and  producto.estado='A'"
                 + " order by producto.cod_producto DESC";
+        System.out.println(query);
         String cod = "", nom = "", valor = "", cant = "", costo = "", iva = "", precio = "";
         String cate = "";
         DefaultTableModel modeloEmpleado = new DefaultTableModel();
@@ -963,6 +981,67 @@ public class Articulo extends javax.swing.JFrame {
         }
     }
 
+    public JTable CargaInventario() throws ClassNotFoundException {
+        Control.conectar();
+        JTable table = new javax.swing.JTable();
+        Producto temp = null;
+        String query = "select "
+                + "cod_producto \"Código\","
+                + "upper(nombre) \"Nombre\","
+                + "categoria.cod_categoria \"Categoría\","
+                + "costo \"Costo\","
+                + "maestro_iva.porcentaje \"IVA\","
+                + "precio_desc \"Precio Venta\","
+                + "stock \"stock\","
+                + "cantidad \"Cantidad\""
+                + "from producto,categoria,maestro_iva\n"
+                + " where\n"
+                + " producto.cod_categoria=categoria.cod_categoria"
+                + " and producto.iva=maestro_iva.codiva\n"
+                + " and  producto.estado='A'"
+                + " order by producto.cod_producto DESC";
+        System.out.println(query);
+        String cod = "", nom = "", valor = "", cant = "", costo = "", iva = "", precio = "";
+        String cate = "";
+        DefaultTableModel modeloEmpleado = new DefaultTableModel();
+        int numeroPreguntas;
+        ResultSetMetaData rsetMetaData;
+        table.setModel(modeloEmpleado);
+        try {
+            boolean r = Control.ejecuteQuery(query);
+
+            rsetMetaData = Control.rs.getMetaData();
+            numeroPreguntas = rsetMetaData.getColumnCount();
+            //Establece los nombres de las columnas de las tablas
+            for (int i = 0; i < numeroPreguntas; i++) {
+                modeloEmpleado.addColumn(rsetMetaData.getColumnLabel(i + 1));
+            }
+
+            while (Control.rs.next()) {
+                cod = Control.rs.getString(1);
+                nom = Control.rs.getString(2);
+                costo = Control.rs.getString(3);
+                iva = Control.rs.getString(4);
+                precio = Control.rs.getString(5);
+                cant = Control.rs.getString(6);
+                cate = Control.rs.getString(7);
+
+                Object[] registroEmpleado = new Object[numeroPreguntas];
+
+                for (int i = 0; i < numeroPreguntas; i++) {
+                    registroEmpleado[i] = Control.rs.getObject(i + 1);
+                }
+                modeloEmpleado.addRow(registroEmpleado);
+            }
+            Control.cerrarConexion();
+//            Control.rs.close();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "ERROR " + e.getMessage());
+        } finally {
+            Control.cerrarConexion();
+        }
+        return table;
+    }
     /**
      * @param args the command line arguments
      */
