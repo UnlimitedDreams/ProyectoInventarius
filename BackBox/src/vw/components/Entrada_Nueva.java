@@ -801,7 +801,7 @@ public class Entrada_Nueva extends javax.swing.JFrame {
 
 
     }//GEN-LAST:event_crearProductoActionPerformed
- 
+
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
 
         Articulo ar;
@@ -851,24 +851,29 @@ public class Entrada_Nueva extends javax.swing.JFrame {
                 try {
                     Control.conectar();
                     Producto temp = null;
-                    String query = "select nombre,precio_desc,iva "
+                    String query = "select nombre,precio_desc,iva,costo,stock "
                             + "from producto\n"
                             + "where\n"
                             + "producto.estado='A' and cod_producto='" + cod + "'";
                     Control.ejecuteQuery(query);
                     String nom = "";
                     double precio = 0;
-                    double iva = 0;
+                    double costo = 0;
+                    int iva = 0;
+                    int stock = 0;
                     boolean r = false;
                     while (Control.rs.next()) {
                         r = true;
                         nom = Control.rs.getString(1);
                         precio = Control.rs.getDouble(2);
-                        iva = Control.rs.getDouble(3);
+                        iva = Control.rs.getInt(3);
+                        costo = Control.rs.getDouble(4);
+                        stock = Control.rs.getInt(5);
                     }
                     Control.cerrarConexion();
                     if (r) {
-                        temp = new Producto(cod, nom, precio, 1, iva, 1, 0);
+                        temp = new Producto(cod, nom, costo, iva, precio, 1, 0);
+                        temp.setStock(stock);
                         productos.add(temp);
                     }
                 } catch (ClassNotFoundException ex) {
@@ -1025,7 +1030,6 @@ public class Entrada_Nueva extends javax.swing.JFrame {
         String cod = "";
         String can = "";
         if (i == -1) {
-            System.out.println("FAVORRRR");
             JOptionPane.showMessageDialog(null, "Favor... seleccione una fil");
         } else if (i >= 0) {
             cod = (String) jTable1.getValueAt(i, 0).toString();
@@ -1043,24 +1047,29 @@ public class Entrada_Nueva extends javax.swing.JFrame {
                 try {
                     Control.conectar();
                     Producto temp = null;
-                    String query = "select nombre,precio_desc,iva "
+                    String query = "select nombre,precio_desc,iva,costo,stock "
                             + "from producto\n"
                             + "where\n"
                             + "producto.estado='A' and cod_producto='" + cod + "'";
                     Control.ejecuteQuery(query);
                     String nom = "";
                     double precio = 0;
-                    double iva = 0;
+                    double costo = 0;
+                    int iva = 0;
+                    int stock = 0;
                     boolean r = false;
                     while (Control.rs.next()) {
                         r = true;
                         nom = Control.rs.getString(1);
                         precio = Control.rs.getDouble(2);
-                        iva = Control.rs.getDouble(3);
+                        iva = Control.rs.getInt(3);
+                        costo = Control.rs.getDouble(4);
+                        stock = Control.rs.getInt(5);
                     }
                     Control.cerrarConexion();
                     if (r) {
-                        temp = new Producto(cod, nom, precio, 1, iva, 1, 0);
+                        temp = new Producto(cod, nom, costo, iva, precio, 1, 0);
+                        temp.setStock(stock);
                         productos.add(temp);
                     }
                 } catch (ClassNotFoundException ex) {

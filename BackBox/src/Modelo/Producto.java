@@ -23,6 +23,7 @@ public class Producto {
     private int stock;
     private double ValorIva;
     private String Esta;
+    private int CantBD;
 
     public Producto(String codigo, String nombre, double Costo, int iva, double precio_venta, int cantidad, int desc) {
         this.codigo = codigo;
@@ -156,5 +157,15 @@ public class Producto {
     public void setEsta(String Esta) {
         this.Esta = Esta;
     }
+
+    public int getCantBD() {
+        return CantBD;
+    }
+
+    public void setCantBD(int CantBD) {
+        this.CantBD = CantBD;
+    }
+    
+    
 
 }
