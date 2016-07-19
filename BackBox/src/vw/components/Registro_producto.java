@@ -353,7 +353,7 @@ public class Registro_producto extends javax.swing.JFrame {
                 if (r) {
                     Entrada.muestreMensajeV("SE AGREGGO PRODUCTO A LA COMPRA");
                     pr.add(new Producto(jTextField2.getText(),
-                            jTextField3.getText(), Double.parseDouble(jTextField4.getText()), precio, Integer.parseInt(jTextField7.getText())));
+                            jTextField3.getText(), Double.parseDouble(jTextField4.getText()), precio, Integer.parseInt(jTextField7.getText()),1));
                     Entrada_Nueva ar = new Entrada_Nueva(pr, nom, fac, ListAcciones,codEmpresa);
                     this.setVisible(false);
                     ar.setVisible(true);

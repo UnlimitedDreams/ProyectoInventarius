@@ -23,6 +23,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -431,6 +432,8 @@ public class VentaDiaria extends javax.swing.JFrame {
             this.setVisible(false);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(VentaDiaria.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_ventasActionPerformed
 
@@ -458,6 +461,8 @@ public class VentaDiaria extends javax.swing.JFrame {
             this.dispose();
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(VentaDiaria.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_devolucionesActionPerformed
 

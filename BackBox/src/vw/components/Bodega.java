@@ -743,7 +743,7 @@ public class Bodega extends javax.swing.JFrame {
             producto.setDesc(Integer.parseInt(Desc));
             producto.setPrecio_venta(Double.parseDouble(Precio));
             producto.setCantidad(Integer.parseInt(cant));
-            ProductoUpdate p = new ProductoUpdate(this, true, producto, usuario, List_Menu,codEmpresa);
+            ProductoUpdate p = new ProductoUpdate(this, true, producto, usuario, List_Menu, codEmpresa);
             p.setVisible(true);
             this.setVisible(false);
         }

@@ -137,17 +137,6 @@ public class RolRegistrarF extends javax.swing.JDialog {
                     codigoAct++;
                 }
                 System.out.println("- " + a++);
-                if (jCheckBox17.isSelected()) {
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",3," + codigo + ",20)");
-                    codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",3," + codigo + ",21)");
-                    codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",3," + codigo + ",22)");
-                    codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",3," + codigo + ",3)");
-                    codigoAct++;
-                }
-                System.out.println("- " + a++);
                 if (VVentas.isSelected()) {
                     Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",2," + codigo + ",16)");
                     codigoAct++;

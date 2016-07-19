@@ -17,6 +17,9 @@ import Control.Entrada;
 import Modelo.List_Categoria;
 import Modelo.Producto;
 import Control.Sequence;
+import Control.Tabla3;
+import vw.components.Entrada_Nueva;
+import vw.model.Venta;
 
 /**
  *
@@ -28,7 +31,9 @@ public class ProductoRegistrar extends javax.swing.JDialog {
     ArrayList<Producto> pr = new ArrayList();
     String nom;
     String fac;
-    ArrayList<Integer> ListAcciones = new ArrayList();
+    Entrada_Nueva v = null;
+    ArrayList<Integer> ListAcciones = new ArrayList();    
+    ArrayList<List_Categoria> listIvas = new ArrayList();
 
     /**
      * Creates new form ProductoRegistrar
@@ -36,7 +41,7 @@ public class ProductoRegistrar extends javax.swing.JDialog {
      * @param parent
      * @param modal
      */
-    public ProductoRegistrar(java.awt.Frame parent, boolean modal) {
+    public ProductoRegistrar(java.awt.Frame parent, boolean modal, ArrayList pro) {
         super(parent, modal);
         initComponents();
         this.setLocationRelativeTo(null);
@@ -47,20 +52,41 @@ public class ProductoRegistrar extends javax.swing.JDialog {
         Categoria();
         codigo.setText("" + 0);
         costoF.setText("" + 0);
-        ivaF.setText("" + 0);
         cantidad.setText("" + 0);
         precioVenta.setText("" + 0);
         stock.setText("" + 0);
+        this.v = (Entrada_Nueva) parent;
+        this.pr = pro;
+        try {
+            ConfigurarIva();
+        } catch (SQLException ex) {
+            Logger.getLogger(ProductoRegistrar.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
-    public void Categoria() {
-        ArrayList<List_Categoria> categorias = new ArrayList();
+    public void ConfigurarIva() throws SQLException {
+        try {
+            listIvas.clear();
+            iva.addItem("No Aplica");
+            Control.conectar();
+            Control.ejecuteQuery("select codiva,porcentaje from maestro_iva");
+            while (Control.rs.next()) {
+                iva.addItem(Control.rs.getString(2) + " %");
+                listIvas.add(new List_Categoria(Control.rs.getInt(1), "" + Control.rs.getInt(2)));
+            }
+            Control.cerrarConexion();
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Venta.class
+                    .getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void Categoria() {        
         try {
             Control.conectar();
-            Control.ejecuteQuery("select * from categoria");
-            while (Control.rs.next()) {
-                categorias.add(new List_Categoria(Control.rs.getInt(1), Control.rs.getString(2)));
-                categoria.addItem(Control.rs.getString(2) + "-" + Control.rs.getString(4));
+            Control.ejecuteQuery("select cod_categoria,rtrim(ltrim(descripcion)) from categoria order by descripcion");
+            while (Control.rs.next()) {                
+                categoria.addItem(Control.rs.getInt(1)+"-"+Control.rs.getString(2));
             }
             Control.cerrarConexion();
         } catch (ClassNotFoundException ex) {
@@ -73,8 +99,11 @@ public class ProductoRegistrar extends javax.swing.JDialog {
     public int buscar_cod() throws ClassNotFoundException {
         int cant = 0;
         try {
-            Control.ejecuteQuery("select count(*) from producto a, venta_pro p , venta v where a.cod_producto=p.cod_prodcuto and p.cod_factura=v.cod_factura and \n"
-                    + "cod_producto='" + codigo.getText() + "'");
+            Control.ejecuteQuery("select sum(cuenta) from (\n"
+                    + "select count(*) cuenta from producto a, venta_pro p , venta v where a.cod_producto=p.cod_prodcuto and p.cod_factura=v.cod_factura and \n"
+                    + "cod_producto='" + codigo.getText() + "'\n"
+                    + "union all \n"
+                    + "select count(*) cuenta from producto where cod_producto='" + codigo.getText() + "' )Y");
 
             while (Control.rs.next()) {
                 cant = Control.rs.getInt(1);
@@ -93,41 +122,37 @@ public class ProductoRegistrar extends javax.swing.JDialog {
             Control.conectar();
             Control.con.setAutoCommit(false);
             if (buscar_cod() == 0) {
-                int categoria = traerCod();
-
-                double costo = Double.parseDouble(costoF.getText());
-                double precio = Double.parseDouble(precioVenta.getText());
-                String desc = "0";
-                double des = 0;
-                String iva = "0";
-                double ivas = 0;
-                double precioSinDEs = Double.parseDouble(precioVenta.getText());
-
-                if (ivaF.getText().equalsIgnoreCase("0")) {
-
-                } else {
-                    iva = "0." + ivaF.getText();
-                    ivas = costo * Double.parseDouble(iva);
-                    precio = precio + ivas;
-                    precioSinDEs = precioSinDEs + ivas;
+                String []categori=categoria.getSelectedItem().toString().split("-");
+                System.out.println("-- " + categori[0]);
+                int cate = Integer.parseInt(categori[0]);
+                String nomcategoria = iva.getSelectedItem().toString();
+                String val[] = nomcategoria.split("%");                
+                int cod = 0;
+                for (List_Categoria iva : listIvas) {                   
+                    if (iva.getNom().equalsIgnoreCase(val[0].replace(" ", ""))) {
+                        cod = iva.getCod();
+                    }
                 }
-                System.out.println("::::::::::::::: Cantidad de bonos " + categoria);
-                boolean r = Control.ejecuteUpdate("insert into producto values('" + codigo.getText() + "','" + nombre.getText() + "',"
-                        + costoF.getText() + "," + ivaF.getText() + "," + precioSinDEs + ","
-                        + categoria + "," + 0 + ",'A','n',0," + precio + "," + Integer.parseInt(stock.getText()) + ",0)");
-                if (r) {
-                    Entrada.muestreMensajeV("SE AGREGGO PRODUCTO A LA COMPRA");
-                    pr.add(new Producto(codigo.getText(), nombre.getText(), Double.parseDouble(costoF.getText()), precio,
-                            Integer.parseInt(cantidad.getText())));
-                    System.out.println("Se registro todo bien");
-                    proceso = true;
+                
+                if (cate != 0 && cod!=0) {
+                    double costo = Double.parseDouble(costoF.getText());
+                    double precio = Double.parseDouble(precioVenta.getText());
+                    boolean r = Control.ejecuteUpdate("insert into producto values('" + codigo.getText() + "','" + nombre.getText() + "',"
+                            + costoF.getText() + "," + cod + "," + precio + ","
+                            + cate + "," + 0 + ",'A','n',0," + precio + "," + Integer.parseInt(stock.getText()) + ",0)");
+                    if (r) {
+                        pr.add(new Producto(codigo.getText(), nombre.getText(), Double.parseDouble(costoF.getText()), precio,
+                                Integer.parseInt(cantidad.getText()), Integer.parseInt(stock.getText())));
+                        proceso = true;
 
+                    } else {
+                        Entrada.muestreMensajeV("Error al Agregar Producto");
+                    }
                 } else {
-                    Entrada.muestreMensajeV("Error al Agregar Producto");
+                    Entrada.muestreMensajeV("La categoria No se ha podido cargar");
                 }
-
             } else {
-                Entrada.muestreMensajeV("El producto que esta tratando de registrar ya existe con una Transacccion");
+                Entrada.muestreMensajeV("El producto que esta tratando de registrar ya existe, con una Transacccion");
             }
 
         } catch (NumberFormatException ex) {
@@ -139,28 +164,22 @@ public class ProductoRegistrar extends javax.swing.JDialog {
 
         if (proceso) {
             System.out.println("Entro a nueva ventana");
-            //Entrada_Nueva ar = new Entrada_Nueva(pr, nom, fac, ListAcciones);
-            this.setVisible(false);
-            //ar.setVisible(true);
-        }
 
-    }
+            Tabla3 t = new Tabla3(pr);
+            t.calculeFrecuenciasV();
 
-    public int traerCod() throws ClassNotFoundException {
-        String nom[] = categoria.getSelectedItem().toString().split("-");
-        int cod = 0;
-        try {
-            System.out.println("select cod_categoria from categoria where descripcion='" + nom[0] + "'");
-            Control.ejecuteQuery("select cod_categoria from categoria where descripcion='" + nom[0] + "'");
+            v.jTable2.getDefaultEditor(null);
+            for (int i = 0; i < 6; i++) {
+                for (int k = 0; k < t.getNrofreq(); k++) {
+                    v.jTable2.setValueAt(t.frecuencias[i][k], k, i);
 
-            while (Control.rs.next()) {
-                cod = Control.rs.getInt(1);
+                }
             }
-        } catch (Exception ex) {
-            System.out.println("error " + ex.getMessage());
+            this.dispose();
         }
-        return cod;
+
     }
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -181,10 +200,9 @@ public class ProductoRegistrar extends javax.swing.JDialog {
         codigo = new javax.swing.JTextField();
         nombre = new javax.swing.JTextField();
         costoF = new javax.swing.JTextField();
-        ivaF = new javax.swing.JTextField();
         precioVenta = new javax.swing.JTextField();
         cantidad = new javax.swing.JTextField();
-        categoria = new javax.swing.JComboBox();
+        iva = new javax.swing.JComboBox();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
@@ -194,6 +212,7 @@ public class ProductoRegistrar extends javax.swing.JDialog {
         stock = new javax.swing.JTextField();
         jLabel10 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
+        categoria = new javax.swing.JComboBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -233,17 +252,14 @@ public class ProductoRegistrar extends javax.swing.JDialog {
         costoF.setFont(new java.awt.Font("Segoe UI Light", 0, 18)); // NOI18N
         jPanel1.add(costoF, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 140, 380, 32));
 
-        ivaF.setFont(new java.awt.Font("Segoe UI Light", 0, 18)); // NOI18N
-        jPanel1.add(ivaF, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 180, 380, 32));
-
         precioVenta.setFont(new java.awt.Font("Segoe UI Light", 0, 18)); // NOI18N
         jPanel1.add(precioVenta, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 260, 380, 32));
 
         cantidad.setFont(new java.awt.Font("Segoe UI Light", 0, 18)); // NOI18N
         jPanel1.add(cantidad, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 220, 380, 32));
 
-        categoria.setFont(new java.awt.Font("Segoe UI Light", 0, 18)); // NOI18N
-        jPanel1.add(categoria, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 20, 380, 32));
+        iva.setFont(new java.awt.Font("Segoe UI Light", 0, 18)); // NOI18N
+        jPanel1.add(iva, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 180, 380, 32));
 
         jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-mdpi/ic_save_black_24dp.png"))); // NOI18N
         jButton1.setText("Registrar");
@@ -322,6 +338,9 @@ public class ProductoRegistrar extends javax.swing.JDialog {
         jLabel11.setText("Precio Venta");
         jPanel1.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 260, 110, -1));
 
+        categoria.setFont(new java.awt.Font("Segoe UI Light", 0, 18)); // NOI18N
+        jPanel1.add(categoria, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 20, 380, 32));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -342,10 +361,14 @@ public class ProductoRegistrar extends javax.swing.JDialog {
 
         try {
             registrar();
+
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ProductoRegistrar.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ProductoRegistrar.class
+                    .getName()).log(Level.SEVERE, null, ex);
+
         } catch (SQLException ex) {
-            Logger.getLogger(ProductoRegistrar.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ProductoRegistrar.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
 
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -401,7 +424,7 @@ public class ProductoRegistrar extends javax.swing.JDialog {
     private javax.swing.JComboBox categoria;
     private javax.swing.JTextField codigo;
     private javax.swing.JTextField costoF;
-    private javax.swing.JTextField ivaF;
+    private javax.swing.JComboBox iva;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel10;

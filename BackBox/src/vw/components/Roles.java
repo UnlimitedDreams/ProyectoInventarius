@@ -41,6 +41,7 @@ import vw.dialogs.CategoriasRegistrar;
 import vw.dialogs.ProveedoresRegistrar;
 import vw.dialogs.RolActualizar;
 import vw.dialogs.RolRegistrarF;
+import vw.dialogs.UsuarioPermiso;
 import vw.dialogs.UsuariosRegistrar;
 
 /**
@@ -58,12 +59,12 @@ public class Roles extends javax.swing.JFrame {
     ArrayList<acciones> listaaccion = new ArrayList();
     ArrayList<ContenedorMenus> List_Menu = new ArrayList();
 
-    public Roles(String usuario, ArrayList acciones,int codEmpresa) throws ClassNotFoundException {
+    public Roles(String usuario, ArrayList acciones, int codEmpresa) throws ClassNotFoundException {
         initComponents();
         inicio();
         this.usuario = usuario;
         this.List_Menu = acciones;
-        this.codEmpresa=codEmpresa;
+        this.codEmpresa = codEmpresa;
         this.setLocationRelativeTo(null);
         this.setResizable(false);
         URL url = getClass().getResource("/images/facelet/icon.png");
@@ -147,7 +148,7 @@ public class Roles extends javax.swing.JFrame {
                         menuItem.addActionListener(new ActionListener() {
                             @Override
                             public void actionPerformed(ActionEvent e) {
-                                MenuRedireccionar MenuF = new MenuRedireccionar(Roles.this, e.getActionCommand(), List_Menu, usuario,codEmpresa);
+                                MenuRedireccionar MenuF = new MenuRedireccionar(Roles.this, e.getActionCommand(), List_Menu, usuario, codEmpresa);
                                 try {
                                     MenuF.reDireccion();
                                     if (e.getActionCommand().equalsIgnoreCase("Crear Categoria ")
@@ -238,7 +239,7 @@ public class Roles extends javax.swing.JFrame {
                     menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_2, ActionEvent.ALT_MASK));
                 }
                 menuItem.addActionListener((ActionEvent e) -> {
-                    MenuRedireccionar MenuF = new MenuRedireccionar(this, e.getActionCommand().toString(), List_Menu, usuario,codEmpresa);
+                    MenuRedireccionar MenuF = new MenuRedireccionar(this, e.getActionCommand().toString(), List_Menu, usuario, codEmpresa);
                     try {
                         MenuF.reDireccion();
                     } catch (IOException ex) {
