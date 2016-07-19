@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
-import javax.swing.JMenu;
 import Control.Entrada;
 import Control.Sequence;
 
@@ -47,9 +46,9 @@ public class UsuarioPermiso extends javax.swing.JDialog {
         listaaccion = con_menu.getListaAcciones();
         for (seccion object : listaSeccion) {
             if (object.getCod_seccion() == 1) {
-                Bodega.setSelected(true);
+                bodega.setSelected(true);
             } else if (object.getCod_seccion() == 2) {
-                jCheckBox14.setSelected(true);
+                proveedores.setSelected(true);
             }
         }
         this.ced = cod;
@@ -66,20 +65,24 @@ public class UsuarioPermiso extends javax.swing.JDialog {
         System.out.println("Usuarioo : " + ced);
     }
 
+    /**
+     *
+     * @throws ClassNotFoundException No encuentra OJDBC
+     */
     public void RecuperarCodigoUsu() throws ClassNotFoundException {
 
         try {
             Control.conectar();
             Control.ejecuteQuery("select cod_usuario from usuario where cedula=" + ced);
-            int cod_usu=0;
+            int cod_usu = 0;
             while (Control.rs.next()) {
-                cod_usu=Control.rs.getInt(1);                
+                cod_usu = Control.rs.getInt(1);
             }
-            this.ced=""+cod_usu;
-            
+            this.ced = "" + cod_usu;
+
         } catch (SQLException ex) {
             Logger.getLogger(UsuarioPermiso.class.getName()).log(Level.SEVERE, null, ex);
-        }finally{
+        } finally {
             Control.cerrarConexion();
         }
     }
@@ -184,7 +187,7 @@ public class UsuarioPermiso extends javax.swing.JDialog {
                 }
 
                 cerrar = true;
-            } catch (Exception ex) {
+            } catch (ClassNotFoundException | SQLException ex) {
                 cerrar = false;
             } finally {
                 Control.con.commit();
@@ -210,314 +213,509 @@ public class UsuarioPermiso extends javax.swing.JDialog {
 
         jCheckBox2 = new javax.swing.JCheckBox();
         jPanel1 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        Bodega = new javax.swing.JCheckBox();
-        jCheckBox13 = new javax.swing.JCheckBox();
+        guardar = new javax.swing.JButton();
+        vovler = new javax.swing.JButton();
+        articulos = new javax.swing.JCheckBox();
+        proveedores = new javax.swing.JCheckBox();
+        Usuarios = new javax.swing.JCheckBox();
+        roles = new javax.swing.JCheckBox();
+        bodega = new javax.swing.JCheckBox();
+        panelBodega = new javax.swing.JPanel();
         BReporte = new javax.swing.JCheckBox();
-        jCheckBox14 = new javax.swing.JCheckBox();
-        jCheckBox17 = new javax.swing.JCheckBox();
-        jLabel1 = new javax.swing.JLabel();
-        BEntradaSalida = new javax.swing.JCheckBox();
         BActualizar = new javax.swing.JCheckBox();
         BBorrar = new javax.swing.JCheckBox();
-        NewCate = new javax.swing.JCheckBox();
-        ACompra = new javax.swing.JCheckBox();
-        ACarga = new javax.swing.JCheckBox();
+        BEntradaSalida = new javax.swing.JCheckBox();
+        panelArticulos = new javax.swing.JPanel();
         AReporte = new javax.swing.JCheckBox();
-        NewPro = new javax.swing.JCheckBox();
+        ACarga = new javax.swing.JCheckBox();
+        ACompra = new javax.swing.JCheckBox();
+        panelRoles = new javax.swing.JPanel();
+        RBorrar = new javax.swing.JCheckBox();
+        REditar = new javax.swing.JCheckBox();
+        RCrear = new javax.swing.JCheckBox();
+        panelProveedores = new javax.swing.JPanel();
+        PCrear = new javax.swing.JCheckBox();
+        PEditar = new javax.swing.JCheckBox();
+        PBorrar = new javax.swing.JCheckBox();
+        panelClientes = new javax.swing.JPanel();
+        CBorrar = new javax.swing.JCheckBox();
+        CEditar = new javax.swing.JCheckBox();
+        CCrear = new javax.swing.JCheckBox();
+        panelUsuarios = new javax.swing.JPanel();
         UPermiso = new javax.swing.JCheckBox();
         UBorrar = new javax.swing.JCheckBox();
         UEditar = new javax.swing.JCheckBox();
         UCrear = new javax.swing.JCheckBox();
-        PCrear = new javax.swing.JCheckBox();
-        PEditar = new javax.swing.JCheckBox();
-        PBorrar = new javax.swing.JCheckBox();
-        RCrear = new javax.swing.JCheckBox();
-        REditar = new javax.swing.JCheckBox();
-        RBorrar = new javax.swing.JCheckBox();
-        CCrear = new javax.swing.JCheckBox();
-        CEditar = new javax.swing.JCheckBox();
-        CBorrar = new javax.swing.JCheckBox();
+        Clientes = new javax.swing.JCheckBox();
+        jSeparator1 = new javax.swing.JSeparator();
 
         jCheckBox2.setText("jCheckBox2");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Modificar Rol - BackBox");
+        setTitle("Ajustar Permisos de usuario - BackBox");
         setResizable(false);
 
-        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        jPanel1.setBackground(java.awt.Color.white);
+        jPanel1.setForeground(java.awt.SystemColor.controlHighlight);
 
-        jButton1.setFont(new java.awt.Font("Segoe UI Light", 0, 11)); // NOI18N
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-mdpi/ic_update_black_24dp.png"))); // NOI18N
-        jButton1.setText("Crear");
-        jButton1.setBorder(null);
-        jButton1.setBorderPainted(false);
-        jButton1.setContentAreaFilled(false);
-        jButton1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jButton1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton1.setPreferredSize(new java.awt.Dimension(55, 47));
-        jButton1.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
-        jButton1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        guardar.setFont(new java.awt.Font("Segoe UI Light", 0, 11)); // NOI18N
+        guardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-mdpi/ic_save_black_24dp.png"))); // NOI18N
+        guardar.setText("Guardar");
+        guardar.setBorder(null);
+        guardar.setBorderPainted(false);
+        guardar.setContentAreaFilled(false);
+        guardar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        guardar.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        guardar.setPreferredSize(new java.awt.Dimension(55, 47));
+        guardar.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
+        guardar.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        guardar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                guardarActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 340, -1, -1));
 
-        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-xhdpi/ic_arrow_back_black_24dp.png"))); // NOI18N
-        jButton2.setBorder(null);
-        jButton2.setBorderPainted(false);
-        jButton2.setContentAreaFilled(false);
-        jButton2.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jButton2.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton2.setPreferredSize(new java.awt.Dimension(55, 47));
-        jButton2.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
-        jButton2.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        vovler.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-xhdpi/ic_arrow_back_black_24dp.png"))); // NOI18N
+        vovler.setBorder(null);
+        vovler.setBorderPainted(false);
+        vovler.setContentAreaFilled(false);
+        vovler.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        vovler.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        vovler.setPreferredSize(new java.awt.Dimension(55, 47));
+        vovler.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
+        vovler.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        vovler.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                vovlerActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 340, -1, -1));
 
-        Bodega.setBackground(new java.awt.Color(255, 255, 255));
-        Bodega.setFont(new java.awt.Font("Segoe UI Light", 0, 14)); // NOI18N
-        Bodega.setSelected(true);
-        Bodega.setText("Bodega");
-        Bodega.setOpaque(false);
-        Bodega.addActionListener(new java.awt.event.ActionListener() {
+        articulos.setBackground(new java.awt.Color(255, 255, 255));
+        articulos.setFont(new java.awt.Font("Segoe UI Light", 1, 14)); // NOI18N
+        articulos.setSelected(true);
+        articulos.setText("Articulos");
+        articulos.setOpaque(false);
+        articulos.setPreferredSize(new java.awt.Dimension(170, 29));
+        articulos.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                BodegaActionPerformed(evt);
+                articulosActionPerformed(evt);
             }
         });
-        jPanel1.add(Bodega, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 100, -1, -1));
 
-        jCheckBox13.setBackground(new java.awt.Color(255, 255, 255));
-        jCheckBox13.setFont(new java.awt.Font("Segoe UI Light", 0, 14)); // NOI18N
-        jCheckBox13.setSelected(true);
-        jCheckBox13.setText("Articulos");
-        jCheckBox13.setOpaque(false);
-        jCheckBox13.addActionListener(new java.awt.event.ActionListener() {
+        proveedores.setBackground(new java.awt.Color(255, 255, 255));
+        proveedores.setFont(new java.awt.Font("Segoe UI Light", 1, 14)); // NOI18N
+        proveedores.setSelected(true);
+        proveedores.setText("Proveedores");
+        proveedores.setOpaque(false);
+        proveedores.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBox13ActionPerformed(evt);
+                proveedoresActionPerformed(evt);
             }
         });
-        jPanel1.add(jCheckBox13, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 100, -1, -1));
 
-        BReporte.setBackground(new java.awt.Color(255, 255, 255));
+        Usuarios.setBackground(new java.awt.Color(255, 255, 255));
+        Usuarios.setFont(new java.awt.Font("Segoe UI Light", 1, 14)); // NOI18N
+        Usuarios.setSelected(true);
+        Usuarios.setText("Usuarios");
+        Usuarios.setOpaque(false);
+        Usuarios.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                UsuariosActionPerformed(evt);
+            }
+        });
+
+        roles.setBackground(java.awt.Color.white);
+        roles.setFont(new java.awt.Font("Segoe UI Light", 1, 14)); // NOI18N
+        roles.setSelected(true);
+        roles.setText("Roles");
+        roles.setOpaque(false);
+        roles.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rolesActionPerformed(evt);
+            }
+        });
+
+        bodega.setBackground(new java.awt.Color(255, 255, 255));
+        bodega.setFont(new java.awt.Font("Segoe UI Light", 1, 14)); // NOI18N
+        bodega.setSelected(true);
+        bodega.setText("Bodega");
+        bodega.setOpaque(false);
+        bodega.setPreferredSize(new java.awt.Dimension(170, 29));
+        bodega.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bodegaActionPerformed(evt);
+            }
+        });
+
+        panelBodega.setBackground(java.awt.Color.white);
+
+        BReporte.setFont(new java.awt.Font("Segoe UI Light", 0, 14)); // NOI18N
         BReporte.setSelected(true);
         BReporte.setText("Stock");
         BReporte.setOpaque(false);
-        BReporte.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                BReporteActionPerformed(evt);
-            }
-        });
-        jPanel1.add(BReporte, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 220, -1, -1));
 
-        jCheckBox14.setBackground(new java.awt.Color(255, 255, 255));
-        jCheckBox14.setFont(new java.awt.Font("Segoe UI Light", 0, 14)); // NOI18N
-        jCheckBox14.setSelected(true);
-        jCheckBox14.setText("Proveedores");
-        jCheckBox14.setOpaque(false);
-        jCheckBox14.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBox14ActionPerformed(evt);
-            }
-        });
-        jPanel1.add(jCheckBox14, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 100, -1, -1));
-
-        jCheckBox17.setBackground(new java.awt.Color(255, 255, 255));
-        jCheckBox17.setFont(new java.awt.Font("Segoe UI Light", 0, 14)); // NOI18N
-        jCheckBox17.setSelected(true);
-        jCheckBox17.setText("Usuarios");
-        jCheckBox17.setOpaque(false);
-        jCheckBox17.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBox17ActionPerformed(evt);
-            }
-        });
-        jPanel1.add(jCheckBox17, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 100, -1, -1));
-
-        jLabel1.setFont(new java.awt.Font("Segoe UI Light", 1, 18)); // NOI18N
-        jLabel1.setText("Permisos");
-        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 20, -1, -1));
-
-        BEntradaSalida.setSelected(true);
-        BEntradaSalida.setText("E / S");
-        BEntradaSalida.setOpaque(false);
-        BEntradaSalida.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                BEntradaSalidaActionPerformed(evt);
-            }
-        });
-        jPanel1.add(BEntradaSalida, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 130, -1, -1));
-
+        BActualizar.setFont(new java.awt.Font("Segoe UI Light", 0, 14)); // NOI18N
         BActualizar.setSelected(true);
         BActualizar.setText("Actualizar Producto");
-        BActualizar.setOpaque(false);
-        BActualizar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                BActualizarActionPerformed(evt);
-            }
-        });
-        jPanel1.add(BActualizar, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 190, -1, -1));
 
+        BBorrar.setFont(new java.awt.Font("Segoe UI Light", 0, 14)); // NOI18N
         BBorrar.setSelected(true);
         BBorrar.setText("Borrar Producto");
-        BBorrar.setOpaque(false);
-        jPanel1.add(BBorrar, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 160, -1, -1));
 
-        NewCate.setSelected(true);
-        NewCate.setText("Clientes");
-        NewCate.setOpaque(false);
-        NewCate.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                NewCateActionPerformed(evt);
-            }
-        });
-        jPanel1.add(NewCate, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 250, -1, -1));
+        BEntradaSalida.setFont(new java.awt.Font("Segoe UI Light", 0, 14)); // NOI18N
+        BEntradaSalida.setSelected(true);
+        BEntradaSalida.setText("E / S");
 
-        ACompra.setSelected(true);
-        ACompra.setText("Nueva Compra");
-        jPanel1.add(ACompra, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 130, -1, -1));
+        javax.swing.GroupLayout panelBodegaLayout = new javax.swing.GroupLayout(panelBodega);
+        panelBodega.setLayout(panelBodegaLayout);
+        panelBodegaLayout.setHorizontalGroup(
+            panelBodegaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(BReporte, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(BEntradaSalida, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(BBorrar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(BActualizar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        panelBodegaLayout.setVerticalGroup(
+            panelBodegaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelBodegaLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(BEntradaSalida)
+                .addGap(18, 18, 18)
+                .addComponent(BBorrar)
+                .addGap(18, 18, 18)
+                .addComponent(BActualizar)
+                .addGap(18, 18, 18)
+                .addComponent(BReporte)
+                .addContainerGap(36, Short.MAX_VALUE))
+        );
 
+        panelArticulos.setBackground(java.awt.Color.white);
+
+        AReporte.setFont(new java.awt.Font("Segoe UI Light", 0, 14)); // NOI18N
+        AReporte.setSelected(true);
+        AReporte.setText("Reporte MS Excel");
+
+        ACarga.setFont(new java.awt.Font("Segoe UI Light", 0, 14)); // NOI18N
         ACarga.setSelected(true);
         ACarga.setText("Cargar Archivo");
-        jPanel1.add(ACarga, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 160, -1, -1));
 
-        AReporte.setSelected(true);
-        AReporte.setText("Reporte Excell");
-        jPanel1.add(AReporte, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 190, -1, -1));
+        ACompra.setFont(new java.awt.Font("Segoe UI Light", 0, 14)); // NOI18N
+        ACompra.setSelected(true);
+        ACompra.setText("Nueva Compra");
 
-        NewPro.setSelected(true);
-        NewPro.setText("Roles");
-        NewPro.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                NewProActionPerformed(evt);
-            }
-        });
-        jPanel1.add(NewPro, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 100, -1, -1));
+        javax.swing.GroupLayout panelArticulosLayout = new javax.swing.GroupLayout(panelArticulos);
+        panelArticulos.setLayout(panelArticulosLayout);
+        panelArticulosLayout.setHorizontalGroup(
+            panelArticulosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(ACompra, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(ACarga, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(AReporte, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        panelArticulosLayout.setVerticalGroup(
+            panelArticulosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelArticulosLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(ACompra)
+                .addGap(18, 18, 18)
+                .addComponent(ACarga)
+                .addGap(18, 18, 18)
+                .addComponent(AReporte)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
 
-        UPermiso.setSelected(true);
-        UPermiso.setText("Permisos");
-        jPanel1.add(UPermiso, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 220, -1, -1));
+        panelRoles.setBackground(java.awt.Color.white);
 
-        UBorrar.setSelected(true);
-        UBorrar.setText("Borrar");
-        jPanel1.add(UBorrar, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 190, -1, -1));
-
-        UEditar.setSelected(true);
-        UEditar.setText("Editar");
-        jPanel1.add(UEditar, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 160, -1, -1));
-
-        UCrear.setSelected(true);
-        UCrear.setText("Crear");
-        jPanel1.add(UCrear, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 130, -1, -1));
-
-        PCrear.setSelected(true);
-        PCrear.setText("Crear");
-        jPanel1.add(PCrear, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 130, -1, -1));
-
-        PEditar.setSelected(true);
-        PEditar.setText("Editar");
-        jPanel1.add(PEditar, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 160, -1, -1));
-
-        PBorrar.setSelected(true);
-        PBorrar.setText("Borrar");
-        jPanel1.add(PBorrar, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 190, -1, -1));
-
-        RCrear.setSelected(true);
-        RCrear.setText("Crear");
-        jPanel1.add(RCrear, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 130, -1, -1));
-
-        REditar.setSelected(true);
-        REditar.setText("Editar");
-        jPanel1.add(REditar, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 160, -1, -1));
-
+        RBorrar.setFont(new java.awt.Font("Segoe UI Light", 0, 14)); // NOI18N
         RBorrar.setSelected(true);
         RBorrar.setText("Borrar");
-        jPanel1.add(RBorrar, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 190, -1, -1));
 
-        CCrear.setSelected(true);
-        CCrear.setText("Crear");
-        jPanel1.add(CCrear, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 280, -1, -1));
+        REditar.setFont(new java.awt.Font("Segoe UI Light", 0, 14)); // NOI18N
+        REditar.setSelected(true);
+        REditar.setText("Editar");
 
-        CEditar.setSelected(true);
-        CEditar.setText("Editar");
-        jPanel1.add(CEditar, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 310, -1, -1));
+        RCrear.setFont(new java.awt.Font("Segoe UI Light", 0, 14)); // NOI18N
+        RCrear.setSelected(true);
+        RCrear.setText("Crear");
 
+        javax.swing.GroupLayout panelRolesLayout = new javax.swing.GroupLayout(panelRoles);
+        panelRoles.setLayout(panelRolesLayout);
+        panelRolesLayout.setHorizontalGroup(
+            panelRolesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(RCrear, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(REditar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(RBorrar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        panelRolesLayout.setVerticalGroup(
+            panelRolesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelRolesLayout.createSequentialGroup()
+                .addGap(8, 8, 8)
+                .addComponent(RCrear)
+                .addGap(19, 19, 19)
+                .addComponent(REditar)
+                .addGap(18, 18, 18)
+                .addComponent(RBorrar)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        panelProveedores.setBackground(java.awt.Color.white);
+
+        PCrear.setFont(new java.awt.Font("Segoe UI Light", 0, 14)); // NOI18N
+        PCrear.setSelected(true);
+        PCrear.setText("Crear");
+
+        PEditar.setFont(new java.awt.Font("Segoe UI Light", 0, 14)); // NOI18N
+        PEditar.setSelected(true);
+        PEditar.setText("Editar");
+
+        PBorrar.setFont(new java.awt.Font("Segoe UI Light", 0, 14)); // NOI18N
+        PBorrar.setSelected(true);
+        PBorrar.setText("Borrar");
+
+        javax.swing.GroupLayout panelProveedoresLayout = new javax.swing.GroupLayout(panelProveedores);
+        panelProveedores.setLayout(panelProveedoresLayout);
+        panelProveedoresLayout.setHorizontalGroup(
+            panelProveedoresLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(PCrear, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(PEditar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(PBorrar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        panelProveedoresLayout.setVerticalGroup(
+            panelProveedoresLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelProveedoresLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(PCrear)
+                .addGap(18, 18, 18)
+                .addComponent(PEditar)
+                .addGap(18, 18, 18)
+                .addComponent(PBorrar)
+                .addContainerGap(50, Short.MAX_VALUE))
+        );
+
+        panelClientes.setBackground(java.awt.Color.white);
+        panelClientes.setPreferredSize(new java.awt.Dimension(63, 180));
+
+        CBorrar.setFont(new java.awt.Font("Segoe UI Light", 0, 14)); // NOI18N
         CBorrar.setSelected(true);
         CBorrar.setText("Borrar");
-        jPanel1.add(CBorrar, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 340, -1, -1));
+
+        CEditar.setFont(new java.awt.Font("Segoe UI Light", 0, 14)); // NOI18N
+        CEditar.setSelected(true);
+        CEditar.setText("Editar");
+
+        CCrear.setFont(new java.awt.Font("Segoe UI Light", 0, 14)); // NOI18N
+        CCrear.setSelected(true);
+        CCrear.setText("Crear");
+
+        javax.swing.GroupLayout panelClientesLayout = new javax.swing.GroupLayout(panelClientes);
+        panelClientes.setLayout(panelClientesLayout);
+        panelClientesLayout.setHorizontalGroup(
+            panelClientesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(CCrear, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(CEditar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(CBorrar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        panelClientesLayout.setVerticalGroup(
+            panelClientesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelClientesLayout.createSequentialGroup()
+                .addGap(8, 8, 8)
+                .addComponent(CCrear)
+                .addGap(19, 19, 19)
+                .addComponent(CEditar)
+                .addGap(18, 18, 18)
+                .addComponent(CBorrar)
+                .addContainerGap(48, Short.MAX_VALUE))
+        );
+
+        panelUsuarios.setBackground(java.awt.Color.white);
+
+        UPermiso.setFont(new java.awt.Font("Segoe UI Light", 0, 14)); // NOI18N
+        UPermiso.setSelected(true);
+        UPermiso.setText("Permisos");
+
+        UBorrar.setFont(new java.awt.Font("Segoe UI Light", 0, 14)); // NOI18N
+        UBorrar.setSelected(true);
+        UBorrar.setText("Borrar");
+
+        UEditar.setFont(new java.awt.Font("Segoe UI Light", 0, 14)); // NOI18N
+        UEditar.setSelected(true);
+        UEditar.setText("Editar");
+
+        UCrear.setFont(new java.awt.Font("Segoe UI Light", 0, 14)); // NOI18N
+        UCrear.setSelected(true);
+        UCrear.setText("Crear");
+
+        javax.swing.GroupLayout panelUsuariosLayout = new javax.swing.GroupLayout(panelUsuarios);
+        panelUsuarios.setLayout(panelUsuariosLayout);
+        panelUsuariosLayout.setHorizontalGroup(
+            panelUsuariosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(UCrear, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(UEditar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(UBorrar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(UPermiso, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        panelUsuariosLayout.setVerticalGroup(
+            panelUsuariosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelUsuariosLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(UCrear)
+                .addGap(18, 18, 18)
+                .addComponent(UEditar)
+                .addGap(18, 18, 18)
+                .addComponent(UBorrar)
+                .addGap(14, 14, 14)
+                .addComponent(UPermiso)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        Clientes.setFont(new java.awt.Font("Segoe UI Light", 1, 14)); // NOI18N
+        Clientes.setSelected(true);
+        Clientes.setText("Clientes");
+        Clientes.setOpaque(false);
+        Clientes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ClientesActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(panelClientes, javax.swing.GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE)
+                            .addComponent(panelBodega, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(bodega, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE)
+                            .addComponent(Clientes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(18, 18, Short.MAX_VALUE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(panelArticulos, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(articulos, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(panelUsuarios, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE)
+                            .addComponent(Usuarios, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(panelProveedores, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(panelRoles, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(roles, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(proveedores, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(guardar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(vovler, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
+            .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.TRAILING)
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(bodega, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(articulos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(roles))
+                .addGap(1, 1, 1)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(panelRoles, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(panelArticulos, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(panelBodega, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(Clientes)
+                    .addComponent(Usuarios)
+                    .addComponent(proveedores))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(panelProveedores, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(panelUsuarios, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(panelClientes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(vovler, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(guardar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 697, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 403, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void guardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_guardarActionPerformed
         try {
             Insert();
-        } catch (Exception ex) {
-
+        } catch (ClassNotFoundException | SQLException ex) {
+            System.out.println("Error: " + ex.toString());
         }
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_guardarActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void vovlerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_vovlerActionPerformed
         this.dispose();
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_vovlerActionPerformed
 
-    private void jCheckBox13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox13ActionPerformed
-        if (jCheckBox13.isSelected()) {
+    private void articulosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_articulosActionPerformed
+        if (articulos.isSelected()) {
+            panelArticulos.setVisible(true);
             AReporte.setSelected(true);
             ACompra.setSelected(true);
             ACarga.setSelected(true);
         } else {
+            panelArticulos.setVisible(false);
             AReporte.setSelected(false);
             ACompra.setSelected(false);
             ACarga.setSelected(false);
         }
 
-    }//GEN-LAST:event_jCheckBox13ActionPerformed
+    }//GEN-LAST:event_articulosActionPerformed
 
-    private void BActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BActualizarActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_BActualizarActionPerformed
-
-    private void BodegaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BodegaActionPerformed
-        if (Bodega.isSelected()) {
+    private void bodegaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bodegaActionPerformed
+        if (bodega.isSelected()) {
+            panelBodega.setVisible(true);
             BEntradaSalida.setSelected(true);
             BBorrar.setSelected(true);
             BActualizar.setSelected(true);
             BReporte.setSelected(true);
         } else {
+            panelBodega.setVisible(false);
             BEntradaSalida.setSelected(false);
             BBorrar.setSelected(false);
             BActualizar.setSelected(false);
             BReporte.setSelected(false);
         }
-    }//GEN-LAST:event_BodegaActionPerformed
+    }//GEN-LAST:event_bodegaActionPerformed
 
-    private void jCheckBox17ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox17ActionPerformed
-        if (jCheckBox17.isSelected()) {
+    private void UsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_UsuariosActionPerformed
+        if (Usuarios.isSelected()) {
+            panelUsuarios.setVisible(true);
             UEditar.setSelected(true);
             UBorrar.setSelected(true);
             UCrear.setSelected(true);
             UPermiso.setSelected(true);
         } else {
+            panelUsuarios.setVisible(false);
             UEditar.setSelected(false);
             UBorrar.setSelected(false);
             UCrear.setSelected(false);
@@ -525,96 +723,52 @@ public class UsuarioPermiso extends javax.swing.JDialog {
         }
 
 
-    }//GEN-LAST:event_jCheckBox17ActionPerformed
+    }//GEN-LAST:event_UsuariosActionPerformed
 
-    private void jCheckBox14ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox14ActionPerformed
-        if (jCheckBox14.isSelected()) {
+    private void proveedoresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_proveedoresActionPerformed
+        if (proveedores.isSelected()) {
+            panelProveedores.setVisible(true);
             PCrear.setSelected(true);
             PEditar.setSelected(true);
             PBorrar.setSelected(true);
         } else {
+            panelProveedores.setVisible(false);
             PCrear.setSelected(false);
             PEditar.setSelected(false);
             PBorrar.setSelected(false);
         }
 
-    }//GEN-LAST:event_jCheckBox14ActionPerformed
+    }//GEN-LAST:event_proveedoresActionPerformed
 
-    private void BEntradaSalidaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BEntradaSalidaActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_BEntradaSalidaActionPerformed
-
-    private void BReporteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BReporteActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_BReporteActionPerformed
-
-    private void NewProActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NewProActionPerformed
-        if (NewPro.isSelected()) {
+    private void rolesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rolesActionPerformed
+        if (roles.isSelected()) {
+            panelRoles.setVisible(true);
             RCrear.setSelected(true);
             RBorrar.setSelected(true);
             REditar.setSelected(true);
         } else {
+            panelRoles.setVisible(false);
             RCrear.setSelected(false);
             RBorrar.setSelected(false);
             REditar.setSelected(false);
         }
 
-    }//GEN-LAST:event_NewProActionPerformed
+    }//GEN-LAST:event_rolesActionPerformed
 
-    private void NewCateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NewCateActionPerformed
-        if (NewCate.isSelected()) {
+    private void ClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ClientesActionPerformed
+        if (Clientes.isSelected()) {
+            panelClientes.setVisible(true);
             CBorrar.setSelected(true);
             CCrear.setSelected(true);
             CEditar.setSelected(true);
         } else {
+            panelClientes.setVisible(false);
             CBorrar.setSelected(false);
             CCrear.setSelected(false);
             CEditar.setSelected(false);
         }
 
-    }//GEN-LAST:event_NewCateActionPerformed
-
-    /**
-     * @param args the command line arguments
-     */
-//    public static void main(String args[]) {
-//        /* Set the Nimbus look and feel */
-//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-//         */
-//        try {
-//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-//                if ("Nimbus".equals(info.getName())) {
-//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-//                    break;
-//                }
-//            }
-//        } catch (ClassNotFoundException ex) {
-//            java.util.logging.Logger.getLogger(RolActualizar.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (InstantiationException ex) {
-//            java.util.logging.Logger.getLogger(RolActualizar.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (IllegalAccessException ex) {
-//            java.util.logging.Logger.getLogger(RolActualizar.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-//            java.util.logging.Logger.getLogger(RolActualizar.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        }
-//        //</editor-fold>
-//
-//        /* Create and display the dialog */
-//        java.awt.EventQueue.invokeLater(new Runnable() {
-//            public void run() {
-//                RolActualizar dialog = new RolActualizar(new javax.swing.JFrame(), true, "1");
-//                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-//                    @Override
-//                    public void windowClosing(java.awt.event.WindowEvent e) {
-//                        System.exit(0);
-//                    }
-//                });
-//                dialog.setVisible(true);
-//            }
-//        });
-//    }
+    }//GEN-LAST:event_ClientesActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox ACarga;
@@ -624,12 +778,10 @@ public class UsuarioPermiso extends javax.swing.JDialog {
     private javax.swing.JCheckBox BBorrar;
     private javax.swing.JCheckBox BEntradaSalida;
     private javax.swing.JCheckBox BReporte;
-    private javax.swing.JCheckBox Bodega;
     private javax.swing.JCheckBox CBorrar;
     private javax.swing.JCheckBox CCrear;
     private javax.swing.JCheckBox CEditar;
-    private javax.swing.JCheckBox NewCate;
-    private javax.swing.JCheckBox NewPro;
+    private javax.swing.JCheckBox Clientes;
     private javax.swing.JCheckBox PBorrar;
     private javax.swing.JCheckBox PCrear;
     private javax.swing.JCheckBox PEditar;
@@ -640,13 +792,21 @@ public class UsuarioPermiso extends javax.swing.JDialog {
     private javax.swing.JCheckBox UCrear;
     private javax.swing.JCheckBox UEditar;
     private javax.swing.JCheckBox UPermiso;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JCheckBox jCheckBox13;
-    private javax.swing.JCheckBox jCheckBox14;
-    private javax.swing.JCheckBox jCheckBox17;
+    private javax.swing.JCheckBox Usuarios;
+    private javax.swing.JCheckBox articulos;
+    private javax.swing.JCheckBox bodega;
+    private javax.swing.JButton guardar;
     private javax.swing.JCheckBox jCheckBox2;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JPanel panelArticulos;
+    private javax.swing.JPanel panelBodega;
+    private javax.swing.JPanel panelClientes;
+    private javax.swing.JPanel panelProveedores;
+    private javax.swing.JPanel panelRoles;
+    private javax.swing.JPanel panelUsuarios;
+    private javax.swing.JCheckBox proveedores;
+    private javax.swing.JCheckBox roles;
+    private javax.swing.JButton vovler;
     // End of variables declaration//GEN-END:variables
 }
