@@ -292,11 +292,9 @@ public class CategoriaGestion extends javax.swing.JFrame {
         Control.conectar();
         String query = "select "
                 + "cod_categoria \"Código\", "
-                + "upper(descripcion) \"Descripción\", "
-                + "serie \"Serie\",serieFinal \"Serie Final\",secuencia \"Secuencia\""
-                + "from categoria where estado='A'";
-        String codCategoria = "", nameCategoria = "", costo = "", serieFinal = "";
-        int secuencia = 0;
+                + "upper(descripcion) \"Descripción\" "                
+                + "from categoria where estado='A' order by 2";
+        String codCategoria = "", nameCategoria = "";
         DefaultTableModel modeloEmpleado = new DefaultTableModel();
         int numeroPreguntas;
         ResultSetMetaData rsetMetaData;
@@ -314,9 +312,6 @@ public class CategoriaGestion extends javax.swing.JFrame {
             while (Control.rs.next()) {
                 codCategoria = Control.rs.getString(1);
                 nameCategoria = Control.rs.getString(2);
-                costo = Control.rs.getString(3);
-                serieFinal = Control.rs.getString(4);
-                secuencia = Control.rs.getInt(5);
 
                 Object[] registroEmpleado = new Object[numeroPreguntas];
 

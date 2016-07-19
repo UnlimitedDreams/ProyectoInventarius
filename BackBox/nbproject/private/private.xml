@@ -2,19 +2,6 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group>
-            <file>file:/E:/GIT/ProyectoInventarius/BackBox/src/vw/main/Acceder.java</file>
-            <file>file:/E:/GIT/ProyectoInventarius/BackBox/src/Modelo/MenuRedireccionar.java</file>
-            <file>file:/E:/GIT/ProyectoInventarius/BackBox/src/vw/dialogs/ProveedoresRegistrar.java</file>
-            <file>file:/E:/GIT/ProyectoInventarius/BackBox/src/vw/model/Articulo.java</file>
-            <file>file:/E:/GIT/ProyectoInventarius/BackBox/src/vw/dialogs/CategoriasRegistrar.java</file>
-            <file>file:/E:/GIT/ProyectoInventarius/BackBox/src/vw/components/Provedores.java</file>
-            <file>file:/E:/GIT/ProyectoInventarius/BackBox/src/vw/dialogs/AcercaDe.java</file>
-            <file>file:/E:/GIT/ProyectoInventarius/BackBox/src/vw/dialogs/RolActualizar.java</file>
-            <file>file:/E:/GIT/ProyectoInventarius/BackBox/src/vw/model/Venta.java</file>
-            <file>file:/E:/GIT/ProyectoInventarius/BackBox/src/vw/main/Menu.java</file>
-            <file>file:/E:/GIT/ProyectoInventarius/BackBox/src/vw/components/Bodega.java</file>
-            <file>file:/E:/GIT/ProyectoInventarius/BackBox/src/vw/components/Clientes.java</file>
-        </group>
+        <group/>
     </open-files>
 </project-private>

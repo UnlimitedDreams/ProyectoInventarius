@@ -91,7 +91,7 @@ public class Venta extends javax.swing.JFrame {
             String usuario,
             int TipoVenta,
             ArrayList acciones, String cliente, int empresa)
-            throws ClassNotFoundException {
+            throws ClassNotFoundException, SQLException {
         initComponents();
         c.setVisible(false);
         this.condicionfiltro = false;
@@ -231,6 +231,7 @@ public class Venta extends javax.swing.JFrame {
             }
         }
         MenuAyuda();
+        ConfigurarIva();
         try {
             RecuperarNombreCliente(Cliente.getText());
         } catch (Exception ex) {
