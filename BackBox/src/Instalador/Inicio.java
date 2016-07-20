@@ -5,9 +5,10 @@
  */
 package Instalador;
 
+import vw.main.*;
 import Control.Control;
-import Control.Entrada;
 import com.alee.laf.WebLookAndFeel;
+import Control.Entrada;
 import java.awt.Color;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -15,48 +16,29 @@ import java.io.IOException;
 import static java.lang.Math.floor;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JFrame;
 import vw.dialogs.AcercaDe;
-import vw.main.*;
 
 /**
  *
  * @author Microinformatica
  */
-public class Index extends javax.swing.JFrame {
+public class Inicio extends javax.swing.JFrame {
 
     /**
      * Creates new form Acceder
      */
     private final Image img;
 
-    public Index() throws InterruptedException {
+    public Inicio() {
         initComponents();
-        //this.setUndecorated(true); 
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
         this.setLocationRelativeTo(null);
         img = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/facelet/icon.png"));
         setIconImage(img);
         
-
     }
 
-    public void ProgresoBarra() throws InterruptedException {
-        jProgressBar1.setValue(0);
-        jProgressBar1.setStringPainted(true);
-        Thread.sleep(1000);
-        jProgressBar1.setValue(10);
-        jProgressBar1.setStringPainted(true);
-        Thread.sleep(1000);
-        jProgressBar1.setValue(25);
-        jProgressBar1.setStringPainted(true);
-        Thread.sleep(1000);
-        jProgressBar1.setValue(40);
-        jProgressBar1.setStringPainted(true);
-        Thread.sleep(1000);
-    }
+   
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -69,10 +51,11 @@ public class Index extends javax.swing.JFrame {
 
         container01 = new javax.swing.JPanel();
         alerta = new javax.swing.JLabel();
-        jLabel1 = new javax.swing.JLabel();
-        jProgressBar1 = new javax.swing.JProgressBar();
+        jPanel1 = new javax.swing.JPanel();
+        jPanel2 = new javax.swing.JPanel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("BackBox");
         setBackground(java.awt.Color.white);
         setResizable(false);
         setState(6);
@@ -88,11 +71,33 @@ public class Index extends javax.swing.JFrame {
         container01.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
         container01.add(alerta, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 460, 110, 40));
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 48)); // NOI18N
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("BackBox");
-        container01.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 60, 220, 80));
-        container01.add(jProgressBar1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 210, 710, 30));
+        jPanel1.setBackground(new java.awt.Color(255, 51, 0));
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 190, Short.MAX_VALUE)
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 500, Short.MAX_VALUE)
+        );
+
+        container01.add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 190, 500));
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 600, Short.MAX_VALUE)
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 500, Short.MAX_VALUE)
+        );
+
+        container01.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 0, 600, 500));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -109,21 +114,17 @@ public class Index extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
-
+        
     }//GEN-LAST:event_formComponentResized
 
+    
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(() -> {
             WebLookAndFeel.install();
-            try {
-                new Index().setVisible(true);
-                
-            } catch (InterruptedException ex) {
-                Logger.getLogger(Index.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            new Inicio().setVisible(true);
         });
     }
 
@@ -131,7 +132,7 @@ public class Index extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel alerta;
     private javax.swing.JPanel container01;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JProgressBar jProgressBar1;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     // End of variables declaration//GEN-END:variables
 }

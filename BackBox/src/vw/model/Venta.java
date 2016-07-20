@@ -1270,7 +1270,7 @@ public class Venta extends javax.swing.JFrame {
                     try {
                         Control.conectar();
                         Producto temp = null;
-                        String query = "select nombre,precio_desc,iva,cast((precio_venta*(iva/100)) as numeric(10)) valorIva "
+                        String query = "select nombre,precio_desc,iva,cast(((precio_venta-costo)*(iva/100)) as numeric(10)) valorIva "
                                 + "from producto\n"
                                 + "where\n"
                                 + "producto.estado='A' and cod_producto='" + cod + "'";
@@ -1403,7 +1403,7 @@ public class Venta extends javax.swing.JFrame {
                 try {
                     Control.conectar();
                     Producto temp = null;
-                    String query = "select nombre,precio_desc,iva,cast((precio_venta*(iva/100)) as numeric(10)) "
+                    String query = "select nombre,precio_desc,iva,cast(((precio_venta-costo)*(iva/100)) as numeric(10)) "
                             + "from producto\n"
                             + "where\n"
                             + "producto.estado='A' and cod_producto='" + cod + "'";

@@ -7,7 +7,6 @@ package Instalador;
 
 import Control.Control;
 import Control.Entrada;
-import com.alee.laf.WebLookAndFeel;
 import java.awt.Color;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -18,19 +17,18 @@ import java.net.URISyntaxException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
-import vw.dialogs.AcercaDe;
-import vw.main.*;
 
 /**
  *
  * @author Microinformatica
  */
-public class Index extends javax.swing.JFrame {
+public class Index extends javax.swing.JFrame implements Runnable {
 
     /**
      * Creates new form Acceder
      */
     private final Image img;
+    Thread Hilo1;
 
     public Index() throws InterruptedException {
         initComponents();
@@ -39,23 +37,38 @@ public class Index extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
         img = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/facelet/icon.png"));
         setIconImage(img);
-        
 
     }
 
     public void ProgresoBarra() throws InterruptedException {
+        
         jProgressBar1.setValue(0);
         jProgressBar1.setStringPainted(true);
         Thread.sleep(1000);
         jProgressBar1.setValue(10);
         jProgressBar1.setStringPainted(true);
         Thread.sleep(1000);
-        jProgressBar1.setValue(25);
+        jProgressBar1.setValue(20);
         jProgressBar1.setStringPainted(true);
         Thread.sleep(1000);
         jProgressBar1.setValue(40);
         jProgressBar1.setStringPainted(true);
         Thread.sleep(1000);
+        jProgressBar1.setValue(60);
+        jProgressBar1.setStringPainted(true);
+        Thread.sleep(1000);
+        jProgressBar1.setValue(80);
+        jProgressBar1.setStringPainted(true);
+        Thread.sleep(1000);
+        jProgressBar1.setValue(90);
+        jProgressBar1.setStringPainted(true);
+        Thread.sleep(1000);
+        jProgressBar1.setValue(100);
+        jProgressBar1.setStringPainted(true);
+        Thread.sleep(1000);
+        new Inicio().setVisible(true);
+        this.dispose();
+
     }
 
     /**
@@ -67,13 +80,14 @@ public class Index extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        container01 = new javax.swing.JPanel();
-        alerta = new javax.swing.JLabel();
-        jLabel1 = new javax.swing.JLabel();
+        jPanel1 = new javax.swing.JPanel();
         jProgressBar1 = new javax.swing.JProgressBar();
+        jLabel1 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setBackground(java.awt.Color.white);
+        setPreferredSize(new java.awt.Dimension(790, 300));
         setResizable(false);
         setState(6);
         addComponentListener(new java.awt.event.ComponentAdapter() {
@@ -82,27 +96,36 @@ public class Index extends javax.swing.JFrame {
             }
         });
 
-        container01.setBackground(new java.awt.Color(255, 255, 255));
-        container01.setMinimumSize(new java.awt.Dimension(791, 491));
-        container01.setName(""); // NOI18N
-        container01.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-        container01.add(alerta, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 460, 110, 40));
+        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel1.setPreferredSize(new java.awt.Dimension(790, 500));
+        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jProgressBar1.setBackground(new java.awt.Color(255, 255, 255));
+        jProgressBar1.setForeground(new java.awt.Color(255, 102, 0));
+        jPanel1.add(jProgressBar1, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 120, 710, 30));
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 48)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("BackBox");
-        container01.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 60, 220, 80));
-        container01.add(jProgressBar1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 210, 710, 30));
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 10, 220, 80));
+
+        jButton1.setText("INICIAR");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 200, 140, 40));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(container01, javax.swing.GroupLayout.DEFAULT_SIZE, 791, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 800, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(container01, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 292, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
@@ -112,15 +135,24 @@ public class Index extends javax.swing.JFrame {
 
     }//GEN-LAST:event_formComponentResized
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        try {
+            Hilo1 = new Thread(this);
+            Hilo1.start();
+        } catch (Exception ex) {
+
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(() -> {
-            WebLookAndFeel.install();
+
             try {
                 new Index().setVisible(true);
-                
+
             } catch (InterruptedException ex) {
                 Logger.getLogger(Index.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -129,9 +161,26 @@ public class Index extends javax.swing.JFrame {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel alerta;
-    private javax.swing.JPanel container01;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JProgressBar jProgressBar1;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void run() {
+        Thread ct = Thread.currentThread();
+
+        while (ct == Hilo1) {
+            try {
+                jProgressBar1.setVisible(true);
+                this.ProgresoBarra();
+                Hilo1.stop();
+                //corredor1();            
+            } catch (InterruptedException ex) {
+                Logger.getLogger(Index.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+    }
 }
