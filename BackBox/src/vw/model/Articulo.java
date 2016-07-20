@@ -5,23 +5,20 @@
  */
 package vw.model;
 
-import Control.LeerExcel;
 import Control.Control;
+import Control.Entrada;
+import Control.LeerExcel;
 import Modelo.ContenedorMenus;
 import Modelo.MenuRedireccionar;
+import Modelo.Producto;
 import Modelo.acciones;
 import Modelo.exportar_excel;
 import Modelo.seccion;
+import java.awt.Color;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import vw.components.CargaArchivo;
-import vw.components.Datalles;
-import Control.Entrada;
-import vw.components.Entrada_Nueva;
-import vw.main.Acceder;
-import vw.main.Menu;
-import Modelo.Producto;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -42,12 +39,17 @@ import javax.swing.JTable;
 import javax.swing.KeyStroke;
 import javax.swing.table.DefaultTableModel;
 import vw.components.Bodega;
+import vw.components.CargaArchivo;
+import vw.components.Datalles;
+import vw.components.Entrada_Nueva;
+import vw.main.Acceder;
+import vw.main.Menu;
 
 /**
  *
  * @author Britany
  */
-public class Articulo extends javax.swing.JFrame {
+public class Articulo extends javax.swing.JFrame implements Runnable {
 
     /**
      * Creates new form Articulo
@@ -55,16 +57,22 @@ public class Articulo extends javax.swing.JFrame {
     String usuario;
     int codEmpresa;
     int regimen;
+    Thread Hilo1;
+    Thread Hilo2;
     ArrayList<seccion> listaSeccion = new ArrayList();
     ArrayList<acciones> listaaccion = new ArrayList();
     ArrayList<ContenedorMenus> List_Menu = new ArrayList();
     ArrayList<Integer> listIvas = new ArrayList();
     ArrayList<Integer> listCategorias = new ArrayList();
 
+    public Articulo() {
+        initComponents();
+    }
+
     public Articulo(String nom, ArrayList acciones, int codEmpresa) throws ClassNotFoundException {
         initComponents();
         inicio();
-//        jButton6.setVisible(false);
+        jProgressBar1.setVisible(false);
         this.List_Menu = acciones;
         this.usuario = nom;
         this.regimen = 0;
@@ -306,6 +314,7 @@ public class Articulo extends javax.swing.JFrame {
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
         jButton6 = new javax.swing.JButton();
+        jProgressBar1 = new javax.swing.JProgressBar();
         jMenuBar1 = new javax.swing.JMenuBar();
         file = new javax.swing.JMenu();
         inicio = new javax.swing.JMenuItem();
@@ -413,6 +422,9 @@ public class Articulo extends javax.swing.JFrame {
             }
         });
 
+        jProgressBar1.setBackground(new java.awt.Color(0, 0, 0));
+        jProgressBar1.setForeground(new java.awt.Color(0, 0, 0));
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -428,13 +440,16 @@ public class Articulo extends javax.swing.JFrame {
                 .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(44, 44, 44))
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 765, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 765, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(48, 48, 48)
-                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 667, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 667, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jProgressBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap(44, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -444,7 +459,9 @@ public class Articulo extends javax.swing.JFrame {
                 .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 360, Short.MAX_VALUE)
-                .addGap(44, 44, 44)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jProgressBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(19, 19, 19)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jButton4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -510,6 +527,14 @@ public class Articulo extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+        Hilo1 = new Thread(this);
+        Hilo1.start();
+
+//Thread hiloA = new Thread(new Articulo(), "hiloA");
+        //  Thread hiloB = new Thread(new MiHilo(), "hiloB");
+
+    }//GEN-LAST:event_jButton6ActionPerformed
+    public void cargarFile() {
         try {
 
             JFileChooser dlg = new JFileChooser();
@@ -523,10 +548,10 @@ public class Articulo extends javax.swing.JFrame {
         } catch (Exception ex) {
             System.err.println("Error : " + ex.toString());
             Entrada.muestreMensajeV("Documento no valido");
+            jProgressBar1.setVisible(false);
 
         }
-    }//GEN-LAST:event_jButton6ActionPerformed
-
+    }
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         if (jTable1.getRowCount() >= 1) {
             getBto_exportar();
@@ -561,8 +586,10 @@ public class Articulo extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         try {
             Entradas();
+
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(Articulo.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Articulo.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jButton1ActionPerformed
     public void Entradas() throws ClassNotFoundException {
@@ -625,8 +652,10 @@ public class Articulo extends javax.swing.JFrame {
         }
     }
 
-    public void pasar_datos(String ruta) throws ClassNotFoundException {
-        System.out.println("Entro");
+    public void pasar_datos(String ruta) throws ClassNotFoundException, InterruptedException {
+        //jProgressBar1.setForeground(Color.ORANGE);
+        jProgressBar1.setValue(0);
+        jProgressBar1.setStringPainted(true);
         String movimiento[] = null;
         String costo[] = null;
         String iva[] = null;
@@ -637,35 +666,38 @@ public class Articulo extends javax.swing.JFrame {
         String stock[] = null;
         LeerExcel Hoja = new LeerExcel();
         Hoja.f_datos_1(ruta, 0);//codigo
+        jProgressBar1.setValue(10);
+        jProgressBar1.setStringPainted(true);
         movimiento = Hoja.Carga();
         Hoja.f_datos_1(ruta, 1);//Nombre
+        jProgressBar1.setValue(20);
+        jProgressBar1.setStringPainted(true);
         nombres = Hoja.Carga();
         Hoja.f_datos_1(ruta, 2);//categoria
+        jProgressBar1.setValue(30);
+        jProgressBar1.setStringPainted(true);
         categoria = Hoja.Carga();
         Hoja.f_datos_1(ruta, 3);//costo
+        jProgressBar1.setValue(40);
+        jProgressBar1.setStringPainted(true);
         costo = Hoja.Carga();
         Hoja.f_datos_1(ruta, 4);//iva
+        jProgressBar1.setValue(50);
+        jProgressBar1.setStringPainted(true);
         iva = Hoja.Carga();
         Hoja.f_datos_1(ruta, 5);//precio
+        jProgressBar1.setValue(60);
+        jProgressBar1.setStringPainted(true);
         precio = Hoja.Carga();
         Hoja.f_datos_1(ruta, 6);//stock
+        jProgressBar1.setValue(70);
+        jProgressBar1.setStringPainted(true);
         precio = Hoja.Carga();
         Hoja.f_datos_1(ruta, 7);//cantidad
+        jProgressBar1.setValue(80);
+        jProgressBar1.setStringPainted(true);
         cantidad = Hoja.Carga();
         ArrayList datos = null;
-        for (String object : iva) {
-            System.out.println("- " + object);
-        }
-        System.out.println("- : "+movimiento.length);
-        System.out.println("- : "+costo.length);
-        System.out.println("- : "+iva.length);
-        System.out.println("- : "+precio.length);
-        System.out.println("- : "+categoria.length);
-        System.out.println("- : "+cantidad.length);
-        System.out.println("- : "+nombres.length );
-        
-        
-        
         if ((movimiento.length == costo.length) && (iva.length == precio.length) && (categoria.length == cantidad.length
                 && nombres.length == movimiento.length)) {
             if (ValidarDatosEnTabla(costo, 1)) {
@@ -673,9 +705,9 @@ public class Articulo extends javax.swing.JFrame {
                     if (ValidarDatosEnTabla(precio, 3)) {
                         if (ValidarDatosEnTabla(categoria, 4)) {
                             if (ValidarDatosEnTabla(cantidad, 5)) {
+                                jProgressBar1.setValue(90);
+                                jProgressBar1.setStringPainted(true);
                                 datos = DatosPersona(movimiento, nombres, costo, iva, precio, categoria, cantidad);
-                                System.out.println("Paso la prueba");
-                                System.out.println("Size : " + datos.size());
                                 CargaArchivo car = new CargaArchivo(datos, usuario, List_Menu);
                                 this.dispose();
                                 car.setVisible(true);
@@ -711,7 +743,6 @@ public class Articulo extends javax.swing.JFrame {
                 r = true;
             }
 
-            
             return r;
         } catch (Exception ex) {
             return r;
@@ -732,7 +763,7 @@ public class Articulo extends javax.swing.JFrame {
                 mnserror = "El valor del costo debe ser Numerico";
                 r = false;
                 break;
-            } else if (condi == 1 && isnumero(valor, 2)) {                
+            } else if (condi == 1 && isnumero(valor, 2)) {
                 if (Double.parseDouble(valor) <= 0) {
                     mnserror = "El valor del costo debe ser mayor a 0 (Cero))";
                     r = false;
@@ -786,14 +817,14 @@ public class Articulo extends javax.swing.JFrame {
                 mnserror = "La cantidad del producto debe ser numerica";
                 r = false;
                 break;
-            } 
-//            else if (condi == 5 && isnumero(valor, 1)) {
-//                if (Integer.parseInt(valor) == 0) {
-//                    mnserror = "La cantidad del producto debe ser mayor a Cero (0)";
-//                    r = false;
-//                    break;
-//                }
-//            }
+            } else if (condi == 5 && isnumero(valor, 1)) {
+                if (Integer.parseInt(valor) < 0) {
+                    System.out.println(":::::::::::::::::::::: " + valor);
+                    mnserror = "La cantidad del producto debe ser mayor a Cero (0)";
+                    r = false;
+                    break;
+                }
+            }
         }
 
 //      
@@ -847,20 +878,19 @@ public class Articulo extends javax.swing.JFrame {
     public void Buscar() throws ClassNotFoundException {
         String query = "";
         if (SoloNumeros(jTextField2.getText())) {
-            query = "select  distinct "
-                    + "cod_producto \"Código\","
-                    + "upper(nombre)\"Nombre\","
-                    + "categoria.cod_categoria \"Categoría \","
-                    + "costo \"Costo\","
-                    + "maestro_iva.porcentaje \"IVA\","
-                    + "precio_desc \"Precio\","
-                    + "stock \"stock\","
-                    + "cantidad \"Cantidad\"\n"
+            query = "select distinct * from (\n"
+                    + "select  distinct cod_producto \"Código\",upper(nombre)\"Nombre\",categoria.cod_categoria \"Categoría \",costo \"Costo\",maestro_iva.porcentaje \"IVA\",precio_desc \"Precio\",stock \"stock\",cantidad \"Cantidad\"\n"
                     + " from producto,categoria,maestro_iva where\n"
                     + "  producto.cod_categoria=categoria.cod_categoria and \n"
                     + "  producto.iva=maestro_iva.codiva and \n"
-                    + "  producto.cod_producto ILIKE ('%" + jTextField2.getText() + "')  and producto.estado='A'"
-                    + " limit 40 ";
+                    + "  producto.cod_producto ILIKE ('%" + jTextField2.getText() + "')  and producto.estado='A'\n"
+                    + "union all\n"
+                    + "select  distinct cod_producto \"Código\",upper(nombre)\"Nombre\",categoria.cod_categoria \"Categoría \",costo \"Costo\",maestro_iva.porcentaje \"IVA\",precio_desc \"Precio\",stock \"stock\",cantidad \"Cantidad\"\n"
+                    + " from producto,categoria,maestro_iva where\n"
+                    + "  producto.cod_categoria=categoria.cod_categoria and \n"
+                    + "  producto.iva=maestro_iva.codiva and \n"
+                    + "  producto.cod_producto ILIKE ('%" + jTextField2.getText() + "%')  and producto.estado='A')Y\n"
+                    + "   limit 40";
         } else {
             query = "select  distinct "
                     + "cod_producto \"Código\","
@@ -999,7 +1029,7 @@ public class Articulo extends javax.swing.JFrame {
                 + " producto.cod_categoria=categoria.cod_categoria"
                 + " and producto.iva=maestro_iva.codiva\n"
                 + " and  producto.estado='A'"
-                + " order by producto.cod_producto DESC";
+                + " order by cantidad ";
         System.out.println(query);
         String cod = "", nom = "", valor = "", cant = "", costo = "", iva = "", precio = "";
         String cate = "";
@@ -1058,10 +1088,24 @@ public class Articulo extends javax.swing.JFrame {
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JProgressBar jProgressBar1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JMenuItem salir;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void run() {
+        Thread ct = Thread.currentThread();
+
+        while (ct == Hilo1) {
+            jProgressBar1.setVisible(true);
+            cargarFile();
+            Hilo1.stop();
+            //corredor1();            
+        }
+
+    }
 }

@@ -136,7 +136,7 @@ public class CargaArchivo extends javax.swing.JFrame {
                 if (pr.getCantBD() >= 0) {
                     cantidad = pr.getCantidad() - pr.getCantBD();
                 } else {
-                    cantidad = pr.getCantBD() - pr.getCantidad();
+                    cantidad = pr.getCantBD() + pr.getCantidad();
                 }
                 System.out.println("cantidad : " + cantidad);
                 if (pr.getEsta().equalsIgnoreCase("Existe") && cantidad != 0) {
@@ -168,25 +168,8 @@ public class CargaArchivo extends javax.swing.JFrame {
 
                 } else if (pr.getEsta().equalsIgnoreCase("Existe") && cantidad == 0) {
 
-                    if (cantidad == 0 && pr.getCantBD() < 0) {
-                        tipo = "Entrada";
-                        ActualizoN++;
-                        cantFinal = cantidad;
-                        cantSAlida = pr.getCantidad();
-
-                        System.out.println("paso 1");
-                        f = Control.ejecuteUpdate("insert into Salida_Entrada values("
-                                + codigo_sal + ",'" + tipo + "'," + Math.abs(cantSAlida) + ",'" + fecha + "','"
-                                + pr.getCodigo() + "','" + mns + "','" + nombre + "')");
-                        System.out.println("paso 2");
-                        f = Control.ejecuteUpdate("update producto set cantidad=" + 1 + " where"
-                                + " cod_producto='" + pr.getCodigo() + "'");
-
-                    } else {
-                        Noentro++;
-                        System.out.println("No hace nada");
-                        f = true;
-                    }
+                    System.out.println("No hace nada");
+                    f = true;
 
 //No ingresa datos
                 } else {
