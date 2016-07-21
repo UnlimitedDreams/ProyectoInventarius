@@ -969,7 +969,7 @@ public class Articulo extends javax.swing.JFrame implements Runnable {
                 + " and producto.iva=maestro_iva.codiva\n"
                 + " and  producto.estado='A'"
                 + " order by producto.cod_producto DESC";
-        System.out.println(query);
+        
         String cod = "", nom = "", valor = "", cant = "", costo = "", iva = "", precio = "";
         String cate = "";
         DefaultTableModel modeloEmpleado = new DefaultTableModel();

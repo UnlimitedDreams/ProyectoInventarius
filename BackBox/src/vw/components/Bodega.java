@@ -657,7 +657,7 @@ public class Bodega extends javax.swing.JFrame {
                     + "select  distinct cod_producto \"Código\",upper(nombre)\"Nombre\",upper(categoria.descripcion) \"Categoría \",costo \"Costo\",iva \"IVA\",precio_desc \"Precio\",descu \"Descuento\",cantidad \"Cantidad\"\n"
                     + "from producto,categoria where\n"
                     + "producto.cod_categoria=categoria.cod_categoria and   \n"
-                    + "producto.cod_producto ILIKE ('%" + jTextField2.getText() + "%')  and producto.estado='A'  )y\n"
+                    + "producto.cod_producto ILIKE ('%" + jTextField2.getText() + "%')  and producto.estado='A'  )y "
                     + "limit 40 ";
         } else {
             query = "select  distinct "
@@ -675,7 +675,7 @@ public class Bodega extends javax.swing.JFrame {
                     + "producto.nombre ILIKE ('%" + jTextField2.getText() + "%') or "
                     + " producto.cod_producto ILIKE ('%" + jTextField2.getText() + "%') )  and producto.estado='A'";
         }
-        
+        System.out.println(query);
         Control.conectar();
         Producto temp = null;
         String cod = "", nom = "", valor = "", cant = "", costo = "", iva = "", precio = "";
