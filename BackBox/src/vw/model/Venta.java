@@ -1277,14 +1277,14 @@ public class Venta extends javax.swing.JFrame {
                         System.out.println("query : " + query);
                         Control.ejecuteQuery(query);
                         String nom = "";
-                        double precio = 0;
-                        double iva = 0, valorIva = 0;
+                        double precio = 0,valorIva = 0;
+                        int iva = 0;                        
                         boolean r = false;
                         while (Control.rs.next()) {
                             r = true;
                             nom = Control.rs.getString(1);
                             precio = Control.rs.getDouble(2);
-                            iva = Control.rs.getDouble(3);
+                            iva = Control.rs.getInt(3);
                             valorIva = Control.rs.getDouble(4);
                         }
                         if (r) {
@@ -1409,14 +1409,14 @@ public class Venta extends javax.swing.JFrame {
                             + "producto.estado='A' and cod_producto='" + cod + "'";
                     Control.ejecuteQuery(query);
                     String nom = "";
-                    double precio = 0;
-                    double iva = 0, valorIva = 0;
+                    double precio = 0, valorIva = 0;
+                    int iva = 0;
                     boolean r = false;
                     while (Control.rs.next()) {
                         r = true;
                         nom = Control.rs.getString(1);
                         precio = Control.rs.getDouble(2);
-                        iva = Control.rs.getDouble(3);
+                        iva = Control.rs.getInt(3);
                         valorIva = Control.rs.getDouble(4);
                     }
                     Control.cerrarConexion();

@@ -283,19 +283,20 @@ public class Bodega extends javax.swing.JFrame {
     public void inicio() throws ClassNotFoundException {
         Control.conectar();
         Producto temp = null;
-        String query = "select cod_producto \"Código\","
+        String query = "select serie_producto \"Código\","
                 + "upper(nombre) \"Nombre\","
                 + "upper(categoria.descripcion) \"Categoría\","
                 + "costo \"Costo\","
-                + "iva \"IVA\","
+                + "maestro_iva.porcentaje \"IVA\","
                 + "precio_desc \"Precio\","
                 + "descu \"Descuento\","
                 + "cantidad \"Cantidad\" "
-                + "from producto,categoria\n"
+                + "from producto,categoria,maestro_iva\n"
                 + "where\n"
                 + "producto.cod_categoria=categoria.cod_categoria\n"
+                + " and producto.iva=maestro_iva.codiva \n"
                 + "and  producto.estado='A'"
-                + " order by producto.cod_producto DESC";
+                + " order by producto.serie_producto DESC";
 
         String cod = "", nom = "", valor = "", cant = "", costo = "", iva = "", precio = "";
         String cate = "";
@@ -648,32 +649,36 @@ public class Bodega extends javax.swing.JFrame {
 
         String query = "";
         if (SoloNumeros(jTextField2.getText())) {
+       
             query = "select distinct * from (\n"
-                    + "select  distinct cod_producto \"Código\",upper(nombre)\"Nombre\",upper(categoria.descripcion) \"Categoría \",costo \"Costo\",iva \"IVA\",precio_desc \"Precio\",descu \"Descuento\",cantidad \"Cantidad\"\n"
-                    + "from producto,categoria where\n"
+                    + "select  distinct serie_producto \"Código\",upper(nombre)\"Nombre\",upper(categoria.descripcion) \"Categoría \",costo \"Costo\",maestro_iva.porcentaje \"IVA\",precio_desc \"Precio\",descu \"Descuento\",cantidad \"Cantidad\"\n"
+                    + "from producto,categoria,maestro_iva where\n"
                     + "producto.cod_categoria=categoria.cod_categoria and   \n"
-                    + "producto.cod_producto ILIKE ('%"+ jTextField2.getText() + "')  and producto.estado='A'  \n"
+                    + " producto.iva=maestro_iva.codiva and \n"
+                    + "producto.serie_producto ILIKE ('%" + jTextField2.getText() + "')  and producto.estado='A'  \n"
                     + "union all\n"
-                    + "select  distinct cod_producto \"Código\",upper(nombre)\"Nombre\",upper(categoria.descripcion) \"Categoría \",costo \"Costo\",iva \"IVA\",precio_desc \"Precio\",descu \"Descuento\",cantidad \"Cantidad\"\n"
-                    + "from producto,categoria where\n"
+                    + "select  distinct serie_producto \"Código\",upper(nombre)\"Nombre\",upper(categoria.descripcion) \"Categoría \",costo \"Costo\",maestro_iva.porcentaje \"IVA\",precio_desc \"Precio\",descu \"Descuento\",cantidad \"Cantidad\"\n"
+                    + "from producto,categoria,maestro_iva where\n"
                     + "producto.cod_categoria=categoria.cod_categoria and   \n"
-                    + "producto.cod_producto ILIKE ('%" + jTextField2.getText() + "%')  and producto.estado='A'  )y "
+                    + "  producto.iva=maestro_iva.codiva and \n"
+                    + "producto.serie_producto ILIKE ('%" + jTextField2.getText() + "%')  and producto.estado='A'  )y "
                     + "limit 40 ";
         } else {
             query = "select  distinct "
-                    + "cod_producto \"Código\","
+                    + "serie_producto \"Código\","
                     + "upper(nombre)\"Nombre\","
                     + "upper(categoria.descripcion) \"Categoría \","
                     + "costo \"Costo\","
-                    + "iva \"IVA\","
+                    + "maestro_iva.porcentaje \"IVA\","
                     + "precio_desc \"Precio\","
                     + "descu \"Descuento\","
                     + "cantidad \"Cantidad\"\n"
-                    + "from producto,categoria where "
+                    + "from producto,categoria,maestro_iva where "
                     + "producto.cod_categoria=categoria.cod_categoria and "
+                    + "  producto.iva=maestro_iva.codiva and \n"
                     + "(categoria.descripcion ILIKE ('%" + jTextField2.getText() + "%') or  "
                     + "producto.nombre ILIKE ('%" + jTextField2.getText() + "%') or "
-                    + " producto.cod_producto ILIKE ('%" + jTextField2.getText() + "%') )  and producto.estado='A'";
+                    + " producto.serie_producto ILIKE ('%" + jTextField2.getText() + "%') )  and producto.estado='A'";
         }
         System.out.println(query);
         Control.conectar();
@@ -737,7 +742,7 @@ public class Bodega extends javax.swing.JFrame {
             producto.setCodigo(cod);
             producto.setNombre(nombre);
             producto.setCosto(Double.parseDouble(Costo));
-            producto.setIva(Double.parseDouble(iva));
+            producto.setIva(Integer.parseInt(iva));
             producto.setDesc(Integer.parseInt(Desc));
             producto.setPrecio_venta(Double.parseDouble(Precio));
             producto.setCantidad(Integer.parseInt(cant));
@@ -760,7 +765,7 @@ public class Bodega extends javax.swing.JFrame {
             op[1] = "No";
             int Condicion = Entrada.menu("BackBox", "¿Esta Seguro que Desea Borrar el Producto? ", op);
             if (Condicion == 1) {
-                boolean r = Control.ejecuteUpdate("update producto set estado='I' where cod_producto='" + cod + "'");
+                boolean r = Control.ejecuteUpdate("update producto set estado='I' where serie_producto='" + cod + "'");
                 if (r) {
                     Entrada.muestreMensajeV("Producto Borrado con Exito");
                     inicio();

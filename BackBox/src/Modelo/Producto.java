@@ -12,9 +12,11 @@ package Modelo;
 public class Producto {
 
     private String codigo;
+    private int codigoProducto;
     private String nombre;
     private double Costo;
-    private double iva;
+    private int iva;
+    private int codigoIva;
     private double precio_venta;
     private int cantidad;
     private int desc;
@@ -35,7 +37,7 @@ public class Producto {
         this.iva = iva;
     }
 
-    public Producto(String codigo, String nombre, double precio_venta, int cantidad, double iva, int stock, double valorIva) {
+    public Producto(String codigo, String nombre, double precio_venta, int cantidad, int iva, int stock, double valorIva) {
         this.codigo = codigo;
         this.nombre = nombre;
         this.precio_venta = precio_venta;
@@ -45,13 +47,13 @@ public class Producto {
         this.ValorIva = valorIva;
     }
 
-    public Producto(String codigo, String nombre, double Costo, double precio_venta, int cantidad,int stock) {
+    public Producto(String codigo, String nombre, double Costo, double precio_venta, int cantidad, int stock) {
         this.codigo = codigo;
         this.nombre = nombre;
         this.Costo = Costo;
         this.precio_venta = precio_venta;
         this.cantidad = cantidad;
-         this.stock = stock;
+        this.stock = stock;
     }
 
     public Producto() {
@@ -101,7 +103,7 @@ public class Producto {
         return iva;
     }
 
-    public void setIva(double iva) {
+    public void setIva(int iva) {
         this.iva = iva;
     }
 
@@ -165,7 +167,22 @@ public class Producto {
     public void setCantBD(int CantBD) {
         this.CantBD = CantBD;
     }
-    
+
+    public int getCodigoProducto() {
+        return codigoProducto;
+    }
+
+    public void setCodigoProducto(int codigoProducto) {
+        this.codigoProducto = codigoProducto;
+    }
+
+    public int getCodigoIva() {
+        return codigoIva;
+    }
+
+    public void setCodigoIva(int codigoIva) {
+        this.codigoIva = codigoIva;
+    }
     
 
 }

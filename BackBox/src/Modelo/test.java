@@ -15,8 +15,8 @@ import org.fife.ui.rsyntaxtextarea.Theme;
 public class test {
 
     public static void main(String juan[]) throws InterruptedException {
-        System.out.println("1");
-        Thread.sleep(1000);
-        System.out.println("1");
+        String v = "7900.0";
+        Double.parseDouble(v);
+        System.out.println(""+Double.parseDouble(v));
     }
 }
