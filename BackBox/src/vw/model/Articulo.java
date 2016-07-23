@@ -847,25 +847,6 @@ public class Articulo extends javax.swing.JFrame implements Runnable {
         return pro;
     }
 
-    public boolean BuscarEstado(String cod) throws ClassNotFoundException {
-        Control.conectar();
-        boolean r = false;
-
-        try {
-            Control.ejecuteQuery("select * from producto where estado='A' "
-                    + "and cod_producto='" + cod + "'");
-            while (Control.rs.next()) {
-                r = true;
-            }
-            Control.cerrarConexion();
-        } catch (Exception ex) {
-
-        } finally {
-            Control.cerrarConexion();
-        }
-        return r;
-    }
-
     public boolean SoloNumeros(String cadena) {
         try {
             Long.parseLong(cadena);
@@ -879,33 +860,33 @@ public class Articulo extends javax.swing.JFrame implements Runnable {
         String query = "";
         if (SoloNumeros(jTextField2.getText())) {
             query = "select distinct * from (\n"
-                    + "select  distinct cod_producto \"Código\",upper(nombre)\"Nombre\",categoria.cod_categoria \"Categoría \",costo \"Costo\",maestro_iva.porcentaje \"IVA\",precio_desc \"Precio\",stock \"stock\",cantidad \"Cantidad\"\n"
+                    + "select  distinct serie_producto \"Código\",upper(nombre)\"Nombre\",upper(categoria.descripcion) \"Categoría \",costo \"Costo\",maestro_iva.porcentaje \"IVA\",precio_desc \"Precio\",stock \"stock\",cantidad \"Cantidad\"\n"
                     + " from producto,categoria,maestro_iva where\n"
                     + "  producto.cod_categoria=categoria.cod_categoria and \n"
                     + "  producto.iva=maestro_iva.codiva and \n"
-                    + "  producto.cod_producto ILIKE ('%" + jTextField2.getText() + "')  and producto.estado='A'\n"
+                    + "  producto.serie_producto ILIKE ('%" + jTextField2.getText() + "')  and producto.estado='A'\n"
                     + "union all\n"
-                    + "select  distinct cod_producto \"Código\",upper(nombre)\"Nombre\",categoria.cod_categoria \"Categoría \",costo \"Costo\",maestro_iva.porcentaje \"IVA\",precio_desc \"Precio\",stock \"stock\",cantidad \"Cantidad\"\n"
+                    + "select  distinct serie_producto \"Código\",upper(nombre)\"Nombre\",upper(categoria.descripcion) \"Categoría \",costo \"Costo\",maestro_iva.porcentaje \"IVA\",precio_desc \"Precio\",stock \"stock\",cantidad \"Cantidad\"\n"
                     + " from producto,categoria,maestro_iva where\n"
                     + "  producto.cod_categoria=categoria.cod_categoria and \n"
                     + "  producto.iva=maestro_iva.codiva and \n"
-                    + "  producto.cod_producto ILIKE ('%" + jTextField2.getText() + "%')  and producto.estado='A')Y\n"
+                    + "  producto.serie_producto ILIKE ('%" + jTextField2.getText() + "%')  and producto.estado='A')Y\n"
                     + "   limit 40";
         } else {
             query = "select  distinct "
-                    + "cod_producto \"Código\","
+                    + "serie_producto \"Código\","
                     + "upper(nombre)\"Nombre\","
                     + "upper(categoria.descripcion) \"Categoría \","
                     + "costo \"Costo\","
                     + "iva \"IVA\","
                     + "precio_desc \"Precio\","
-                    + "descu \"Descuento\","
+                    + "stock \"stock\","
                     + "cantidad \"Cantidad\"\n"
                     + " from producto,categoria where "
                     + "  producto.cod_categoria=categoria.cod_categoria and "
                     + "   (categoria.descripcion ILIKE ('%" + jTextField2.getText() + "%') or  "
                     + "producto.nombre ILIKE ('%" + jTextField2.getText() + "%') or "
-                    + " producto.cod_producto ILIKE ('%" + jTextField2.getText() + "%') )  and producto.estado='A'";
+                    + " producto.serie_producto ILIKE ('%" + jTextField2.getText() + "%') )  and producto.estado='A'";
         }
         Control.conectar();
         Producto temp = null;
@@ -955,7 +936,7 @@ public class Articulo extends javax.swing.JFrame implements Runnable {
         Control.conectar();
         Producto temp = null;
         String query = "select "
-                + "cod_producto \"Código\","
+                + "serie_producto \"Código\","
                 + "upper(nombre) \"Nombre\","
                 + "upper(categoria.descripcion) \"Categoría\","
                 + "costo \"Costo\","
@@ -968,8 +949,8 @@ public class Articulo extends javax.swing.JFrame implements Runnable {
                 + " producto.cod_categoria=categoria.cod_categoria"
                 + " and producto.iva=maestro_iva.codiva\n"
                 + " and  producto.estado='A'"
-                + " order by producto.cod_producto DESC";
-        
+                + " order by producto.serie_producto DESC";
+
         String cod = "", nom = "", valor = "", cant = "", costo = "", iva = "", precio = "";
         String cate = "";
         DefaultTableModel modeloEmpleado = new DefaultTableModel();
@@ -1016,7 +997,7 @@ public class Articulo extends javax.swing.JFrame implements Runnable {
         JTable table = new javax.swing.JTable();
         Producto temp = null;
         String query = "select "
-                + "cod_producto \"Código\","
+                + "serie_producto \"Código\","
                 + "upper(nombre) \"Nombre\","
                 + "categoria.cod_categoria \"Categoría\","
                 + "costo \"Costo\","
