@@ -48,6 +48,7 @@ import net.sf.jasperreports.engine.JasperReport;
 import Control.Entrada;
 import Modelo.Producto;
 import Control.Sequence;
+import java.awt.event.KeyListener;
 import vw.dialogs.RegistroCliente;
 import vw.main.Acceder;
 import vw.main.Menu;
@@ -56,7 +57,7 @@ import vw.main.Menu;
  *
  * @author Britany
  */
-public class Venta extends javax.swing.JFrame {
+public class Venta extends javax.swing.JFrame implements KeyListener {
 
     ArrayList<Producto> productos = new ArrayList();
     Connection cone;
@@ -93,6 +94,7 @@ public class Venta extends javax.swing.JFrame {
             ArrayList acciones, String cliente, int empresa)
             throws ClassNotFoundException, SQLException {
         initComponents();
+        addKeyListener((KeyListener) this);
         c.setVisible(false);
         this.condicionfiltro = false;
         this.ValorPago = 0;
@@ -113,7 +115,6 @@ public class Venta extends javax.swing.JFrame {
         setIconImage(img.getImage());
         this.productos = Acciones;
         iniciar();
-
         porcentajeDescuento.setText("" + 0);
         Date fechaMostrar = new Date();
         SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
@@ -230,6 +231,7 @@ public class Venta extends javax.swing.JFrame {
                 }
             }
         }
+
         MenuAyuda();
         ConfigurarIva();
         try {
@@ -369,13 +371,10 @@ public class Venta extends javax.swing.JFrame {
 
         for (int i = 0; i < productos.size(); i++) {
             pro = (Producto) productos.get(i);
-            System.out.println("Producto :  " + pro.getCodigo());
             cant = pro.getCantidad();
             valor = valor + (pro.getPrecio_final() * cant);
-            iva = iva + (int) pro.getValorIva();
+            iva = iva + (int) (pro.getValorIva() * pro.getCantidad());
         }
-        System.out.println("-------------------------");
-        System.out.println("Valor : " + valor);
         valorPorcentaje = ((valor) * (descu / 100));
         subtotal.setText("" + formateador.format(valor));
         String d = "";
@@ -447,6 +446,7 @@ public class Venta extends javax.swing.JFrame {
         montoPago = new javax.swing.JTextField();
         NomCliente = new javax.swing.JLabel();
         fecha = new javax.swing.JLabel();
+        jButton2 = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         file = new javax.swing.JMenu();
         inicio = new javax.swing.JMenuItem();
@@ -895,6 +895,14 @@ public class Venta extends javax.swing.JFrame {
         fecha.setText("jLabel1");
         jPanel1.add(fecha, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 10, 170, 30));
 
+        jButton2.setText("V");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 170, -1, -1));
+
         file.setText("Archivo");
         file.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
 
@@ -979,6 +987,7 @@ public class Venta extends javax.swing.JFrame {
     public void generarFactura(int cod_factura, Date fecha, Connection c) throws JRException, ClassNotFoundException {
 
         try {
+            System.out.println("Factura");
             HashMap<String, Object> parametros = new HashMap<String, Object>();
             parametros.put("Cod_fac", cod_factura);
             parametros.put("fec_fac", fecha);
@@ -986,12 +995,12 @@ public class Venta extends javax.swing.JFrame {
             parametros.put("Iva", Double.parseDouble(porcentajeIVA.getText()));
             parametros.put("ValorDesc", Double.parseDouble(valorDescuento.getText()));
             parametros.put("Total", ValorPago);
-            JasperReport report = JasperCompileManager.compileReport("Reportes/Fac.jrxml");
+            JasperReport report = JasperCompileManager.compileReport("src\\Reportes\\Fac.jrxml");
             JasperPrint jasperPrint = JasperFillManager.fillReport(report, parametros, c);
             //Mostrar en pdf   // JasperViewer.viewReport(jasperPrint);   
             JasperPrintManager.printReport(jasperPrint, true);
         } catch (Exception ex) {
-            System.err.println(ex.toString());
+            System.err.println("Error Reporte "+ex.toString());
         }
     }
 
@@ -1002,7 +1011,7 @@ public class Venta extends javax.swing.JFrame {
         boolean r = false;
         try {
             DecimalFormat formateador = new DecimalFormat("#############");
-            
+
             Control.conectar();
             Control.con.setAutoCommit(false);
             cone = Control.con;
@@ -1026,11 +1035,11 @@ public class Venta extends javax.swing.JFrame {
                 for (int i = 0; i < productos.size(); i++) {
                     pro = (Producto) productos.get(i);
                     r = Control.ejecuteUpdate("insert into venta_pro values(" + codigo_pro + ","
-                            + codigo_venta + "," + pro.getCantidad() + "," + pro.getIva() + "," + pro.getValorIva() + "," + pro.getCodigoProducto() + ")");
+                            + codigo_venta + "," + pro.getCantidad() + "," + pro.getIva() + "," + (pro.getValorIva()*pro.getCantidad()) + "," + pro.getCodigoProducto() + ")");
                     codigo_pro++;
                 }
                 restar_Bodega();
-                //generarFactura(codigo_venta, fecha, cone);
+               generarFactura(codigo_venta, fecha, cone);
 
                 Proceso = true;
             } else {
@@ -1051,7 +1060,7 @@ public class Venta extends javax.swing.JFrame {
             ArrayList<Producto> productos = new ArrayList();
             new Venta(productos, usuario, 1, List_Menu, "1", codigo_empresa).setVisible(true);
             this.dispose();
-        }else{
+        } else {
             Entrada.muestreMensajeV("Error al realizar la venta");
         }
 
@@ -1107,7 +1116,6 @@ public class Venta extends javax.swing.JFrame {
 
     private void jTable2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTable2KeyPressed
         try {
-            System.out.println("Tecla : " + evt.getKeyCode());
             if (evt.getKeyCode() == 127) {
                 borrar();
             }
@@ -1117,7 +1125,7 @@ public class Venta extends javax.swing.JFrame {
     }//GEN-LAST:event_jTable2KeyPressed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        new Menu(usuario).setVisible(true);;
+        new Menu(usuario).setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButton4ActionPerformed
 
@@ -1267,6 +1275,7 @@ public class Venta extends javax.swing.JFrame {
                         Esta = true;
                         p.setCantidad(p.getCantidad() + 1);
                         p.setPrecio_venta(p.getPrecio_final() * p.getCantidad());
+
                     }
                 }
                 if (Esta == false) {
@@ -1515,7 +1524,6 @@ public class Venta extends javax.swing.JFrame {
                 boolean r = false;
                 Control.ejecuteQuery("select concat(nombre,' ',apellido) from clientes where cedula='" + Cliente.getText() + "'");
                 while (Control.rs.next()) {
-                    System.out.println("encontro datos");
                     r = true;
                     NomCliente.setText("Cliente : " + Control.rs.getString(1));
                 }
@@ -1523,6 +1531,7 @@ public class Venta extends javax.swing.JFrame {
                 if (r == false) {
                     Entrada.muestreMensajeV("La cedula ingresada no esta registrada como cliente");
                     Cliente.setText(this.cedulaCliente);
+                    NomCliente.setText("Cliente : Administrador Venta");
                 } else {
                     codigo_cliente = Integer.parseInt(Cliente.getText());
                 }
@@ -1572,6 +1581,15 @@ public class Venta extends javax.swing.JFrame {
     private void porcentajeDescuentoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_porcentajeDescuentoKeyPressed
         // TODO add your handling code here:
     }//GEN-LAST:event_porcentajeDescuentoKeyPressed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        ArrayList<Producto> productos = new ArrayList();
+        try {
+            new VentaAux(productos, usuario, 1, List_Menu, "1", codigo_empresa).setVisible(true);
+        }catch(Exception ex){
+            
+        }   
+    }//GEN-LAST:event_jButton2ActionPerformed
     public void Buscar() throws ClassNotFoundException {
         String query = "";
         if (SoloNumeros(jTextField2.getText())) {
@@ -1681,6 +1699,7 @@ public class Venta extends javax.swing.JFrame {
         }
 
     }
+
     /**
      * @param args the command line arguments
      */
@@ -1698,6 +1717,7 @@ public class Venta extends javax.swing.JFrame {
     private javax.swing.JMenu file;
     private javax.swing.JMenuItem inicio;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
@@ -1725,4 +1745,19 @@ public class Venta extends javax.swing.JFrame {
     private javax.swing.JTextField subtotal;
     private javax.swing.JTextField valorDescuento;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+        System.out.println("Entro por aqui");
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        System.out.println("Entro por aqui 2");
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+        System.out.println("Entro por aqui 3");
+    }
 }

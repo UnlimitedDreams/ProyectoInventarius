@@ -2,7 +2,7 @@
 <!-- Created with iReport - A designer for JasperReports -->
 <!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
 <jasperReport
-		 name="Rep_VentasDet"
+		 name="Rep_FacturasCompradas"
 		 columnCount="1"
 		 printOrder="Vertical"
 		 orientation="Portrait"
@@ -26,7 +26,7 @@
 	<parameter name="fechaI" isForPrompting="false" class="java.lang.String"/>
 	<parameter name="FechaF" isForPrompting="false" class="java.lang.String"/>
 	<parameter name="query" isForPrompting="false" class="java.lang.String"/>
-	<queryString><![CDATA[$!P{query}
+	<queryString><![CDATA[$P!{query}
 ]]></queryString>
 
 	<field name="Factura" class="java.lang.String"/>

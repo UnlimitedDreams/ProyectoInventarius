@@ -99,7 +99,7 @@ public class Producto {
         this.Costo = Costo;
     }
 
-    public double getIva() {
+    public int getIva() {
         return iva;
     }
 
