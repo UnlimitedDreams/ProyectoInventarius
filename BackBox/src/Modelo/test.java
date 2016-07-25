@@ -6,6 +6,7 @@
 package Modelo;
 
 import java.text.DecimalFormat;
+import org.fife.ui.rsyntaxtextarea.Theme;
 
 /**
  *
@@ -13,16 +14,9 @@ import java.text.DecimalFormat;
  */
 public class test {
 
-    public static void main(String juan[]) {
-        DecimalFormat formateador = new DecimalFormat("#########");
-        String valor = "5";
-        String b[] = valor.split(".");
-        double a = 0;
-        System.out.println("- " +Double.parseDouble(valor));
-//        System.out.println("- " + Integer.parseInt(valor));
-//        System.out.println("- " + b[1]);
-        //  System.out.println("-- : " + formateador.format(valor));
-//        a=Integer.parseInt(formateador.format(valor));
-//        System.out.println("IVa : " + a);
+    public static void main(String juan[]) throws InterruptedException {
+        String v = "7900.0";
+        Double.parseDouble(v);
+        System.out.println(""+Double.parseDouble(v));
     }
 }

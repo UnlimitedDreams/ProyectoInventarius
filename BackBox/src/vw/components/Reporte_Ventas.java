@@ -272,7 +272,6 @@ public class Reporte_Ventas extends javax.swing.JFrame {
     }
 
     public void generarVentaPDF() throws JRException, ClassNotFoundException {
-
         try {
             Date date = jDateChooser1.getDate();
             SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd");

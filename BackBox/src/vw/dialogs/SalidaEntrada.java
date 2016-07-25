@@ -28,6 +28,7 @@ public class SalidaEntrada extends javax.swing.JDialog {
     String nombre;
     String cant;
     String usuario;
+    int codProducto;
     int codEmpresa;
     ArrayList<Integer> ListAcciones = new ArrayList();
 
@@ -58,6 +59,7 @@ public class SalidaEntrada extends javax.swing.JDialog {
         setIconImage(img.getImage());
         try {
             cargarUsuario(usuario);
+            cargarCodProducto();
         } catch (SQLException ex) {
             Logger.getLogger(SalidaEntrada.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
@@ -190,7 +192,16 @@ public class SalidaEntrada extends javax.swing.JDialog {
         }
         this.nombre = nombre;
         Control.cerrarConexion();
-
+    }
+    public void cargarCodProducto() throws SQLException, ClassNotFoundException {
+        Control.conectar();
+        Control.ejecuteQuery("select cod_producto from producto where serie_producto='" + codigo+"'");
+        int codPro = 0;
+        while (Control.rs.next()) {
+            codPro = Control.rs.getInt(1);
+        }
+        this.codProducto = codPro;
+        Control.cerrarConexion();
     }
 
     /**
@@ -211,15 +222,15 @@ public class SalidaEntrada extends javax.swing.JDialog {
                             javax.swing.JOptionPane.WARNING_MESSAGE);
                 } else {
                     boolean r1 = Control.ejecuteUpdate("insert into Salida_Entrada values("
-                            + codigo_sal + ",'" + tipo + "'," + cantidad.getValue() + ",'" + fecha + "','"
-                            + codigo + "','" + jTextArea1.getText() + "','" + nombre + "')");
+                            + codigo_sal + ",'" + tipo + "'," + cantidad.getValue() + ",'" + fecha + "',"
+                            +"'" + jTextArea1.getText() + "','" + nombre + "',"+codProducto+")");
                     if (r1) {
                         boolean r = false;
                         if (tipo.equalsIgnoreCase("Salida")) {
-                            r = Control.ejecuteUpdate("update producto set cantidad=cantidad-" + cantidad.getValue() + " where cod_producto='" + codigo + "'");
+                            r = Control.ejecuteUpdate("update producto set cantidad=cantidad-" + cantidad.getValue() + " where cod_producto='" + codProducto + "'");
                         } else {
                             System.out.println("Update producto");
-                            r = Control.ejecuteUpdate("update producto set cantidad=cantidad+" + cantidad.getValue() + " where cod_producto='" + codigo + "'");
+                            r = Control.ejecuteUpdate("update producto set cantidad=cantidad+" + cantidad.getValue() + " where cod_producto='" + codProducto + "'");
 
                         }
                         if (r) {

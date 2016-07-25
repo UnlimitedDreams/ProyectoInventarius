@@ -26,15 +26,28 @@ public class Tabla3 {
 
     public void calculeFrecuenciasV() {
         Producto temp = null;
+        String iva = "";
+        int ivaFinal = 0;
         for (int i = 0; i < pro.size(); i++) {
             temp = (Producto) pro.get(i);
+
+            if (pro.get(i).getIva() > 0) {
+                iva = "" + pro.get(i).getIva();
+            }
+            if (iva.contains(".")) {
+                ivaFinal = Integer.parseInt(iva.substring(0, (iva.length() - 2)));
+            } else if (iva.equalsIgnoreCase("")) {
+                ivaFinal =0;
+            } else {
+                ivaFinal = Integer.parseInt(iva);
+            }
             frecuencias[0][nrofreq] = "" + pro.get(i).getCodigo();
             frecuencias[1][nrofreq] = "" + pro.get(i).getNombre();
             frecuencias[2][nrofreq] = "" + pro.get(i).getCosto();
-            frecuencias[3][nrofreq] = "" + pro.get(i).getCantidad();
-            frecuencias[4][nrofreq] = "" + pro.get(i).getPrecio_venta();
-            frecuencias[5][nrofreq] = ""+pro.get(i).getStock();
-
+            frecuencias[3][nrofreq] = "" + pro.get(i).getPrecio_venta();
+            frecuencias[4][nrofreq] = "" + ivaFinal;
+            frecuencias[5][nrofreq] = "" + pro.get(i).getCantidad();
+            frecuencias[6][nrofreq] = "" + pro.get(i).getStock();
             nrofreq++;
         }
     }
