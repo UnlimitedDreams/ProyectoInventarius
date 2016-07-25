@@ -231,9 +231,9 @@ public class Bodega extends javax.swing.JFrame {
             borrar.setEnabled(false);
             actualizar.setEnabled(false);
             stock.setEnabled(false);
-            String acci="";
+            String acci = "";
             for (String accione : acciones) {
-                acci=(String)accione;
+                acci = (String) accione;
                 if (acci.equalsIgnoreCase("EntradaSalida")) {
                     System.out.println("entro");
                     salida.setEnabled(true);
@@ -283,19 +283,20 @@ public class Bodega extends javax.swing.JFrame {
     public void inicio() throws ClassNotFoundException {
         Control.conectar();
         Producto temp = null;
-        String query = "select cod_producto \"Código\","
+        String query = "select serie_producto \"Código\","
                 + "upper(nombre) \"Nombre\","
                 + "upper(categoria.descripcion) \"Categoría\","
                 + "costo \"Costo\","
-                + "iva \"IVA\","
+                + "maestro_iva.porcentaje \"IVA\","
                 + "precio_desc \"Precio\","
                 + "descu \"Descuento\","
                 + "cantidad \"Cantidad\" "
-                + "from producto,categoria\n"
+                + "from producto,categoria,maestro_iva\n"
                 + "where\n"
                 + "producto.cod_categoria=categoria.cod_categoria\n"
+                + " and producto.iva=maestro_iva.codiva \n"
                 + "and  producto.estado='A'"
-                + " order by producto.cod_producto DESC";
+                + " order by producto.serie_producto DESC";
 
         String cod = "", nom = "", valor = "", cant = "", costo = "", iva = "", precio = "";
         String cate = "";
@@ -648,36 +649,38 @@ public class Bodega extends javax.swing.JFrame {
 
         String query = "";
         if (SoloNumeros(jTextField2.getText())) {
-            query = "select  distinct "
-                    + "cod_producto \"Código\","
-                    + "upper(nombre)\"Nombre\","
-                    + "upper(categoria.descripcion) \"Categoría \","
-                    + "costo \"Costo\","
-                    + "iva \"IVA\","
-                    + "precio_desc \"Precio\","
-                    + "descu \"Descuento\","
-                    + "cantidad \"Cantidad\"\n"
-                    + " from producto,categoria where\n"
-                    + "  producto.cod_categoria=categoria.cod_categoria and \n"
-                    + "  \n"
-                    + "  producto.cod_producto ILIKE ('%" + jTextField2.getText() + "')  and producto.estado='A'"
-                    + "  limit 40 ";
+
+            query = "select distinct * from (\n"
+                    + "select  distinct serie_producto \"Código\",upper(nombre)\"Nombre\",upper(categoria.descripcion) \"Categoría \",costo \"Costo\",maestro_iva.porcentaje \"IVA\",precio_desc \"Precio\",descu \"Descuento\",cantidad \"Cantidad\"\n"
+                    + "from producto,categoria,maestro_iva where\n"
+                    + "producto.cod_categoria=categoria.cod_categoria and   \n"
+                    + " producto.iva=maestro_iva.codiva and \n"
+                    + "producto.serie_producto ILIKE ('%" + jTextField2.getText() + "')  and producto.estado='A'  \n"
+                    + "union all\n"
+                    + "select  distinct serie_producto \"Código\",upper(nombre)\"Nombre\",upper(categoria.descripcion) \"Categoría \",costo \"Costo\",maestro_iva.porcentaje \"IVA\",precio_desc \"Precio\",descu \"Descuento\",cantidad \"Cantidad\"\n"
+                    + "from producto,categoria,maestro_iva where\n"
+                    + "producto.cod_categoria=categoria.cod_categoria and   \n"
+                    + "  producto.iva=maestro_iva.codiva and \n"
+                    + "producto.serie_producto ILIKE ('%" + jTextField2.getText() + "%')  and producto.estado='A'  )y "
+                    + "limit 40 ";
         } else {
             query = "select  distinct "
-                    + "cod_producto \"Código\","
+                    + "serie_producto \"Código\","
                     + "upper(nombre)\"Nombre\","
                     + "upper(categoria.descripcion) \"Categoría \","
                     + "costo \"Costo\","
-                    + "iva \"IVA\","
+                    + "maestro_iva.porcentaje \"IVA\","
                     + "precio_desc \"Precio\","
                     + "descu \"Descuento\","
                     + "cantidad \"Cantidad\"\n"
-                    + " from producto,categoria where "
-                    + "  producto.cod_categoria=categoria.cod_categoria and "
-                    + " (categoria.descripcion ILIKE ('%" + jTextField2.getText() + "%') or  "
+                    + "from producto,categoria,maestro_iva where "
+                    + "producto.cod_categoria=categoria.cod_categoria and "
+                    + "  producto.iva=maestro_iva.codiva and \n"
+                    + "(categoria.descripcion ILIKE ('%" + jTextField2.getText() + "%') or  "
                     + "producto.nombre ILIKE ('%" + jTextField2.getText() + "%') or "
-                    + " producto.cod_producto ILIKE ('%" + jTextField2.getText() + "%') )  and producto.estado='A'";
+                    + " producto.serie_producto ILIKE ('%" + jTextField2.getText() + "%') )  and producto.estado='A'";
         }
+
         Control.conectar();
         Producto temp = null;
         String cod = "", nom = "", valor = "", cant = "", costo = "", iva = "", precio = "";
@@ -739,7 +742,7 @@ public class Bodega extends javax.swing.JFrame {
             producto.setCodigo(cod);
             producto.setNombre(nombre);
             producto.setCosto(Double.parseDouble(Costo));
-            producto.setIva(Double.parseDouble(iva));
+            producto.setIva(Integer.parseInt(iva));
             producto.setDesc(Integer.parseInt(Desc));
             producto.setPrecio_venta(Double.parseDouble(Precio));
             producto.setCantidad(Integer.parseInt(cant));
@@ -749,29 +752,43 @@ public class Bodega extends javax.swing.JFrame {
         }
     }
 
-    public void borrar() throws ClassNotFoundException {
-        Control.conectar();
-        int i = tablaProductos.getSelectedRow();
-        int j = tablaProductos.getSelectedColumn();
-        if (i == -1) {
-            JOptionPane.showMessageDialog(null, "Favor... Seleccione una Fila");
-        } else {
-            String cod = (String) tablaProductos.getValueAt(i, 0).toString();
-            String op[] = new String[2];
-            op[0] = "Si";
-            op[1] = "No";
-            int Condicion = Entrada.menu("BackBox", "¿Esta Seguro que Desea Borrar el Producto? ", op);
-            if (Condicion == 1) {
-                boolean r = Control.ejecuteUpdate("update producto set estado='I' where cod_producto='" + cod + "'");
-                if (r) {
-                    Entrada.muestreMensajeV("Producto Borrado con Exito");
-                    inicio();
-                } else {
-                    Entrada.muestreMensajeV("Error Borrando el Producto");
+    public void borrar() throws ClassNotFoundException, SQLException {
+        boolean r = false;
+        int Condicion = 0;
+        try {
+            Control.conectar();
+            Control.con.setAutoCommit(false);
+            int i = tablaProductos.getSelectedRow();
+            int j = tablaProductos.getSelectedColumn();
+            if (i == -1) {
+                JOptionPane.showMessageDialog(null, "Favor... Seleccione una Fila");
+            } else {
+                String cod = (String) tablaProductos.getValueAt(i, 0).toString();
+                String op[] = new String[2];
+                op[0] = "Si";
+                op[1] = "No";
+                Condicion = Entrada.menu("BackBox", "¿Esta Seguro que Desea Borrar el Producto? \n Recuerde que "
+                        + "despues de borrar el producto,SI el producto tiene transacciones (Ventas),\n no podra volver a "
+                        + "usar el mismo codigo para otro producto, De lo contrario Si", op);
+                if (Condicion == 1) {
+                    r = Control.ejecuteUpdate("update producto set estado='I' where serie_producto='" + cod + "'");
                 }
             }
+        } catch (Exception ex) {
+            System.out.println("Error : " + ex.toString());
+        } finally {
+            Control.con.commit();
+            Control.con.setAutoCommit(true);
             Control.cerrarConexion();
         }
+
+        if (r && Condicion==1) {
+            Entrada.muestreMensajeV("Producto Borrado con Exito");
+            inicio();
+        } else if(r==false && Condicion==1) {
+            Entrada.muestreMensajeV("Error Borrando el Producto");
+        }
+
     }
 
     public void Sacar() throws ClassNotFoundException {
@@ -822,7 +839,7 @@ public class Bodega extends javax.swing.JFrame {
         } else {
             String cod = (String) tablaProductos.getValueAt(i, 0).toString();
             String c = (String) tablaProductos.getValueAt(i, 6).toString();
-            int codigo_sal = Sequence.seque("select max(cod_entra) from Salida_Entrada");
+
             SalidaEntrada newEntrada = new SalidaEntrada(this, true,
                     cod, "Entrada", usuario, c, List_Menu, codEmpresa);
             newEntrada.setVisible(true);

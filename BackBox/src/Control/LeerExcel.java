@@ -57,7 +57,7 @@ public class LeerExcel {
                     cellTempList.add(hssfCell);
                 }                
                 for (int j = 0; j < cellTempList.size(); j++) {
-                    //System.out.println("--- : " + cellTempList.get(j));
+                    System.out.println("--- : " + cellTempList.get(j));
 
                     try {
                         XSSFCell hssfCell = (XSSFCell) cellTempList.get(j);

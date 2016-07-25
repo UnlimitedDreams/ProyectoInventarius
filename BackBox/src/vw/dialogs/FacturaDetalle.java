@@ -200,14 +200,14 @@ public class FacturaDetalle extends javax.swing.JDialog {
         Control.conectar();
         Producto temp = null;
         String query = "select "
-                + "producto.cod_producto \"Producto\","
+                + "producto.serie_producto \"Producto\","
                 + "nombre \"Nombre\","
                 + "precio_venta \"Precio\","
                 + "venta_pro.cantidad \"Cantidad\",(precio_venta*venta_pro.cantidad) \"Total\""
                 + "from venta,venta_pro,producto\n"
                 + "               where\n"
                 + "                 venta.cod_factura=venta_pro.cod_factura\n"
-                + "                and venta_pro.cod_prodcuto=producto.cod_producto\n"
+                + "                and venta_pro.cod_producto=producto.cod_producto\n"
                 + "                and venta.cod_factura='" + factura + "'";
         String codi = "", total = "", cant = "", nombre = "",totalValor="";
         DefaultTableModel modeloEmpleado = new DefaultTableModel();

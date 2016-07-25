@@ -14,7 +14,9 @@ import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import vw.components.Bodega;
 import Control.Entrada;
+import Modelo.List_Categoria;
 import Modelo.Producto;
+import vw.model.Venta;
 
 /**
  *
@@ -32,21 +34,26 @@ public class ProductoUpdate extends javax.swing.JDialog {
     int secuenciaIva;
     int codEmpresa;
     ArrayList<Integer> ListAcciones = new ArrayList();
+    ArrayList<List_Categoria> listIvas = new ArrayList();
 
-    public ProductoUpdate(java.awt.Frame parent, boolean modal, Producto p, String nom, ArrayList acciones,int codEmpresa) throws ClassNotFoundException {
+    public ProductoUpdate(java.awt.Frame parent, boolean modal, Producto p, String nom, ArrayList acciones, int codEmpresa) throws ClassNotFoundException {
         super(parent, modal);
         initComponents();
         this.p = p;
         this.nom = nom;
         this.ListAcciones = acciones;
-        this.codEmpresa=codEmpresa;
+        this.codEmpresa = codEmpresa;
         recuperar();
         this.setLocationRelativeTo(null);
         this.setResizable(false);
         URL url = getClass().getResource("/images/facelet/icon.png");
         ImageIcon img = new ImageIcon(url);
         setIconImage(img.getImage());
-
+        try {
+            ConfigurarIva();
+        } catch (SQLException ex) {
+            Logger.getLogger(ProductoUpdate.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public void recuperar() {
@@ -56,8 +63,38 @@ public class ProductoUpdate extends javax.swing.JDialog {
         jTextField8.setText("" + p.getCantidad());
         jTextField6.setText("" + p.getPrecio_venta());
         jTextField9.setText("" + p.getDesc());
-        jTextField9.setText("" + p.getIva());
-        jTextField9.setText("" + p.getStock());
+
+    }
+
+    public void ConfigurarIva() throws SQLException, ClassNotFoundException {
+        try {
+            listIvas.clear();
+            Control.conectar();
+            Control.con.setAutoCommit(false);
+            Control.ejecuteQuery("select codiva,porcentaje from maestro_iva a, producto b where\n"
+                    + "a.codiva=b.iva\n"
+                    + "union all\n"
+                    + "select codiva,porcentaje from maestro_iva a where codiva not in (select iva from producto where iva=a.codiva)");
+            while (Control.rs.next()) {
+                iva.addItem(Control.rs.getString(2) + " %");
+                listIvas.add(new List_Categoria(Control.rs.getInt(1), "" + Control.rs.getInt(2)));
+            }
+            Control.ejecuteQuery("select stock from producto where serie_producto='" + p.getCodigo() + "'");
+
+            while (Control.rs.next()) {
+                jTextField12.setText("" + Control.rs.getInt(1));
+            }
+            if (jTextField12.getText().equalsIgnoreCase("")) {
+                jTextField12.setText("" + 0);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Venta.class
+                    .getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            Control.con.commit();
+            Control.con.setAutoCommit(true);
+            Control.cerrarConexion();
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -83,7 +120,7 @@ public class ProductoUpdate extends javax.swing.JDialog {
         jLabel11 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
         jTextField12 = new javax.swing.JTextField();
-        jTextField10 = new javax.swing.JTextField();
+        iva = new javax.swing.JComboBox<String>();
 
         setTitle("Actualizar Producto - Inventarius");
         setResizable(false);
@@ -262,13 +299,15 @@ public class ProductoUpdate extends javax.swing.JDialog {
         });
         jPanel1.add(jTextField12, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 390, 400, 40));
 
-        jTextField10.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
-        jTextField10.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                jTextField10KeyReleased(evt);
+        iva.setFont(new java.awt.Font("Segoe UI Light", 0, 14)); // NOI18N
+        iva.setToolTipText("");
+        iva.setPreferredSize(new java.awt.Dimension(130, 28));
+        iva.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ivaActionPerformed(evt);
             }
         });
-        jPanel1.add(jTextField10, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 340, 400, 40));
+        jPanel1.add(iva, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 340, 400, 40));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -290,7 +329,7 @@ public class ProductoUpdate extends javax.swing.JDialog {
         Bodega b;
         try {
             try {
-                b = new Bodega(nom, ListAcciones,codEmpresa);
+                b = new Bodega(nom, ListAcciones, codEmpresa);
                 b.setVisible(true);
                 this.setVisible(false);
             } catch (SQLException ex) {
@@ -353,9 +392,7 @@ public class ProductoUpdate extends javax.swing.JDialog {
     private void jTextField4KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField4KeyReleased
         try {
             boolean v = SoloNumeros(jTextField4.getText(), 1);
-            System.out.println("R : " + v);
             if (v == false) {
-                System.out.println("SecuenciaCosto : " + SecuenciaCosto);
                 jTextField4.setText(jTextField4.getText().substring(0, SecuenciaCosto));
             }
         } catch (Exception ex) {
@@ -392,7 +429,7 @@ public class ProductoUpdate extends javax.swing.JDialog {
 
     private void jTextField12KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField12KeyReleased
         boolean v = SoloNumeros(jTextField12.getText(), 5);
-        if (v == false) {           
+        if (v == false) {
             jTextField12.setText("");
         }
     }//GEN-LAST:event_jTextField12KeyReleased
@@ -401,16 +438,6 @@ public class ProductoUpdate extends javax.swing.JDialog {
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField8ActionPerformed
 
-    private void jTextField10KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField10KeyReleased
-        boolean v = SoloNumeros(jTextField10.getText(), 5);
-        if (v == false) {
-            jTextField10.setText(jTextField10.getText().substring(0, secuenciaIva));
-        }
-        if (jTextField10.getText().length() > 1) {
-            jTextField10.setText(jTextField10.getText().substring(0, 2));
-        }
-    }//GEN-LAST:event_jTextField10KeyReleased
-
     private void jTextField3KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField3KeyReleased
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField3KeyReleased
@@ -418,6 +445,10 @@ public class ProductoUpdate extends javax.swing.JDialog {
     private void jTextField3KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField3KeyPressed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField3KeyPressed
+
+    private void ivaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ivaActionPerformed
+
+    }//GEN-LAST:event_ivaActionPerformed
     public int detectarNumero(String a) {
         int valor = 0;
         try {
@@ -430,26 +461,37 @@ public class ProductoUpdate extends javax.swing.JDialog {
     }
 
     public void update() throws ClassNotFoundException, SQLException {
-        Control.conectar();
+        boolean r = false;
+        try {
+            Control.conectar();
+            Control.con.setAutoCommit(false);
+            String nomcategoria = iva.getSelectedItem().toString();
+            String val[] = nomcategoria.split("%");
+            r = Control.ejecuteUpdate("update producto set nombre='" + jTextField3.getText() + "',"
+                    + "costo=" + jTextField4.getText() + ",cantidad=" + jTextField8.getText() + ","
+                    + "precio_venta=" + jTextField6.getText() + ","
+                    + "descu=" + jTextField9.getText() + ","
+                    + "precio_desc=" + ((Double.parseDouble(jTextField6.getText()))
+                    - ((Double.parseDouble(jTextField6.getText())) * (Double.parseDouble(jTextField9.getText()) / 100))) + ","
+                    + " iva=" + val[0] + ",stock=" + Integer.parseInt(jTextField12.getText()) + " where cod_producto='" + jTextField2.getText()
+                    + "'");
+        } catch (SQLException ex) {
+            System.out.println("Error SQL : " + ex.toString());
+        } finally {
+            Control.con.commit();
+            Control.con.setAutoCommit(true);
+            Control.cerrarConexion();
+        }
 
-        boolean r = Control.ejecuteUpdate("update producto set nombre='" + jTextField3.getText() + "',"
-                + "costo=" + jTextField4.getText() + ",cantidad=" + jTextField8.getText() + ","
-                + "precio_venta=" + jTextField6.getText() + ","
-                + "descu=" + jTextField9.getText() + ","
-                + "precio_desc=" + ((Double.parseDouble(jTextField6.getText()))
-                - ((Double.parseDouble(jTextField6.getText())) * (Double.parseDouble(jTextField9.getText()) / 100))) + ","
-                + " iva=" + detectarNumero(jTextField12.getText()) + ",stock=" + Integer.parseInt(jTextField12.getText()) + " where cod_producto='" + jTextField2.getText()
-                + "'");
         if (r) {
             Entrada.muestreMensajeV("Actualizacion Exitosa",
                     javax.swing.JOptionPane.INFORMATION_MESSAGE);
-            Bodega b = new Bodega(nom, ListAcciones,codEmpresa);
+            Bodega b = new Bodega(nom, ListAcciones, codEmpresa);
             this.setVisible(false);
             b.setVisible(true);
         } else {
             Entrada.muestreMensajeV("Error Actualizando");
         }
-        Control.cerrarConexion();
 
     }
 
@@ -458,6 +500,7 @@ public class ProductoUpdate extends javax.swing.JDialog {
      */
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox<String> iva;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel10;
@@ -470,7 +513,6 @@ public class ProductoUpdate extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JTextField jTextField10;
     private javax.swing.JTextField jTextField12;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;

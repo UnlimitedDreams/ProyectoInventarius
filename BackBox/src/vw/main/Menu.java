@@ -31,11 +31,12 @@ import javax.swing.KeyStroke;
  *
  * @author Microinformatica
  */
-public class Menu extends javax.swing.JFrame implements KeyListener {
+public class Menu extends javax.swing.JFrame implements Runnable {
 
     /**
      * Creates new form Bodega
      */
+    Thread Hilo1;
     String usuario;
     ArrayList<seccion> listaSeccion = new ArrayList();
     ArrayList<acciones> listaaccion = new ArrayList();
@@ -54,7 +55,6 @@ public class Menu extends javax.swing.JFrame implements KeyListener {
         URL url = getClass().getResource("/images/facelet/icon.png");
         ImageIcon img = new ImageIcon(url);
         setIconImage(img.getImage());
-        addKeyListener(this);
         VerBodega = 0;
         VerArticulos = 0;
         VerVenta = 0;
@@ -63,7 +63,9 @@ public class Menu extends javax.swing.JFrame implements KeyListener {
         List_Menu.clear();
         try {
             cargarUsuario(usuario);
+            System.out.println("1");
             cargarSecciones();
+            System.out.println("2");
             cargarAccion();
             ContenedorMenus con_menu = new ContenedorMenus();
             con_menu.setListaAcciones(listaaccion);
@@ -167,6 +169,7 @@ public class Menu extends javax.swing.JFrame implements KeyListener {
                     }
                 }
             }
+            System.out.println("3");
             MenuAyuda();
             EliminarBandera();
         } catch (SQLException ex) {
@@ -230,8 +233,6 @@ public class Menu extends javax.swing.JFrame implements KeyListener {
             while (Control.rs.next()) {
                 listaSeccion.add(new seccion(Control.rs.getInt(1), Control.rs.getString(2)));
             }
-
-            Control.cerrarConexion();
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
@@ -276,9 +277,7 @@ public class Menu extends javax.swing.JFrame implements KeyListener {
 
     public void EliminarBandera() throws ClassNotFoundException {
         Control.conectar();
-        Control.ejecuteUpdate("delete from detalle a, producto b \n"
-                + "where a.cod_producto=b.cod_producto\n"
-                + "and b.bandera=0");
+        Control.ejecuteUpdate("delete from detalle a where a.cod_producto in (select cod_producto from producto where cod_producto=a.cod_producto and bandera=0)");
         Control.ejecuteUpdate("delete from producto where bandera=0");
         Control.cerrarConexion();
     }
@@ -484,19 +483,12 @@ public class Menu extends javax.swing.JFrame implements KeyListener {
     // End of variables declaration//GEN-END:variables
 
     @Override
-    public void keyTyped(KeyEvent e) {
-        System.out.println(":: " + e.getKeyChar());
+    public void run() {
+        Thread ct = Thread.currentThread();
 
-    }
+        while (ct == Hilo1) {
+            System.out.println("---");
 
-    @Override
-    public void keyReleased(KeyEvent e) {
-        System.out.println("::-- " + e.getKeyChar());
-
-    }
-
-    @Override
-    public void keyPressed(KeyEvent e) {
-        System.out.println("--.- " + e.getKeyChar());
+        }
     }
 }

@@ -12,11 +12,13 @@ import Control.Tabla;
 import Control.Control;
 import Control.Sequence;
 import java.awt.Toolkit;
+import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ImageIcon;
 import vw.model.Articulo;
 
 /**
@@ -44,7 +46,9 @@ public class CargaArchivo extends javax.swing.JFrame {
             this.p = p;
             iniciar();
             jTextField1.setText("" + p.size());
-            setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/facelet/icon.png")));
+            URL url = getClass().getResource("/images/facelet/icon.png");
+            ImageIcon img = new ImageIcon(url);
+            setIconImage(img.getImage());
         } catch (SQLException ex) {
             Logger.getLogger(CargaArchivo.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -66,10 +70,12 @@ public class CargaArchivo extends javax.swing.JFrame {
 
     public void iniciar() throws SQLException {
         try {
+            System.out.println("Tamaño inicial : " + p.size());
             String r = "";
             Control.conectar();
             Control.con.setAutoCommit(false);
             Producto temp = null;
+            int cantidad = 0;
             for (int i = 0; i < p.size(); i++) {
                 temp = (Producto) p.get(i);
                 Control.ejecuteQuery("select cantidad from producto where cod_producto='" + temp.getCodigo() + "'");
@@ -77,9 +83,18 @@ public class CargaArchivo extends javax.swing.JFrame {
                     temp.setEsta("Existe");
                     temp.setCantBD(Control.rs.getInt(1));
                 } else {
-                    temp.setEsta("");
+                    temp.setEsta("-");
                     temp.setCantBD(0);
                 }
+//                if (temp.getCantBD() >= 0) {
+//                    cantidad = temp.getCantidad() - temp.getCantBD();
+//                } else {
+//                    cantidad = temp.getCantBD() + temp.getCantidad();
+//                }
+//                if (cantidad == 0) {
+//                    p.remove(temp);
+//                }
+
             }
 
         } catch (Exception ex) {
@@ -94,6 +109,7 @@ public class CargaArchivo extends javax.swing.JFrame {
                     "Codigo", "Nombre", "Costo", "Iva", "Precio", "Cantidad", "Estado"
                 }
         ));
+        System.out.println("Tamaño final : " + p.size());
         Tabla t = new Tabla(p);
         t.calculeFrecuenciasV();
         muevaLosDatosFre(t);
@@ -113,8 +129,7 @@ public class CargaArchivo extends javax.swing.JFrame {
         Producto pr = null;
         Date fecha = new Date();
         int Noentro = 0;
-        int ActualizoP = 0;
-        int ActualizoN = 0;
+        int Actualizo = 0;
         int Creo = 0;
         ArrayList<String> listaError = new ArrayList();
         boolean f = false;
@@ -125,22 +140,21 @@ public class CargaArchivo extends javax.swing.JFrame {
         int cantidad = 0;
         int cantFinal = 0;
         int cantSAlida = 0;
+        int Condicion = 0;
         try {
             Control.conectar();
             Control.con.setAutoCommit(false);
 
             for (int i = 0; i < p.size(); i++) {
                 pr = (Producto) p.get(i);
-                System.out.println("Producto : " + pr.getCodigo());
                 double precio = pr.getPrecio_venta();
                 if (pr.getCantBD() >= 0) {
                     cantidad = pr.getCantidad() - pr.getCantBD();
                 } else {
-                    cantidad = pr.getCantBD() - pr.getCantidad();
+                    cantidad = pr.getCantBD() + pr.getCantidad();
                 }
-                System.out.println("cantidad : " + cantidad);
                 if (pr.getEsta().equalsIgnoreCase("Existe") && cantidad != 0) {
-                    ActualizoP++;
+                    Actualizo++;
                     if (cantidad > 0 && pr.getCantBD() < 0) {
                         tipo = "Entrada";
                         cantFinal = cantidad;
@@ -158,48 +172,78 @@ public class CargaArchivo extends javax.swing.JFrame {
                         cantFinal = pr.getCantidad();
                         cantSAlida = cantidad;
                     }
-                    System.out.println("paso 1");
-                    f = Control.ejecuteUpdate("insert into Salida_Entrada values("
-                            + codigo_sal + ",'" + tipo + "'," + Math.abs(cantSAlida) + ",'" + fecha + "','"
-                            + pr.getCodigo() + "','" + mns + "','" + nombre + "')");
-                    System.out.println("paso 2");
-                    f = Control.ejecuteUpdate("update producto set cantidad=" + cantFinal + " where"
-                            + " cod_producto='" + pr.getCodigo() + "'");
-
                 } else if (pr.getEsta().equalsIgnoreCase("Existe") && cantidad == 0) {
-
-                    if (cantidad == 0 && pr.getCantBD() < 0) {
-                        tipo = "Entrada";
-                        ActualizoN++;
-                        cantFinal = cantidad;
-                        cantSAlida = pr.getCantidad();
-
+                    f = true;
+                    Noentro++;
+//No ingresa datos
+                } else {
+                    Creo++;
+                }
+            }
+            String op[] = new String[2];
+            op[0] = "Si";
+            op[1] = "No";
+            Condicion = Entrada.menu("BackBox", "Detalle Cambios en el Sistema. \n "
+                    + "Detalles. \n"
+                    + "Nuevos Productos : " + Creo + "\n"
+                    + "Actualizo Productos : " + Actualizo + "\n"
+                    + "Sin Operacion : " + Noentro + "\n ¿Desea Realizar los combios ?", op);
+            System.err.println("valor de condicion : " + Condicion);
+            if (Condicion == 1) {
+                System.out.println("Entro a Condicion");
+                for (int i = 0; i < p.size(); i++) {
+                    pr = (Producto) p.get(i);
+                    System.out.println("Producto : " + pr.getCodigo());
+                    double precio = pr.getPrecio_venta();
+                    if (pr.getCantBD() >= 0) {
+                        cantidad = pr.getCantidad() - pr.getCantBD();
+                    } else {
+                        cantidad = pr.getCantBD() + pr.getCantidad();
+                    }
+                    System.out.println("cantidad : " + cantidad);
+                    if (pr.getEsta().equalsIgnoreCase("Existe") && cantidad != 0) {
+                        Actualizo++;
+                        if (cantidad > 0 && pr.getCantBD() < 0) {
+                            tipo = "Entrada";
+                            cantFinal = cantidad;
+                            cantSAlida = pr.getCantidad();
+                        } else if (cantidad > 0 && pr.getCantBD() > 0) {
+                            tipo = "Entrada";
+                            cantFinal = pr.getCantidad();
+                            cantSAlida = cantidad;
+                        } else if (cantidad < 0 && pr.getCantBD() < 0) {
+                            tipo = "Entrada";
+                            cantFinal = cantidad;
+                            cantSAlida = pr.getCantidad();
+                        } else if (cantidad < 0 && pr.getCantBD() > 0) {
+                            tipo = "Salida";
+                            cantFinal = pr.getCantidad();
+                            cantSAlida = cantidad;
+                        }
                         System.out.println("paso 1");
                         f = Control.ejecuteUpdate("insert into Salida_Entrada values("
                                 + codigo_sal + ",'" + tipo + "'," + Math.abs(cantSAlida) + ",'" + fecha + "','"
                                 + pr.getCodigo() + "','" + mns + "','" + nombre + "')");
                         System.out.println("paso 2");
-                        f = Control.ejecuteUpdate("update producto set cantidad=" + 1 + " where"
+                        f = Control.ejecuteUpdate("update producto set cantidad=" + cantFinal + " where"
                                 + " cod_producto='" + pr.getCodigo() + "'");
 
-                    } else {
-                        Noentro++;
+                    } else if (pr.getEsta().equalsIgnoreCase("Existe") && cantidad == 0) {
                         System.out.println("No hace nada");
                         f = true;
-                    }
-
+                        Noentro++;
 //No ingresa datos
-                } else {
-                    Creo++;
-                    f = Control.ejecuteUpdate("insert into producto values('" + pr.getCodigo() + "','" + pr.getNombre() + "',"
-                            + pr.getCosto() + "," + pr.getIva() + "," + precio + "," + pr.getCategoria() + ","
-                            + pr.getCantidad() + ",'A','n'," + pr.getDesc() + "," + precio + ")");
+                    } else {
+                        Creo++;
+                        f = Control.ejecuteUpdate("insert into producto values('" + pr.getCodigo() + "','" + pr.getNombre() + "',"
+                                + pr.getCosto() + "," + pr.getIva() + "," + precio + "," + pr.getCategoria() + ","
+                                + pr.getCantidad() + ",'A','n'," + pr.getDesc() + "," + precio + ")");
+                    }
+                    if (f == false) {
+                        break;
+                    }
+                    codigo_sal++;
                 }
-                if (f == false) {
-                    break;
-                }
-                codigo_sal++;
-
             }
         } catch (Exception ex) {
 
@@ -208,28 +252,22 @@ public class CargaArchivo extends javax.swing.JFrame {
             Control.con.setAutoCommit(true);
             Control.cerrarConexion();
         }
-
-        if (f) {
-            Entrada.muestreMensajeV("EXITO AL CARGAR \n " + ""
-                    + " Detalles"
-                    + " Nuevos Productos : " + Creo + "\n"
-                    + " Actualizo Productos : " + ActualizoP + "\n"
-                    + " Actualizo Productos : " + ActualizoN + "\n"
-                    + " Sin Operacion : " + Noentro);
-            Articulo ar;
-            try {
-                ar = new Articulo(usuario, ListAcciones, 1);
-                ar.setVisible(true);
-            } catch (ClassNotFoundException ex) {
-                Logger.getLogger(Entrada_Nueva.class.getName()).log(Level.SEVERE, null, ex);
+        if (Condicion == 1) {
+            if (f) {
+                Entrada.muestreMensajeV("Carga Masiva Exitosa");
+                Articulo ar;
+                try {
+                    ar = new Articulo(usuario, ListAcciones, 1);
+                    ar.setVisible(true);
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(Entrada_Nueva.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                this.dispose();
+            } else {
+                Entrada.muestreMensajeV("Error al Cargar Archivo  "
+                        + javax.swing.JOptionPane.INFORMATION_MESSAGE);
             }
-            this.dispose();
-        } else {
-            Entrada.muestreMensajeV("Error al Cargar Archivo  " + pr.getCodigo(),
-                    javax.swing.JOptionPane.INFORMATION_MESSAGE);
         }
-
-        Control.cerrarConexion();
 
     }
 
@@ -250,6 +288,7 @@ public class CargaArchivo extends javax.swing.JFrame {
         jTable1 = new javax.swing.JTable();
         jLabel2 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
 
         jButton3.setText("Nuevo");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
@@ -259,12 +298,13 @@ public class CargaArchivo extends javax.swing.JFrame {
         });
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setPreferredSize(new java.awt.Dimension(815, 560));
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         Nuevo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-mdpi/ic_add_black_24dp.png"))); // NOI18N
-        Nuevo.setText("Nuevo");
+        Nuevo.setText("CARGAR");
         Nuevo.setBorder(null);
         Nuevo.setBorderPainted(false);
         Nuevo.setContentAreaFilled(false);
@@ -277,6 +317,7 @@ public class CargaArchivo extends javax.swing.JFrame {
                 NuevoActionPerformed(evt);
             }
         });
+        jPanel1.add(Nuevo, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 460, 82, -1));
 
         jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-xhdpi/ic_arrow_back_black_24dp.png"))); // NOI18N
         jButton4.setBorder(null);
@@ -286,6 +327,7 @@ public class CargaArchivo extends javax.swing.JFrame {
                 jButton4ActionPerformed(evt);
             }
         });
+        jPanel1.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 450, -1, -1));
 
         jTable1.setDropMode(javax.swing.DropMode.INSERT_ROWS);
         jTable1.setEditingColumn(0);
@@ -293,59 +335,28 @@ public class CargaArchivo extends javax.swing.JFrame {
         jTable1.setGridColor(new java.awt.Color(102, 102, 102));
         jScrollPane2.setViewportView(jTable1);
 
+        jPanel1.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(15, 65, 770, 370));
+
         jLabel2.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         jLabel2.setText("Cantidad");
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 40, -1, -1));
 
         jTextField1.setEnabled(false);
+        jPanel1.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(693, 40, 91, -1));
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(Nuevo)
-                .addGap(604, 604, 604)
-                .addComponent(jButton4)
-                .addGap(58, 58, 58))
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(22, 22, 22)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(64, 64, 64))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 740, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField1)
-                    .addComponent(jLabel2))
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 432, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton4, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(Nuevo, javax.swing.GroupLayout.Alignment.TRAILING))
-                .addGap(53, 53, 53))
-        );
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel1.setText("CARGA MASIVA DE DATOS");
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 40, -1, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 804, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 539, Short.MAX_VALUE)
         );
 
         pack();
@@ -377,6 +388,7 @@ public class CargaArchivo extends javax.swing.JFrame {
     private javax.swing.JButton Nuevo;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane2;

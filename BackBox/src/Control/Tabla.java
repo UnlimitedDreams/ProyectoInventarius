@@ -36,7 +36,7 @@ public class Tabla {
             frecuencias[3][nrofreq] = "" + pro.get(i).getIva();
             frecuencias[4][nrofreq] = "" + pro.get(i).getPrecio_venta();
             frecuencias[5][nrofreq] = "" + pro.get(i).getCantidad();    
-            frecuencias[6][nrofreq] = "" + pro.get(i).getEsta();;
+            frecuencias[6][nrofreq] = "" + pro.get(i).getEsta();
             nrofreq++;                     
         }
 

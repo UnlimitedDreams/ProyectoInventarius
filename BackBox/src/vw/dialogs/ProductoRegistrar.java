@@ -32,7 +32,7 @@ public class ProductoRegistrar extends javax.swing.JDialog {
     String nom;
     String fac;
     Entrada_Nueva v = null;
-    ArrayList<Integer> ListAcciones = new ArrayList();    
+    ArrayList<Integer> ListAcciones = new ArrayList();
     ArrayList<List_Categoria> listIvas = new ArrayList();
 
     /**
@@ -81,12 +81,12 @@ public class ProductoRegistrar extends javax.swing.JDialog {
         }
     }
 
-    public void Categoria() {        
+    public void Categoria() {
         try {
             Control.conectar();
             Control.ejecuteQuery("select cod_categoria,rtrim(ltrim(descripcion)) from categoria order by descripcion");
-            while (Control.rs.next()) {                
-                categoria.addItem(Control.rs.getInt(1)+"-"+Control.rs.getString(2));
+            while (Control.rs.next()) {
+                categoria.addItem(Control.rs.getInt(1) + "-" + Control.rs.getString(2));
             }
             Control.cerrarConexion();
         } catch (ClassNotFoundException ex) {
@@ -100,8 +100,9 @@ public class ProductoRegistrar extends javax.swing.JDialog {
         int cant = 0;
         try {
             Control.ejecuteQuery("select sum(cuenta) from (\n"
-                    + "select count(*) cuenta from producto a, venta_pro p , venta v where a.cod_producto=p.cod_prodcuto and p.cod_factura=v.cod_factura and \n"
-                    + "cod_producto='" + codigo.getText() + "'\n"
+                    + "select count(*) cuenta from producto a, venta_pro p , venta v where a.cod_producto=p.cod_producto "
+                    + "and p.cod_factura=v.cod_factura and \n"
+                    + "a.cod_producto='" + codigo.getText() + "'\n"
                     + "union all \n"
                     + "select count(*) cuenta from producto where cod_producto='" + codigo.getText() + "' )Y");
 
@@ -119,30 +120,41 @@ public class ProductoRegistrar extends javax.swing.JDialog {
     public void registrar() throws ClassNotFoundException, SQLException {
         boolean proceso = false;
         try {
+            int codProducto = Sequence.seque("select max(cod_producto) from producto");
+            System.out.println("cod_producto  : " + codProducto);
             Control.conectar();
             Control.con.setAutoCommit(false);
             if (buscar_cod() == 0) {
-                String []categori=categoria.getSelectedItem().toString().split("-");
-                System.out.println("-- " + categori[0]);
+                System.out.println("Paso por aqui");
+                String[] categori = categoria.getSelectedItem().toString().split("-");
                 int cate = Integer.parseInt(categori[0]);
                 String nomcategoria = iva.getSelectedItem().toString();
-                String val[] = nomcategoria.split("%");                
+                String val[] = nomcategoria.split("%");
                 int cod = 0;
-                for (List_Categoria iva : listIvas) {                   
+                int ValorIVa = 0;
+                for (List_Categoria iva : listIvas) {
                     if (iva.getNom().equalsIgnoreCase(val[0].replace(" ", ""))) {
                         cod = iva.getCod();
+                        ValorIVa = Integer.parseInt(iva.getNom());
                     }
                 }
-                
-                if (cate != 0 && cod!=0) {
+
+                if (cate != 0 && cod != 0) {
                     double costo = Double.parseDouble(costoF.getText());
                     double precio = Double.parseDouble(precioVenta.getText());
-                    boolean r = Control.ejecuteUpdate("insert into producto values('" + codigo.getText() + "','" + nombre.getText() + "',"
+                    System.out.println("insert into producto values('" + nombre.getText() + "',"
                             + costoF.getText() + "," + cod + "," + precio + ","
-                            + cate + "," + 0 + ",'A','n',0," + precio + "," + Integer.parseInt(stock.getText()) + ",0)");
+                            + cate + "," + 0 + ",'A','n',0," + precio + "," + Integer.parseInt(stock.getText()) + ",0,'" + codigo.getText() + "'," + codProducto + ")");
+                    boolean r = Control.ejecuteUpdate("insert into producto values('" + nombre.getText() + "',"
+                            + costoF.getText() + "," + cod + "," + precio + ","
+                            + cate + "," + 0 + ",'A','n',0," + precio + "," + Integer.parseInt(stock.getText()) + ",0,'" + codigo.getText() + "'," + codProducto + ")");
                     if (r) {
-                        pr.add(new Producto(codigo.getText(), nombre.getText(), Double.parseDouble(costoF.getText()), precio,
-                                Integer.parseInt(cantidad.getText()), Integer.parseInt(stock.getText())));
+                        Producto p = new Producto(codigo.getText(), nombre.getText(), Double.parseDouble(costoF.getText()), precio,
+                                Integer.parseInt(cantidad.getText()), Integer.parseInt(stock.getText()));
+                        p.setIva(ValorIVa);
+                        p.setCodigoProducto(codProducto);
+                        pr.add(p);
+
                         proceso = true;
 
                     } else {
@@ -179,7 +191,6 @@ public class ProductoRegistrar extends javax.swing.JDialog {
         }
 
     }
-
 
     /**
      * This method is called from within the constructor to initialize the form.

@@ -43,29 +43,53 @@ public class Entrada_Nueva extends javax.swing.JFrame {
 
     ArrayList<Producto> productos = new ArrayList();
     String nom;
+    String nombreUsuario;
     boolean condicionfiltro;
     int codEmpresa;
     ArrayList<Integer> ListAcciones = new ArrayList();
+    ArrayList<Integer> listIvas = new ArrayList();
 
     public Entrada_Nueva(ArrayList x, String nom, String fac, ArrayList acciones, int codEmpresa) throws ClassNotFoundException {
-        initComponents();
-        URL url = getClass().getResource("/images/facelet/icon.png");
-        ImageIcon img = new ImageIcon(url);
-        setIconImage(img.getImage());
-        c.setVisible(false);
-        this.nom = nom;
-        this.codEmpresa = codEmpresa;
-        this.condicionfiltro = false;
-        this.ListAcciones = acciones;
-        this.setLocationRelativeTo(null);
-        this.setResizable(false);
-        Categoria2();
-        this.productos = x;
-        iniciar();
-        recuperar_fecha();
-        jTextField1.setText(fac);
-        jLabel4.setText("0.0");
-        sumarTot();
+        try {
+            initComponents();
+            URL url = getClass().getResource("/images/facelet/icon.png");
+            ImageIcon img = new ImageIcon(url);
+            setIconImage(img.getImage());
+            c.setVisible(false);
+            this.nom = nom;
+            System.out.println("Nombre : " + nom);
+            this.codEmpresa = codEmpresa;
+            this.condicionfiltro = false;
+            this.ListAcciones = acciones;
+            this.setLocationRelativeTo(null);
+            this.setResizable(false);
+            Categoria2();
+            this.productos = x;
+            iniciar();
+            recuperar_fecha();
+            jTextField1.setText(fac);
+            jLabel4.setText("0.0");
+            sumarTot();
+            ConfigurarIva();
+            cargarUsuario();
+        } catch (SQLException ex) {
+            Logger.getLogger(Entrada_Nueva.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void ConfigurarIva() throws SQLException {
+        try {
+            listIvas.clear();
+            Control.conectar();
+            Control.ejecuteQuery("select porcentaje from maestro_iva");
+            while (Control.rs.next()) {
+                listIvas.add(Control.rs.getInt(1));
+            }
+            Control.cerrarConexion();
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Venta.class
+                    .getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public void recuperar_fecha() {
@@ -112,12 +136,29 @@ public class Entrada_Nueva extends javax.swing.JFrame {
 
     public void muevaLosDatosFre(Tabla3 x) {
         jTable2.getDefaultEditor(null);
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < 7; i++) {
             for (int k = 0; k < x.getNrofreq(); k++) {
+                System.out.println("--- : " + x.frecuencias[i][k]);
                 jTable2.setValueAt(x.frecuencias[i][k], k, i);
 
             }
         }
+    }
+
+    public void cargarUsuario() throws SQLException, ClassNotFoundException {
+        Control.conectar();
+        Control.ejecuteQuery("select nombre,apellido,codempresa from usuario,persona where \n"
+                + "usuario.cedula=persona.cedula and  cod_usuario=" + nom);
+        String nombre = "";
+        int empresa = 0;
+        while (Control.rs.next()) {
+            nombre = Control.rs.getString(1) + " " + Control.rs.getString(2);
+            empresa = Control.rs.getInt(3);
+        }
+        this.codEmpresa = empresa;
+        this.nombreUsuario = nombre;
+        Control.cerrarConexion();
+
     }
 
     @SuppressWarnings("unchecked")
@@ -220,113 +261,113 @@ public class Entrada_Nueva extends javax.swing.JFrame {
         jTable2.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
         jTable2.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null}
             },
             new String [] {
-                "Código", "Nombre", "Costo", "Cantidad", "Precio", "Stock"
+                "Código", "Nombre", "Costo", "Precio", "Iva", "Cantidad", "Stock"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, true, true, true, true, true
+                false, true, true, true, true, true, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -440,6 +481,7 @@ public class Entrada_Nueva extends javax.swing.JFrame {
         jPanel1.add(comprass, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 50, 170, 25));
 
         jTextField2.setFont(new java.awt.Font("Segoe UI Light", 0, 18)); // NOI18N
+        jTextField2.setToolTipText("Busca un codigo de Producto");
         jTextField2.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 jTextField2FocusLost(evt);
@@ -494,43 +536,58 @@ public class Entrada_Nueva extends javax.swing.JFrame {
             boolean Rfinal = false;
             if (ajustar_Datos_CalculoCosto()) {
                 try {
+                    System.out.println("Valido todo");
                     Date date = fechaActual.getDate();
-                    SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd");
+                    SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd  hh:mm:ss");
                     String fecha = format2.format(date);
                     Producto pro = null;
                     String v[] = proveedores.getSelectedItem().toString().split("-");
                     if (VerificarFactura() == false) {
+                        System.out.println("Sigue por aqui");
                         boolean r = false;
                         boolean r1 = false;
                         int codigo_detalle = Sequence.seque("select max(cod_detalle) from detalle");
-                        Control.conectar();
-                        Control.con.setAutoCommit(false);
-                        for (int i = 0; i < productos.size(); i++) {
-                            pro = (Producto) productos.get(i);
-                            r = Control.ejecuteUpdate("insert into detalle values(" + codigo_detalle + ",'" + fecha + "',"
-                                    + pro.getCantidad() + "," + pro.getCosto() + ","
-                                    + v[0] + ",'" + jTextField1.getText() + "','" + pro.getCodigo() + "'"
-                                    + ",'" + comprass.getSelectedItem().toString() + "')");
-                            codigo_detalle++;
-
-                            if (r) {
-                                r1 = Control.ejecuteUpdate("update producto set cantidad=cantidad+" + pro.getCantidad() + ","
-                                        + "stock=" + pro.getStock() + ",bandera=1,nombre='" + pro.getNombre() + "',"
-                                        + "precio_venta=" + pro.getPrecio_final()
-                                        + " where cod_producto='" + pro.getCodigo() + "'");
-                                if (r1) {
-                                    int cost = costo(pro.getCodigo());
-                                    boolean f = promedio_costo(cost, pro.getCosto(), pro.getCodigo());
+                        try {
+                            Control.conectar();
+                            Control.con.setAutoCommit(false);
+                            for (int i = 0; i < productos.size(); i++) {
+                                pro = (Producto) productos.get(i);                               
+                                r = Control.ejecuteUpdate("insert into detalle values(" + codigo_detalle + ",'" + fecha + "',"
+                                        + pro.getCantidad() + "," + pro.getCosto() + ","
+                                        + v[0] + ",'" + jTextField1.getText() + "','" + comprass.getSelectedItem().toString() + "'"
+                                        + "," + pro.getIva() + "," + pro.getPrecio_venta() + "," + codEmpresa + ",'" + nombreUsuario + "'," + pro.getCodigoProducto() + ")");
+                                codigo_detalle++;
+                                if (r) {
+                                    r1 = Control.ejecuteUpdate("update producto set cantidad=cantidad+" + pro.getCantidad() + ","
+                                            + "stock=" + pro.getStock() + ",bandera=1,nombre='" + pro.getNombre() + "',"
+                                            + "precio_venta=" + pro.getPrecio_venta()+",precio_desc="+pro.getPrecio_venta()
+                                            + " where cod_producto=" + pro.getCodigoProducto() + "");
+                                    if (r1) {
+                                        System.out.println("Paso Bien");
+                                        int cost = costo(pro.getCodigoProducto());
+                                        boolean f = promedio_costo(cost, pro.getCosto(), pro.getCodigoProducto());
+                                    }
                                 }
                             }
-                        }
-                        if (r == true && r1 == true) {
-                            Connection con = Control.con;
-                            generarFactura(jTextField1.getText(), fecha, con, v[1]);
-                            Rfinal = true;
+                            if (r == true && r1 == true) {
+//                                Connection con = Control.con;
+//                            generarFactura(jTextField1.getText(), fecha, con, v[1]);
+                                Rfinal = true;
 
-                        } else {
-                            Entrada.muestreMensajeV("Error al Registrar Producto Pongase en contacto con Soporte");
+                            } else {
+                                Entrada.muestreMensajeV("Error al Registrar Producto Pongase en contacto con Soporte");
+                            }
+
+                        } catch (SQLException ex) {
+                            System.out.println("Error SQL : " + ex.toString());
+                        } finally {
+                            try {
+                                Control.con.commit();
+                                Control.con.setAutoCommit(true);
+                                Control.cerrarConexion();
+                            } catch (SQLException ex) {
+                                Logger.getLogger(Entrada_Nueva.class.getName()).log(Level.SEVERE, null, ex);
+                            }
                         }
 
                     } else {
@@ -538,16 +595,8 @@ public class Entrada_Nueva extends javax.swing.JFrame {
                     }
 
                 } catch (Exception ex) {
-                    System.out.println("Error ----- : " + ex.toString());
-                } finally {
-                    try {
-                        Control.con.commit();
-                        Control.con.setAutoCommit(true);
-                        Control.cerrarConexion();
-                    } catch (SQLException ex) {
-                        Logger.getLogger(Entrada_Nueva.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
+                    System.out.println("Error Proceso : " + ex.toString());
+                } 
 
                 if (Rfinal) {
                     try {
@@ -583,21 +632,21 @@ public class Entrada_Nueva extends javax.swing.JFrame {
         }
     }
 
-    public boolean promedio_costo(int costo, double x, String cod) throws ClassNotFoundException {
+    public boolean promedio_costo(int costo, double x, int cod) throws ClassNotFoundException {
 
         int valor = 0;
         valor = (costo + (int) x) / 2;
         boolean r = Control.ejecuteUpdate("update producto set costo=" + valor
-                + " where cod_producto='" + cod + "'");
+                + " where cod_producto=" + cod );
 
         return r;
     }
 
-    public int costo(String cod) throws ClassNotFoundException {
+    public int costo(int cod) throws ClassNotFoundException {
         int costo = 0;
         try {
             Control.ejecuteQuery("select costo from producto where "
-                    + "cod_producto='" + cod + "'");
+                    + "cod_producto=" + cod );
             while (Control.rs.next()) {
                 costo = Control.rs.getInt(1);
             }
@@ -626,6 +675,7 @@ public class Entrada_Nueva extends javax.swing.JFrame {
         Producto prod = null;
         String mnserror = "N";
         boolean r = true;
+        boolean iva = false;
         int cant = 0;
         double costo = 0;
         double precio = 0;
@@ -646,32 +696,51 @@ public class Entrada_Nueva extends javax.swing.JFrame {
                         r = false;
                         break;
                     }
-                } else if (i == 3 && SoloNumeros((String) jTable2.getValueAt(k, i), 2) == false) {
+                } else if (i == 5 && SoloNumeros((String) jTable2.getValueAt(k, i), 2) == false) {
                     mnserror = "La cantidad debe ser Numerica";
                     r = false;
                     break;
-                } else if (i == 3 && SoloNumeros((String) jTable2.getValueAt(k, i), 2)) {
+                } else if (i == 5 && SoloNumeros((String) jTable2.getValueAt(k, i), 2)) {
                     cant = Integer.parseInt((String) jTable2.getValueAt(k, i));
                     if (cant <= 0) {
                         mnserror = "La cantidad debe ser mayor a cero (0)";
                         r = false;
                         break;
                     }
-                } else if (i == 4 && SoloNumeros((String) jTable2.getValueAt(k, i), 1) == false) {
+                } else if (i == 3 && SoloNumeros((String) jTable2.getValueAt(k, i), 1) == false) {
                     mnserror = "El valor del Precio debe ser Numerico";
                     r = false;
                     break;
-                } else if (i == 4 && SoloNumeros((String) jTable2.getValueAt(k, i), 1)) {
+                } else if (i == 3 && SoloNumeros((String) jTable2.getValueAt(k, i), 1)) {
                     precio = Double.parseDouble((String) jTable2.getValueAt(k, i));
                     if (precio <= 0) {
                         mnserror = "El valor del Precio Debe ser mayor a cero (0)";
                         r = false;
                         break;
                     }
-                } else if (i == 5 && SoloNumeros((String) jTable2.getValueAt(k, i), 2) == false) {
+                } else if (i == 6 && SoloNumeros((String) jTable2.getValueAt(k, i), 2) == false) {
                     mnserror = "La cantidad del Stock debe ser Numerico";
                     r = false;
                     break;
+
+                } else if (i == 4 && SoloNumeros((String) jTable2.getValueAt(k, i), 1) == false) {
+                    mnserror = "El valor del iva debe ser Numerico";
+                    r = false;
+                    break;
+                } else if (i == 4 && SoloNumeros((String) jTable2.getValueAt(k, i), 1)) {
+                    for (int Valoriva : listIvas) {
+                        System.out.println("" + (String) jTable2.getValueAt(k, i) + "=" + Valoriva);
+                        if (Integer.parseInt((String) jTable2.getValueAt(k, i)) == Valoriva) {
+
+                            iva = true;
+                        }
+                    }
+                    if (iva == false) {
+                        mnserror = "El valor del iva debe estar dentro de los parametros del iva permitido";
+                        r = false;
+                        break;
+                    }
+
                 }
             }
         }
@@ -685,7 +754,7 @@ public class Entrada_Nueva extends javax.swing.JFrame {
         boolean costo = false;
         Producto prod = null;
         double valorCosto = 0;
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < 7; i++) {
             for (int k = 0; k < productos.size(); k++) {
                 prod = (Producto) productos.get(k);
                 if (i == 1) {
@@ -693,10 +762,12 @@ public class Entrada_Nueva extends javax.swing.JFrame {
                 } else if (i == 2) {
                     prod.setCosto(Double.parseDouble((String) jTable2.getValueAt(k, i)));
                 } else if (i == 3) {
-                    prod.setCantidad(Integer.parseInt((String) jTable2.getValueAt(k, i)));
+                    prod.setPrecio_venta(Double.parseDouble((String) jTable2.getValueAt(k, i)));
                 } else if (i == 4) {
-                    prod.setPrecio_final(Double.parseDouble((String) jTable2.getValueAt(k, i)));
+                    prod.setIva(Integer.parseInt((String) jTable2.getValueAt(k, i)));
                 } else if (i == 5) {
+                    prod.setCantidad(Integer.parseInt((String) jTable2.getValueAt(k, i)));
+                } else if (i == 6) {
                     prod.setStock(Integer.parseInt((String) jTable2.getValueAt(k, i)));
                 }
             }
@@ -706,6 +777,9 @@ public class Entrada_Nueva extends javax.swing.JFrame {
         }
         if (valorCosto > 0) {
             costo = true;
+        }
+        for (Producto producto : productos) {
+            System.out.println("-" + producto.toString());
         }
         return costo;
     }
@@ -851,15 +925,18 @@ public class Entrada_Nueva extends javax.swing.JFrame {
                 try {
                     Control.conectar();
                     Producto temp = null;
-                    String query = "select nombre,precio_desc,iva,costo,stock "
-                            + "from producto\n"
-                            + "where\n"
-                            + "producto.estado='A' and cod_producto='" + cod + "'";
+
+                    String query = "select nombre,precio_desc,cast(maestro_iva.porcentaje as numeric(10)),costo,stock,maestro_iva.codiva,cod_producto "
+                            + "from producto,maestro_iva\n"
+                            + "where  producto.iva=maestro_iva.codiva and \n"
+                            + "producto.estado='A' and serie_producto='" + cod + "'";
+                    System.out.println(query);
                     Control.ejecuteQuery(query);
                     String nom = "";
                     double precio = 0;
                     double costo = 0;
-                    int iva = 0;
+                    int iva = 0, cod_producto = 0;
+                    int ivaMaestro = 0;
                     int stock = 0;
                     boolean r = false;
                     while (Control.rs.next()) {
@@ -869,11 +946,15 @@ public class Entrada_Nueva extends javax.swing.JFrame {
                         iva = Control.rs.getInt(3);
                         costo = Control.rs.getDouble(4);
                         stock = Control.rs.getInt(5);
+                        ivaMaestro = Control.rs.getInt(6);
+                        cod_producto = Control.rs.getInt(7);
                     }
                     Control.cerrarConexion();
                     if (r) {
                         temp = new Producto(cod, nom, costo, iva, precio, 1, 0);
                         temp.setStock(stock);
+                        temp.setCodigoIva(ivaMaestro);
+                        temp.setCodigoProducto(cod_producto);
                         productos.add(temp);
                     }
                 } catch (ClassNotFoundException ex) {
@@ -945,18 +1026,24 @@ public class Entrada_Nueva extends javax.swing.JFrame {
     public void Buscar() throws ClassNotFoundException {
         String query = "";
         if (SoloNumeros(jTextField2.getText())) {
-            query = "select distinct  cod_producto \"Codigo\",nombre,precio_desc \"Precio Venta\""
-                    + " from producto,categoria where\n"
-                    + "  producto.cod_categoria=categoria.cod_categoria and \n"
-                    + "  producto.cod_producto ILIKE ('%" + jTextField2.getText() + "')  and producto.estado='A'"
-                    + "  union all select  '0'  \"Código\",'' \"Nombre\",0  \"Precio\" limit 40  ";
+            query = "select distinct * from (\n"
+                    + "select  distinct serie_producto \"Código\",upper(nombre)\"Nombre\",upper(categoria.descripcion) \"Categoría \",costo \"Costo\",iva \"IVA\",precio_desc \"Precio\",descu \"Descuento\",cantidad \"Cantidad\"\n"
+                    + "from producto,categoria where\n"
+                    + "producto.cod_categoria=categoria.cod_categoria and   \n"
+                    + "producto.serie_producto ILIKE ('%" + jTextField2.getText() + "')  and producto.estado='A'  \n"
+                    + "union all\n"
+                    + "select  distinct serie_producto \"Código\",upper(nombre)\"Nombre\",upper(categoria.descripcion) \"Categoría \",costo \"Costo\",iva \"IVA\",precio_desc \"Precio\",descu \"Descuento\",cantidad \"Cantidad\"\n"
+                    + "from producto,categoria where\n"
+                    + "producto.cod_categoria=categoria.cod_categoria and   \n"
+                    + "producto.serie_producto ILIKE ('%" + jTextField2.getText() + "%')  and producto.estado='A'  )y "
+                    + "limit 40 ";
         } else {
-            query = "select distinct  cod_producto \"Codigo\",nombre,precio_desc \"Precio Venta\""
+            query = "select distinct  serie_producto \"Codigo\",nombre,precio_desc \"Precio Venta\""
                     + " from producto,categoria where "
                     + "  producto.cod_categoria=categoria.cod_categoria and "
                     + "  (categoria.descripcion ILIKE ('%" + jTextField2.getText() + "%') or  "
                     + "producto.nombre ILIKE ('%" + jTextField2.getText() + "%') or "
-                    + " producto.cod_producto ILIKE ('%" + jTextField2.getText() + "%') )  and producto.estado='A'";
+                    + " producto.serie_producto ILIKE ('%" + jTextField2.getText() + "%') )  and producto.estado='A'";
         }
 
         System.out.println(query);
@@ -1047,15 +1134,16 @@ public class Entrada_Nueva extends javax.swing.JFrame {
                 try {
                     Control.conectar();
                     Producto temp = null;
-                    String query = "select nombre,precio_desc,iva,costo,stock "
-                            + "from producto\n"
-                            + "where\n"
-                            + "producto.estado='A' and cod_producto='" + cod + "'";
+                    String query = "select nombre,precio_desc,cast(maestro_iva.porcentaje as numeric(10)),costo,stock,maestro_iva.codiva,cod_producto  "
+                            + "from producto,maestro_iva\n"
+                            + "where  producto.iva=maestro_iva.codiva and \n"
+                            + "producto.estado='A' and serie_producto='" + cod + "'";
                     Control.ejecuteQuery(query);
                     String nom = "";
                     double precio = 0;
                     double costo = 0;
-                    int iva = 0;
+                    int iva = 0, cod_producto = 0;
+                    int maestroIva = 0;
                     int stock = 0;
                     boolean r = false;
                     while (Control.rs.next()) {
@@ -1065,11 +1153,15 @@ public class Entrada_Nueva extends javax.swing.JFrame {
                         iva = Control.rs.getInt(3);
                         costo = Control.rs.getDouble(4);
                         stock = Control.rs.getInt(5);
+                        maestroIva = Control.rs.getInt(6);
+                        cod_producto = Control.rs.getInt(7);
                     }
                     Control.cerrarConexion();
                     if (r) {
                         temp = new Producto(cod, nom, costo, iva, precio, 1, 0);
                         temp.setStock(stock);
+                        temp.setCodigoIva(maestroIva);
+                        temp.setCodigoProducto(cod_producto);
                         productos.add(temp);
                     }
                 } catch (ClassNotFoundException ex) {
