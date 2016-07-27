@@ -120,13 +120,13 @@ public class Ayudas extends javax.swing.JFrame {
             .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 560, Short.MAX_VALUE)
         );
 
-        ayuda.setBackground(new java.awt.Color(196, 70, 38));
+        ayuda.setBackground(java.awt.Color.white);
         ayuda.setForeground(new java.awt.Color(196, 70, 38));
         ayuda.setFont(new java.awt.Font("Segoe UI Light", 1, 14)); // NOI18N
         ayuda.setPreferredSize(new java.awt.Dimension(382, 540));
 
         titulo.setFont(new java.awt.Font("Segoe UI Light", 1, 14)); // NOI18N
-        titulo.setForeground(java.awt.Color.lightGray);
+        titulo.setForeground(java.awt.Color.darkGray);
         titulo.setText("Ayudas");
 
         ayudaTextual.setEditable(false);
