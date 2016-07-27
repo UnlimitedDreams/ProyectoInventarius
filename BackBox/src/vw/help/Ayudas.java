@@ -12,14 +12,14 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.regex.Pattern;
 import javax.swing.ImageIcon;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreePath;
 
 /**
  *
- * @author usuario
+ * @author Miguel Lemoz
  */
 public class Ayudas extends javax.swing.JFrame {
 
@@ -28,6 +28,9 @@ public class Ayudas extends javax.swing.JFrame {
      *
      * @param codigo
      */
+    TreeMap ayudasPrimerNivel = new TreeMap();
+    TreeMap ayudasSegundoNivel = new TreeMap();
+
     public Ayudas(int codigo) {
         initComponents();
         crearArbol();
@@ -38,9 +41,8 @@ public class Ayudas extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
     }
 
-    public void crearArbol() {
+    private void crearArbol() {
         TreeMap arbolPrincipal = new TreeMap();
-        TreeMap arbolSecundario = new TreeMap();
         DefaultMutableTreeNode carpetaRaiz = new DefaultMutableTreeNode("Inicio");
         DefaultTreeModel modelo = new DefaultTreeModel(carpetaRaiz);
         listaAyudas.setModel(modelo);
@@ -49,43 +51,29 @@ public class Ayudas extends javax.swing.JFrame {
             Control.ejecuteQuery("SELECT idvista, nombre, ayuda\n"
                     + "  FROM helps.vistas;");
             while (Control.rs.next()) {
-                System.out.println("RS:" + Control.rs.getString(1)
-                        + " " + Control.rs.getString(2) + " " + Control.rs.getString(3));
                 arbolPrincipal.put(Control.rs.getInt(1), Control.rs.getString(2));
-                modelo.insertNodeInto(new DefaultMutableTreeNode(Control.rs.getInt(1) + ". " +Control.rs.getString(2)),carpetaRaiz,Control.rs.getInt(1)-1);
+                ayudasPrimerNivel.put(Control.rs.getInt(1), Control.rs.getString(3));
             }
-           
+            for (Iterator iterator = arbolPrincipal.entrySet().iterator(); iterator.hasNext();) {
+                Map.Entry me = (Map.Entry) iterator.next();
+                int key = (int) me.getKey();
+                DefaultMutableTreeNode temp = new DefaultMutableTreeNode(key + "." + arbolPrincipal.get(key));
+                modelo.insertNodeInto(temp, carpetaRaiz, key - 1);
+                Control.ejecuteQuery("SELECT idayuda, idvista, nombre, index, ayuda\n"
+                        + "  FROM helps.ayudas\n"
+                        + "  where idvista= " + key + ";");
+                while (Control.rs.next()) {
+                    ayudasSegundoNivel.put(key + "." + Control.rs.getInt(4), Control.rs.getString(5));
+                    modelo.insertNodeInto(new DefaultMutableTreeNode(key + "." + Control.rs.getInt(4) + "." + Control.rs.getString(3)),
+                            temp,
+                            Control.rs.getInt(4) - 1);
+                }
+            }
         } catch (ClassNotFoundException | SQLException classNotFoundException) {
             System.out.println("Error:" + classNotFoundException.toString());
         } finally {
             Control.cerrarConexion();
         }
-
-//        /**
-//         * Definimos mas nodos del arbol y se lo agregamos al modelo
-//         */
-//        DefaultMutableTreeNode carpeta2 = new DefaultMutableTreeNode("SubCarpeta");
-//        DefaultMutableTreeNode archivo1 = new DefaultMutableTreeNode("Archivo1");
-//        DefaultMutableTreeNode archivo2 = new DefaultMutableTreeNode("Archivo2");
-//        DefaultMutableTreeNode archivo3 = new DefaultMutableTreeNode("Archivo3");
-//        /**
-//         * Definimos donde se agrega el nodo, dentro de que rama y que posicion
-//         */
-//        modelo.insertNodeInto(carpeta2, carpetaRaiz, 0);
-//        modelo.insertNodeInto(archivo1, carpetaRaiz, 1);
-//        modelo.insertNodeInto(archivo2, carpetaRaiz, 2);
-//
-//        /**
-//         * Creamos las hojas del arbol
-//         */
-//        DefaultMutableTreeNode archivo4 = new DefaultMutableTreeNode("Archivo4");
-//        DefaultMutableTreeNode archivo5 = new DefaultMutableTreeNode("Archivo5");
-//        DefaultMutableTreeNode archivo6 = new DefaultMutableTreeNode("Archivo6");
-//
-  //      modelo.insertNodeInto(archivo3, carpeta2, 0);
-//        modelo.insertNodeInto(archivo4, carpeta2, 1);
-//        modelo.insertNodeInto(archivo5, carpeta2, 2);
-//        modelo.insertNodeInto(archivo6, carpeta2, 3);
     }
 
     /**
@@ -208,10 +196,18 @@ public class Ayudas extends javax.swing.JFrame {
                     + "Para más info visitenos en: \n"
                     + "www.BackBox.com");
         } else {
-            TreePath path = evt.getPath();
-            System.out.println(path.getLastPathComponent());
-            ayudaTextual.setText(evt.getPath() + " \n"
-                    + Arrays.toString(listaAyudas.getSelectionRows()));
+
+//            TreePath path;
+            String[] temp = evt.getPath().getLastPathComponent().toString().split(Pattern.quote("."));
+
+            if (temp.length < 3) {
+                ayudaTextual.setText(ayudasPrimerNivel.get(Integer.parseInt(temp[0])).toString());
+            } else {
+                System.out.println(evt.getPath());
+                ayudaTextual.setText(ayudasSegundoNivel.get(temp[0] + "." + temp[1]).toString());
+//                ayudaTextual.setText(evt.getPath() + " \n"
+//                        + Arrays.toString(listaAyudas.getSelectionRows()));
+            }
         }
     }//GEN-LAST:event_listaAyudasValueChanged
 
@@ -232,22 +228,13 @@ public class Ayudas extends javax.swing.JFrame {
 
                 }
             }
-        } catch (ClassNotFoundException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(Ayudas.class
                     .getName()).log(java.util.logging.Level.SEVERE, null, ex);
 
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Ayudas.class
-                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
-
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Ayudas.class
-                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
-
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Ayudas.class
-                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+
         //</editor-fold>
 
         /* Create and display the form */
