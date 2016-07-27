@@ -61,7 +61,7 @@ public class Roles extends javax.swing.JFrame {
 
     public Roles(String usuario, ArrayList acciones, int codEmpresa) throws ClassNotFoundException {
         initComponents();
-        inicio();
+        inicio(1);
         this.usuario = usuario;
         this.List_Menu = acciones;
         this.codEmpresa = codEmpresa;
@@ -177,7 +177,7 @@ public class Roles extends javax.swing.JFrame {
         Permisos();
 
     }
-    
+
     public void Permisos() throws ClassNotFoundException {
         Control.conectar();
         try {
@@ -194,10 +194,10 @@ public class Roles extends javax.swing.JFrame {
             jButton1.setEnabled(false);
             jButton2.setEnabled(false);
             actualizar.setEnabled(false);
-            
-            String acci="";
+
+            String acci = "";
             for (String accione : acciones) {
-                acci=(String)accione;
+                acci = (String) accione;
                 if (acci.equalsIgnoreCase("RolCrear")) {
                     jButton1.setEnabled(true);
                 } else if (acci.equalsIgnoreCase("RolEditar")) {
@@ -266,6 +266,7 @@ public class Roles extends javax.swing.JFrame {
 
         jButton3 = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
+        buscaUsu = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jButton4 = new javax.swing.JButton();
@@ -290,6 +291,22 @@ public class Roles extends javax.swing.JFrame {
         setTitle("Roles - BackBox");
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+
+        buscaUsu.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
+        buscaUsu.setSelectionColor(new java.awt.Color(51, 0, 255));
+        buscaUsu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buscaUsuActionPerformed(evt);
+            }
+        });
+        buscaUsu.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                buscaUsuKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                buscaUsuKeyReleased(evt);
+            }
+        });
 
         jTable1.setFont(new java.awt.Font("Segoe UI Light", 0, 11)); // NOI18N
         jScrollPane1.setViewportView(jTable1);
@@ -365,32 +382,37 @@ public class Roles extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 742, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(actualizar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 742, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(478, 478, 478)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(actualizar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(51, 51, 51)
+                        .addComponent(buscaUsu, javax.swing.GroupLayout.PREFERRED_SIZE, 631, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(10, 10, 10))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(25, 25, 25)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 440, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
+                .addGap(19, 19, 19)
+                .addComponent(buscaUsu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(26, 26, 26)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(actualizar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(actualizar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
 
         file.setText("Archivo");
@@ -458,7 +480,7 @@ public class Roles extends javax.swing.JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         try {
             borrar();
-            inicio();
+            inicio(1);
         } catch (Exception ex) {
 
         }
@@ -480,7 +502,7 @@ public class Roles extends javax.swing.JFrame {
             System.out.println("Error: " + ex.toString());
         } finally {
             try {
-                inicio();
+                inicio(1);
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(Roles.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -494,7 +516,7 @@ public class Roles extends javax.swing.JFrame {
             System.out.println("Error: " + e.toString());
         } finally {
             try {
-                inicio();
+                inicio(1);
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(Roles.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -515,6 +537,22 @@ public class Roles extends javax.swing.JFrame {
     private void salirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_salirActionPerformed
         System.exit(0);
     }//GEN-LAST:event_salirActionPerformed
+
+    private void buscaUsuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buscaUsuActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_buscaUsuActionPerformed
+
+    private void buscaUsuKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_buscaUsuKeyPressed
+
+    }//GEN-LAST:event_buscaUsuKeyPressed
+
+    private void buscaUsuKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_buscaUsuKeyReleased
+        try {
+            inicio(2);
+        } catch (Exception ex) {
+            System.out.println("error " + ex.toString());
+        }
+    }//GEN-LAST:event_buscaUsuKeyReleased
     public void borrar() throws ClassNotFoundException {
         int i = jTable1.getSelectedRow();
         if (i == -1) {
@@ -531,7 +569,7 @@ public class Roles extends javax.swing.JFrame {
                 if (r) {
 
                     Entrada.muestreMensajeV("Rol Borrado con Exito", javax.swing.JOptionPane.INFORMATION_MESSAGE);
-                    inicio();
+                    inicio(1);
                 } else {
                     Entrada.muestreMensajeV("Error al Borrar Rol", javax.swing.JOptionPane.ERROR_MESSAGE);
                 }
@@ -540,54 +578,81 @@ public class Roles extends javax.swing.JFrame {
         }
     }
 
-    public void inicio() throws ClassNotFoundException {
-        Control.conectar();
-        Producto temp = null;
-        String query = "select cod_rol \"Codigo\",descripcion \"Descripcion\" from rol"
-                + " where estado='A' order by descripcion";
-        String cod = "", nom = "";
-        String cate = "";
-        DefaultTableModel modeloEmpleado = new DefaultTableModel();
-        int numeroPreguntas;
-        ResultSetMetaData rsetMetaData;
-        this.jTable1.setModel(modeloEmpleado);
+    public boolean SoloNumeros(String cadena) {
         try {
-            boolean r = Control.ejecuteQuery(query);
-
-            rsetMetaData = Control.rs.getMetaData();
-            numeroPreguntas = rsetMetaData.getColumnCount();
-            //Establece los nombres de las columnas de las tablas
-            for (int i = 0; i < numeroPreguntas; i++) {
-                modeloEmpleado.addColumn(rsetMetaData.getColumnLabel(i + 1));
-            }
-
-            while (Control.rs.next()) {
-                cod = Control.rs.getString(1);
-                nom = Control.rs.getString(2);
-
-                Object[] registroEmpleado = new Object[numeroPreguntas];
-
-                for (int i = 0; i < numeroPreguntas; i++) {
-                    registroEmpleado[i] = Control.rs.getObject(i + 1);
-                }
-                modeloEmpleado.addRow(registroEmpleado);
-            }
-            Control.cerrarConexion();
-
-//            Control.rs.close();
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "ERROR " + e.getMessage());
-        } finally {
-            Control.cerrarConexion();
+            Long.parseLong(cadena);
+            return true;
+        } catch (Exception ex) {
+            return false;
         }
     }
 
-    /**
-     * @param args the command line arguments
-     */
+    public void inicio(int condicion) throws ClassNotFoundException {
+        Control.conectar();
+        Producto temp = null;
+        String query = "";
 
+        if (condicion == 1) {
+            query = "select cod_rol \"Codigo\",descripcion \"Descripcion\" from rol"
+                    + " where estado='A' order by descripcion";
+        } else if (condicion == 2) {
+            if (SoloNumeros(buscaUsu.getText())) {
+                query = "select distinct  * from "
+                        + "(select cod_rol \"Codigo\",descripcion \"Descripcion\" from rol"
+                        + " where estado='A' and cast(cod_rol as varchar(10)) like ('%" + buscaUsu.getText() + "')"
+                        + "union all "
+                        + "select cod_rol \"Codigo\",descripcion \"Descripcion\" from rol"
+                        + " where estado='A' and cast(cod_rol as varchar(10)) like ('%" + buscaUsu.getText() + "%'))Y";
+            } else {
+                query = "select cod_rol \"Codigo\",descripcion \"Descripcion\" from rol"
+                        + " where estado='A' and descripcion ILIKE ('%"+buscaUsu.getText()+"%') order by descripcion";
+
+            }
+        }
+        System.out.println(query);
+            String cod = "", nom = "";
+            String cate = "";
+            DefaultTableModel modeloEmpleado = new DefaultTableModel();
+            int numeroPreguntas;
+            ResultSetMetaData rsetMetaData;
+            this.jTable1.setModel(modeloEmpleado);
+            try {
+                boolean r = Control.ejecuteQuery(query);
+
+                rsetMetaData = Control.rs.getMetaData();
+                numeroPreguntas = rsetMetaData.getColumnCount();
+                //Establece los nombres de las columnas de las tablas
+                for (int i = 0; i < numeroPreguntas; i++) {
+                    modeloEmpleado.addColumn(rsetMetaData.getColumnLabel(i + 1));
+                }
+
+                while (Control.rs.next()) {
+                    cod = Control.rs.getString(1);
+                    nom = Control.rs.getString(2);
+
+                    Object[] registroEmpleado = new Object[numeroPreguntas];
+
+                    for (int i = 0; i < numeroPreguntas; i++) {
+                        registroEmpleado[i] = Control.rs.getObject(i + 1);
+                    }
+                    modeloEmpleado.addRow(registroEmpleado);
+                }
+                Control.cerrarConexion();
+
+//            Control.rs.close();
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, "ERROR " + e.getMessage());
+            } finally {
+                Control.cerrarConexion();
+            }
+        }
+    
+        /**
+         * @param args the command line arguments
+         */
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton actualizar;
+    private javax.swing.JTextField buscaUsu;
     private javax.swing.JMenuItem cerrarSesion;
     private javax.swing.JMenu file;
     private javax.swing.JMenuItem inicio;
