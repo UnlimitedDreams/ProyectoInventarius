@@ -332,12 +332,8 @@ public class Articulo extends javax.swing.JFrame implements Runnable {
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
         jTextField2.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
+        jTextField2.setToolTipText("Buscar un artículo");
         jTextField2.setSelectionColor(new java.awt.Color(51, 0, 255));
-        jTextField2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField2ActionPerformed(evt);
-            }
-        });
         jTextField2.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 jTextField2KeyPressed(evt);
@@ -588,10 +584,6 @@ public class Articulo extends javax.swing.JFrame implements Runnable {
 
     }//GEN-LAST:event_jTextField2KeyPressed
 
-    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField2ActionPerformed
-
     private void agregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_agregarActionPerformed
         try {
             Entradas();
@@ -624,7 +616,7 @@ public class Articulo extends javax.swing.JFrame implements Runnable {
     }//GEN-LAST:event_salirActionPerformed
 
     private void ayudaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ayudaActionPerformed
-        miAyuda = new Ayudas(1);
+        miAyuda = new Ayudas("1.1.Buscar un articulo");
         miAyuda.setVisible(true);
     }//GEN-LAST:event_ayudaActionPerformed
     private void getBto_exportar() {
