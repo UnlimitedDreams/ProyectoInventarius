@@ -26,6 +26,7 @@ public class Producto {
     private double ValorIva;
     private String Esta;
     private int CantBD;
+    private int IvaCargeArchivo;
 
     public Producto(String codigo, String nombre, double Costo, int iva, double precio_venta, int cantidad, int desc) {
         this.codigo = codigo;
@@ -182,6 +183,14 @@ public class Producto {
 
     public void setCodigoIva(int codigoIva) {
         this.codigoIva = codigoIva;
+    }
+
+    public int getIvaCargeArchivo() {
+        return IvaCargeArchivo;
+    }
+
+    public void setIvaCargeArchivo(int IvaCargeArchivo) {
+        this.IvaCargeArchivo = IvaCargeArchivo;
     }
     
 
