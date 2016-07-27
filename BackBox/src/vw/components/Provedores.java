@@ -35,7 +35,7 @@ public class Provedores extends javax.swing.JFrame {
     public Provedores(String nom, ArrayList acciones) throws ClassNotFoundException {
         initComponents();
         this.ListAcciones = acciones;
-        inicio();
+        inicio(1);
         this.nom = nom;
         this.setLocationRelativeTo(null);
         this.setResizable(false);
@@ -44,6 +44,7 @@ public class Provedores extends javax.swing.JFrame {
         setIconImage(img.getImage());
         Permisos();
     }
+
     public void Permisos() throws ClassNotFoundException {
         Control.conectar();
         try {
@@ -60,10 +61,10 @@ public class Provedores extends javax.swing.JFrame {
             nuevo.setEnabled(false);
             borrar.setEnabled(false);
             actualizar.setEnabled(false);
-            
-            String acci="";
+
+            String acci = "";
             for (String accione : acciones) {
-                acci=(String)accione;
+                acci = (String) accione;
                 if (acci.equalsIgnoreCase("ProCrear")) {
                     nuevo.setEnabled(true);
                 } else if (acci.equalsIgnoreCase("ProEditar")) {
@@ -79,7 +80,6 @@ public class Provedores extends javax.swing.JFrame {
             Control.cerrarConexion();
         }
     }
-
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -97,6 +97,7 @@ public class Provedores extends javax.swing.JFrame {
         nuevo = new javax.swing.JButton();
         borrar = new javax.swing.JButton();
         actualizar = new javax.swing.JButton();
+        buscaUsu = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Lista de Proveedores - BackBox");
@@ -173,6 +174,22 @@ public class Provedores extends javax.swing.JFrame {
             }
         });
 
+        buscaUsu.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
+        buscaUsu.setSelectionColor(new java.awt.Color(51, 0, 255));
+        buscaUsu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buscaUsuActionPerformed(evt);
+            }
+        });
+        buscaUsu.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                buscaUsuKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                buscaUsuKeyReleased(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -191,12 +208,18 @@ public class Provedores extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(volver, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(64, 64, 64)
+                .addComponent(buscaUsu, javax.swing.GroupLayout.PREFERRED_SIZE, 667, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 472, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(15, 15, 15)
+                .addComponent(buscaUsu, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 420, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(actualizar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -229,7 +252,7 @@ public class Provedores extends javax.swing.JFrame {
 
         try {
             borrar();
-            inicio();
+            inicio(1);
         } catch (Exception ex) {
 
         }
@@ -242,7 +265,7 @@ public class Provedores extends javax.swing.JFrame {
             System.out.println("Error: " + ex);
         } finally {
             try {
-                inicio();
+                inicio(1);
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(Provedores.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -256,7 +279,7 @@ public class Provedores extends javax.swing.JFrame {
             System.out.println("Error" + e.toString());
         } finally {
             try {
-                inicio();
+                inicio(1);
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(Provedores.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -271,6 +294,22 @@ public class Provedores extends javax.swing.JFrame {
 //            Logger.getLogger(Provedores.class.getName()).log(Level.SEVERE, null, ex);
 //        }
     }//GEN-LAST:event_nuevoActionPerformed
+
+    private void buscaUsuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buscaUsuActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_buscaUsuActionPerformed
+
+    private void buscaUsuKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_buscaUsuKeyPressed
+
+    }//GEN-LAST:event_buscaUsuKeyPressed
+
+    private void buscaUsuKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_buscaUsuKeyReleased
+        try {
+            inicio(2);
+        } catch (Exception ex) {
+            System.out.println("error " + ex.toString());
+        }
+    }//GEN-LAST:event_buscaUsuKeyReleased
     public void borrar() throws ClassNotFoundException {
 
         int i = jTable1.getSelectedRow();
@@ -310,15 +349,62 @@ public class Provedores extends javax.swing.JFrame {
         }
     }
 
-    public void inicio() throws ClassNotFoundException {
+    public boolean SoloNumeros(String cadena) {
+        try {
+            Long.parseLong(cadena);
+            return true;
+        } catch (Exception ex) {
+            return false;
+        }
+    }
+
+    public void inicio(int condicion) throws ClassNotFoundException {
         Control.conectar();
-        String query = "select "
-                + "cod_provedor \"Código\","
-                + "upper(empresa) \"Empresa\","
-                + "nit\"Nit Empresa\","
-                + "telefono \"Teléfono\","
-                + "direccion \"Dirección\" "
-                + "from" + " provedor where estado='A'";
+
+        String query = "";
+        if (condicion == 1) {
+            query = "select "
+                    + "cod_provedor \"Código\","
+                    + "upper(empresa) \"Empresa\","
+                    + "nit\"Nit Empresa\","
+                    + "telefono \"Teléfono\","
+                    + "direccion \"Dirección\" "
+                    + "from provedor where estado='A'";
+        } else if (condicion == 2) {
+            if (SoloNumeros(buscaUsu.getText())) {
+                query = "select distinct  * from (select "
+                        + "cod_provedor \"Código\","
+                        + "upper(empresa) \"Empresa\","
+                        + "nit\"Nit Empresa\","
+                        + "telefono \"Teléfono\","
+                        + "direccion \"Dirección\" "
+                        + "from provedor where "
+                        + "nit ILIKE ('%" + buscaUsu.getText() + "') "
+                        + "and estado='A' "
+                        + "union all "
+                        + "select "
+                        + "cod_provedor \"Código\","
+                        + "upper(empresa) \"Empresa\","
+                        + "nit\"Nit Empresa\","
+                        + "telefono \"Teléfono\","
+                        + "direccion \"Dirección\" "
+                        + "from provedor where "
+                        + " nit ILIKE ('%" + buscaUsu.getText() + "%')"
+                        + " and estado='A')Y";
+            } else {
+                query = "select "
+                        + "cod_provedor \"Código\","
+                        + "upper(empresa) \"Empresa\","
+                        + "nit\"Nit Empresa\","
+                        + "telefono \"Teléfono\","
+                        + "direccion \"Dirección\" "
+                        + "from provedor where "
+                        + " empresa ILIKE ('%" + buscaUsu.getText() + "%')"
+                        + "and estado='A'";
+            }
+
+        }
+        System.out.println(query);
         String cod = "", nom = "", valor = "", cant = "", costo = "", iva = "", precio = "";
         String cate = "";
         DefaultTableModel modeloEmpleado = new DefaultTableModel();
@@ -366,6 +452,7 @@ public class Provedores extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton actualizar;
     private javax.swing.JButton borrar;
+    private javax.swing.JTextField buscaUsu;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
