@@ -170,15 +170,11 @@ public class Clientes extends javax.swing.JFrame {
     }
 
     public void Permisos() throws ClassNotFoundException {
-        Control.conectar();
+
         try {
+            Control.conectar();
             ArrayList<String> acciones = new ArrayList();
-            Control.ejecuteQuery("select c.accion from usuario a, persona b , permisos c\n"
-                    + "where\n"
-                    + "a.cedula=b.cedula and \n"
-                    + "a.cod_usuario=c.cod_usuario\n"
-                    + "and c.panel='Cliente'\n"
-                    + "and a.cod_usuario=" + usuario);
+            Control.ejecuteQuery("select * from Permisos (" + usuario + ",'Cliente')");
             while (Control.rs.next()) {
                 acciones.add(Control.rs.getString(1));
             }
@@ -503,7 +499,7 @@ public class Clientes extends javax.swing.JFrame {
     private void salirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_salirActionPerformed
         System.exit(0);
     }//GEN-LAST:event_salirActionPerformed
-    public void borrar() throws ClassNotFoundException {
+    public void borrar() throws ClassNotFoundException, SQLException {
         int i = jTable1.getSelectedRow();
         if (i == -1) {
             JOptionPane.showMessageDialog(null, "Favor... seleccione una fila");
@@ -514,21 +510,29 @@ public class Clientes extends javax.swing.JFrame {
             op[1] = "No";
             int Condicion = Entrada.menu("BackBox", "¿Esta Seguro que Desea Borrar el Cliente? ", op);
             if (Condicion == 1) {
-                Control.conectar();
-                boolean r = Control.ejecuteUpdate("delete from clientes where cedula='" + cod + "'");
+                boolean r = false;
+                try {
+                    Control.conectar();
+                    Control.con.setAutoCommit(false);
+                    r = Control.ejecuteUpdate("delete from clientes where cedula='" + cod + "'");
+                } catch (SQLException ex) {
+                    System.out.println("Error");
+                } finally {
+                    Control.con.commit();
+                    Control.con.setAutoCommit(true);
+                    Control.cerrarConexion();
+                }
                 if (r) {
                     Entrada.muestreMensajeV("Cliente Borrado con Exito", javax.swing.JOptionPane.INFORMATION_MESSAGE);
                     inicio();
                 } else {
                     Entrada.muestreMensajeV("Error al Borrar Cliente");
                 }
-                Control.cerrarConexion();
             }
         }
     }
 
     public void Update() throws ClassNotFoundException {
-        Control.conectar();
         int i = jTable1.getSelectedRow();
         int j = jTable1.getSelectedColumn();
         if (i == -1) {
@@ -539,10 +543,7 @@ public class Clientes extends javax.swing.JFrame {
                 new ClienteActualizar(this, true, cod).setVisible(true);
             } catch (Exception e) {
                 System.out.println("Error: " + e.toString());
-            } finally {
-                inicio();
             }
-
         }
     }
 

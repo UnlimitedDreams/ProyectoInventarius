@@ -15,6 +15,7 @@ import Modelo.List_Categoria;
 import java.awt.Toolkit;
 import java.net.URL;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.logging.Level;
@@ -62,46 +63,45 @@ public class CargaArchivo extends javax.swing.JFrame {
 
     public void cargarUsuario() throws SQLException, ClassNotFoundException {
         Control.conectar();
-        Control.ejecuteQuery("select nombre,apellido from usuario,persona where \n"
-                + "usuario.cedula=persona.cedula and  cod_usuario=" + usuario);
+        Control.ejecuteQuery("select * from CargaUsuario(" + usuario + ")");
         String nombre = "";
         while (Control.rs.next()) {
             nombre = Control.rs.getString(1) + " " + Control.rs.getString(2);
         }
         this.nombre = nombre;
         Control.cerrarConexion();
-
     }
-    
+
     public void ConfigurarIva() throws SQLException {
         try {
             listIvas.clear();
             Control.conectar();
-            Control.ejecuteQuery("select codiva,porcentaje from maestro_iva");
+            Control.ejecuteQuery("select * from CargaIva()");
             while (Control.rs.next()) {
-                listIvas.add(new List_Categoria(Control.rs.getInt(1),""+Control.rs.getInt(2)));
+                listIvas.add(new List_Categoria(Control.rs.getInt(1), "" + Control.rs.getInt(2)));
             }
-            Control.cerrarConexion();
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(Venta.class
                     .getName()).log(Level.SEVERE, null, ex);
+        }finally
+        {
+            Control.cerrarConexion();
         }
-    }
 
+    }
 
     public void iniciar() throws SQLException {
         try {
-            System.out.println("Tamaño inicial : " + p.size());
             String r = "";
             Control.conectar();
             Control.con.setAutoCommit(false);
             Producto temp = null;
-            int cantidad = 0;  
-            int iva=0;
-            int ivaF=0;
+            int cantidad = 0;
+            int iva = 0;
+            int ivaF = 0;
             for (int i = 0; i < p.size(); i++) {
                 temp = (Producto) p.get(i);
-                Control.ejecuteQuery("select cantidad,cod_producto from producto where serie_producto='" + temp.getCodigo() + "'");
+                Control.ejecuteQuery("select * from CargaProductoBuqueda('"+temp.getCodigo()+"')");
                 if (Control.rs.next()) {
                     temp.setEsta("Existe");
                     temp.setCantBD(Control.rs.getInt(1));
@@ -110,24 +110,15 @@ public class CargaArchivo extends javax.swing.JFrame {
                     temp.setEsta("-");
                     temp.setCantBD(0);
                 }
-                
+
                 for (List_Categoria cate : listIvas) {
-                    iva=Integer.parseInt(cate.getNom());
-                    ivaF=cate.getCod();
-                    if(temp.getIva()==iva){
+                    iva = Integer.parseInt(cate.getNom());
+                    ivaF = cate.getCod();
+                    if (temp.getIva() == iva) {
                         temp.setIvaCargeArchivo(ivaF);
                         break;
                     }
                 }
-//                if (temp.getCantBD() >= 0) {
-//                    cantidad = temp.getCantidad() - temp.getCantBD();
-//                } else {
-//                    cantidad = temp.getCantBD() + temp.getCantidad();
-//                }
-//                if (cantidad == 0) {
-//                    p.remove(temp);
-//                }
-
             }
 
         } catch (Exception ex) {
@@ -142,7 +133,6 @@ public class CargaArchivo extends javax.swing.JFrame {
                     "Codigo", "Nombre", "Costo", "Iva", "Precio", "Cantidad", "Estado"
                 }
         ));
-        System.out.println("Tamaño final : " + p.size());
         Tabla t = new Tabla(p);
         t.calculeFrecuenciasV();
         muevaLosDatosFre(t);
@@ -169,7 +159,9 @@ public class CargaArchivo extends javax.swing.JFrame {
         boolean r1 = false;
         int codProducto = Sequence.seque("select max(cod_producto) from producto");
         int codigo_sal = Sequence.seque("select max(cod_entra) from Salida_Entrada");
-        String mns = "Inventario : " + fecha;
+        SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd");
+        String fechafinal = format2.format(fecha);
+        String mns = "Inventario : " + fechafinal;
         String tipo = "";
         int cantidad = 0;
         int cantFinal = 0;
@@ -224,17 +216,14 @@ public class CargaArchivo extends javax.swing.JFrame {
                     + "Sin Operacion : " + Noentro + "\n ¿Desea Realizar los combios ?", op);
             System.err.println("valor de condicion : " + Condicion);
             if (Condicion == 1) {
-                System.out.println("Entro a Condicion");
                 for (int i = 0; i < p.size(); i++) {
                     pr = (Producto) p.get(i);
-                    System.out.println("Producto : " + pr.getCodigo());
                     double precio = pr.getPrecio_venta();
                     if (pr.getCantBD() >= 0) {
                         cantidad = pr.getCantidad() - pr.getCantBD();
                     } else {
                         cantidad = pr.getCantBD() + pr.getCantidad();
                     }
-                    System.out.println("cantidad : " + cantidad);
                     if (pr.getEsta().equalsIgnoreCase("Existe") && cantidad != 0) {
                         Actualizo++;
                         if (cantidad > 0 && pr.getCantBD() < 0) {
@@ -253,28 +242,21 @@ public class CargaArchivo extends javax.swing.JFrame {
                             tipo = "Salida";
                             cantFinal = pr.getCantidad();
                             cantSAlida = cantidad;
-                        }
-                        System.out.println("insert into Salida_Entrada values("
-                                + codigo_sal + ",'" + tipo + "'," + Math.abs(cantSAlida) + ",'" + fecha + "','" + mns + "','" + nombre + "',"+pr.getCodigoProducto()+")");
+                        }                        
                         f = Control.ejecuteUpdate("insert into Salida_Entrada values("
-                                + codigo_sal + ",'" + tipo + "'," + Math.abs(cantSAlida) + ",'" + fecha + "','" + mns + "','" + nombre + "',"+pr.getCodigoProducto()+")");
+                                + codigo_sal + ",'" + tipo + "'," + Math.abs(cantSAlida) + ",'" + fecha + "','" + mns + "','" + nombre + "'," + pr.getCodigoProducto() + ")");
                         System.out.println("paso 2");
                         f = Control.ejecuteUpdate("update producto set cantidad=" + cantFinal + " where"
                                 + " cod_producto=" + pr.getCodigoProducto());
 
                     } else if (pr.getEsta().equalsIgnoreCase("Existe") && cantidad == 0) {
-                        System.out.println("No hace nada");
                         f = true;
                         Noentro++;
 //No ingresa datos
                     } else {
                         Creo++;
-                        System.out.println("insert into producto values('" + pr.getNombre() + "',"
-                                + pr.getCosto() + "," + pr.getIvaCargeArchivo() + "," + precio + "," + pr.getCategoria() + ","
-                                + pr.getCantidad() + ",'A','n'," + pr.getDesc() + "," + precio + ",1,1,'" + pr.getCodigo() + "',"
-                                + codProducto + ")");
                         f = Control.ejecuteUpdate("insert into producto values('" + pr.getNombre() + "',"
-                                + pr.getCosto() + "," + pr.getIvaCargeArchivo()+ "," + precio + "," + pr.getCategoria() + ","
+                                + pr.getCosto() + "," + pr.getIvaCargeArchivo() + "," + precio + "," + pr.getCategoria() + ","
                                 + pr.getCantidad() + ",'A','n'," + pr.getDesc() + "," + precio + ",1,1,'" + pr.getCodigo() + "',"
                                 + codProducto + ")");
                     }

@@ -12,6 +12,7 @@ import Modelo.acciones;
 import Modelo.seccion;
 import java.net.URL;
 import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -256,30 +257,39 @@ public class CategoriaGestion extends javax.swing.JFrame {
      * @throws ClassNotFoundException no encuentra la librería de conexion
      * DataBase
      */
-    public void Update() throws ClassNotFoundException {
-        Control.conectar();
-        int i = categoriaLista.getSelectedRow();
-        int j = categoriaLista.getSelectedColumn();
-        if (i == -1) {
-            JOptionPane.showMessageDialog(null, "Favor... seleccione una fila");
-        } else {
-            String nom = Entrada.leaCadenaV("Digite Nombre Nuevo");
-            String cod = (String) categoriaLista.getValueAt(i, 0).toString();
-            System.out.println("codigo " + cod);
-            if (!nom.isEmpty()) {
-                if (Control.ejecuteUpdate("update categoria set descripcion='"
-                        + nom + "' where cod_categoria=" + cod)) {
-                    inicio();
-                } else {
-                    Entrada.muestreMensajeV("Error "
-                            + "\nCategoría no se pudo actualizar correctamente"
-                            + "\nDebido a un error en la consulta",
-                            javax.swing.JOptionPane.ERROR_MESSAGE);
+    public void Update() throws ClassNotFoundException, SQLException {
+        boolean r = false;
+        try {
+            Control.conectar();
+            Control.con.setAutoCommit(false);
+            int i = categoriaLista.getSelectedRow();
+            int j = categoriaLista.getSelectedColumn();
+            if (i == -1) {
+                JOptionPane.showMessageDialog(null, "Favor... seleccione una fila");
+            } else {
+                String nom = Entrada.leaCadenaV("Digite Nombre Nuevo");
+                String cod = (String) categoriaLista.getValueAt(i, 0).toString();
+                if (!nom.isEmpty()) {
+                    r = Control.ejecuteUpdate("update categoria set descripcion='" + nom + "' where cod_categoria=" + cod);
                 }
             }
-
+        } catch (SQLException ex) {
+            r = false;
+            System.out.println("Erro SQl " + ex.toString());
+        } finally {
+            Control.con.commit();
+            Control.con.setAutoCommit(true);
             Control.cerrarConexion();
         }
+        if (r) {
+            inicio();
+        } else {
+            Entrada.muestreMensajeV("Error "
+                    + "\nCategoría no se pudo actualizar correctamente"
+                    + "\nDebido a un error en la consulta",
+                    javax.swing.JOptionPane.ERROR_MESSAGE);
+        }
+
     }
 
     /**
@@ -288,20 +298,14 @@ public class CategoriaGestion extends javax.swing.JFrame {
      * @throws ClassNotFoundException no encuentra la librería de conexion
      * DataBase
      */
-    public void inicio() throws ClassNotFoundException {
-        Control.conectar();
-        String query = "select "
-                + "cod_categoria \"Código\", "
-                + "upper(descripcion) \"Descripción\" "                
-                + "from categoria where estado='A' order by 2";
-        String codCategoria = "", nameCategoria = "";
+    public void inicio() throws ClassNotFoundException {        
         DefaultTableModel modeloEmpleado = new DefaultTableModel();
         int numeroPreguntas;
         ResultSetMetaData rsetMetaData;
         this.categoriaLista.setModel(modeloEmpleado);
         try {
-            Control.ejecuteQuery(query);
-
+            Control.conectar();
+            Control.ejecuteQuery("select * from CategoriaBusqueda()");
             rsetMetaData = Control.rs.getMetaData();
             numeroPreguntas = rsetMetaData.getColumnCount();
             //Establece los nombres de las columnas de las tablas
@@ -310,9 +314,6 @@ public class CategoriaGestion extends javax.swing.JFrame {
             }
 
             while (Control.rs.next()) {
-                codCategoria = Control.rs.getString(1);
-                nameCategoria = Control.rs.getString(2);
-
                 Object[] registroEmpleado = new Object[numeroPreguntas];
 
                 for (int i = 0; i < numeroPreguntas; i++) {
@@ -320,7 +321,6 @@ public class CategoriaGestion extends javax.swing.JFrame {
                 }
                 modeloEmpleado.addRow(registroEmpleado);
             }
-            Control.cerrarConexion();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "ERROR " + e.getMessage());
         } finally {
