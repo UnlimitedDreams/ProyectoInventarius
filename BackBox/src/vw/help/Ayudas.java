@@ -16,6 +16,7 @@ import java.util.regex.Pattern;
 import javax.swing.ImageIcon;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreePath;
 
 /**
  *
@@ -31,17 +32,16 @@ public class Ayudas extends javax.swing.JFrame {
     TreeMap ayudasPrimerNivel = new TreeMap();
     TreeMap ayudasSegundoNivel = new TreeMap();
 
-    public Ayudas(int codigo) {
+    public Ayudas(String nodo) {
         initComponents();
-        crearArbol();
-        listaAyudas.setSelectionRow(0);
+        crearArbol(nodo);
         URL url = getClass().getResource("/images/facelet/icon.png");
         ImageIcon img = new ImageIcon(url);
         setIconImage(img.getImage());
         this.setLocationRelativeTo(null);
     }
 
-    private void crearArbol() {
+    private void crearArbol(String nodo) {
         TreeMap arbolPrincipal = new TreeMap();
         DefaultMutableTreeNode carpetaRaiz = new DefaultMutableTreeNode("Inicio");
         DefaultTreeModel modelo = new DefaultTreeModel(carpetaRaiz);
@@ -61,7 +61,8 @@ public class Ayudas extends javax.swing.JFrame {
                 modelo.insertNodeInto(temp, carpetaRaiz, key - 1);
                 Control.ejecuteQuery("SELECT idayuda, idvista, nombre, index, ayuda\n"
                         + "  FROM helps.ayudas\n"
-                        + "  where idvista= " + key + ";");
+                        + "  where idvista= " + key + "\n"
+                        + "  order by index asc;");
                 while (Control.rs.next()) {
                     ayudasSegundoNivel.put(key + "." + Control.rs.getInt(4), Control.rs.getString(5));
                     modelo.insertNodeInto(new DefaultMutableTreeNode(key + "." + Control.rs.getInt(4) + "." + Control.rs.getString(3)),
@@ -73,6 +74,7 @@ public class Ayudas extends javax.swing.JFrame {
             System.out.println("Error:" + classNotFoundException.toString());
         } finally {
             Control.cerrarConexion();
+            listaAyudas.setSelectionPath(new TreePath(modelo.getPathToRoot(new DefaultMutableTreeNode(nodo))));
         }
     }
 
@@ -130,11 +132,17 @@ public class Ayudas extends javax.swing.JFrame {
         titulo.setText("Ayudas");
 
         ayudaTextual.setEditable(false);
-        ayudaTextual.setColumns(20);
+        ayudaTextual.setColumns(10);
         ayudaTextual.setFont(new java.awt.Font("Segoe UI Light", 0, 18)); // NOI18N
-        ayudaTextual.setRows(5);
+        ayudaTextual.setLineWrap(true);
+        ayudaTextual.setRows(10);
+        ayudaTextual.setWrapStyleWord(true);
+        ayudaTextual.setAutoscrolls(false);
         ayudaTextual.setBorder(null);
+        ayudaTextual.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
         ayudaTextual.setMargin(new java.awt.Insets(5, 5, 5, 5));
+        ayudaTextual.setMaximumSize(new java.awt.Dimension(300, 125));
+        ayudaTextual.setMinimumSize(new java.awt.Dimension(300, 125));
         jScrollPane1.setViewportView(ayudaTextual);
 
         javax.swing.GroupLayout ayudaLayout = new javax.swing.GroupLayout(ayuda);
@@ -203,12 +211,13 @@ public class Ayudas extends javax.swing.JFrame {
             if (temp.length < 3) {
                 ayudaTextual.setText(ayudasPrimerNivel.get(Integer.parseInt(temp[0])).toString());
             } else {
-                System.out.println(evt.getPath());
+
                 ayudaTextual.setText(ayudasSegundoNivel.get(temp[0] + "." + temp[1]).toString());
 //                ayudaTextual.setText(evt.getPath() + " \n"
 //                        + Arrays.toString(listaAyudas.getSelectionRows()));
             }
         }
+        titulo.setText(listaAyudas.getLastSelectedPathComponent().toString());
     }//GEN-LAST:event_listaAyudasValueChanged
 
     /**
@@ -239,7 +248,7 @@ public class Ayudas extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> {
-            new Ayudas(1).setVisible(true);
+            new Ayudas("1.1.Buscar un articulo").setVisible(true);
         });
     }
 
