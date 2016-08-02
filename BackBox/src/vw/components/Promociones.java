@@ -26,7 +26,7 @@ import vw.main.Menu;
  *
  * @author usuario
  */
-public class CategoriaGestion extends javax.swing.JFrame {
+public class Promociones extends javax.swing.JFrame {
 
     String usuario;
     ArrayList<seccion> listaSeccion = new ArrayList();
@@ -36,7 +36,7 @@ public class CategoriaGestion extends javax.swing.JFrame {
     /**
      * Creates new form categoriaGestion
      */
-    public CategoriaGestion(String Usuario, ArrayList Acciones) {
+    public Promociones(String Usuario, ArrayList Acciones) {
         initComponents();
         this.List_Menu = Acciones;
         this.usuario = Usuario;
@@ -48,7 +48,7 @@ public class CategoriaGestion extends javax.swing.JFrame {
         try {
             inicio();
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(CategoriaGestion.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Promociones.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -70,7 +70,7 @@ public class CategoriaGestion extends javax.swing.JFrame {
         actualizar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Gestión de Categrorías - Inventarius");
+        setTitle("Gestión de Promociones - Inventarius");
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -305,7 +305,7 @@ public class CategoriaGestion extends javax.swing.JFrame {
         this.categoriaLista.setModel(modeloEmpleado);
         try {
             Control.conectar();
-            Control.ejecuteQuery("select * from CategoriaBusqueda()");
+            Control.ejecuteQuery("select * from promociones order by fechaIni desc");
             rsetMetaData = Control.rs.getMetaData();
             numeroPreguntas = rsetMetaData.getColumnCount();
             //Establece los nombres de las columnas de las tablas

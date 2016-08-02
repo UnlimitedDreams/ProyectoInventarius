@@ -38,7 +38,6 @@ import javax.swing.KeyStroke;
 import javax.swing.table.DefaultTableModel;
 import vw.components.Bodega;
 import vw.components.CargaArchivo;
-import vw.components.Datalles;
 import vw.components.Entrada_Nueva;
 import vw.help.Ayudas;
 import vw.main.Acceder;
@@ -645,18 +644,18 @@ public class Articulo extends javax.swing.JFrame implements Runnable {
         }
     }
 
-    public void detalles_pro() throws ClassNotFoundException {
-        int i = jTable1.getSelectedRow();
-        int j = jTable1.getSelectedColumn();
-        if (i == -1) {
-            JOptionPane.showMessageDialog(null, "Favor... seleccione una fila");
-        } else {
-            String cod = (String) jTable1.getValueAt(i, 0).toString();
-            Datalles p = new Datalles(cod, usuario, List_Menu);
-            p.setVisible(true);
-            this.setVisible(false);
-        }
-    }
+//    public void detalles_pro() throws ClassNotFoundException {
+//        int i = jTable1.getSelectedRow();
+//        int j = jTable1.getSelectedColumn();
+//        if (i == -1) {
+//            JOptionPane.showMessageDialog(null, "Favor... seleccione una fila");
+//        } else {
+//            String cod = (String) jTable1.getValueAt(i, 0).toString();
+//            Datalles p = new Datalles(cod, usuario, List_Menu);
+//            p.setVisible(true);
+//            this.setVisible(false);
+//        }
+//    }
 
     public void pasar_datos(String ruta) throws ClassNotFoundException, InterruptedException {
         //jProgressBar1.setForeground(Color.ORANGE);

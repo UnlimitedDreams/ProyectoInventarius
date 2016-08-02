@@ -144,7 +144,6 @@ public class RolActualizar extends javax.swing.JDialog {
                         codigoAct++;
                     }
 
-                   
                     if (VVentas.isSelected()) {
                         Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",2," + ced + ",16)");
                         codigoAct++;
@@ -161,8 +160,7 @@ public class RolActualizar extends javax.swing.JDialog {
                     }
                     Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",2," + ced + ",3)");
                     codigoAct++;
-                    
-                    
+
                     if (RVentas.isSelected()) {
                         Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",3," + ced + ",20)");
                         codigoAct++;
@@ -179,8 +177,7 @@ public class RolActualizar extends javax.swing.JDialog {
                     }
                     Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",3," + ced + ",3)");
                     codigoAct++;
-                    
-                    
+
                     if (ListPro.isSelected() && NewPro.isSelected()) {
                         Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + ced + ",5)");
                         codigoAct++;
@@ -223,6 +220,14 @@ public class RolActualizar extends javax.swing.JDialog {
                         Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + ced + ",3)");
                         codigoAct++;
                     }
+                    if (iva.isSelected()) {
+                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",19," + ced + ",32)");
+                        codigoAct++;
+                    }
+                    if (promocion.isSelected()) {
+                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",19," + ced + ",33)");
+                        codigoAct++;
+                    }
                 }
                 cerrar = true;
             } catch (Exception ex) {
@@ -235,7 +240,7 @@ public class RolActualizar extends javax.swing.JDialog {
         }
         if (cerrar) {
             this.dispose();
-        }else{
+        } else {
             Entrada.muestreMensajeV("Error Comuniquese con soporte");
         }
     }
@@ -278,6 +283,9 @@ public class RolActualizar extends javax.swing.JDialog {
         RVentas = new javax.swing.JCheckBox();
         VVentas = new javax.swing.JCheckBox();
         VDevol = new javax.swing.JCheckBox();
+        iva = new javax.swing.JCheckBox();
+        jCheckBox16 = new javax.swing.JCheckBox();
+        promocion = new javax.swing.JCheckBox();
 
         jCheckBox2.setText("jCheckBox2");
 
@@ -340,7 +348,7 @@ public class RolActualizar extends javax.swing.JDialog {
                 jCheckBox3ActionPerformed(evt);
             }
         });
-        jPanel1.add(jCheckBox3, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 100, -1, -1));
+        jPanel1.add(jCheckBox3, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 100, -1, -1));
 
         jCheckBox13.setBackground(new java.awt.Color(255, 255, 255));
         jCheckBox13.setFont(new java.awt.Font("Segoe UI Light", 0, 14)); // NOI18N
@@ -352,14 +360,14 @@ public class RolActualizar extends javax.swing.JDialog {
                 jCheckBox13ActionPerformed(evt);
             }
         });
-        jPanel1.add(jCheckBox13, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 100, -1, -1));
+        jPanel1.add(jCheckBox13, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 100, -1, -1));
 
         ListCate.setBackground(new java.awt.Color(255, 255, 255));
         ListCate.setFont(new java.awt.Font("Segoe UI Light", 0, 14)); // NOI18N
         ListCate.setSelected(true);
         ListCate.setText("Lista Categoria");
         ListCate.setOpaque(false);
-        jPanel1.add(ListCate, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 230, -1, -1));
+        jPanel1.add(ListCate, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 230, -1, -1));
 
         jCheckBox14.setBackground(new java.awt.Color(255, 255, 255));
         jCheckBox14.setFont(new java.awt.Font("Segoe UI Light", 0, 14)); // NOI18N
@@ -371,7 +379,7 @@ public class RolActualizar extends javax.swing.JDialog {
                 jCheckBox14ActionPerformed(evt);
             }
         });
-        jPanel1.add(jCheckBox14, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 100, -1, -1));
+        jPanel1.add(jCheckBox14, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 100, -1, -1));
 
         jCheckBox17.setBackground(new java.awt.Color(255, 255, 255));
         jCheckBox17.setFont(new java.awt.Font("Segoe UI Light", 0, 14)); // NOI18N
@@ -383,7 +391,7 @@ public class RolActualizar extends javax.swing.JDialog {
                 jCheckBox17ActionPerformed(evt);
             }
         });
-        jPanel1.add(jCheckBox17, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 100, -1, -1));
+        jPanel1.add(jCheckBox17, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 100, -1, -1));
 
         jLabel1.setFont(new java.awt.Font("Segoe UI Light", 1, 18)); // NOI18N
         jLabel1.setText("Acciones Menu");
@@ -392,7 +400,7 @@ public class RolActualizar extends javax.swing.JDialog {
         LisBodega.setSelected(true);
         LisBodega.setText("Lista Bodega");
         LisBodega.setOpaque(false);
-        jPanel1.add(LisBodega, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 140, -1, -1));
+        jPanel1.add(LisBodega, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 140, -1, -1));
 
         NewCompra.setSelected(true);
         NewCompra.setText("Nueva Compra");
@@ -402,65 +410,70 @@ public class RolActualizar extends javax.swing.JDialog {
                 NewCompraActionPerformed(evt);
             }
         });
-        jPanel1.add(NewCompra, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 200, -1, -1));
+        jPanel1.add(NewCompra, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 200, -1, -1));
 
         ListArti.setSelected(true);
         ListArti.setText("Lista Articulos");
         ListArti.setOpaque(false);
-        jPanel1.add(ListArti, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 170, -1, -1));
+        jPanel1.add(ListArti, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 170, -1, -1));
 
         NewCate.setSelected(true);
         NewCate.setText("Crear Categoria");
         NewCate.setOpaque(false);
-        jPanel1.add(NewCate, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 260, -1, -1));
+        jPanel1.add(NewCate, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 260, -1, -1));
 
         ListUsu.setSelected(true);
         ListUsu.setText("Lista Usuarios");
-        jPanel1.add(ListUsu, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 140, -1, -1));
+        jPanel1.add(ListUsu, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 140, -1, -1));
 
         NewUsu.setSelected(true);
         NewUsu.setText("Crear Usuarios");
-        jPanel1.add(NewUsu, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 170, -1, -1));
+        jPanel1.add(NewUsu, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 170, -1, -1));
 
         ListPro.setSelected(true);
         ListPro.setText("Lista Proveedores");
-        jPanel1.add(ListPro, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 200, -1, -1));
+        jPanel1.add(ListPro, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 200, -1, -1));
 
         NewPro.setSelected(true);
         NewPro.setText("Crear Proveedor");
-        jPanel1.add(NewPro, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 230, -1, -1));
+        jPanel1.add(NewPro, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 230, -1, -1));
 
         ListRol.setSelected(true);
         ListRol.setText("Lista Roles");
-        jPanel1.add(ListRol, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 260, -1, -1));
+        jPanel1.add(ListRol, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 260, -1, -1));
 
         NewRol.setSelected(true);
         NewRol.setText("Crear Rol");
-        jPanel1.add(NewRol, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 290, -1, -1));
+        jPanel1.add(NewRol, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 290, -1, -1));
 
         ListClientes.setSelected(true);
         ListClientes.setText("Lista Clientes");
-        jPanel1.add(ListClientes, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 320, -1, -1));
+        jPanel1.add(ListClientes, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 320, -1, -1));
 
         Rentradas.setSelected(true);
         Rentradas.setText("E/S");
-        jPanel1.add(Rentradas, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 200, -1, -1));
+        jPanel1.add(Rentradas, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 200, -1, -1));
 
         VDiaria.setSelected(true);
         VDiaria.setText("Venta Diaria");
-        jPanel1.add(VDiaria, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 200, -1, -1));
+        jPanel1.add(VDiaria, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 200, -1, -1));
 
         rcompras.setSelected(true);
         rcompras.setText("Compras");
-        jPanel1.add(rcompras, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 170, -1, -1));
+        jPanel1.add(rcompras, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 170, -1, -1));
 
         RVentas.setSelected(true);
         RVentas.setText("Ventas");
-        jPanel1.add(RVentas, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 140, -1, -1));
+        jPanel1.add(RVentas, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 140, -1, -1));
 
         VVentas.setSelected(true);
         VVentas.setText("Realizar Venta");
-        jPanel1.add(VVentas, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 140, -1, -1));
+        VVentas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                VVentasActionPerformed(evt);
+            }
+        });
+        jPanel1.add(VVentas, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 140, -1, -1));
 
         VDevol.setSelected(true);
         VDevol.setText("Realizar Devolucion");
@@ -469,7 +482,43 @@ public class RolActualizar extends javax.swing.JDialog {
                 VDevolActionPerformed(evt);
             }
         });
-        jPanel1.add(VDevol, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 170, -1, -1));
+        jPanel1.add(VDevol, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 170, -1, -1));
+
+        iva.setBackground(new java.awt.Color(255, 255, 255));
+        iva.setFont(new java.awt.Font("Segoe UI Light", 0, 14)); // NOI18N
+        iva.setSelected(true);
+        iva.setText("Iva");
+        iva.setOpaque(false);
+        iva.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ivaActionPerformed(evt);
+            }
+        });
+        jPanel1.add(iva, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 130, -1, -1));
+
+        jCheckBox16.setBackground(new java.awt.Color(255, 255, 255));
+        jCheckBox16.setFont(new java.awt.Font("Segoe UI Light", 0, 14)); // NOI18N
+        jCheckBox16.setSelected(true);
+        jCheckBox16.setText("Configuracion");
+        jCheckBox16.setOpaque(false);
+        jCheckBox16.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBox16ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(jCheckBox16, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 100, -1, -1));
+
+        promocion.setBackground(new java.awt.Color(255, 255, 255));
+        promocion.setFont(new java.awt.Font("Segoe UI Light", 0, 14)); // NOI18N
+        promocion.setSelected(true);
+        promocion.setText("Promociones");
+        promocion.setOpaque(false);
+        promocion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                promocionActionPerformed(evt);
+            }
+        });
+        jPanel1.add(promocion, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 160, -1, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -569,6 +618,26 @@ public class RolActualizar extends javax.swing.JDialog {
 
     }//GEN-LAST:event_jCheckBox14ActionPerformed
 
+    private void ivaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ivaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_ivaActionPerformed
+
+    private void jCheckBox16ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox16ActionPerformed
+        if (jCheckBox16.isSelected()) {
+            iva.setSelected(true);
+        } else {
+            iva.setSelected(false);
+        }
+    }//GEN-LAST:event_jCheckBox16ActionPerformed
+
+    private void VVentasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_VVentasActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_VVentasActionPerformed
+
+    private void promocionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_promocionActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_promocionActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -629,10 +698,12 @@ public class RolActualizar extends javax.swing.JDialog {
     private javax.swing.JCheckBox VDevol;
     private javax.swing.JCheckBox VDiaria;
     private javax.swing.JCheckBox VVentas;
+    private javax.swing.JCheckBox iva;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JCheckBox jCheckBox13;
     private javax.swing.JCheckBox jCheckBox14;
+    private javax.swing.JCheckBox jCheckBox16;
     private javax.swing.JCheckBox jCheckBox17;
     private javax.swing.JCheckBox jCheckBox2;
     private javax.swing.JCheckBox jCheckBox3;
@@ -640,6 +711,7 @@ public class RolActualizar extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JTextField jTextField3;
+    private javax.swing.JCheckBox promocion;
     private javax.swing.JCheckBox rcompras;
     // End of variables declaration//GEN-END:variables
 }

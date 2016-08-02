@@ -5,8 +5,8 @@
  */
 package vw.components;
 
-import Control.Entrada;
 import Control.Control;
+import Control.Entrada;
 import Modelo.ContenedorMenus;
 import Modelo.acciones;
 import Modelo.seccion;
@@ -20,13 +20,15 @@ import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import vw.dialogs.CategoriasRegistrar;
+import vw.dialogs.IvaCrear;
+import vw.dialogs.IvaModificar;
 import vw.main.Menu;
 
 /**
  *
  * @author usuario
  */
-public class CategoriaGestion extends javax.swing.JFrame {
+public class MaestroIva extends javax.swing.JFrame {
 
     String usuario;
     ArrayList<seccion> listaSeccion = new ArrayList();
@@ -36,7 +38,7 @@ public class CategoriaGestion extends javax.swing.JFrame {
     /**
      * Creates new form categoriaGestion
      */
-    public CategoriaGestion(String Usuario, ArrayList Acciones) {
+    public MaestroIva(String Usuario, ArrayList Acciones) {
         initComponents();
         this.List_Menu = Acciones;
         this.usuario = Usuario;
@@ -48,7 +50,7 @@ public class CategoriaGestion extends javax.swing.JFrame {
         try {
             inicio();
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(CategoriaGestion.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MaestroIva.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -70,7 +72,7 @@ public class CategoriaGestion extends javax.swing.JFrame {
         actualizar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Gestión de Categrorías - Inventarius");
+        setTitle("Gestión de Iva - Inventarius");
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -199,7 +201,12 @@ public class CategoriaGestion extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void nuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nuevoActionPerformed
-        new CategoriasRegistrar(this, true).setVisible(true);
+        try {
+            new IvaCrear(this, true).setVisible(true);
+            inicio();
+        } catch (Exception ex) {
+
+        }
     }//GEN-LAST:event_nuevoActionPerformed
 
     private void borrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_borrarActionPerformed
@@ -214,8 +221,18 @@ public class CategoriaGestion extends javax.swing.JFrame {
 
     private void actualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_actualizarActionPerformed
         try {
-            Update();
-            inicio();
+            int i = categoriaLista.getSelectedRow();
+            if (i == -1) {
+                Entrada.muestreMensajeV("Favor... seleccione una fila",
+                        JOptionPane.WARNING_MESSAGE);
+            } else {
+                String codiva = (String) categoriaLista.getValueAt(i, 0).toString();
+                String descri = (String) categoriaLista.getValueAt(i, 1).toString();
+                String porce = (String) categoriaLista.getValueAt(i, 2).toString();
+                new IvaModificar(this, true, Integer.parseInt(codiva), descri, porce).setVisible(true);
+                inicio();
+            }
+
         } catch (Exception ex) {
             /*Nothing Here*/
         }
@@ -227,28 +244,57 @@ public class CategoriaGestion extends javax.swing.JFrame {
      *
      * @throws ClassNotFoundException No se encuentra la librería de conexión
      */
-    public void borrar() throws ClassNotFoundException {
-        Control.conectar();
-        int i = categoriaLista.getSelectedRow();
-        int j = categoriaLista.getSelectedColumn();
-        if (i == -1) {
-            Entrada.muestreMensajeV("Favor... seleccione una fila",
-                    JOptionPane.WARNING_MESSAGE);
-        } else if (JOptionPane.showConfirmDialog(this, "¿Está seguro de borrar esta categoría?", "Inventarius", JOptionPane.YES_NO_OPTION) == 0) {
-            String cod = (String) categoriaLista.getValueAt(i, 0).toString();
-            boolean r = Control.ejecuteUpdate("update categoria "
-                    + "set estado='I' " /*Estado Inactivo*/
-                    + "where cod_categoria=" + cod);
-            if (r) {
-                Entrada.muestreMensajeV("Categoría Borrada con éxito",
-                        JOptionPane.INFORMATION_MESSAGE);
-                inicio();
-            } else {
-                Entrada.muestreMensajeV(":Error Fatal: \nNo se pudo borrar la categoría\n::Revise su conexión",
-                        JOptionPane.ERROR_MESSAGE);
+    public int ValidacionIva(int iva) {
+        int cant = 0;
+        try {
+            Control.ejecuteQuery("select count(*) from maestro_iva a , producto b where a.codiva=b.iva and a.codiva=" + iva + " having count(*)>0");
+            while (Control.rs.next()) {
+                cant = Control.rs.getInt(1);
             }
+            System.out.println("CANT : " + cant);
+        } catch (Exception ex) {
+            System.out.println("Error Iva : " + ex.toString());
+        }
+        return cant;
+    }
+
+    public void borrar() throws ClassNotFoundException, SQLException {
+        try {
+            Control.conectar();
+            Control.con.setAutoCommit(false);
+
+            boolean r = false;
+            int i = categoriaLista.getSelectedRow();
+            if (i == -1) {
+                Entrada.muestreMensajeV("Favor... seleccione una fila",
+                        JOptionPane.WARNING_MESSAGE);
+            } else if (JOptionPane.showConfirmDialog(this, "¿Está seguro de borrar el iva?", "Inventarius", JOptionPane.YES_NO_OPTION) == 0) {
+                String cod = (String) categoriaLista.getValueAt(i, 0).toString();
+                if (ValidacionIva(Integer.parseInt(cod)) == 0) {
+                    r = Control.ejecuteUpdate("update maestro_iva "
+                            + "set estado='I' " /*Estado Inactivo*/
+                            + "where codiva=" + Integer.parseInt(cod));
+
+                    if (r) {
+                        Entrada.muestreMensajeV("Categoría Borrada con éxito",
+                                JOptionPane.INFORMATION_MESSAGE);
+                    } else {
+                        Entrada.muestreMensajeV(":Error Fatal: \nNo se pudo borrar la categoría\n::Revise su conexión",
+                                JOptionPane.ERROR_MESSAGE);
+                    }
+                } else {
+                    Entrada.muestreMensajeV("Esta configuracion de iva ya esta siendo usa por productos,\n es recomendable modificarlo");
+                }
+            }
+
+        } catch (SQLException ex) {
+            System.out.println("Error : " + ex.toString());
+        } finally {
+            Control.con.commit();
+            Control.con.setAutoCommit(true);
             Control.cerrarConexion();
         }
+        inicio();
     }
 
     /**
@@ -257,55 +303,20 @@ public class CategoriaGestion extends javax.swing.JFrame {
      * @throws ClassNotFoundException no encuentra la librería de conexion
      * DataBase
      */
-    public void Update() throws ClassNotFoundException, SQLException {
-        boolean r = false;
-        try {
-            Control.conectar();
-            Control.con.setAutoCommit(false);
-            int i = categoriaLista.getSelectedRow();
-            int j = categoriaLista.getSelectedColumn();
-            if (i == -1) {
-                JOptionPane.showMessageDialog(null, "Favor... seleccione una fila");
-            } else {
-                String nom = Entrada.leaCadenaV("Digite Nombre Nuevo");
-                String cod = (String) categoriaLista.getValueAt(i, 0).toString();
-                if (!nom.isEmpty()) {
-                    r = Control.ejecuteUpdate("update categoria set descripcion='" + nom + "' where cod_categoria=" + cod);
-                }
-            }
-        } catch (SQLException ex) {
-            r = false;
-            System.out.println("Erro SQl " + ex.toString());
-        } finally {
-            Control.con.commit();
-            Control.con.setAutoCommit(true);
-            Control.cerrarConexion();
-        }
-        if (r) {
-            inicio();
-        } else {
-            Entrada.muestreMensajeV("Error "
-                    + "\nCategoría no se pudo actualizar correctamente"
-                    + "\nDebido a un error en la consulta",
-                    javax.swing.JOptionPane.ERROR_MESSAGE);
-        }
-
-    }
-
     /**
      * Iniciar la tabla definida en el inicio.
      *
      * @throws ClassNotFoundException no encuentra la librería de conexion
      * DataBase
      */
-    public void inicio() throws ClassNotFoundException {        
+    public void inicio() throws ClassNotFoundException {
         DefaultTableModel modeloEmpleado = new DefaultTableModel();
         int numeroPreguntas;
         ResultSetMetaData rsetMetaData;
         this.categoriaLista.setModel(modeloEmpleado);
         try {
             Control.conectar();
-            Control.ejecuteQuery("select * from CategoriaBusqueda()");
+            Control.ejecuteQuery("select codiva,descripcion,porcentaje from maestro_iva where estado='A' order by porcentaje ");
             rsetMetaData = Control.rs.getMetaData();
             numeroPreguntas = rsetMetaData.getColumnCount();
             //Establece los nombres de las columnas de las tablas
