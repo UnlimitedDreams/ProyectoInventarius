@@ -614,10 +614,10 @@ public class Bodega extends javax.swing.JFrame {
         String query = "";
         if (SoloNumeros(jTextField2.getText())) {
             query = "select codigo \"Codigo\",nombre \"Nombre\",cate \"Categoria\",rcosto \"Costo\",riva \"Iva\",rprecio \"Precio\","
-                    + "rdescuento \"Descuento\",rcantidad \"Cantidad\"  from BodegaInicioBuscarSerie('"+jTextField2.getText()+"') ";
+                    + "rdescuento \"Descuento\",rcantidad \"Cantidad\"  from BodegaInicioBuscar(1,'"+jTextField2.getText()+"') ";
         } else {
             query = "select codigo \"Codigo\",nombre \"Nombre\",cate \"Categoria\",rcosto \"Costo\",riva \"Iva\",rprecio \"Precio\","
-                    + "rdescuento \"Descuento\",rcantidad \"Cantidad\"  from BodegaInicioBuscarNombre('"+jTextField2.getText()+"')";
+                    + "rdescuento \"Descuento\",rcantidad \"Cantidad\"  from BodegaInicioBuscar(2,'"+jTextField2.getText()+"')";
         }
         Control.conectar();
         DefaultTableModel modeloEmpleado = new DefaultTableModel();
