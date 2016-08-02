@@ -57,7 +57,6 @@ public class Entrada_Nueva extends javax.swing.JFrame {
             setIconImage(img.getImage());
             c.setVisible(false);
             this.nom = nom;
-            System.out.println("Nombre : " + nom);
             this.codEmpresa = codEmpresa;
             this.condicionfiltro = false;
             this.ListAcciones = acciones;
@@ -81,7 +80,7 @@ public class Entrada_Nueva extends javax.swing.JFrame {
         try {
             listIvas.clear();
             Control.conectar();
-            Control.ejecuteQuery("select porcentaje from maestro_iva");
+            Control.ejecuteQuery("select * from cargaiva()");
             while (Control.rs.next()) {
                 listIvas.add(Control.rs.getInt(1));
             }
@@ -109,18 +108,16 @@ public class Entrada_Nueva extends javax.swing.JFrame {
     }
 
     public void Categoria2() throws ClassNotFoundException {
-        Control.conectar();
+
         try {
-            Control.ejecuteQuery("select * from provedor where estado='A'");
+            Control.conectar();
+            Control.ejecuteQuery("select * from categoriabusqueda()");
             String cod = "", nom = "";
             ArrayList<List_Categoria> cater = new ArrayList();
-
             while (Control.rs.next()) {
                 cater.add(new List_Categoria(Control.rs.getInt(1), Control.rs.getString(3)));
                 proveedores.addItem(Control.rs.getInt(1) + "-" + Control.rs.getString(3));
-
             }
-            Control.cerrarConexion();
         } catch (Exception ex) {
 
         } finally {
@@ -147,8 +144,8 @@ public class Entrada_Nueva extends javax.swing.JFrame {
 
     public void cargarUsuario() throws SQLException, ClassNotFoundException {
         Control.conectar();
-        Control.ejecuteQuery("select nombre,apellido,codempresa from usuario,persona where \n"
-                + "usuario.cedula=persona.cedula and  cod_usuario=" + nom);
+        System.out.println("usuario : " + nom);
+        Control.ejecuteQuery("select * from cargausuario(" + nom + ")");
         String nombre = "";
         int empresa = 0;
         while (Control.rs.next()) {
@@ -536,14 +533,12 @@ public class Entrada_Nueva extends javax.swing.JFrame {
             boolean Rfinal = false;
             if (ajustar_Datos_CalculoCosto()) {
                 try {
-                    System.out.println("Valido todo");
                     Date date = fechaActual.getDate();
                     SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd  hh:mm:ss");
                     String fecha = format2.format(date);
                     Producto pro = null;
                     String v[] = proveedores.getSelectedItem().toString().split("-");
                     if (VerificarFactura() == false) {
-                        System.out.println("Sigue por aqui");
                         boolean r = false;
                         boolean r1 = false;
                         int codigo_detalle = Sequence.seque("select max(cod_detalle) from detalle");
@@ -551,7 +546,7 @@ public class Entrada_Nueva extends javax.swing.JFrame {
                             Control.conectar();
                             Control.con.setAutoCommit(false);
                             for (int i = 0; i < productos.size(); i++) {
-                                pro = (Producto) productos.get(i);                               
+                                pro = (Producto) productos.get(i);
                                 r = Control.ejecuteUpdate("insert into detalle values(" + codigo_detalle + ",'" + fecha + "',"
                                         + pro.getCantidad() + "," + pro.getCosto() + ","
                                         + v[0] + ",'" + jTextField1.getText() + "','" + comprass.getSelectedItem().toString() + "'"
@@ -560,10 +555,9 @@ public class Entrada_Nueva extends javax.swing.JFrame {
                                 if (r) {
                                     r1 = Control.ejecuteUpdate("update producto set cantidad=cantidad+" + pro.getCantidad() + ","
                                             + "stock=" + pro.getStock() + ",bandera=1,nombre='" + pro.getNombre() + "',"
-                                            + "precio_venta=" + pro.getPrecio_venta()+",precio_desc="+pro.getPrecio_venta()
+                                            + "precio_venta=" + pro.getPrecio_venta() + ",precio_desc=" + pro.getPrecio_venta()
                                             + " where cod_producto=" + pro.getCodigoProducto() + "");
                                     if (r1) {
-                                        System.out.println("Paso Bien");
                                         int cost = costo(pro.getCodigoProducto());
                                         boolean f = promedio_costo(cost, pro.getCosto(), pro.getCodigoProducto());
                                     }
@@ -573,7 +567,6 @@ public class Entrada_Nueva extends javax.swing.JFrame {
 //                                Connection con = Control.con;
 //                            generarFactura(jTextField1.getText(), fecha, con, v[1]);
                                 Rfinal = true;
-
                             } else {
                                 Entrada.muestreMensajeV("Error al Registrar Producto Pongase en contacto con Soporte");
                             }
@@ -596,7 +589,7 @@ public class Entrada_Nueva extends javax.swing.JFrame {
 
                 } catch (Exception ex) {
                     System.out.println("Error Proceso : " + ex.toString());
-                } 
+                }
 
                 if (Rfinal) {
                     try {
@@ -637,7 +630,7 @@ public class Entrada_Nueva extends javax.swing.JFrame {
         int valor = 0;
         valor = (costo + (int) x) / 2;
         boolean r = Control.ejecuteUpdate("update producto set costo=" + valor
-                + " where cod_producto=" + cod );
+                + " where cod_producto=" + cod);
 
         return r;
     }
@@ -646,7 +639,7 @@ public class Entrada_Nueva extends javax.swing.JFrame {
         int costo = 0;
         try {
             Control.ejecuteQuery("select costo from producto where "
-                    + "cod_producto=" + cod );
+                    + "cod_producto=" + cod);
             while (Control.rs.next()) {
                 costo = Control.rs.getInt(1);
             }
@@ -729,9 +722,7 @@ public class Entrada_Nueva extends javax.swing.JFrame {
                     break;
                 } else if (i == 4 && SoloNumeros((String) jTable2.getValueAt(k, i), 1)) {
                     for (int Valoriva : listIvas) {
-                        System.out.println("" + (String) jTable2.getValueAt(k, i) + "=" + Valoriva);
                         if (Integer.parseInt((String) jTable2.getValueAt(k, i)) == Valoriva) {
-
                             iva = true;
                         }
                     }
@@ -740,7 +731,6 @@ public class Entrada_Nueva extends javax.swing.JFrame {
                         r = false;
                         break;
                     }
-
                 }
             }
         }
@@ -778,9 +768,6 @@ public class Entrada_Nueva extends javax.swing.JFrame {
         if (valorCosto > 0) {
             costo = true;
         }
-        for (Producto producto : productos) {
-            System.out.println("-" + producto.toString());
-        }
         return costo;
     }
 
@@ -795,18 +782,6 @@ public class Entrada_Nueva extends javax.swing.JFrame {
 
     }
 
-    public void restar_Bodega() throws ClassNotFoundException {
-        Control.conectar();
-        Producto pro = null;
-        int codigo_pro = 0;
-        for (int i = 0; i < productos.size(); i++) {
-            pro = (Producto) productos.get(i);
-            Control.ejecuteUpdate("update producto set cantidad=cantidad-" + pro.getCantidad() + " where "
-                    + "cod_producto='" + pro.getCodigo() + "'");
-        }
-        Control.cerrarConexion();
-    }
-
     public boolean VerificarFactura() throws ClassNotFoundException {
         Control.conectar();
         boolean r = false;
@@ -817,9 +792,11 @@ public class Entrada_Nueva extends javax.swing.JFrame {
             while (Control.rs.next()) {
                 r = true;
             }
-            Control.cerrarConexion();
+
         } catch (Exception ex) {
 
+        } finally {
+            Control.cerrarConexion();
         }
         return r;
     }
@@ -839,37 +816,28 @@ public class Entrada_Nueva extends javax.swing.JFrame {
             int i = jTable2.getSelectedRow();
             if (i == -1) {
                 JOptionPane.showMessageDialog(null, "Favor... seleccione una fila");
-            } else {
-                System.out.println("---------");
+            } else {                
                 String cod = (String) jTable2.getValueAt(i, 0).toString();
                 Producto p = null;
 
                 for (int k = 0; k < productos.size(); k++) {
                     p = (Producto) productos.get(k);
-                    if (p.getCodigo().equalsIgnoreCase(cod)) {
-                        System.out.println("borrar");
+                    if (p.getCodigo().equalsIgnoreCase(cod)) {                        
                         productos.remove(p);
                     }
-                }
-                System.out.println("size " + productos.size());
+                }                
                 if (productos.size() == 0) {
                     Borrar2();
                 } else {
                     Borrar();
-
                 }
                 iniciar();
-
             }
-
         }
-
     }
     private void crearProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_crearProductoActionPerformed
         String proveedor[] = proveedores.getSelectedItem().toString().split("-");
-
         String fac = jTextField1.getText();
-
         new ProductoRegistrar(this, true, productos).setVisible(true);
         //this.setVisible(false);
 
@@ -924,14 +892,8 @@ public class Entrada_Nueva extends javax.swing.JFrame {
             if (Esta == false) {
                 try {
                     Control.conectar();
-                    Producto temp = null;
-
-                    String query = "select nombre,precio_desc,cast(maestro_iva.porcentaje as numeric(10)),costo,stock,maestro_iva.codiva,cod_producto "
-                            + "from producto,maestro_iva\n"
-                            + "where  producto.iva=maestro_iva.codiva and \n"
-                            + "producto.estado='A' and serie_producto='" + cod + "'";
-                    System.out.println(query);
-                    Control.ejecuteQuery(query);
+                    Producto temp = null;                    
+                    Control.ejecuteQuery("select * from ProductoBuqueda('"+cod+"',1)");
                     String nom = "";
                     double precio = 0;
                     double costo = 0;
@@ -961,6 +923,7 @@ public class Entrada_Nueva extends javax.swing.JFrame {
                     Logger.getLogger(Venta.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (SQLException ex) {
                     Logger.getLogger(Venta.class.getName()).log(Level.SEVERE, null, ex);
+                    Control.cerrarConexion();
                 }
             }
             c.setVisible(false);
@@ -1026,31 +989,11 @@ public class Entrada_Nueva extends javax.swing.JFrame {
     public void Buscar() throws ClassNotFoundException {
         String query = "";
         if (SoloNumeros(jTextField2.getText())) {
-            query = "select distinct * from (\n"
-                    + "select  distinct serie_producto \"Código\",upper(nombre)\"Nombre\",upper(categoria.descripcion) \"Categoría \",costo \"Costo\",iva \"IVA\",precio_desc \"Precio\",descu \"Descuento\",cantidad \"Cantidad\"\n"
-                    + "from producto,categoria where\n"
-                    + "producto.cod_categoria=categoria.cod_categoria and   \n"
-                    + "producto.serie_producto ILIKE ('%" + jTextField2.getText() + "')  and producto.estado='A'  \n"
-                    + "union all\n"
-                    + "select  distinct serie_producto \"Código\",upper(nombre)\"Nombre\",upper(categoria.descripcion) \"Categoría \",costo \"Costo\",iva \"IVA\",precio_desc \"Precio\",descu \"Descuento\",cantidad \"Cantidad\"\n"
-                    + "from producto,categoria where\n"
-                    + "producto.cod_categoria=categoria.cod_categoria and   \n"
-                    + "producto.serie_producto ILIKE ('%" + jTextField2.getText() + "%')  and producto.estado='A'  )y "
-                    + "limit 40 ";
+            query = "select * from CompraVentaFiltro('"+jTextField2.getText()+"',1)";
         } else {
-            query = "select distinct  serie_producto \"Codigo\",nombre,precio_desc \"Precio Venta\""
-                    + " from producto,categoria where "
-                    + "  producto.cod_categoria=categoria.cod_categoria and "
-                    + "  (categoria.descripcion ILIKE ('%" + jTextField2.getText() + "%') or  "
-                    + "producto.nombre ILIKE ('%" + jTextField2.getText() + "%') or "
-                    + " producto.serie_producto ILIKE ('%" + jTextField2.getText() + "%') )  and producto.estado='A'";
-        }
-
-        System.out.println(query);
+            query = "select * from CompraVentaFiltro('"+jTextField2.getText()+"',2)";
+        }        
         Control.conectar();
-        Producto temp = null;
-        String cod = "", nom = "", valor = "", cant = "", costo = "", iva = "", precio = "";
-        String cate = "";
         String cabeceras[] = {"Producto", "Nombre", "Precio"};
         DefaultTableModel modeloEmpleado = new DefaultTableModel(null, cabeceras) {
             @Override
@@ -1072,13 +1015,8 @@ public class Entrada_Nueva extends javax.swing.JFrame {
             for (int i = 0; i <= numeroPreguntas; i++) {
                 //modeloEmpleado.addColumn(rsetMetaData.getColumnLabel(i + 1));
             }
-            if (!jTextField2.getText().equals("")) {
-                //System.out.println(":: " + Control.rs.next());
+            if (!jTextField2.getText().equals("")) {                
                 while (Control.rs.next()) {
-                    System.out.println("Trajo datos");
-                    cod = Control.rs.getString(1);
-                    nom = Control.rs.getString(2);
-                    costo = Control.rs.getString(3);
                     r2 = true;
                     Object[] registroEmpleado = new Object[numeroPreguntas];
                     for (int i = 0; i < numeroPreguntas; i++) {
@@ -1089,8 +1027,7 @@ public class Entrada_Nueva extends javax.swing.JFrame {
                 c.setVisible(true);
             } else {
                 c.setVisible(false);
-            }
-            Control.cerrarConexion();
+            }            
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "ERROR " + e.getMessage());
         } finally {
@@ -1119,8 +1056,7 @@ public class Entrada_Nueva extends javax.swing.JFrame {
         if (i == -1) {
             JOptionPane.showMessageDialog(null, "Favor... seleccione una fil");
         } else if (i >= 0) {
-            cod = (String) jTable1.getValueAt(i, 0).toString();
-            System.out.println("Trajo producto :::: " + cod);
+            cod = (String) jTable1.getValueAt(i, 0).toString();            
             boolean Esta = false;
             for (int k = 0; k < productos.size(); k++) {
                 p = (Producto) productos.get(k);
@@ -1129,15 +1065,11 @@ public class Entrada_Nueva extends javax.swing.JFrame {
                     p.setCantidad(p.getCantidad() + 1);
                 }
             }
-            if (Esta == false) {
-                System.out.println("Consulto datos");
+            if (Esta == false) {               
                 try {
                     Control.conectar();
                     Producto temp = null;
-                    String query = "select nombre,precio_desc,cast(maestro_iva.porcentaje as numeric(10)),costo,stock,maestro_iva.codiva,cod_producto  "
-                            + "from producto,maestro_iva\n"
-                            + "where  producto.iva=maestro_iva.codiva and \n"
-                            + "producto.estado='A' and serie_producto='" + cod + "'";
+                    String query = "select * from ProductoBuqueda('"+cod+"',1)";
                     Control.ejecuteQuery(query);
                     String nom = "";
                     double precio = 0;
