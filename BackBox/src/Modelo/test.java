@@ -15,8 +15,7 @@ import org.fife.ui.rsyntaxtextarea.Theme;
 public class test {
 
     public static void main(String juan[]) throws InterruptedException {
-        String v = "7900.0";
-        Double.parseDouble(v);
-        System.out.println(""+Double.parseDouble(v));
+        String v = "$ 5000";
+        System.out.println(v.substring(2, v.length()));
     }
 }

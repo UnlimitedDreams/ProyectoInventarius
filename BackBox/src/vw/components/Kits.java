@@ -30,7 +30,7 @@ import vw.main.Menu;
  *
  * @author usuario
  */
-public class Promociones extends javax.swing.JFrame {
+public class Kits extends javax.swing.JFrame {
 
     String usuario;
     ArrayList<seccion> listaSeccion = new ArrayList();
@@ -40,7 +40,7 @@ public class Promociones extends javax.swing.JFrame {
     /**
      * Creates new form categoriaGestion
      */
-    public Promociones(String Usuario, ArrayList Acciones) {
+    public Kits(String Usuario, ArrayList Acciones) {
         initComponents();
         this.List_Menu = Acciones;
         this.usuario = Usuario;
@@ -52,7 +52,7 @@ public class Promociones extends javax.swing.JFrame {
         try {
             inicio();
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(Promociones.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Kits.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

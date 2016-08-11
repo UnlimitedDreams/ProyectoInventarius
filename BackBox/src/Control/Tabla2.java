@@ -10,16 +10,15 @@ import java.util.ArrayList;
 import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
 
-
 public class Tabla2 implements TableCellRenderer {
 
     ArrayList<Producto> pro = new ArrayList();
     public String frecuencias[][];
     int nrofreq;
-
-    public Tabla2(ArrayList x) {
+ 
+    public Tabla2(ArrayList x, int Columnas) {
         nuevo();
-        frecuencias = new String[7][x.size()];
+        frecuencias = new String[Columnas][x.size()];
         nrofreq = 0;
         Producto temp = null;
         for (int i = 0; i < x.size(); i++) {
@@ -28,26 +27,40 @@ public class Tabla2 implements TableCellRenderer {
         }
     }
 
-
-
     public void calculeFrecuenciasV() {
         Producto temp = null;
-            for (int i = 0; i < pro.size(); i++) {
-                temp = (Producto) pro.get(i);
-                frecuencias[0][nrofreq] = "" + pro.get(i).getCodigo();
-                frecuencias[1][nrofreq] = "" + pro.get(i).getNombre();
-                frecuencias[2][nrofreq] = ""+pro.get(i).getPrecio_venta();
-                frecuencias[3][nrofreq] = "" + pro.get(i).getCantidad();
-                nrofreq++;
-            }      
+        for (int i = 0; i < pro.size(); i++) {
+            temp = (Producto) pro.get(i);
+            frecuencias[0][nrofreq] = "" + pro.get(i).getCodigo();
+            frecuencias[1][nrofreq] = "" + pro.get(i).getNombre();
+            frecuencias[2][nrofreq] = "" + pro.get(i).getPrecio_venta();
+            frecuencias[3][nrofreq] = "" + pro.get(i).getCantidad();
+            nrofreq++;
+        }
+    }
+
+    public void calculeFrecuenciasPromocion() {
+        Producto temp = null;
+        for (int i = 0; i < pro.size(); i++) {
+            temp = (Producto) pro.get(i);
+            frecuencias[0][nrofreq] = "" + pro.get(i).getCodigo();
+            frecuencias[1][nrofreq] = "" + pro.get(i).getNombre();
+            frecuencias[2][nrofreq] = "" + pro.get(i).getPrecio_venta();
+            frecuencias[3][nrofreq] = "" + pro.get(i).getDesc();
+            frecuencias[4][nrofreq] = "" + pro.get(i).getCosto();
+            frecuencias[5][nrofreq] = "" + pro.get(i).getPrecio_final();
+            nrofreq++;
+        }
     }
 
     public void nuevo() {
         pro.clear();
     }
+
     public int getNrofreq() {
         return nrofreq;
     }
+
     public void setNrofreq(int nrofreq) {
         this.nrofreq = nrofreq;
     }

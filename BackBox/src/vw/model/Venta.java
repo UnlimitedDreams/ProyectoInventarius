@@ -107,6 +107,7 @@ public class Venta extends javax.swing.JFrame implements KeyListener {
         this.codigo_cliente = 0;
         this.codigo_empresa = empresa;
         this.subtotal.setText("0");
+        this.montoPago.setText("0");
         this.setLocationRelativeTo(null);
         this.setResizable(false);
         this.regimen = 0;
@@ -341,7 +342,7 @@ public class Venta extends javax.swing.JFrame implements KeyListener {
 
     public void iniciar() {
         System.out.println("Tamañ de productos " + productos.size());
-        Tabla2 t = new Tabla2(productos);
+        Tabla2 t = new Tabla2(productos, 5);
         t.calculeFrecuenciasV();
         muevaLosDatosFre(t);
 
@@ -431,7 +432,7 @@ public class Venta extends javax.swing.JFrame implements KeyListener {
         jButton5 = new javax.swing.JButton();
         valorDescuento = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
-        medioPago = new javax.swing.JComboBox<String>();
+        medioPago = new javax.swing.JComboBox<>();
         Descuento = new javax.swing.JLabel();
         porcentajeIVA = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
@@ -761,7 +762,7 @@ public class Venta extends javax.swing.JFrame implements KeyListener {
         jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 340, -1, -1));
 
         medioPago.setFont(new java.awt.Font("Segoe UI Light", 0, 14)); // NOI18N
-        medioPago.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Efectivo", "Tarjeta" }));
+        medioPago.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Efectivo", "Tarjeta Credito", "Tarjeta Debito" }));
         medioPago.setToolTipText("Método de Pago del Cliente");
         medioPago.setPreferredSize(new java.awt.Dimension(130, 28));
         medioPago.addActionListener(new java.awt.event.ActionListener() {
@@ -1000,7 +1001,7 @@ public class Venta extends javax.swing.JFrame implements KeyListener {
             //Mostrar en pdf   // JasperViewer.viewReport(jasperPrint);   
             JasperPrintManager.printReport(jasperPrint, true);
         } catch (Exception ex) {
-            System.err.println("Error Reporte "+ex.toString());
+            System.err.println("Error Reporte " + ex.toString());
         }
     }
 
@@ -1020,26 +1021,33 @@ public class Venta extends javax.swing.JFrame implements KeyListener {
                 cod_pago = 1;
             } else if (medioPago.getSelectedIndex() == 1) {
                 cod_pago = 2;
+            } else if (medioPago.getSelectedIndex() == 2) {
+                cod_pago = 3;
             }
             Date fecha = new Date();
             double valorIva = Double.parseDouble(porcentajeIVA.getText());
-            System.out.println("2");
-            System.out.println("valor pago : " + ValorPago);
+            double CambioUsu = 0;
+            if (cambio.getText().equalsIgnoreCase("0") || cambio.getText().equalsIgnoreCase("$ 0")) {
+                CambioUsu = 0;
+            } else {
+                CambioUsu = Double.parseDouble(cambio.getText().substring(2, cambio.getText().length()));
+            }
             r = Control.ejecuteUpdate("insert into venta values(" + codigo_venta + ",'" + fecha + "'," + ValorPago
                     + "," + usuario + "," + tipoVenta + "," + cod_pago + "," + valorIva + ""
                     + "," + Integer.parseInt(porcentajeDescuento.getText()) + ","
                     + this.ValorDesc + "," + codigo_cliente + ","
-                    + this.ValorNeto + "," + codigo_empresa + ")");
+                    + this.ValorNeto + "," + codigo_empresa + "," + Double.parseDouble(montoPago.getText()) + ","
+                    + CambioUsu + ")");
             if (r) {
                 Producto pro = null;
                 for (int i = 0; i < productos.size(); i++) {
                     pro = (Producto) productos.get(i);
                     r = Control.ejecuteUpdate("insert into venta_pro values(" + codigo_pro + ","
-                            + codigo_venta + "," + pro.getCantidad() + "," + pro.getIva() + "," + (pro.getValorIva()*pro.getCantidad()) + "," + pro.getCodigoProducto() + ")");
+                            + codigo_venta + "," + pro.getCantidad() + "," + pro.getIva() + "," + (pro.getValorIva() * pro.getCantidad()) + "," + pro.getCodigoProducto() + ")");
                     codigo_pro++;
                 }
                 restar_Bodega();
-               generarFactura(codigo_venta, fecha, cone);
+                generarFactura(codigo_venta, fecha, cone);
 
                 Proceso = true;
             } else {
@@ -1501,11 +1509,9 @@ public class Venta extends javax.swing.JFrame implements KeyListener {
             } catch (StringIndexOutOfBoundsException e) {
                 /*Error Normal*/
             }
-        } else {
-            if (Integer.parseInt(porcentajeDescuento.getText()) > 100) {
-                Entrada.muestreMensajeV("El % del descuento no puede ser mayor a 100");
-                porcentajeDescuento.setText("" + 0);
-            }
+        } else if (Integer.parseInt(porcentajeDescuento.getText()) > 100) {
+            Entrada.muestreMensajeV("El % del descuento no puede ser mayor a 100");
+            porcentajeDescuento.setText("" + 0);
         }
     }//GEN-LAST:event_porcentajeDescuentoKeyReleased
     public boolean SoloNumeros(String cadena) {
@@ -1586,9 +1592,9 @@ public class Venta extends javax.swing.JFrame implements KeyListener {
         ArrayList<Producto> productos = new ArrayList();
         try {
             new VentaAux(productos, usuario, 1, List_Menu, "1", codigo_empresa).setVisible(true);
-        }catch(Exception ex){
-            
-        }   
+        } catch (Exception ex) {
+
+        }
     }//GEN-LAST:event_jButton2ActionPerformed
     public void Buscar() throws ClassNotFoundException {
         String query = "";

@@ -30,6 +30,7 @@ public class SalidaEntrada extends javax.swing.JDialog {
     String usuario;
     int codProducto;
     int codEmpresa;
+    Bodega Bode;
     ArrayList<Integer> ListAcciones = new ArrayList();
 
     /**
@@ -43,7 +44,7 @@ public class SalidaEntrada extends javax.swing.JDialog {
      * @param cant Cantidad del Producto
      */
     public SalidaEntrada(java.awt.Frame parent, boolean modal,
-            String codigo, String tipo, String Nombre, String cant, ArrayList acciones,int codEmpresa) {
+            String codigo, String tipo, String Nombre, String cant, ArrayList acciones, int codEmpresa) {
         super(parent, modal);
         initComponents();
         this.codigo = codigo;
@@ -51,7 +52,8 @@ public class SalidaEntrada extends javax.swing.JDialog {
         this.usuario = Nombre;
         this.cant = cant;
         this.ListAcciones = acciones;
-        this.codEmpresa=codEmpresa;
+        this.codEmpresa = codEmpresa;
+        this.Bode=(Bodega)parent;
         this.setLocationRelativeTo(null);
         this.setResizable(false);
         URL url = getClass().getResource("/images/facelet/icon.png");
@@ -193,9 +195,10 @@ public class SalidaEntrada extends javax.swing.JDialog {
         this.nombre = nombre;
         Control.cerrarConexion();
     }
+
     public void cargarCodProducto() throws SQLException, ClassNotFoundException {
         Control.conectar();
-        Control.ejecuteQuery("select cod_producto from producto where serie_producto='" + codigo+"'");
+        Control.ejecuteQuery("select cod_producto from producto where serie_producto='" + codigo + "'");
         int codPro = 0;
         while (Control.rs.next()) {
             codPro = Control.rs.getInt(1);
@@ -213,6 +216,7 @@ public class SalidaEntrada extends javax.swing.JDialog {
         int cant2 = (int) cantidad.getValue();
         if (cant2 <= Integer.parseInt(cant) || tipo.equalsIgnoreCase("Entrada")) {
             int codigo_sal = Sequence.seque("select max(cod_entra) from Salida_Entrada");
+            boolean r = false;
             try {
                 Control.conectar();
                 Control.con.setAutoCommit(false);
@@ -223,26 +227,15 @@ public class SalidaEntrada extends javax.swing.JDialog {
                 } else {
                     boolean r1 = Control.ejecuteUpdate("insert into Salida_Entrada values("
                             + codigo_sal + ",'" + tipo + "'," + cantidad.getValue() + ",'" + fecha + "',"
-                            +"'" + jTextArea1.getText() + "','" + nombre + "',"+codProducto+")");
+                            + "'" + jTextArea1.getText() + "','" + nombre + "'," + codProducto + ")");
                     if (r1) {
-                        boolean r = false;
+
                         if (tipo.equalsIgnoreCase("Salida")) {
                             r = Control.ejecuteUpdate("update producto set cantidad=cantidad-" + cantidad.getValue() + " where cod_producto='" + codProducto + "'");
                         } else {
                             System.out.println("Update producto");
                             r = Control.ejecuteUpdate("update producto set cantidad=cantidad+" + cantidad.getValue() + " where cod_producto='" + codProducto + "'");
 
-                        }
-                        if (r) {
-                            Control.con.commit();
-                            Control.con.setAutoCommit(true);
-                            Control.cerrarConexion();
-                            Bodega b = new Bodega(usuario, ListAcciones,codEmpresa);
-                            this.dispose();
-
-                        } else {
-                            Entrada.muestreMensajeV("Error Haciendo Cambios a La Bodega",
-                                    javax.swing.JOptionPane.ERROR_MESSAGE);
                         }
                     } else {
                         Entrada.muestreMensajeV("Error",
@@ -256,6 +249,16 @@ public class SalidaEntrada extends javax.swing.JDialog {
                 Control.con.commit();
                 Control.con.setAutoCommit(true);
                 Control.cerrarConexion();
+            }
+            if (r) {
+                Bodega b = new Bodega(usuario, ListAcciones, codEmpresa);
+                this.Bode.inicio();
+                this.dispose();
+                
+
+            } else {
+                Entrada.muestreMensajeV("Error Haciendo Cambios a La Bodega",
+                        javax.swing.JOptionPane.ERROR_MESSAGE);
             }
 
         } else {

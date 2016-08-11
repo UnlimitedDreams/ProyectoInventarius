@@ -32,7 +32,7 @@ import vw.model.Venta;
  *
  * @author usuario
  */
-public class PromocionRegistro extends javax.swing.JDialog {
+public class KitsRegistro extends javax.swing.JDialog {
 
     /**
      * Creates new form RolActualizar
@@ -45,7 +45,7 @@ public class PromocionRegistro extends javax.swing.JDialog {
     ArrayList<Producto> productos = new ArrayList();
     boolean condicionfiltro;
 
-    public PromocionRegistro(java.awt.Frame parent, boolean modal) {
+    public KitsRegistro(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         this.setLocationRelativeTo(null);

@@ -830,9 +830,7 @@ public class Articulo extends javax.swing.JFrame implements Runnable {
                     break;
                 }
             }
-        }
-
-//      
+        } 
         if (mnserror != "N") {
             Entrada.muestreMensajeV(mnserror);
         }
@@ -864,34 +862,11 @@ public class Articulo extends javax.swing.JFrame implements Runnable {
     public void Buscar() throws ClassNotFoundException {
         String query = "";
         if (SoloNumeros(jTextField2.getText())) {
-            query = "select distinct * from (\n"
-                    + "select  distinct serie_producto \"Código\",upper(nombre)\"Nombre\",upper(categoria.descripcion) \"Categoría \",costo \"Costo\",maestro_iva.porcentaje \"IVA\",precio_desc \"Precio\",stock \"stock\",cantidad \"Cantidad\"\n"
-                    + " from producto,categoria,maestro_iva where\n"
-                    + "  producto.cod_categoria=categoria.cod_categoria and \n"
-                    + "  producto.iva=maestro_iva.codiva and \n"
-                    + "  producto.serie_producto ILIKE ('%" + jTextField2.getText() + "')  and producto.estado='A'\n"
-                    + "union all\n"
-                    + "select  distinct serie_producto \"Código\",upper(nombre)\"Nombre\",upper(categoria.descripcion) \"Categoría \",costo \"Costo\",maestro_iva.porcentaje \"IVA\",precio_desc \"Precio\",stock \"stock\",cantidad \"Cantidad\"\n"
-                    + " from producto,categoria,maestro_iva where\n"
-                    + "  producto.cod_categoria=categoria.cod_categoria and \n"
-                    + "  producto.iva=maestro_iva.codiva and \n"
-                    + "  producto.serie_producto ILIKE ('%" + jTextField2.getText() + "%')  and producto.estado='A')Y\n"
-                    + "   limit 40";
+             query = "select codigo \"Codigo\",nombre \"Nombre\",cate \"Categoria\",rcosto \"Costo\",riva \"Iva\",rprecio \"Precio\","
+                        + "rdescuento \"Stock\",rcantidad \"Cantidad\"  from BodegaInicioBuscar(3,'" + jTextField2.getText() + "') ";
         } else {
-            query = "select  distinct "
-                    + "serie_producto \"Código\","
-                    + "upper(nombre)\"Nombre\","
-                    + "upper(categoria.descripcion) \"Categoría \","
-                    + "costo \"Costo\","
-                    + "iva \"IVA\","
-                    + "precio_desc \"Precio\","
-                    + "stock \"stock\","
-                    + "cantidad \"Cantidad\"\n"
-                    + " from producto,categoria where "
-                    + "  producto.cod_categoria=categoria.cod_categoria and "
-                    + "   (categoria.descripcion ILIKE ('%" + jTextField2.getText() + "%') or  "
-                    + "producto.nombre ILIKE ('%" + jTextField2.getText() + "%') or "
-                    + " producto.serie_producto ILIKE ('%" + jTextField2.getText() + "%') )  and producto.estado='A'";
+             query = "select codigo \"Codigo\",nombre \"Nombre\",cate \"Categoria\",rcosto \"Costo\",riva \"Iva\",rprecio \"Precio\","
+                        + "rdescuento \"Stock\",rcantidad \"Cantidad\"  from BodegaInicioBuscar(4,'" + jTextField2.getText() + "')";
         }
         Control.conectar();
         Producto temp = null;
@@ -947,14 +922,14 @@ public class Articulo extends javax.swing.JFrame implements Runnable {
                 + "costo \"Costo\","
                 + "maestro_iva.porcentaje \"IVA\","
                 + "precio_desc \"Precio Venta\","
-                + "stock \"stock\","
+                + "stock \"Stock\","
                 + "cantidad \"Cantidad\""
                 + "from producto,categoria,maestro_iva\n"
                 + " where\n"
                 + " producto.cod_categoria=categoria.cod_categoria"
                 + " and producto.iva=maestro_iva.codiva\n"
                 + " and  producto.estado='A'"
-                + " order by producto.serie_producto DESC";
+                + " order by producto.serie_producto";
 
         String cod = "", nom = "", valor = "", cant = "", costo = "", iva = "", precio = "";
         String cate = "";

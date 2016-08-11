@@ -57,6 +57,18 @@ public class Producto {
         this.stock = stock;
     }
 
+    public Producto(String codigo, String nombre, double precio_venta, int desc, double precio_final) {
+        this.codigo = codigo;
+        this.nombre = nombre;
+        this.precio_venta = precio_venta;
+        this.desc = desc;
+        this.precio_final = precio_final;
+    }
+
+    public Producto(int codigoProducto) {
+        this.codigoProducto = codigoProducto;
+    }
+
     public Producto() {
     }
 
