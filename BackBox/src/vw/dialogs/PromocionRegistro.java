@@ -186,11 +186,11 @@ public class PromocionRegistro extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        try {
-            update();
-        } catch (Exception ex) {
-
-        }
+//        try {
+//            update();
+//        } catch (Exception ex) {
+//
+//        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -214,11 +214,11 @@ public class PromocionRegistro extends javax.swing.JDialog {
     }//GEN-LAST:event_jTextField2KeyPressed
 
     private void jTextField2KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField2KeyReleased
-        try {
-            Buscar();
-        } catch (Exception ex) {
-
-        }
+//        try {
+//            Buscar();
+//        } catch (Exception ex) {
+//
+//        }
     }//GEN-LAST:event_jTextField2KeyReleased
 
     /**
