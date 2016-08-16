@@ -566,8 +566,8 @@ public class Articulo extends javax.swing.JFrame implements Runnable {
     }//GEN-LAST:event_bajarExcelActionPerformed
 
     private void volverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_volverActionPerformed
-        new Menu(usuario).setVisible(true);
-        miAyuda.dispose();
+       new Menu(usuario).setVisible(true);
+//        miAyuda.dispose();
         this.dispose();
     }//GEN-LAST:event_volverActionPerformed
 

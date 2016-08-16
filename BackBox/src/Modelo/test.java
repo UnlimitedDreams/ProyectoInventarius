@@ -15,7 +15,10 @@ import org.fife.ui.rsyntaxtextarea.Theme;
 public class test {
 
     public static void main(String juan[]) throws InterruptedException {
-        String v = "$ 5000";
+        String v = "Kit-1";
+        if(v.contains("Kit")){
+            System.out.println("Si");
+        }
         System.out.println(v.substring(2, v.length()));
     }
 }

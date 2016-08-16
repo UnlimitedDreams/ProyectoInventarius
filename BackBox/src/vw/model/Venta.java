@@ -1043,11 +1043,13 @@ public class Venta extends javax.swing.JFrame implements KeyListener {
                 for (int i = 0; i < productos.size(); i++) {
                     pro = (Producto) productos.get(i);
                     r = Control.ejecuteUpdate("insert into venta_pro values(" + codigo_pro + ","
-                            + codigo_venta + "," + pro.getCantidad() + "," + pro.getIva() + "," + (pro.getValorIva() * pro.getCantidad()) + "," + pro.getCodigoProducto() + ")");
+                            + codigo_venta + "," + pro.getCantidad() + "," + pro.getIva() + ","
+                            + (pro.getValorIva() * pro.getCantidad()) + "," + pro.getCodigoProducto() + ","
+                            + "(case when upper(substring('" + pro.getCodigo() + "',0,4))='KIT' then '" + pro.getCodigo() + "' else '0'  end)) ");
                     codigo_pro++;
                 }
                 restar_Bodega();
-                generarFactura(codigo_venta, fecha, cone);
+//                generarFactura(codigo_venta, fecha, cone);
 
                 Proceso = true;
             } else {
@@ -1100,10 +1102,17 @@ public class Venta extends javax.swing.JFrame implements KeyListener {
         int codigo_pro = 0;
         for (int i = 0; i < productos.size(); i++) {
             pro = (Producto) productos.get(i);
-            if (tipoVenta == 1) {
+            if (tipoVenta == 1 && pro.getCodigo().contains("Kit")) {
+                Control.ejecuteUpdate("update Kist set cantidad=cantidad-" + pro.getCantidad() + " where "
+                        + "cod_kit='" + pro.getCodigo() + "'");
+            } else {
                 Control.ejecuteUpdate("update producto set cantidad=cantidad-" + pro.getCantidad() + " where "
                         + "serie_producto='" + pro.getCodigo() + "'");
-            } else if (tipoVenta == 2) {
+            }
+            if (tipoVenta == 2 && pro.getCodigo().contains("Kit")) {
+               Control.ejecuteUpdate("update Kist set cantidad=cantidad+" + pro.getCantidad() + " where "
+                        + "cod_kit='" + pro.getCodigo() + "'");
+            } else {
                 Control.ejecuteUpdate("update producto set cantidad=cantidad+" + pro.getCantidad() + " where "
                         + "serie_producto='" + pro.getCodigo() + "'");
             }
@@ -1290,14 +1299,11 @@ public class Venta extends javax.swing.JFrame implements KeyListener {
                     try {
                         Control.conectar();
                         Producto temp = null;
-                        String query = "select * from (\n"
-                                + "select nombre,precio_desc,iva,cast(((precio_venta-costo)*(iva/100)) as numeric(10)) valorIva,cod_producto from producto\n"
-                                + "where\n"
-                                + "producto.estado='A' and serie_producto like ('%" + cod + "')\n"
-                                + "union all \n"
-                                + "select nombre,precio_desc,iva,cast(((precio_venta-costo)*(iva/100)) as numeric(10)) valorIva,cod_producto from producto\n"
-                                + "where\n"
-                                + "producto.estado='A' and serie_producto like ('%" + cod + "%') )Y";
+//                        String query = "select nombre,precio_desc,iva,cast(((precio_venta-costo)*(maestro_iva.porcentaje/100)) as numeric(10)) valorIva,cod_producto "
+//                                + "from producto,maestro_iva\n"
+//                                + "where producto.iva=maestro_iva.codiva\n"
+//                                + " and producto.estado='A' and serie_producto='"+ cod + "'";
+                        String query = "select * from VentaBuscar(1,'" + cod + "')";
                         Control.ejecuteQuery(query);
                         String nom = "";
                         double precio = 0, valorIva = 0;
@@ -1429,10 +1435,7 @@ public class Venta extends javax.swing.JFrame implements KeyListener {
                 try {
                     Control.conectar();
                     Producto temp = null;
-                    String query = "select nombre,precio_desc,iva,cast(((precio_venta-costo)*(iva/100)) as numeric(10)) "
-                            + ",cod_producto from producto\n"
-                            + "where\n"
-                            + "producto.estado='A' and serie_producto='" + cod + "'";
+                    String query = "select * from VentaBuscar(1,'" + cod + "')";
                     Control.ejecuteQuery(query);
                     String nom = "";
                     double precio = 0, valorIva = 0;

@@ -479,6 +479,11 @@ public class PromocionRegistro extends javax.swing.JDialog {
                 return canEdit [columnIndex];
             }
         });
+        jTable1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jTable1KeyReleased(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTable1);
 
         jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 170, 590, 160));
@@ -731,6 +736,42 @@ public class PromocionRegistro extends javax.swing.JDialog {
         }
 
     }//GEN-LAST:event_CateActionPerformed
+    public void borrar() {
+        String op[] = new String[2];
+        op[0] = "Si";
+        op[1] = "No";
+        int Condicion = Entrada.menu("Inventarius", "¿Esta Seguro que Desea Borrar el Producto? ", op);
+        if (Condicion == 1) {
+            int i = jTable1.getSelectedRow();
+            if (i == -1) {
+                JOptionPane.showMessageDialog(null, "Favor... seleccione una fila");
+            } else {
+                System.out.println("---------");
+                String cod = (String) jTable1.getValueAt(i, 0).toString();
+                Producto p = null;
+
+                for (int k = 0; k < productos.size(); k++) {
+                    p = (Producto) productos.get(k);
+                    if (p.getCodigo().equalsIgnoreCase(cod)) {
+                        productos.remove(p);
+                    }
+                }
+                Borrar();
+            }
+
+        }
+
+    }
+
+    private void jTable1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTable1KeyReleased
+        try {
+            if (evt.getKeyCode() == 127) {
+                borrar();
+            }
+        } catch (Exception ex) {
+            System.err.println("Error al borrar producto :" + ex.toString());
+        }
+    }//GEN-LAST:event_jTable1KeyReleased
 
     public void iniciar() {
         System.out.println("Tamañ de productos " + productos.size());

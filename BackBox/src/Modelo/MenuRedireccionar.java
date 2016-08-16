@@ -18,6 +18,7 @@ import vw.components.CategoriaGestion;
 import vw.components.Clientes;
 import vw.components.DatallesPorFecha;
 import vw.components.Entrada_Nueva;
+import vw.components.Kits;
 import vw.components.MaestroIva;
 import vw.components.Promociones;
 import vw.components.Provedores;
@@ -116,6 +117,8 @@ public class MenuRedireccionar {
                 new MaestroIva(Usuario, listMenu).setVisible(true);
             } else if (CadenaMenu.equalsIgnoreCase("Promocion")) {
                 new Promociones(Usuario, listMenu).setVisible(true);
+            }else if (CadenaMenu.equalsIgnoreCase("Kits")) {
+                new Kits(Usuario, listMenu).setVisible(true);
             }
 
         } catch (ClassNotFoundException ex) {

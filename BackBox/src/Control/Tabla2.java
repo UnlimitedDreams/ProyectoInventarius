@@ -52,6 +52,18 @@ public class Tabla2 implements TableCellRenderer {
             nrofreq++;
         }
     }
+    
+     public void calculeFrecuenciasKits() {
+        Producto temp = null;
+        for (int i = 0; i < pro.size(); i++) {
+            temp = (Producto) pro.get(i);
+            frecuencias[0][nrofreq] = "" + pro.get(i).getCodigo();
+            frecuencias[1][nrofreq] = "" + pro.get(i).getNombre();
+            frecuencias[2][nrofreq] = "" + pro.get(i).getCantidad();
+            frecuencias[3][nrofreq] = "" + pro.get(i).getPrecio_venta();
+            nrofreq++;
+        }
+    }
 
     public void nuevo() {
         pro.clear();

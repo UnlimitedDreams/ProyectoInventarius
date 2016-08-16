@@ -69,6 +69,15 @@ public class Producto {
         this.codigoProducto = codigoProducto;
     }
 
+    public Producto(String codigo, int codigoProducto, String nombre, double Costo, double precio_venta) {
+        this.codigo = codigo;
+        this.codigoProducto = codigoProducto;
+        this.nombre = nombre;
+        this.Costo = Costo;
+        this.precio_venta = precio_venta;
+    }
+
+    
     public Producto() {
     }
 
