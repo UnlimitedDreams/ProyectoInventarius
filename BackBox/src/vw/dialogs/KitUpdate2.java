@@ -33,7 +33,7 @@ import vw.model.Venta;
  *
  * @author usuario
  */
-public class KitsRegistro extends javax.swing.JDialog {
+public class KitUpdate2 extends javax.swing.JDialog {
 
     /**
      * Creates new form RolActualizar
@@ -43,11 +43,13 @@ public class KitsRegistro extends javax.swing.JDialog {
      * @param cod
      */
     Kits kit = null;
+    String CodigoKit;
     int numKit;
+    int CantProducto;
     ArrayList<Producto> productos = new ArrayList();
     boolean condicionfiltro;
 
-    public KitsRegistro(java.awt.Frame parent, boolean modal) {
+    public KitUpdate2(java.awt.Frame parent, boolean modal, String codkit) {
         super(parent, modal);
         initComponents();
         this.setLocationRelativeTo(null);
@@ -56,57 +58,77 @@ public class KitsRegistro extends javax.swing.JDialog {
         ImageIcon img = new ImageIcon(url);
         setIconImage(img.getImage());
         this.condicionfiltro = false;
+        this.CodigoKit = codkit;
         c.setVisible(false);
         this.Costo.setText("0");
         this.precio.setText("0");
         this.Cantidad.setText("0");
         this.kit = (Kits) parent;
-        Numerador();
+        RecuperarInfo();
         nombre.requestFocus();
 
     }
 
-    public void Numerador() {
+    public void RecuperarInfo() {
         try {
             Control.conectar();
-            Control.ejecuteQuery("select secuencia from Numerador where TipoNumerador='Kits'");
+            Control.ejecuteQuery("select * from Kits where cod_kit='" + CodigoKit + "'");
             while (Control.rs.next()) {
-                this.numKit = Integer.parseInt(Control.rs.getString(1));
-                codigo.setText("Kit-" + Control.rs.getString(1));
+                codigo.setText(Control.rs.getString(1));
+                Costo.setText(Control.rs.getString(2));
+                precio.setText(Control.rs.getString(3));
+                Cantidad.setText(Control.rs.getString(4));
+                nombre.setText(Control.rs.getString(7));
+
             }
+            this.CantProducto=Integer.parseInt(Cantidad.getText());
+
+            Producto temp = null;
+            System.out.println("va por aqui");
+            Control.ejecuteQuery("select a.serie_producto,a.nombre,a.precio_venta,a.descu,a.precio_desc,a.cod_producto,a.cantidad "
+                    + "from producto a,Kits b,kitdetalle c\n"
+                    + "where\n"
+                    + "a.cod_producto=c.cod_producto and \n"
+                    + "b.cod_kit=c.cod_kit and b.cod_kit='" + CodigoKit + "'");
+            while (Control.rs.next()) {
+                temp = new Producto(Control.rs.getString(1), Control.rs.getString(2), Control.rs.getDouble(3), Control.rs.getInt(4), Control.rs.getDouble(5));
+                temp.setCodigoProducto(Control.rs.getInt(6));
+                temp.setCantidad(Control.rs.getInt(7));
+                temp.setMarcaKits(true);
+                productos.add(temp);
+            }
+
+        } catch (Exception ex) {
+
+        } finally {
             Control.cerrarConexion();
-        } catch (ClassNotFoundException ex) {
-            System.out.println("Error al conectar" + ex.toString());
-        } catch (SQLException ex) {
-            System.out.println("Sintaxis de la consulta mal hecha" + ex.toString());
         }
+        iniciar();
     }
 
-    public void registrarKit() throws SQLException, ClassNotFoundException {
+    public void UpdateKit() throws SQLException, ClassNotFoundException {
         boolean r = false;
         try {
             int codKitDel = Sequence.seque("select max(codKitDet) from KitDetalle");
             Control.conectar();
             Control.con.setAutoCommit(false);
-            int actu = 0;
-            if (commit.isSelected()) {
-                actu = 1;
-            } else {
-                actu = 2;
-            }
+            int canti = 0;
+
+            Control.ejecuteUpdate("delete from Kitdetalle where cod_kit='" + codigo.getText() + "'");
+            Control.ejecuteUpdate("delete from Kits where cod_kit='" + codigo.getText() + "'");
+
             Control.ejecuteUpdate("insert into Kits values('" + codigo.getText().trim() + "',"
                     + Double.parseDouble(Costo.getText()) + "," + Double.parseDouble(precio.getText())
-                    + "," + Integer.parseInt(Cantidad.getText()) + ",'A'," + numKit + ",'" + nombre.getText() + "'," + actu + ")");
-            int canti = 0;
+                    + "," + Integer.parseInt(Cantidad.getText()) + ",'A'," + numKit + ",'" + nombre.getText() + "')");
+
             for (Producto LiProducto : productos) {
                 Control.ejecuteUpdate("insert into KitDetalle values(" + codKitDel + ",'" + codigo.getText().trim() + "',"
                         + LiProducto.getCodigoProducto() + "," + LiProducto.getPrecio_venta() + ")");
                 codKitDel++;
-                canti = LiProducto.getCantidad() - Integer.parseInt(Cantidad.getText());
+                canti =( LiProducto.getCantidad()+this.CantProducto )- Integer.parseInt(Cantidad.getText());
                 Control.ejecuteUpdate("update producto set cantidad=" + canti + " where cod_producto=" + LiProducto.getCodigoProducto());
                 canti = 0;
             }
-            Control.ejecuteUpdate("update Numerador set secuencia=" + (numKit + 1) + " where tiponumerador='Kits'");
 
             r = true;
         } catch (Exception ex) {
@@ -121,7 +143,7 @@ public class KitsRegistro extends javax.swing.JDialog {
             kit.inicio();
             this.dispose();
         } else {
-            Entrada.muestreMensajeV("Error Al Crear Promocion");
+            Entrada.muestreMensajeV("Error Al Crear Kit");
         }
     }
 
@@ -224,14 +246,11 @@ public class KitsRegistro extends javax.swing.JDialog {
         precio = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         nombre = new javax.swing.JTextField();
-        jLabel5 = new javax.swing.JLabel();
-        commit = new javax.swing.JCheckBox();
 
         jCheckBox2.setText("jCheckBox2");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Gestion Promocion - BackBox");
-        setPreferredSize(new java.awt.Dimension(697, 500));
+        setTitle("Update Kits - BackBox");
         setResizable(false);
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
@@ -272,11 +291,11 @@ public class KitsRegistro extends javax.swing.JDialog {
         jPanel1.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 410, -1, -1));
 
         jLabel7.setFont(new java.awt.Font("Segoe UI Light", 1, 14)); // NOI18N
-        jLabel7.setText("Codigo ");
+        jLabel7.setText("Codigo :");
         jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 20, -1, -1));
 
         jLabel6.setFont(new java.awt.Font("Segoe UI Light", 1, 14)); // NOI18N
-        jLabel6.setText("Costo ");
+        jLabel6.setText("Costo");
         jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 60, -1, -1));
 
         jLabel2.setFont(new java.awt.Font("Segoe UI Light", 1, 14)); // NOI18N
@@ -469,18 +488,11 @@ public class KitsRegistro extends javax.swing.JDialog {
         jPanel1.add(precio, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 60, 160, -1));
 
         jLabel3.setFont(new java.awt.Font("Segoe UI Light", 1, 14)); // NOI18N
-        jLabel3.setText("Actualizacion");
-        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 100, -1, 30));
+        jLabel3.setText("Precio");
+        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 60, -1, -1));
 
         nombre.setFont(new java.awt.Font("Segoe UI Light", 0, 18)); // NOI18N
         jPanel1.add(nombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 20, 310, -1));
-
-        jLabel5.setFont(new java.awt.Font("Segoe UI Light", 1, 14)); // NOI18N
-        jLabel5.setText("Precio");
-        jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 60, -1, -1));
-
-        commit.setContentAreaFilled(false);
-        jPanel1.add(commit, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 110, -1, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -506,7 +518,7 @@ public class KitsRegistro extends javax.swing.JDialog {
                 Cantidad.requestFocus();
             } else {
                 if (validarCantidad()) {
-                    registrarKit();
+                    UpdateKit();
                 } else {
                     Entrada.muestreMensajeV("Uno de los productos no tiene la cantidad suficiente \n para crear el kit.");
                 }
@@ -730,19 +742,19 @@ public class KitsRegistro extends javax.swing.JDialog {
     public void Buscar() throws ClassNotFoundException {
         String query = "";
         if (SoloNumeros(jTextField2.getText())) {
-            query = " select distinct * from (select distinct  serie_producto \"Codigo\",nombre,precio_venta \"Precio Venta\""
+            query = " select distinct * from (select distinct  serie_producto \"Codigo\",nombre,cantidad,precio_venta \"Precio Venta\""
                     + " from producto,categoria where\n"
                     + "  producto.cod_categoria=categoria.cod_categoria and \n"
                     + "  \n"
                     + "  producto.serie_producto ILIKE ('%" + jTextField2.getText() + "')  and producto.estado='A'"
                     + "  union all"
-                    + " select distinct  serie_producto \"Codigo\",nombre,precio_venta \"Precio Venta\""
+                    + " select distinct  serie_producto \"Codigo\",nombre,cantidad,precio_venta \"Precio Venta\""
                     + "  from producto,categoria where\n"
                     + "  producto.cod_categoria=categoria.cod_categoria and \n"
                     + "  \n"
                     + "  producto.serie_producto ILIKE ('%" + jTextField2.getText() + "%')  and producto.estado='A')Y limit 10 ";
         } else {
-            query = "select distinct  serie_producto \"Codigo\",nombre,precio_venta \"Precio Venta\""
+            query = "select distinct  serie_producto \"Codigo\",nombre,cantidad,precio_venta \"Precio Venta\""
                     + "  from producto,categoria where "
                     + "  producto.cod_categoria=categoria.cod_categoria and "
                     + " (categoria.descripcion ILIKE ('%" + jTextField2.getText() + "%') or  "
@@ -753,7 +765,7 @@ public class KitsRegistro extends javax.swing.JDialog {
         Producto temp = null;
         String cod = "", nom = "", valor = "", cant = "", costo = "", iva = "", precio = "";
         String cate = "";
-        String cabeceras[] = {"Producto", "Nombre", "Precio"};
+        String cabeceras[] = {"Producto", "Nombre", "Cantidad", "Precio"};
         DefaultTableModel modeloEmpleado = new DefaultTableModel(null, cabeceras) {
             @Override
             public boolean isCellEditable(int row, int column) {//para evitar que las celdas sean editables
@@ -842,14 +854,12 @@ public class KitsRegistro extends javax.swing.JDialog {
     private javax.swing.JTextField Costo;
     private javax.swing.JScrollPane c;
     private javax.swing.JTextField codigo;
-    private javax.swing.JCheckBox commit;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JCheckBox jCheckBox2;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;

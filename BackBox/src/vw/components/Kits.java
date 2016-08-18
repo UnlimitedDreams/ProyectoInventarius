@@ -21,6 +21,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import vw.dialogs.CategoriasRegistrar;
+import vw.dialogs.KitUpdate2;
 import vw.dialogs.KitsRegistro;
 import vw.dialogs.RolActualizar;
 import vw.main.Menu;
@@ -222,8 +223,7 @@ public class Kits extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "Favor... seleccione una fila");
             } else {
                 String cod = (String) promociones.getValueAt(i, 0).toString();
-                System.out.println("Codigo : " + cod);
-//                new PromocionUpdate(this, true, Integer.parseInt(cod)).setVisible(true);
+                new KitUpdate2(this, true, cod).setVisible(true);
             }
 
         } catch (Exception ex) {
@@ -244,35 +244,36 @@ public class Kits extends javax.swing.JFrame {
         if (i == -1) {
             Entrada.muestreMensajeV("Favor... seleccione una fila",
                     JOptionPane.WARNING_MESSAGE);
-        } else if (JOptionPane.showConfirmDialog(this, "¿Está seguro de borrar esta categoría?", "Inventarius", JOptionPane.YES_NO_OPTION) == 0) {
+        } else if (JOptionPane.showConfirmDialog(this, "¿Está seguro de borrar el Kit?", "Inventarius", JOptionPane.YES_NO_OPTION) == 0) {
             try {
                 ArrayList<Producto> listPro = new ArrayList();
                 Control.conectar();
                 Control.con.setAutoCommit(false);
                 String cod = (String) promociones.getValueAt(i, 0).toString();
-                Control.ejecuteQuery("select a.cod_producto from producto a,promociones b,detallepromociones c\n"
+                Control.ejecuteQuery("select a.cod_producto,b.cantidad "
+                        + "from producto a,Kits b,kitdetalle c\n"
                         + "where\n"
-                        + "a.cod_producto=c.codproducto and \n"
-                        + "b.cod_promocion=c.codpromo and b.cod_promocion=" + cod);
+                        + "a.cod_producto=c.cod_producto and \n"
+                        + "b.cod_kit=c.cod_kit and b.cod_kit='" + cod + "'");
                 Producto temp = null;
                 while (Control.rs.next()) {
                     System.out.println("----");
                     temp = new Producto(Control.rs.getInt(1));
+                    temp.setCantidad(Control.rs.getInt(2));
                     listPro.add(temp);
                 }
                 for (Producto producto : listPro) {
-                    Control.ejecuteUpdate("update producto set descu=0,precio_desc=precio_venta where cod_producto=" + producto.getCodigoProducto());
-                }                
-                Control.ejecuteUpdate("update promociones  set estado='C' where cod_promocion=" + cod);
-                r=true;
+                    Control.ejecuteUpdate("update producto set cantidad=cantidad+"+producto.getCantidad()+" where cod_producto=" + producto.getCodigoProducto());
+                }
+                Control.ejecuteUpdate("update Kits  set estado='I' where cod_kit='" + cod+"'");
+                r = true;
                 if (r) {
-                    Entrada.muestreMensajeV("Promocion Borrada con éxito",
+                    Entrada.muestreMensajeV("Kit Borrada con éxito",
                             JOptionPane.INFORMATION_MESSAGE);
                 } else {
-                    Entrada.muestreMensajeV(":Error Fatal: \nNo se pudo borrar la Promocion\n::Revise su conexión",
+                    Entrada.muestreMensajeV(":Error Fatal: \nNo se pudo borrar el Kit\n::Revise su conexión",
                             JOptionPane.ERROR_MESSAGE);
                 }
-
             } catch (Exception ex) {
 
             } finally {
@@ -292,7 +293,6 @@ public class Kits extends javax.swing.JFrame {
      * @throws ClassNotFoundException no encuentra la librería de conexion
      * DataBase
      */
-    
     /**
      * Iniciar la tabla definida en el inicio.
      *
@@ -300,19 +300,23 @@ public class Kits extends javax.swing.JFrame {
      * DataBase
      */
     public void inicio() throws ClassNotFoundException {
-        DefaultTableModel modeloEmpleado = new DefaultTableModel();
+        String cabeceras[] = {"Kit", "Nombre", "Costo", "Precio", "Cantidad"};
+        DefaultTableModel modeloEmpleado = new DefaultTableModel(null, cabeceras) {
+            @Override
+            public boolean isCellEditable(int row, int column) {//para evitar que las celdas sean editables
+                return false;
+            }
+        };
         int numeroPreguntas;
         ResultSetMetaData rsetMetaData;
         this.promociones.setModel(modeloEmpleado);
+
         try {
             Control.conectar();
-            Control.ejecuteQuery("select cod_kit,nombre,costo,valor,cantidad  from Kits");
+            Control.ejecuteQuery("select cod_kit,nombre,costo,valor,cantidad  from Kits where estado='A'");
             rsetMetaData = Control.rs.getMetaData();
             numeroPreguntas = rsetMetaData.getColumnCount();
             //Establece los nombres de las columnas de las tablas
-            for (int i = 0; i < numeroPreguntas; i++) {
-                modeloEmpleado.addColumn(rsetMetaData.getColumnLabel(i + 1));
-            }
 
             while (Control.rs.next()) {
                 Object[] registroEmpleado = new Object[numeroPreguntas];

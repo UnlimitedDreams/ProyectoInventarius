@@ -27,6 +27,7 @@ public class Producto {
     private String Esta;
     private int CantBD;
     private int IvaCargeArchivo;
+    private boolean MarcaKits;
 
     public Producto(String codigo, String nombre, double Costo, int iva, double precio_venta, int cantidad, int desc) {
         this.codigo = codigo;
@@ -212,6 +213,14 @@ public class Producto {
 
     public void setIvaCargeArchivo(int IvaCargeArchivo) {
         this.IvaCargeArchivo = IvaCargeArchivo;
+    }
+
+    public boolean isMarcaKits() {
+        return MarcaKits;
+    }
+
+    public void setMarcaKits(boolean MarcaKits) {
+        this.MarcaKits = MarcaKits;
     }
     
 

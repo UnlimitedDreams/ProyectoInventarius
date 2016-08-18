@@ -1012,7 +1012,6 @@ public class Venta extends javax.swing.JFrame implements KeyListener {
         boolean r = false;
         try {
             DecimalFormat formateador = new DecimalFormat("#############");
-
             Control.conectar();
             Control.con.setAutoCommit(false);
             cone = Control.con;
@@ -1110,7 +1109,7 @@ public class Venta extends javax.swing.JFrame implements KeyListener {
                         + "serie_producto='" + pro.getCodigo() + "'");
             }
             if (tipoVenta == 2 && pro.getCodigo().contains("Kit")) {
-               Control.ejecuteUpdate("update Kist set cantidad=cantidad+" + pro.getCantidad() + " where "
+                Control.ejecuteUpdate("update Kist set cantidad=cantidad+" + pro.getCantidad() + " where "
                         + "cod_kit='" + pro.getCodigo() + "'");
             } else {
                 Control.ejecuteUpdate("update producto set cantidad=cantidad+" + pro.getCantidad() + " where "
@@ -1612,14 +1611,21 @@ public class Venta extends javax.swing.JFrame implements KeyListener {
                     + "  from producto,categoria where\n"
                     + "  producto.cod_categoria=categoria.cod_categoria and \n"
                     + "  \n"
-                    + "  producto.serie_producto ILIKE ('%" + jTextField2.getText() + "%')  and producto.estado='A')Y limit 10 ";
+                    + "  producto.serie_producto ILIKE ('%" + jTextField2.getText() + "%')  and producto.estado='A'"
+                    + ")Y limit 10 ";
         } else {
-            query = "select distinct  serie_producto \"Codigo\",nombre,precio_desc \"Precio Venta\""
+            query = "select * from (select distinct  serie_producto ,nombre,precio_desc"
                     + "  from producto,categoria where "
                     + "  producto.cod_categoria=categoria.cod_categoria and "
                     + " (categoria.descripcion ILIKE ('%" + jTextField2.getText() + "%') or  "
                     + "producto.nombre ILIKE ('%" + jTextField2.getText() + "%') or "
-                    + " producto.serie_producto ILIKE ('%" + jTextField2.getText() + "%') )  and producto.estado='A'";
+                    + " producto.serie_producto ILIKE ('%" + jTextField2.getText() + "%') )  and producto.estado='A' and "
+                    + "cod_producto not in (0)"
+                    + "  union "
+                    + " select A.cod_kit,A.nombre,A.valor precio_desc  from kits A, kitdetalle B , producto C , maestro_iva D\n"
+                    + "where A.cod_kit=B.cod_kit and B.cod_producto=C.cod_producto and  \n"
+                    + "C.iva=D.codiva and A.cod_kit ILIKE ('%" + jTextField2.getText() + "%')"
+                    + ")Y";
         }
         Control.conectar();
         Producto temp = null;
