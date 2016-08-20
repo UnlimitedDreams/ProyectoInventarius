@@ -248,11 +248,9 @@ public class Venta extends javax.swing.JFrame implements KeyListener {
 
     public void EliminarBandera() throws ClassNotFoundException {
         Control.conectar();
-        Control.ejecuteUpdate("delete from detalle a, producto b \n"
-                + "where a.cod_producto=b.cod_producto\n"
-                + "and b.bandera=0");
         Control.ejecuteUpdate("delete from producto where bandera=0");
         Control.cerrarConexion();
+        System.out.println("Paso por aqui");
     }
 
     public void MenuAyuda() {
@@ -1037,6 +1035,7 @@ public class Venta extends javax.swing.JFrame implements KeyListener {
                     + this.ValorDesc + "," + codigo_cliente + ","
                     + this.ValorNeto + "," + codigo_empresa + "," + Double.parseDouble(montoPago.getText()) + ","
                     + CambioUsu + ")");
+            System.out.println("Va bien");
             if (r) {
                 Producto pro = null;
                 for (int i = 0; i < productos.size(); i++) {
@@ -1044,7 +1043,9 @@ public class Venta extends javax.swing.JFrame implements KeyListener {
                     r = Control.ejecuteUpdate("insert into venta_pro values(" + codigo_pro + ","
                             + codigo_venta + "," + pro.getCantidad() + "," + pro.getIva() + ","
                             + (pro.getValorIva() * pro.getCantidad()) + "," + pro.getCodigoProducto() + ","
-                            + "(case when upper(substring('" + pro.getCodigo() + "',0,4))='KIT' then '" + pro.getCodigo() + "' else '0'  end)) ");
+                            + "(case when upper(substring('" + pro.getCodigo() + "',0,4))='KIT' then '" + pro.getCodigo() + "' else '0'  end),"
+                            + pro.getPrecio_venta() + ")");
+
                     codigo_pro++;
                 }
                 restar_Bodega();
@@ -1055,11 +1056,11 @@ public class Venta extends javax.swing.JFrame implements KeyListener {
                 System.out.println("Error en venta");
             }
 
-        } catch (Exception ex) {
+        } catch (SQLException ex) {
+            r = false;
             System.out.println("Error : " + ex.toString());
         } finally {
             System.out.println("Cerro Todo");
-
             Control.con.commit();
             Control.con.setAutoCommit(true);
             Control.cerrarConexion();
@@ -1102,14 +1103,14 @@ public class Venta extends javax.swing.JFrame implements KeyListener {
         for (int i = 0; i < productos.size(); i++) {
             pro = (Producto) productos.get(i);
             if (tipoVenta == 1 && pro.getCodigo().contains("Kit")) {
-                Control.ejecuteUpdate("update Kist set cantidad=cantidad-" + pro.getCantidad() + " where "
+                Control.ejecuteUpdate("update Kits set cantidad=cantidad-" + pro.getCantidad() + " where "
                         + "cod_kit='" + pro.getCodigo() + "'");
             } else {
                 Control.ejecuteUpdate("update producto set cantidad=cantidad-" + pro.getCantidad() + " where "
                         + "serie_producto='" + pro.getCodigo() + "'");
             }
             if (tipoVenta == 2 && pro.getCodigo().contains("Kit")) {
-                Control.ejecuteUpdate("update Kist set cantidad=cantidad+" + pro.getCantidad() + " where "
+                Control.ejecuteUpdate("update Kits set cantidad=cantidad+" + pro.getCantidad() + " where "
                         + "cod_kit='" + pro.getCodigo() + "'");
             } else {
                 Control.ejecuteUpdate("update producto set cantidad=cantidad+" + pro.getCantidad() + " where "

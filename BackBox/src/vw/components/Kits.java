@@ -223,7 +223,7 @@ public class Kits extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "Favor... seleccione una fila");
             } else {
                 String cod = (String) promociones.getValueAt(i, 0).toString();
-                new KitUpdate2(this, true, cod).setVisible(true);
+                new KitUpdate2(this, true, cod,1).setVisible(true);
             }
 
         } catch (Exception ex) {
@@ -256,8 +256,7 @@ public class Kits extends javax.swing.JFrame {
                         + "a.cod_producto=c.cod_producto and \n"
                         + "b.cod_kit=c.cod_kit and b.cod_kit='" + cod + "'");
                 Producto temp = null;
-                while (Control.rs.next()) {
-                    System.out.println("----");
+                while (Control.rs.next()) {                    
                     temp = new Producto(Control.rs.getInt(1));
                     temp.setCantidad(Control.rs.getInt(2));
                     listPro.add(temp);
@@ -273,7 +272,7 @@ public class Kits extends javax.swing.JFrame {
                 } else {
                     Entrada.muestreMensajeV(":Error Fatal: \nNo se pudo borrar el Kit\n::Revise su conexión",
                             JOptionPane.ERROR_MESSAGE);
-                }
+                } 
             } catch (Exception ex) {
 
             } finally {

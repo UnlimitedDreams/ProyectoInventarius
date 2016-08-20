@@ -49,7 +49,7 @@ public class ProductoRegistrar extends javax.swing.JDialog {
         URL url = getClass().getResource("/images/facelet/icon.png");
         ImageIcon img = new ImageIcon(url);
         setIconImage(img.getImage());
-        Categoria();
+//        Categoria();
         codigo.setText("" + 0);
         costoF.setText("" + 0);
         cantidad.setText("" + 0);
@@ -57,36 +57,20 @@ public class ProductoRegistrar extends javax.swing.JDialog {
         stock.setText("" + 0);
         this.v = (Entrada_Nueva) parent;
         this.pr = pro;
+
         try {
-            ConfigurarIva();
+            ConfigurarInicio();
         } catch (SQLException ex) {
             Logger.getLogger(ProductoRegistrar.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    public void ConfigurarIva() throws SQLException {
-        try {
-            listIvas.clear();
-            iva.addItem("No Aplica");
-            Control.conectar();
-            Control.ejecuteQuery("select codiva,porcentaje from maestro_iva");
-            while (Control.rs.next()) {
-                iva.addItem(Control.rs.getString(2) + " %");
-                listIvas.add(new List_Categoria(Control.rs.getInt(1), "" + Control.rs.getInt(2)));
-            }
-            Control.cerrarConexion();
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(Venta.class
-                    .getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    public void Categoria() {
+    public void Numerador() {
         try {
             Control.conectar();
-            Control.ejecuteQuery("select cod_categoria,rtrim(ltrim(descripcion)) from categoria order by descripcion");
+            Control.ejecuteQuery("select secuencia from Numerador where TipoNumerador='Producto'");
             while (Control.rs.next()) {
-                categoria.addItem(Control.rs.getInt(1) + "-" + Control.rs.getString(2));
+                codigo.setText(Control.rs.getString(1));
             }
             Control.cerrarConexion();
         } catch (ClassNotFoundException ex) {
@@ -96,6 +80,49 @@ public class ProductoRegistrar extends javax.swing.JDialog {
         }
     }
 
+    public void ConfigurarInicio() throws SQLException {
+        try {
+            listIvas.clear();
+            iva.addItem("No Aplica");
+            Control.conectar();
+            Control.ejecuteQuery("select codiva,porcentaje from maestro_iva");
+            while (Control.rs.next()) {
+                iva.addItem(Control.rs.getString(2) + " %");
+                listIvas.add(new List_Categoria(Control.rs.getInt(1), "" + Control.rs.getInt(2)));
+            }
+            Control.ejecuteQuery("select secuencia from Numerador where TipoNumerador='Producto'");
+            while (Control.rs.next()) {
+                codigo.setText(Control.rs.getString(1));
+            }
+
+            Control.ejecuteQuery("select cod_categoria,rtrim(ltrim(descripcion)) from categoria order by descripcion");
+            while (Control.rs.next()) {
+                categoria.addItem(Control.rs.getInt(1) + "-" + Control.rs.getString(2));
+            }
+
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Venta.class
+                    .getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            Control.cerrarConexion();
+        }
+
+    }
+
+//    public void Categoria() {
+//        try {
+//            Control.conectar();
+//            Control.ejecuteQuery("select cod_categoria,rtrim(ltrim(descripcion)) from categoria order by descripcion");
+//            while (Control.rs.next()) {
+//                categoria.addItem(Control.rs.getInt(1) + "-" + Control.rs.getString(2));
+//            }
+//            Control.cerrarConexion();
+//        } catch (ClassNotFoundException ex) {
+//            System.out.println("Error al conectar" + ex.toString());
+//        } catch (SQLException ex) {
+//            System.out.println("Sintaxis de la consulta mal hecha" + ex.toString());
+//        }
+//    }
     public int buscar_cod() throws ClassNotFoundException {
         int cant = 0;
         try {

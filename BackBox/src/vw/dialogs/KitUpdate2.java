@@ -25,6 +25,7 @@ import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import vw.components.Bodega;
 import vw.components.Kits;
 import vw.components.Promociones;
 import vw.model.Venta;
@@ -43,13 +44,15 @@ public class KitUpdate2 extends javax.swing.JDialog {
      * @param cod
      */
     Kits kit = null;
+    Bodega Bodega = null;
     String CodigoKit;
     int numKit;
     int CantProducto;
+    int condicion;
     ArrayList<Producto> productos = new ArrayList();
     boolean condicionfiltro;
 
-    public KitUpdate2(java.awt.Frame parent, boolean modal, String codkit) {
+    public KitUpdate2(java.awt.Frame parent, boolean modal, String codkit, int condicion) {
         super(parent, modal);
         initComponents();
         this.setLocationRelativeTo(null);
@@ -63,7 +66,13 @@ public class KitUpdate2 extends javax.swing.JDialog {
         this.Costo.setText("0");
         this.precio.setText("0");
         this.Cantidad.setText("0");
-        this.kit = (Kits) parent;
+        this.condicion=condicion;
+        if (condicion == 1) {
+            this.kit = (Kits) parent;
+        } else if (condicion == 2) {
+            this.Bodega = (Bodega) parent;
+        }
+//        this.kit = (Kits) parent;
         RecuperarInfo();
         nombre.requestFocus();
 
@@ -78,10 +87,10 @@ public class KitUpdate2 extends javax.swing.JDialog {
                 Costo.setText(Control.rs.getString(2));
                 precio.setText(Control.rs.getString(3));
                 Cantidad.setText(Control.rs.getString(4));
+                numKit = Control.rs.getInt(6);
                 nombre.setText(Control.rs.getString(7));
-
             }
-            this.CantProducto=Integer.parseInt(Cantidad.getText());
+            this.CantProducto = Integer.parseInt(Cantidad.getText());
 
             Producto temp = null;
             System.out.println("va por aqui");
@@ -125,7 +134,7 @@ public class KitUpdate2 extends javax.swing.JDialog {
                 Control.ejecuteUpdate("insert into KitDetalle values(" + codKitDel + ",'" + codigo.getText().trim() + "',"
                         + LiProducto.getCodigoProducto() + "," + LiProducto.getPrecio_venta() + ")");
                 codKitDel++;
-                canti =( LiProducto.getCantidad()+this.CantProducto )- Integer.parseInt(Cantidad.getText());
+                canti = (LiProducto.getCantidad() + this.CantProducto) - Integer.parseInt(Cantidad.getText());
                 Control.ejecuteUpdate("update producto set cantidad=" + canti + " where cod_producto=" + LiProducto.getCodigoProducto());
                 canti = 0;
             }
@@ -139,11 +148,16 @@ public class KitUpdate2 extends javax.swing.JDialog {
             Control.cerrarConexion();
         }
         if (r) {
-            Entrada.muestreMensajeV("Se registro Exitosamente el Kit");
-            kit.inicio();
+            Entrada.muestreMensajeV("Se Actualizo Exitosamente el Kit");
+            if (this.condicion == 1) {
+                kit.inicio();
+            } else if (this.condicion == 2) {
+                Bodega.inicio();
+            }
+
             this.dispose();
         } else {
-            Entrada.muestreMensajeV("Error Al Crear Kit");
+            Entrada.muestreMensajeV("Error Al Actualizar Kit");
         }
     }
 
@@ -258,7 +272,7 @@ public class KitUpdate2 extends javax.swing.JDialog {
 
         jButton1.setFont(new java.awt.Font("Segoe UI Light", 0, 11)); // NOI18N
         jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-mdpi/ic_update_black_24dp.png"))); // NOI18N
-        jButton1.setText("Registrar");
+        jButton1.setText("Actualizar");
         jButton1.setBorder(null);
         jButton1.setBorderPainted(false);
         jButton1.setContentAreaFilled(false);
@@ -516,13 +530,10 @@ public class KitUpdate2 extends javax.swing.JDialog {
             } else if (Cantidad.getText().equalsIgnoreCase("0")) {
                 Entrada.muestreMensajeV("La cantidad debe ser mayor a cero");
                 Cantidad.requestFocus();
+            } else if (validarCantidad()) {
+                UpdateKit();
             } else {
-                if (validarCantidad()) {
-                    UpdateKit();
-                } else {
-                    Entrada.muestreMensajeV("Uno de los productos no tiene la cantidad suficiente \n para crear el kit.");
-                }
-
+                Entrada.muestreMensajeV("Uno de los productos no tiene la cantidad suficiente \n para crear el kit.");
             }
         } catch (Exception ex) {
 

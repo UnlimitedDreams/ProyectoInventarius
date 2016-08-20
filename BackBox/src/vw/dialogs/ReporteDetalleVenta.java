@@ -183,26 +183,41 @@ public class ReporteDetalleVenta extends javax.swing.JDialog {
     public void inicio() throws ClassNotFoundException {
         Control.conectar();
         Producto temp = null;
-        String query = "select to_char(fecha_venta, 'HH24:MI:SS')  \"Hora\",producto.cod_producto \"Codigo\""
-                + ",producto.nombre \"Nombre\",venta_pro.cantidad\"Cantidad\""
-                + ",producto.precio_desc\"Precio\",(venta_pro.cantidad*producto.precio_desc) Total from venta,usuario,persona,venta_pro,producto\n"
-                + "where\n"
-                + "venta.cod_usuario=usuario.cod_usuario\n"
-                + "and usuario.cedula=persona.cedula\n"
-                + "and venta.cod_factura=venta_pro.cod_factura\n"
-                + "and producto.cod_producto=venta_pro.cod_prodcuto\n"
-                + "and persona.cedula=" + cod + "\n"
-                + "and venta.fecha_venta between '" + fec.substring(0, 10).concat(" 00:00:00") + "' and '"
-                + fec.substring(0, 10).concat(" 23:59:59") + "'"
-                + "order by fecha_venta ";
+        String query = "           select * from (\n"
+                + "		   select to_char(fecha_venta, 'HH24:MI:SS')  Hora,cast(producto.cod_producto as varchar(15)) Codigo\n"
+                + "                ,producto.nombre Nombre,venta_pro.cantidad \n"
+                + "                ,producto.precio_desc Precio,(venta_pro.cantidad*producto.precio_desc) Total from venta,usuario,persona,venta_pro,producto\n"
+                + "                where\n"
+                + "                venta.cod_usuario=usuario.cod_usuario\n"
+                + "                and usuario.cedula=persona.cedula\n"
+                + "                and venta.cod_factura=venta_pro.cod_factura\n"
+                + "                and producto.cod_producto=venta_pro.cod_producto\n"
+                + "                and persona.cedula=1 \n"
+                + "                and venta.fecha_venta between '2016-08-15 00:00:00' and '2016-08-20 23:59:59' and producto.cod_producto<>0\n"
+                + "		   union 		\n"
+                + "		   select to_char(fecha_venta, 'HH24:MI:SS')  Hora,b.cod_kit Codigo\n"
+                + "                ,b.nombre Nombre,venta_pro.cantidad \n"
+                + "                ,b.valor,(venta_pro.cantidad*b.valor) Total \n"
+                + "		   from venta,usuario,persona,venta_pro,Kits b\n"
+                + "                where\n"
+                + "                venta.cod_usuario=usuario.cod_usuario\n"
+                + "                and usuario.cedula=persona.cedula\n"
+                + "                and venta.cod_factura=venta_pro.cod_factura\n"
+                + "                and b.cod_kit=venta_pro.cod_kit\n"
+                + "                and persona.cedula=" + cod + " \n"
+                + "                and venta.fecha_venta between '" + fec.substring(0, 10).concat(" 00:00:00") + "' and '"
+                +                  fec.substring(0, 10).concat(" 23:59:59") + "'"
+                + "                )Y\n"
+                + "                order by Y.hora";
+        
         String cod = "", nom = "", valor = "", cant = "", costo = "", iva = "", precio = "", hora = "";
-        String cate = "",ValorTot="";
+        String cate = "", ValorTot = "";
         DefaultTableModel modeloEmpleado = new DefaultTableModel();
         int numeroPreguntas;
         ResultSetMetaData rsetMetaData;
         this.jTable1.setModel(modeloEmpleado);
-         try {
-        boolean r = Control.ejecuteQuery(query);
+        try {
+            boolean r = Control.ejecuteQuery(query);
             rsetMetaData = Control.rs.getMetaData();
             numeroPreguntas = rsetMetaData.getColumnCount();
             //Establece los nombres de las columnas de las tablas
@@ -225,12 +240,11 @@ public class ReporteDetalleVenta extends javax.swing.JDialog {
                 }
                 modeloEmpleado.addRow(registroEmpleado);
             }
-            Control.cerrarConexion();
 //            Control.rs.close();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "ERROR " + e.getMessage());
         } finally {
-           Control.cerrarConexion();
+            Control.cerrarConexion();
         }
     }
 

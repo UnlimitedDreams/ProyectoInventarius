@@ -53,12 +53,18 @@ public class SalidaEntrada extends javax.swing.JDialog {
         this.cant = cant;
         this.ListAcciones = acciones;
         this.codEmpresa = codEmpresa;
-        this.Bode=(Bodega)parent;
+        this.Bode = (Bodega) parent;
         this.setLocationRelativeTo(null);
         this.setResizable(false);
         URL url = getClass().getResource("/images/facelet/icon.png");
         ImageIcon img = new ImageIcon(url);
         setIconImage(img.getImage());
+        if (tipo.equalsIgnoreCase("Entrada")) {
+            jLabel1.setText("ENTRADA");
+        } else if (tipo.equalsIgnoreCase("Salida")) {
+            jLabel1.setText("SALIDA");
+        }
+
         try {
             cargarUsuario(usuario);
             cargarCodProducto();
@@ -86,6 +92,7 @@ public class SalidaEntrada extends javax.swing.JDialog {
         actualizar = new javax.swing.JButton();
         volver = new javax.swing.JButton();
         cantidad = new javax.swing.JSpinner();
+        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("BackBox - Salidas/Entradas");
@@ -96,18 +103,18 @@ public class SalidaEntrada extends javax.swing.JDialog {
 
         jLabel2.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
         jLabel2.setText("Cantidad");
-        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 50, -1, -1));
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 60, -1, -1));
 
         jLabel3.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
         jLabel3.setText("Comentario");
-        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 130, -1, -1));
+        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 150, -1, -1));
 
         jTextArea1.setColumns(20);
         jTextArea1.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
         jTextArea1.setRows(5);
         jScrollPane1.setViewportView(jTextArea1);
 
-        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 86, -1, 110));
+        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 100, -1, 110));
 
         actualizar.setFont(new java.awt.Font("Segoe UI Light", 0, 11)); // NOI18N
         actualizar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-mdpi/ic_update_black_24dp.png"))); // NOI18N
@@ -151,7 +158,12 @@ public class SalidaEntrada extends javax.swing.JDialog {
                 cantidadKeyReleased(evt);
             }
         });
-        jPanel1.add(cantidad, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 50, 210, -1));
+        jPanel1.add(cantidad, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 60, 210, -1));
+
+        jLabel1.setFont(new java.awt.Font("Segoe UI Light", 1, 24)); // NOI18N
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setText("Nombre");
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 10, 200, 40));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -197,14 +209,19 @@ public class SalidaEntrada extends javax.swing.JDialog {
     }
 
     public void cargarCodProducto() throws SQLException, ClassNotFoundException {
-        Control.conectar();
-        Control.ejecuteQuery("select cod_producto from producto where serie_producto='" + codigo + "'");
-        int codPro = 0;
-        while (Control.rs.next()) {
-            codPro = Control.rs.getInt(1);
+        if (codigo.contains("Kit")) {
+            this.codProducto = 0;
+        } else {
+            Control.conectar();
+            Control.ejecuteQuery("select cod_producto from producto where serie_producto='" + codigo + "'");
+            int codPro = 0;
+            while (Control.rs.next()) {
+                codPro = Control.rs.getInt(1);
+            }
+            this.codProducto = codPro;
+            Control.cerrarConexion();
         }
-        this.codProducto = codPro;
-        Control.cerrarConexion();
+
     }
 
     /**
@@ -227,15 +244,22 @@ public class SalidaEntrada extends javax.swing.JDialog {
                 } else {
                     boolean r1 = Control.ejecuteUpdate("insert into Salida_Entrada values("
                             + codigo_sal + ",'" + tipo + "'," + cantidad.getValue() + ",'" + fecha + "',"
-                            + "'" + jTextArea1.getText() + "','" + nombre + "'," + codProducto + ")");
+                            + "'" + jTextArea1.getText() + "','" + nombre + "'," + codProducto + ","
+                            + "(case when upper(substring('" + codigo + "',0,4))='KIT' then '" + codigo + "' else '0'  end) )");
                     if (r1) {
 
-                        if (tipo.equalsIgnoreCase("Salida")) {
+                        if (tipo.equalsIgnoreCase("Salida") && codigo.contains("Kit")) {
+                            r = Control.ejecuteUpdate("update Kits set cantidad=cantidad-" + cantidad.getValue() + " where cod_kit='" + codigo + "'");
+                        } else if (tipo.equalsIgnoreCase("Salida")) {
+                            System.out.println("Update producto Salida");
                             r = Control.ejecuteUpdate("update producto set cantidad=cantidad-" + cantidad.getValue() + " where cod_producto='" + codProducto + "'");
-                        } else {
-                            System.out.println("Update producto");
-                            r = Control.ejecuteUpdate("update producto set cantidad=cantidad+" + cantidad.getValue() + " where cod_producto='" + codProducto + "'");
+                        }
 
+                        if (tipo.equalsIgnoreCase("Entrada") && codigo.contains("Kit")) {
+                            r = Control.ejecuteUpdate("update Kits set cantidad=cantidad+" + cantidad.getValue() + " where cod_kit='" + codigo + "'");
+                        } else if (tipo.equalsIgnoreCase("Entrada")) {
+                            System.out.println("Update producto entrada");
+                            r = Control.ejecuteUpdate("update producto set cantidad=cantidad+" + cantidad.getValue() + " where cod_producto='" + codProducto + "'");
                         }
                     } else {
                         Entrada.muestreMensajeV("Error",
@@ -254,7 +278,6 @@ public class SalidaEntrada extends javax.swing.JDialog {
                 Bodega b = new Bodega(usuario, ListAcciones, codEmpresa);
                 this.Bode.inicio();
                 this.dispose();
-                
 
             } else {
                 Entrada.muestreMensajeV("Error Haciendo Cambios a La Bodega",
@@ -313,6 +336,7 @@ public class SalidaEntrada extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton actualizar;
     private javax.swing.JSpinner cantidad;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;

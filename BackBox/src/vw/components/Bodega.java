@@ -33,6 +33,7 @@ import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
 import javax.swing.table.DefaultTableModel;
 import vw.dialogs.AcercaDe;
+import vw.dialogs.KitUpdate2;
 import vw.dialogs.ProductoUpdate;
 import vw.dialogs.SalidaEntrada;
 import vw.main.Acceder;
@@ -278,7 +279,7 @@ public class Bodega extends javax.swing.JFrame {
         DefaultTableModel modeloEmpleado = new DefaultTableModel();
         int numeroPreguntas;
         ResultSetMetaData rsetMetaData;
-        String cabeceras[] = {"Codigo", "Nombre", "Categoria","Costo","Iva","Precio","Descuento","Cantidad"};
+        String cabeceras[] = {"Codigo", "Nombre", "Categoria", "Costo", "Iva", "Precio", "Descuento", "Cantidad"};
         modeloEmpleado = new DefaultTableModel(null, cabeceras) {
             @Override
             public boolean isCellEditable(int row, int column) {//para evitar que las celdas sean editables
@@ -655,6 +656,7 @@ public class Bodega extends javax.swing.JFrame {
         } else {
             String cod = (String) tablaProductos.getValueAt(i, 0).toString();
             String nombre = (String) tablaProductos.getValueAt(i, 1).toString();
+            String categoria = (String) tablaProductos.getValueAt(i, 2).toString();
             String Costo = (String) tablaProductos.getValueAt(i, 3).toString();
             String iva = (String) tablaProductos.getValueAt(i, 4).toString();
             String Precio = (String) tablaProductos.getValueAt(i, 5).toString();
@@ -667,9 +669,13 @@ public class Bodega extends javax.swing.JFrame {
             producto.setDesc(Integer.parseInt(Desc));
             producto.setPrecio_venta(Double.parseDouble(Precio));
             producto.setCantidad(Integer.parseInt(cant));
-            ProductoUpdate p = new ProductoUpdate(this, true, producto, usuario, List_Menu, codEmpresa);
-            p.setVisible(true);
-            this.setVisible(false);
+            if (categoria.equalsIgnoreCase("Kits")) {
+                new KitUpdate2(this, true, cod,2).setVisible(true);
+            } else {
+                ProductoUpdate p = new ProductoUpdate(this, true, producto, usuario, List_Menu, codEmpresa);
+                p.setVisible(true);
+                this.dispose();
+            }
         }
     }
 
