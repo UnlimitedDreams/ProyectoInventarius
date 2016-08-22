@@ -1023,18 +1023,19 @@ public class Venta extends javax.swing.JFrame implements KeyListener {
             }
             Date fecha = new Date();
             double valorIva = Double.parseDouble(porcentajeIVA.getText());
-            double CambioUsu = 0;
+            String CambioUsu = "";
             if (cambio.getText().equalsIgnoreCase("0") || cambio.getText().equalsIgnoreCase("$ 0")) {
-                CambioUsu = 0;
+                CambioUsu = "0";
             } else {
-                CambioUsu = Double.parseDouble(cambio.getText().substring(2, cambio.getText().length()));
+                System.out.println("---- Cambio : " + cambio.getText().substring(2, cambio.getText().length()));
+                CambioUsu = cambio.getText().substring(2, cambio.getText().length());
             }
             r = Control.ejecuteUpdate("insert into venta values(" + codigo_venta + ",'" + fecha + "'," + ValorPago
                     + "," + usuario + "," + tipoVenta + "," + cod_pago + "," + valorIva + ""
                     + "," + Integer.parseInt(porcentajeDescuento.getText()) + ","
                     + this.ValorDesc + "," + codigo_cliente + ","
-                    + this.ValorNeto + "," + codigo_empresa + "," + Double.parseDouble(montoPago.getText()) + ","
-                    + CambioUsu + ")");
+                    + this.ValorNeto + "," + codigo_empresa + ",'" + montoPago.getText()+ "','"
+                    +CambioUsu+ "')");
             System.out.println("Va bien");
             if (r) {
                 Producto pro = null;
@@ -1625,7 +1626,7 @@ public class Venta extends javax.swing.JFrame implements KeyListener {
                     + "  union "
                     + " select A.cod_kit,A.nombre,A.valor precio_desc  from kits A, kitdetalle B , producto C , maestro_iva D\n"
                     + "where A.cod_kit=B.cod_kit and B.cod_producto=C.cod_producto and  \n"
-                    + "C.iva=D.codiva and A.cod_kit ILIKE ('%" + jTextField2.getText() + "%')"
+                    + "C.iva=D.codiva and A.cod_kit ILIKE ('%" + jTextField2.getText() + "%') and A.estado='A'"
                     + ")Y";
         }
         Control.conectar();

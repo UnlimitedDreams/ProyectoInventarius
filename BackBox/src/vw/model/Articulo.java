@@ -347,7 +347,7 @@ public class Articulo extends javax.swing.JFrame implements Runnable {
 
         agregar.setFont(new java.awt.Font("Segoe UI Light", 0, 11)); // NOI18N
         agregar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-mdpi/ic_add_black_24dp.png"))); // NOI18N
-        agregar.setText("Agregar");
+        agregar.setText("Compra");
         agregar.setBorder(null);
         agregar.setBorderPainted(false);
         agregar.setContentAreaFilled(false);

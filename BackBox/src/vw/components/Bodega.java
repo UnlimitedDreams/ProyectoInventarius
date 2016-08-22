@@ -5,11 +5,11 @@
  */
 package vw.components;
 
-import Control.Entrada;
-import Modelo.Producto;
 import Control.Control;
+import Control.Entrada;
 import Modelo.ContenedorMenus;
 import Modelo.MenuRedireccionar;
+import Modelo.Producto;
 import Modelo.acciones;
 import Modelo.seccion;
 import java.awt.Desktop;
@@ -35,6 +35,7 @@ import javax.swing.table.DefaultTableModel;
 import vw.dialogs.AcercaDe;
 import vw.dialogs.KitUpdate2;
 import vw.dialogs.ProductoUpdate;
+import vw.dialogs.ProductoUpdate2;
 import vw.dialogs.SalidaEntrada;
 import vw.main.Acceder;
 import vw.main.Menu;
@@ -670,11 +671,10 @@ public class Bodega extends javax.swing.JFrame {
             producto.setPrecio_venta(Double.parseDouble(Precio));
             producto.setCantidad(Integer.parseInt(cant));
             if (categoria.equalsIgnoreCase("Kits")) {
-                new KitUpdate2(this, true, cod,2).setVisible(true);
+                new KitUpdate2(this, true, cod, 2).setVisible(true);
             } else {
-                ProductoUpdate p = new ProductoUpdate(this, true, producto, usuario, List_Menu, codEmpresa);
-                p.setVisible(true);
-                this.dispose();
+                ProductoUpdate2 p = new ProductoUpdate2(this, true, producto, codEmpresa);
+                p.setVisible(true);                
             }
         }
     }

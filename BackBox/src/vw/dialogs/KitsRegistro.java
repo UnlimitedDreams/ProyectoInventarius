@@ -81,6 +81,19 @@ public class KitsRegistro extends javax.swing.JDialog {
             System.out.println("Sintaxis de la consulta mal hecha" + ex.toString());
         }
     }
+    public boolean ValidarCampos(){
+        boolean r=true;
+        if(nombre.getText().length()>0){
+            nombre.requestFocus();
+            r=false;
+        }
+        if(Cantidad.getText().length()>0){
+            Cantidad.requestFocus();
+            r=false;
+        }
+        
+        return r;
+    }
 
     public void registrarKit() throws SQLException, ClassNotFoundException {
         boolean r = false;
@@ -89,11 +102,6 @@ public class KitsRegistro extends javax.swing.JDialog {
             Control.conectar();
             Control.con.setAutoCommit(false);
             int actu = 0;
-            if (commit.isSelected()) {
-                actu = 1;
-            } else {
-                actu = 2;
-            }
             Control.ejecuteUpdate("insert into Kits values('" + codigo.getText().trim() + "',"
                     + Double.parseDouble(Costo.getText()) + "," + Double.parseDouble(precio.getText())
                     + "," + Integer.parseInt(Cantidad.getText()) + ",'A'," + numKit + ",'" + nombre.getText() + "'," + actu + ")");
@@ -222,10 +230,8 @@ public class KitsRegistro extends javax.swing.JDialog {
         codigo = new javax.swing.JTextField();
         Cantidad = new javax.swing.JTextField();
         precio = new javax.swing.JTextField();
-        jLabel3 = new javax.swing.JLabel();
         nombre = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
-        commit = new javax.swing.JCheckBox();
 
         jCheckBox2.setText("jCheckBox2");
 
@@ -468,19 +474,12 @@ public class KitsRegistro extends javax.swing.JDialog {
         precio.setFont(new java.awt.Font("Segoe UI Light", 0, 18)); // NOI18N
         jPanel1.add(precio, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 60, 160, -1));
 
-        jLabel3.setFont(new java.awt.Font("Segoe UI Light", 1, 14)); // NOI18N
-        jLabel3.setText("Actualizacion");
-        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 100, -1, 30));
-
         nombre.setFont(new java.awt.Font("Segoe UI Light", 0, 18)); // NOI18N
         jPanel1.add(nombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 20, 310, -1));
 
         jLabel5.setFont(new java.awt.Font("Segoe UI Light", 1, 14)); // NOI18N
         jLabel5.setText("Precio");
         jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 60, -1, -1));
-
-        commit.setContentAreaFilled(false);
-        jPanel1.add(commit, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 110, -1, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -498,10 +497,10 @@ public class KitsRegistro extends javax.swing.JDialog {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         try {
-            if (nombre.getText().isEmpty()) {
+            if (nombre.getText().length()==0) {
                 Entrada.muestreMensajeV("EL nombre es obligatorio");
                 nombre.requestFocus();
-            } else if (Cantidad.getText().equalsIgnoreCase("0")) {
+            } else if (Cantidad.getText().equalsIgnoreCase("0") || Cantidad.getText().length()==0) {
                 Entrada.muestreMensajeV("La cantidad debe ser mayor a cero");
                 Cantidad.requestFocus();
             } else {
@@ -842,12 +841,10 @@ public class KitsRegistro extends javax.swing.JDialog {
     private javax.swing.JTextField Costo;
     private javax.swing.JScrollPane c;
     private javax.swing.JTextField codigo;
-    private javax.swing.JCheckBox commit;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JCheckBox jCheckBox2;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
