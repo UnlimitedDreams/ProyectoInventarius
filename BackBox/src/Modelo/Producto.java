@@ -27,6 +27,7 @@ public class Producto {
     private String Esta;
     private int CantBD;
     private int IvaCargeArchivo;
+    private boolean MarcaKits;
 
     public Producto(String codigo, String nombre, double Costo, int iva, double precio_venta, int cantidad, int desc) {
         this.codigo = codigo;
@@ -57,6 +58,27 @@ public class Producto {
         this.stock = stock;
     }
 
+    public Producto(String codigo, String nombre, double precio_venta, int desc, double precio_final) {
+        this.codigo = codigo;
+        this.nombre = nombre;
+        this.precio_venta = precio_venta;
+        this.desc = desc;
+        this.precio_final = precio_final;
+    }
+
+    public Producto(int codigoProducto) {
+        this.codigoProducto = codigoProducto;
+    }
+
+    public Producto(String codigo, int codigoProducto, String nombre, double Costo, double precio_venta) {
+        this.codigo = codigo;
+        this.codigoProducto = codigoProducto;
+        this.nombre = nombre;
+        this.Costo = Costo;
+        this.precio_venta = precio_venta;
+    }
+
+    
     public Producto() {
     }
 
@@ -191,6 +213,14 @@ public class Producto {
 
     public void setIvaCargeArchivo(int IvaCargeArchivo) {
         this.IvaCargeArchivo = IvaCargeArchivo;
+    }
+
+    public boolean isMarcaKits() {
+        return MarcaKits;
+    }
+
+    public void setMarcaKits(boolean MarcaKits) {
+        this.MarcaKits = MarcaKits;
     }
     
 

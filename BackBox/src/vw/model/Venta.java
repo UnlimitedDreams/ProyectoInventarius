@@ -107,6 +107,7 @@ public class Venta extends javax.swing.JFrame implements KeyListener {
         this.codigo_cliente = 0;
         this.codigo_empresa = empresa;
         this.subtotal.setText("0");
+        this.montoPago.setText("0");
         this.setLocationRelativeTo(null);
         this.setResizable(false);
         this.regimen = 0;
@@ -247,11 +248,9 @@ public class Venta extends javax.swing.JFrame implements KeyListener {
 
     public void EliminarBandera() throws ClassNotFoundException {
         Control.conectar();
-        Control.ejecuteUpdate("delete from detalle a, producto b \n"
-                + "where a.cod_producto=b.cod_producto\n"
-                + "and b.bandera=0");
         Control.ejecuteUpdate("delete from producto where bandera=0");
         Control.cerrarConexion();
+        System.out.println("Paso por aqui");
     }
 
     public void MenuAyuda() {
@@ -341,7 +340,7 @@ public class Venta extends javax.swing.JFrame implements KeyListener {
 
     public void iniciar() {
         System.out.println("Tamañ de productos " + productos.size());
-        Tabla2 t = new Tabla2(productos);
+        Tabla2 t = new Tabla2(productos, 5);
         t.calculeFrecuenciasV();
         muevaLosDatosFre(t);
 
@@ -431,7 +430,7 @@ public class Venta extends javax.swing.JFrame implements KeyListener {
         jButton5 = new javax.swing.JButton();
         valorDescuento = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
-        medioPago = new javax.swing.JComboBox<String>();
+        medioPago = new javax.swing.JComboBox<>();
         Descuento = new javax.swing.JLabel();
         porcentajeIVA = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
@@ -761,7 +760,7 @@ public class Venta extends javax.swing.JFrame implements KeyListener {
         jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 340, -1, -1));
 
         medioPago.setFont(new java.awt.Font("Segoe UI Light", 0, 14)); // NOI18N
-        medioPago.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Efectivo", "Tarjeta" }));
+        medioPago.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Efectivo", "Tarjeta Credito", "Tarjeta Debito" }));
         medioPago.setToolTipText("Método de Pago del Cliente");
         medioPago.setPreferredSize(new java.awt.Dimension(130, 28));
         medioPago.addActionListener(new java.awt.event.ActionListener() {
@@ -1000,7 +999,7 @@ public class Venta extends javax.swing.JFrame implements KeyListener {
             //Mostrar en pdf   // JasperViewer.viewReport(jasperPrint);   
             JasperPrintManager.printReport(jasperPrint, true);
         } catch (Exception ex) {
-            System.err.println("Error Reporte "+ex.toString());
+            System.err.println("Error Reporte " + ex.toString());
         }
     }
 
@@ -1011,7 +1010,6 @@ public class Venta extends javax.swing.JFrame implements KeyListener {
         boolean r = false;
         try {
             DecimalFormat formateador = new DecimalFormat("#############");
-
             Control.conectar();
             Control.con.setAutoCommit(false);
             cone = Control.con;
@@ -1020,37 +1018,50 @@ public class Venta extends javax.swing.JFrame implements KeyListener {
                 cod_pago = 1;
             } else if (medioPago.getSelectedIndex() == 1) {
                 cod_pago = 2;
+            } else if (medioPago.getSelectedIndex() == 2) {
+                cod_pago = 3;
             }
             Date fecha = new Date();
             double valorIva = Double.parseDouble(porcentajeIVA.getText());
-            System.out.println("2");
-            System.out.println("valor pago : " + ValorPago);
+            String CambioUsu = "";
+            if (cambio.getText().equalsIgnoreCase("0") || cambio.getText().equalsIgnoreCase("$ 0")) {
+                CambioUsu = "0";
+            } else {
+                System.out.println("---- Cambio : " + cambio.getText().substring(2, cambio.getText().length()));
+                CambioUsu = cambio.getText().substring(2, cambio.getText().length());
+            }
             r = Control.ejecuteUpdate("insert into venta values(" + codigo_venta + ",'" + fecha + "'," + ValorPago
                     + "," + usuario + "," + tipoVenta + "," + cod_pago + "," + valorIva + ""
                     + "," + Integer.parseInt(porcentajeDescuento.getText()) + ","
                     + this.ValorDesc + "," + codigo_cliente + ","
-                    + this.ValorNeto + "," + codigo_empresa + ")");
+                    + this.ValorNeto + "," + codigo_empresa + ",'" + montoPago.getText()+ "','"
+                    +CambioUsu+ "')");
+            System.out.println("Va bien");
             if (r) {
                 Producto pro = null;
                 for (int i = 0; i < productos.size(); i++) {
                     pro = (Producto) productos.get(i);
                     r = Control.ejecuteUpdate("insert into venta_pro values(" + codigo_pro + ","
-                            + codigo_venta + "," + pro.getCantidad() + "," + pro.getIva() + "," + (pro.getValorIva()*pro.getCantidad()) + "," + pro.getCodigoProducto() + ")");
+                            + codigo_venta + "," + pro.getCantidad() + "," + pro.getIva() + ","
+                            + (pro.getValorIva() * pro.getCantidad()) + "," + pro.getCodigoProducto() + ","
+                            + "(case when upper(substring('" + pro.getCodigo() + "',0,4))='KIT' then '" + pro.getCodigo() + "' else '0'  end),"
+                            + pro.getPrecio_venta() + ")");
+
                     codigo_pro++;
                 }
                 restar_Bodega();
-               generarFactura(codigo_venta, fecha, cone);
+//                generarFactura(codigo_venta, fecha, cone);
 
                 Proceso = true;
             } else {
                 System.out.println("Error en venta");
             }
 
-        } catch (Exception ex) {
+        } catch (SQLException ex) {
+            r = false;
             System.out.println("Error : " + ex.toString());
         } finally {
             System.out.println("Cerro Todo");
-
             Control.con.commit();
             Control.con.setAutoCommit(true);
             Control.cerrarConexion();
@@ -1092,10 +1103,17 @@ public class Venta extends javax.swing.JFrame implements KeyListener {
         int codigo_pro = 0;
         for (int i = 0; i < productos.size(); i++) {
             pro = (Producto) productos.get(i);
-            if (tipoVenta == 1) {
+            if (tipoVenta == 1 && pro.getCodigo().contains("Kit")) {
+                Control.ejecuteUpdate("update Kits set cantidad=cantidad-" + pro.getCantidad() + " where "
+                        + "cod_kit='" + pro.getCodigo() + "'");
+            } else {
                 Control.ejecuteUpdate("update producto set cantidad=cantidad-" + pro.getCantidad() + " where "
                         + "serie_producto='" + pro.getCodigo() + "'");
-            } else if (tipoVenta == 2) {
+            }
+            if (tipoVenta == 2 && pro.getCodigo().contains("Kit")) {
+                Control.ejecuteUpdate("update Kits set cantidad=cantidad+" + pro.getCantidad() + " where "
+                        + "cod_kit='" + pro.getCodigo() + "'");
+            } else {
                 Control.ejecuteUpdate("update producto set cantidad=cantidad+" + pro.getCantidad() + " where "
                         + "serie_producto='" + pro.getCodigo() + "'");
             }
@@ -1282,14 +1300,11 @@ public class Venta extends javax.swing.JFrame implements KeyListener {
                     try {
                         Control.conectar();
                         Producto temp = null;
-                        String query = "select * from (\n"
-                                + "select nombre,precio_desc,iva,cast(((precio_venta-costo)*(iva/100)) as numeric(10)) valorIva,cod_producto from producto\n"
-                                + "where\n"
-                                + "producto.estado='A' and serie_producto like ('%" + cod + "')\n"
-                                + "union all \n"
-                                + "select nombre,precio_desc,iva,cast(((precio_venta-costo)*(iva/100)) as numeric(10)) valorIva,cod_producto from producto\n"
-                                + "where\n"
-                                + "producto.estado='A' and serie_producto like ('%" + cod + "%') )Y";
+//                        String query = "select nombre,precio_desc,iva,cast(((precio_venta-costo)*(maestro_iva.porcentaje/100)) as numeric(10)) valorIva,cod_producto "
+//                                + "from producto,maestro_iva\n"
+//                                + "where producto.iva=maestro_iva.codiva\n"
+//                                + " and producto.estado='A' and serie_producto='"+ cod + "'";
+                        String query = "select * from VentaBuscar(1,'" + cod + "')";
                         Control.ejecuteQuery(query);
                         String nom = "";
                         double precio = 0, valorIva = 0;
@@ -1421,10 +1436,7 @@ public class Venta extends javax.swing.JFrame implements KeyListener {
                 try {
                     Control.conectar();
                     Producto temp = null;
-                    String query = "select nombre,precio_desc,iva,cast(((precio_venta-costo)*(iva/100)) as numeric(10)) "
-                            + ",cod_producto from producto\n"
-                            + "where\n"
-                            + "producto.estado='A' and serie_producto='" + cod + "'";
+                    String query = "select * from VentaBuscar(1,'" + cod + "')";
                     Control.ejecuteQuery(query);
                     String nom = "";
                     double precio = 0, valorIva = 0;
@@ -1501,11 +1513,9 @@ public class Venta extends javax.swing.JFrame implements KeyListener {
             } catch (StringIndexOutOfBoundsException e) {
                 /*Error Normal*/
             }
-        } else {
-            if (Integer.parseInt(porcentajeDescuento.getText()) > 100) {
-                Entrada.muestreMensajeV("El % del descuento no puede ser mayor a 100");
-                porcentajeDescuento.setText("" + 0);
-            }
+        } else if (Integer.parseInt(porcentajeDescuento.getText()) > 100) {
+            Entrada.muestreMensajeV("El % del descuento no puede ser mayor a 100");
+            porcentajeDescuento.setText("" + 0);
         }
     }//GEN-LAST:event_porcentajeDescuentoKeyReleased
     public boolean SoloNumeros(String cadena) {
@@ -1586,9 +1596,9 @@ public class Venta extends javax.swing.JFrame implements KeyListener {
         ArrayList<Producto> productos = new ArrayList();
         try {
             new VentaAux(productos, usuario, 1, List_Menu, "1", codigo_empresa).setVisible(true);
-        }catch(Exception ex){
-            
-        }   
+        } catch (Exception ex) {
+
+        }
     }//GEN-LAST:event_jButton2ActionPerformed
     public void Buscar() throws ClassNotFoundException {
         String query = "";
@@ -1603,14 +1613,21 @@ public class Venta extends javax.swing.JFrame implements KeyListener {
                     + "  from producto,categoria where\n"
                     + "  producto.cod_categoria=categoria.cod_categoria and \n"
                     + "  \n"
-                    + "  producto.serie_producto ILIKE ('%" + jTextField2.getText() + "%')  and producto.estado='A')Y limit 10 ";
+                    + "  producto.serie_producto ILIKE ('%" + jTextField2.getText() + "%')  and producto.estado='A'"
+                    + ")Y limit 10 ";
         } else {
-            query = "select distinct  serie_producto \"Codigo\",nombre,precio_desc \"Precio Venta\""
+            query = "select * from (select distinct  serie_producto ,nombre,precio_desc"
                     + "  from producto,categoria where "
                     + "  producto.cod_categoria=categoria.cod_categoria and "
                     + " (categoria.descripcion ILIKE ('%" + jTextField2.getText() + "%') or  "
                     + "producto.nombre ILIKE ('%" + jTextField2.getText() + "%') or "
-                    + " producto.serie_producto ILIKE ('%" + jTextField2.getText() + "%') )  and producto.estado='A'";
+                    + " producto.serie_producto ILIKE ('%" + jTextField2.getText() + "%') )  and producto.estado='A' and "
+                    + "cod_producto not in (0)"
+                    + "  union "
+                    + " select A.cod_kit,A.nombre,A.valor precio_desc  from kits A, kitdetalle B , producto C , maestro_iva D\n"
+                    + "where A.cod_kit=B.cod_kit and B.cod_producto=C.cod_producto and  \n"
+                    + "C.iva=D.codiva and A.cod_kit ILIKE ('%" + jTextField2.getText() + "%') and A.estado='A'"
+                    + ")Y";
         }
         Control.conectar();
         Producto temp = null;

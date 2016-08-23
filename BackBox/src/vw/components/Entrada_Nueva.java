@@ -836,9 +836,7 @@ public class Entrada_Nueva extends javax.swing.JFrame {
         }
     }
     private void crearProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_crearProductoActionPerformed
-        String proveedor[] = proveedores.getSelectedItem().toString().split("-");
-        String fac = jTextField1.getText();
-        new ProductoRegistrar(this, true, productos).setVisible(true);
+     new ProductoRegistrar(this, true, productos).setVisible(true);
         //this.setVisible(false);
 
 
