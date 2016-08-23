@@ -5,12 +5,11 @@
  */
 package vw.components;
 
-
-import Control.Entrada;
-import Modelo.Producto;
 import Control.Control;
+import Control.Entrada;
 import Modelo.ContenedorMenus;
 import Modelo.MenuRedireccionar;
+import Modelo.Producto;
 import Modelo.acciones;
 import Modelo.seccion;
 import java.awt.Desktop;
@@ -34,7 +33,9 @@ import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
 import javax.swing.table.DefaultTableModel;
 import vw.dialogs.AcercaDe;
+import vw.dialogs.KitUpdate2;
 import vw.dialogs.ProductoUpdate;
+import vw.dialogs.ProductoUpdate2;
 import vw.dialogs.SalidaEntrada;
 import vw.main.Acceder;
 import vw.main.Menu;
@@ -217,7 +218,7 @@ public class Bodega extends javax.swing.JFrame {
         Control.conectar();
         try {
             ArrayList<String> acciones = new ArrayList();
-            Control.ejecuteQuery("select * from Permisos("+usuario+",'Bodega')");
+            Control.ejecuteQuery("select * from Permisos(" + usuario + ",'Bodega')");
             while (Control.rs.next()) {
                 acciones.add(Control.rs.getString(1));
             }
@@ -229,7 +230,7 @@ public class Bodega extends javax.swing.JFrame {
             String acci = "";
             for (String accione : acciones) {
                 acci = (String) accione;
-                if (acci.equalsIgnoreCase("EntradaSalida")) {                    
+                if (acci.equalsIgnoreCase("EntradaSalida")) {
                     salida.setEnabled(true);
                     entrada.setEnabled(true);
                 } else if (acci.equalsIgnoreCase("BodegaBorrar")) {
@@ -254,7 +255,7 @@ public class Bodega extends javax.swing.JFrame {
             Control.ejecuteQuery("select * from Reporte_Stock()");
             int count = 0;
 
-            while (Control.rs.next()) {                
+            while (Control.rs.next()) {
                 count++;
             }
             if (count > 0) {
@@ -275,18 +276,25 @@ public class Bodega extends javax.swing.JFrame {
      * @throws ClassNotFoundException
      */
     public void inicio() throws ClassNotFoundException {
-        Control.conectar();        
+        Control.conectar();
         DefaultTableModel modeloEmpleado = new DefaultTableModel();
         int numeroPreguntas;
         ResultSetMetaData rsetMetaData;
+        String cabeceras[] = {"Codigo", "Nombre", "Categoria", "Costo", "Iva", "Precio", "Descuento", "Cantidad"};
+        modeloEmpleado = new DefaultTableModel(null, cabeceras) {
+            @Override
+            public boolean isCellEditable(int row, int column) {//para evitar que las celdas sean editables
+                return false;
+            }
+        };
         this.tablaProductos.setModel(modeloEmpleado);
         try {
-            Control.ejecuteQuery( "select codigo \"Codigo\",nombre \"Nombre\",cate \"Categoria\",rcosto \"Costo\",riva \"Iva\",rprecio \"Precio\""
-                    + ",rdescuento \"Descuento\",rcantidad \"Cantidad\" from BodegaInicio()");
+            Control.ejecuteQuery("select codigo \"Codigo\",nombre \"Nombre\",categoria \"Categoria\",costo \"Costo\",iva \"Iva\",precio \"Precio\""
+                    + ",descuento \"Descuento\",cantidad \"Cantidad\" from BodegaInicio() limit 500");
             rsetMetaData = Control.rs.getMetaData();
             numeroPreguntas = rsetMetaData.getColumnCount();
             for (int i = 0; i < numeroPreguntas; i++) {
-                modeloEmpleado.addColumn(rsetMetaData.getColumnLabel(i + 1));
+//                modeloEmpleado.addColumn(rsetMetaData.getColumnLabel(i + 1));
             }
             while (Control.rs.next()) {
                 Object[] registroEmpleado = new Object[numeroPreguntas];
@@ -543,12 +551,6 @@ public class Bodega extends javax.swing.JFrame {
             Sacar();
         } catch (Exception ex) {
             //nothing here
-        } finally {
-            try {
-                inicio();
-            } catch (ClassNotFoundException ex) {
-                Logger.getLogger(Bodega.class.getName()).log(Level.SEVERE, null, ex);
-            }
         }
 
     }//GEN-LAST:event_salidaActionPerformed
@@ -558,12 +560,6 @@ public class Bodega extends javax.swing.JFrame {
             Entrar();
         } catch (Exception ex) {
             //nothing here
-        } finally {
-            try {
-                inicio();
-            } catch (ClassNotFoundException ex) {
-                Logger.getLogger(Bodega.class.getName()).log(Level.SEVERE, null, ex);
-            }
         }
     }//GEN-LAST:event_entradaActionPerformed
 
@@ -576,8 +572,8 @@ public class Bodega extends javax.swing.JFrame {
     private void stockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stockActionPerformed
         try {
             Stock st = new Stock(usuario, List_Menu, codEmpresa);
-            this.setVisible(false);
             st.setVisible(true);
+            this.dispose();
         } catch (Exception ex) {
 
         }
@@ -611,40 +607,44 @@ public class Bodega extends javax.swing.JFrame {
     }
 
     public void Buscar() throws ClassNotFoundException {
-        String query = "";
-        if (SoloNumeros(jTextField2.getText())) {
-            query = "select codigo \"Codigo\",nombre \"Nombre\",cate \"Categoria\",rcosto \"Costo\",riva \"Iva\",rprecio \"Precio\","
-                    + "rdescuento \"Descuento\",rcantidad \"Cantidad\"  from BodegaInicioBuscar(1,'"+jTextField2.getText()+"') ";
-        } else {
-            query = "select codigo \"Codigo\",nombre \"Nombre\",cate \"Categoria\",rcosto \"Costo\",riva \"Iva\",rprecio \"Precio\","
-                    + "rdescuento \"Descuento\",rcantidad \"Cantidad\"  from BodegaInicioBuscar(2,'"+jTextField2.getText()+"')";
-        }
-        Control.conectar();
-        DefaultTableModel modeloEmpleado = new DefaultTableModel();
-        int numeroPreguntas;
-        ResultSetMetaData rsetMetaData;
-        this.tablaProductos.setModel(modeloEmpleado);
-        try {
-            Control.ejecuteQuery(query);
-            rsetMetaData = Control.rs.getMetaData();
-            numeroPreguntas = rsetMetaData.getColumnCount();
-            //Establece los nombres de las columnas de las tablas
-            for (int i = 0; i < numeroPreguntas; i++) {
-                modeloEmpleado.addColumn(rsetMetaData.getColumnLabel(i + 1));
+        if (jTextField2.getText().length() > 0) {
+            String query = "";
+            if (SoloNumeros(jTextField2.getText())) {
+                query = "select codigo \"Codigo\",nombre \"Nombre\",cate \"Categoria\",rcosto \"Costo\",riva \"Iva\",rprecio \"Precio\","
+                        + "rdescuento \"Descuento\",rcantidad \"Cantidad\"  from BodegaInicioBuscar(1,'" + jTextField2.getText() + "') ";
+            } else {
+                query = "select codigo \"Codigo\",nombre \"Nombre\",cate \"Categoria\",rcosto \"Costo\",riva \"Iva\",rprecio \"Precio\","
+                        + "rdescuento \"Descuento\",rcantidad \"Cantidad\"  from BodegaInicioBuscar(2,'" + jTextField2.getText() + "')";
             }
-
-            while (Control.rs.next()) {
-                Object[] registroEmpleado = new Object[numeroPreguntas];
-
+            Control.conectar();
+            DefaultTableModel modeloEmpleado = new DefaultTableModel();
+            int numeroPreguntas;
+            ResultSetMetaData rsetMetaData;
+            this.tablaProductos.setModel(modeloEmpleado);
+            try {
+                Control.ejecuteQuery(query);
+                rsetMetaData = Control.rs.getMetaData();
+                numeroPreguntas = rsetMetaData.getColumnCount();
+                //Establece los nombres de las columnas de las tablas
                 for (int i = 0; i < numeroPreguntas; i++) {
-                    registroEmpleado[i] = Control.rs.getObject(i + 1);
+                    modeloEmpleado.addColumn(rsetMetaData.getColumnLabel(i + 1));
                 }
-                modeloEmpleado.addRow(registroEmpleado);
+
+                while (Control.rs.next()) {
+                    Object[] registroEmpleado = new Object[numeroPreguntas];
+
+                    for (int i = 0; i < numeroPreguntas; i++) {
+                        registroEmpleado[i] = Control.rs.getObject(i + 1);
+                    }
+                    modeloEmpleado.addRow(registroEmpleado);
+                }
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, "Error al Realizar Filtro de Datos " + e.getMessage());
+            } finally {
+                Control.cerrarConexion();
             }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Error al Realizar Filtro de Datos " + e.getMessage());
-        } finally {
-            Control.cerrarConexion();
+        } else {
+            inicio();
         }
     }
 
@@ -657,6 +657,7 @@ public class Bodega extends javax.swing.JFrame {
         } else {
             String cod = (String) tablaProductos.getValueAt(i, 0).toString();
             String nombre = (String) tablaProductos.getValueAt(i, 1).toString();
+            String categoria = (String) tablaProductos.getValueAt(i, 2).toString();
             String Costo = (String) tablaProductos.getValueAt(i, 3).toString();
             String iva = (String) tablaProductos.getValueAt(i, 4).toString();
             String Precio = (String) tablaProductos.getValueAt(i, 5).toString();
@@ -669,9 +670,12 @@ public class Bodega extends javax.swing.JFrame {
             producto.setDesc(Integer.parseInt(Desc));
             producto.setPrecio_venta(Double.parseDouble(Precio));
             producto.setCantidad(Integer.parseInt(cant));
-            ProductoUpdate p = new ProductoUpdate(this, true, producto, usuario, List_Menu, codEmpresa);
-            p.setVisible(true);
-            this.setVisible(false);
+            if (categoria.equalsIgnoreCase("Kits")) {
+                new KitUpdate2(this, true, cod, 2).setVisible(true);
+            } else {
+                ProductoUpdate2 p = new ProductoUpdate2(this, true, producto, codEmpresa);
+                p.setVisible(true);                
+            }
         }
     }
 
@@ -705,10 +709,10 @@ public class Bodega extends javax.swing.JFrame {
             Control.cerrarConexion();
         }
 
-        if (r && Condicion==1) {
+        if (r && Condicion == 1) {
             Entrada.muestreMensajeV("Producto Borrado con Exito");
             inicio();
-        } else if(r==false && Condicion==1) {
+        } else if (r == false && Condicion == 1) {
             Entrada.muestreMensajeV("Error Borrando el Producto");
         }
 

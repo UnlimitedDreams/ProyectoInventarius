@@ -105,7 +105,8 @@ public class VentaAux extends javax.swing.JFrame {
         this.codigo_cliente = 0;
         this.codigo_empresa = empresa;
         this.subtotal.setText("0");
-        this.setLocationRelativeTo(null);
+        this.montoPago.setText("0");
+//        this.setLocationRelativeTo(null);
         this.setResizable(false);
         this.regimen = 0;
         URL url = getClass().getResource("/images/facelet/icon.png");
@@ -339,7 +340,7 @@ public class VentaAux extends javax.swing.JFrame {
 
     public void iniciar() {
         System.out.println("Tamañ de productos " + productos.size());
-        Tabla2 t = new Tabla2(productos);
+        Tabla2 t = new Tabla2(productos, 5);
         t.calculeFrecuenciasV();
         muevaLosDatosFre(t);
 
@@ -368,10 +369,10 @@ public class VentaAux extends javax.swing.JFrame {
         }
 
         for (int i = 0; i < productos.size(); i++) {
-            pro = (Producto) productos.get(i);            
+            pro = (Producto) productos.get(i);
             cant = pro.getCantidad();
             valor = valor + (pro.getPrecio_final() * cant);
-            iva = iva + (int) (pro.getValorIva()*pro.getCantidad());
+            iva = iva + (int) (pro.getValorIva() * pro.getCantidad());
         }
         valorPorcentaje = ((valor) * (descu / 100));
         subtotal.setText("" + formateador.format(valor));
@@ -429,7 +430,7 @@ public class VentaAux extends javax.swing.JFrame {
         jButton5 = new javax.swing.JButton();
         valorDescuento = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
-        medioPago = new javax.swing.JComboBox<String>();
+        medioPago = new javax.swing.JComboBox<>();
         Descuento = new javax.swing.JLabel();
         porcentajeIVA = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
@@ -460,7 +461,7 @@ public class VentaAux extends javax.swing.JFrame {
 
         jMenu7.setText("jMenu7");
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -758,7 +759,7 @@ public class VentaAux extends javax.swing.JFrame {
         jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 340, -1, -1));
 
         medioPago.setFont(new java.awt.Font("Segoe UI Light", 0, 14)); // NOI18N
-        medioPago.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Efectivo", "Tarjeta" }));
+        medioPago.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Efectivo", "Tarjeta Credito", "Tarjeta Debito" }));
         medioPago.setToolTipText("Método de Pago del Cliente");
         medioPago.setPreferredSize(new java.awt.Dimension(130, 28));
         medioPago.addActionListener(new java.awt.event.ActionListener() {
@@ -999,7 +1000,7 @@ public class VentaAux extends javax.swing.JFrame {
         boolean r = false;
         try {
             DecimalFormat formateador = new DecimalFormat("#############");
-            
+
             Control.conectar();
             Control.con.setAutoCommit(false);
             cone = Control.con;
@@ -1008,22 +1009,25 @@ public class VentaAux extends javax.swing.JFrame {
                 cod_pago = 1;
             } else if (medioPago.getSelectedIndex() == 1) {
                 cod_pago = 2;
+            } else if (medioPago.getSelectedIndex() == 2) {
+                cod_pago = 3;
             }
             Date fecha = new Date();
             double valorIva = Double.parseDouble(porcentajeIVA.getText());
-            System.out.println("2");
-            System.out.println("valor pago : " + ValorPago);
+
             r = Control.ejecuteUpdate("insert into venta values(" + codigo_venta + ",'" + fecha + "'," + ValorPago
                     + "," + usuario + "," + tipoVenta + "," + cod_pago + "," + valorIva + ""
                     + "," + Integer.parseInt(porcentajeDescuento.getText()) + ","
                     + this.ValorDesc + "," + codigo_cliente + ","
-                    + this.ValorNeto + "," + codigo_empresa + ")");
+                    + this.ValorNeto + "," + codigo_empresa + "," + Double.parseDouble(montoPago.getText()) + ","
+                    + Double.parseDouble(cambio.getText().substring(2, cambio.getText().length())) + ")");
             if (r) {
                 Producto pro = null;
                 for (int i = 0; i < productos.size(); i++) {
                     pro = (Producto) productos.get(i);
                     r = Control.ejecuteUpdate("insert into venta_pro values(" + codigo_pro + ","
-                            + codigo_venta + "," + pro.getCantidad() + "," + pro.getIva() + "," + (pro.getValorIva()*pro.getCantidad()) + "," + pro.getCodigoProducto() + ")");
+                            + codigo_venta + "," + pro.getCantidad() + "," + pro.getIva() + "," + (pro.getValorIva() * pro.getCantidad())
+                            + "," + pro.getCodigoProducto() + ")");
                     codigo_pro++;
                 }
                 restar_Bodega();
@@ -1046,7 +1050,7 @@ public class VentaAux extends javax.swing.JFrame {
         }
         if (Proceso && r) {
             this.dispose();
-        }else{
+        } else {
             Entrada.muestreMensajeV("Error al realizar la venta");
         }
 
@@ -1112,7 +1116,7 @@ public class VentaAux extends javax.swing.JFrame {
     }//GEN-LAST:event_jTable2KeyPressed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        
+
         this.dispose();
     }//GEN-LAST:event_jButton4ActionPerformed
 
@@ -1262,7 +1266,7 @@ public class VentaAux extends javax.swing.JFrame {
                         Esta = true;
                         p.setCantidad(p.getCantidad() + 1);
                         p.setPrecio_venta(p.getPrecio_final() * p.getCantidad());
-                        
+
                     }
                 }
                 if (Esta == false) {
@@ -1488,11 +1492,9 @@ public class VentaAux extends javax.swing.JFrame {
             } catch (StringIndexOutOfBoundsException e) {
                 /*Error Normal*/
             }
-        } else {
-            if (Integer.parseInt(porcentajeDescuento.getText()) > 100) {
-                Entrada.muestreMensajeV("El % del descuento no puede ser mayor a 100");
-                porcentajeDescuento.setText("" + 0);
-            }
+        } else if (Integer.parseInt(porcentajeDescuento.getText()) > 100) {
+            Entrada.muestreMensajeV("El % del descuento no puede ser mayor a 100");
+            porcentajeDescuento.setText("" + 0);
         }
     }//GEN-LAST:event_porcentajeDescuentoKeyReleased
     public boolean SoloNumeros(String cadena) {
@@ -1510,7 +1512,7 @@ public class VentaAux extends javax.swing.JFrame {
                 Control.conectar();
                 boolean r = false;
                 Control.ejecuteQuery("select concat(nombre,' ',apellido) from clientes where cedula='" + Cliente.getText() + "'");
-                while (Control.rs.next()) {                    
+                while (Control.rs.next()) {
                     r = true;
                     NomCliente.setText("Cliente : " + Control.rs.getString(1));
                 }

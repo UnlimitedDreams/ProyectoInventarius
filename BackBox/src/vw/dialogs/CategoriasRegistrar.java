@@ -31,6 +31,9 @@ public class CategoriasRegistrar extends javax.swing.JDialog {
         URL url = getClass().getResource("/images/facelet/icon.png");
         ImageIcon img = new ImageIcon(url);
         setIconImage(img.getImage());
+        for (int i = 0; i < 100; i++) {
+            Porcentaje.addItem("" + i + " %");
+        }
     }
 
     /**
@@ -47,20 +50,22 @@ public class CategoriasRegistrar extends javax.swing.JDialog {
         salir = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
+        Porcentaje = new javax.swing.JComboBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Nueva Categoria");
-        setPreferredSize(new java.awt.Dimension(557, 189));
+        setPreferredSize(new java.awt.Dimension(557, 280));
 
         jPanel1.setBackground(java.awt.Color.white);
         jPanel1.setMinimumSize(new java.awt.Dimension(540, 400));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jTextField3.setFont(new java.awt.Font("Segoe UI Light", 0, 24)); // NOI18N
-        jPanel1.add(jTextField3, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 40, 380, 32));
+        jPanel1.add(jTextField3, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 40, 350, 32));
 
         salir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-xhdpi/ic_arrow_back_black_24dp.png"))); // NOI18N
         salir.setBorder(null);
@@ -76,12 +81,15 @@ public class CategoriasRegistrar extends javax.swing.JDialog {
                 salirActionPerformed(evt);
             }
         });
-        jPanel1.add(salir, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 90, -1, -1));
+        jPanel1.add(salir, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 170, -1, -1));
 
         jPanel2.setBackground(new java.awt.Color(196, 70, 38));
 
         jLabel4.setFont(new java.awt.Font("Segoe UI Light", 1, 24)); // NOI18N
         jLabel4.setText("Nombre:");
+
+        jLabel7.setFont(new java.awt.Font("Segoe UI Light", 1, 24)); // NOI18N
+        jLabel7.setText("Ganancia");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -89,18 +97,22 @@ public class CategoriasRegistrar extends javax.swing.JDialog {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel4)
-                .addContainerGap(45, Short.MAX_VALUE))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel4)
+                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(19, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(38, 38, 38)
                 .addComponent(jLabel4)
-                .addContainerGap(90, Short.MAX_VALUE))
+                .addGap(30, 30, 30)
+                .addComponent(jLabel7)
+                .addContainerGap(118, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 150, 160));
+        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 150, 250));
 
         jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-mdpi/ic_save_black_24dp.png"))); // NOI18N
         jButton1.setText("Guardar");
@@ -117,7 +129,7 @@ public class CategoriasRegistrar extends javax.swing.JDialog {
                 jButton1ActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 90, -1, -1));
+        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 170, -1, -1));
 
         jLabel5.setFont(new java.awt.Font("Segoe UI Light", 1, 24)); // NOI18N
         jLabel5.setText("Serie:");
@@ -127,15 +139,29 @@ public class CategoriasRegistrar extends javax.swing.JDialog {
         jLabel6.setText("Serie:");
         jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 100, -1, -1));
 
+        Porcentaje.setFont(new java.awt.Font("Segoe UI Light", 0, 18)); // NOI18N
+        Porcentaje.setMaximumRowCount(10);
+        Porcentaje.setAutoscrolls(true);
+        Porcentaje.setMinimumSize(new java.awt.Dimension(31, 22));
+        Porcentaje.setPreferredSize(new java.awt.Dimension(31, 25));
+        Porcentaje.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                PorcentajeActionPerformed(evt);
+            }
+        });
+        jPanel1.add(Porcentaje, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 100, 110, 32));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 557, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 540, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();
@@ -155,14 +181,19 @@ public class CategoriasRegistrar extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void PorcentajeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PorcentajeActionPerformed
+
+    }//GEN-LAST:event_PorcentajeActionPerformed
+
     public void registrar() throws ClassNotFoundException, SQLException {
         int codigo = Sequence.seque("select max(cod_categoria) from categoria");
         boolean r = false;
         try {
             Control.conectar();
             Control.con.setAutoCommit(false);
+             String valorIva[] = Porcentaje.getSelectedItem().toString().split("%");
             r = Control.ejecuteUpdate("insert into categoria values(" + codigo + ",'" + jTextField3.getText()
-                    + ")");
+                    + "','A',"+Integer.parseInt(valorIva[0].trim())+")");
             if (r) {
                 Entrada.muestreMensajeV("Categoria Registrada",
                         javax.swing.JOptionPane.INFORMATION_MESSAGE);
@@ -245,10 +276,12 @@ public class CategoriasRegistrar extends javax.swing.JDialog {
 //    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox Porcentaje;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JTextField jTextField3;

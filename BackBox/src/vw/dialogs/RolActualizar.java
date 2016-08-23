@@ -228,6 +228,12 @@ public class RolActualizar extends javax.swing.JDialog {
                         Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",19," + ced + ",33)");
                         codigoAct++;
                     }
+                    if (kits.isSelected()) {
+                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",19," + ced + ",34)");
+                        codigoAct++;
+                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",19," + ced + ",3)");
+                        codigoAct++;
+                    }
                 }
                 cerrar = true;
             } catch (Exception ex) {
@@ -286,6 +292,7 @@ public class RolActualizar extends javax.swing.JDialog {
         iva = new javax.swing.JCheckBox();
         jCheckBox16 = new javax.swing.JCheckBox();
         promocion = new javax.swing.JCheckBox();
+        kits = new javax.swing.JCheckBox();
 
         jCheckBox2.setText("jCheckBox2");
 
@@ -518,7 +525,19 @@ public class RolActualizar extends javax.swing.JDialog {
                 promocionActionPerformed(evt);
             }
         });
-        jPanel1.add(promocion, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 160, -1, -1));
+        jPanel1.add(promocion, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 200, -1, -1));
+
+        kits.setBackground(new java.awt.Color(255, 255, 255));
+        kits.setFont(new java.awt.Font("Segoe UI Light", 0, 14)); // NOI18N
+        kits.setSelected(true);
+        kits.setText("Kits");
+        kits.setOpaque(false);
+        kits.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                kitsActionPerformed(evt);
+            }
+        });
+        jPanel1.add(kits, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 160, -1, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -638,6 +657,10 @@ public class RolActualizar extends javax.swing.JDialog {
         // TODO add your handling code here:
     }//GEN-LAST:event_promocionActionPerformed
 
+    private void kitsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_kitsActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_kitsActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -711,6 +734,7 @@ public class RolActualizar extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JTextField jTextField3;
+    private javax.swing.JCheckBox kits;
     private javax.swing.JCheckBox promocion;
     private javax.swing.JCheckBox rcompras;
     // End of variables declaration//GEN-END:variables

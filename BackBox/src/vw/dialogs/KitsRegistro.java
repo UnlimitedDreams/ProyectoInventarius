@@ -25,6 +25,7 @@ import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import vw.components.Kits;
 import vw.components.Promociones;
 import vw.model.Venta;
 
@@ -32,7 +33,7 @@ import vw.model.Venta;
  *
  * @author usuario
  */
-public class PromocionRegistro extends javax.swing.JDialog {
+public class KitsRegistro extends javax.swing.JDialog {
 
     /**
      * Creates new form RolActualizar
@@ -41,11 +42,12 @@ public class PromocionRegistro extends javax.swing.JDialog {
      * @param modal
      * @param cod
      */
-    Promociones promo = null;
+    Kits kit = null;
+    int numKit;
     ArrayList<Producto> productos = new ArrayList();
     boolean condicionfiltro;
 
-    public PromocionRegistro(java.awt.Frame parent, boolean modal) {
+    public KitsRegistro(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         this.setLocationRelativeTo(null);
@@ -53,32 +55,24 @@ public class PromocionRegistro extends javax.swing.JDialog {
         URL url = getClass().getResource("/images/facelet/icon.png");
         ImageIcon img = new ImageIcon(url);
         setIconImage(img.getImage());
-        Cate.addItem("Seleccione");
         this.condicionfiltro = false;
-        promo = (Promociones) parent;
         c.setVisible(false);
-        if (Tipo.getSelectedIndex() == 1) {
-            Cate.setEnabled(true);
-        } else {
-            Cate.setEnabled(false);
-        }
-        for (int i = 0; i < 100; i++) {
-            Porcentaje.addItem("" + i + " %");
-        }
-        Date fecha = new Date();
-        jDateChooser1.setDate(fecha);
-        jDateChooser2.setDate(fecha);
-        Categoria();
+        this.Costo.setText("0");
+        this.precio.setText("0");
+        this.Cantidad.setText("0");
+        this.kit = (Kits) parent;
+        Numerador();
+        nombre.requestFocus();
 
     }
 
-    public void Categoria() {
+    public void Numerador() {
         try {
             Control.conectar();
-
-            Control.ejecuteQuery("select cod_categoria,rtrim(ltrim(descripcion)) from categoria order by descripcion");
+            Control.ejecuteQuery("select secuencia from Numerador where TipoNumerador='Kits'");
             while (Control.rs.next()) {
-                Cate.addItem(Control.rs.getString(2));
+                this.numKit = Integer.parseInt(Control.rs.getString(1));
+                codigo.setText("Kit-" + Control.rs.getString(1));
             }
             Control.cerrarConexion();
         } catch (ClassNotFoundException ex) {
@@ -87,33 +81,41 @@ public class PromocionRegistro extends javax.swing.JDialog {
             System.out.println("Sintaxis de la consulta mal hecha" + ex.toString());
         }
     }
+    public boolean ValidarCampos(){
+        boolean r=true;
+        if(nombre.getText().length()>0){
+            nombre.requestFocus();
+            r=false;
+        }
+        if(Cantidad.getText().length()>0){
+            Cantidad.requestFocus();
+            r=false;
+        }
+        
+        return r;
+    }
 
-    public void registrarPromocion() throws SQLException, ClassNotFoundException {
+    public void registrarKit() throws SQLException, ClassNotFoundException {
         boolean r = false;
         try {
-            int codPromo = Sequence.seque("select max(cod_promocion) from promociones");
-            int codDetPro = Sequence.seque("select max(codDetallePromo) from DetallePromociones");
-            Date date = jDateChooser1.getDate();
-            SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd");
-            String fechaString = format2.format(date);
-
-            Date date2 = jDateChooser2.getDate();
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-            String fecha2String = format.format(date2);
+            int codKitDel = Sequence.seque("select max(codKitDet) from KitDetalle");
             Control.conectar();
             Control.con.setAutoCommit(false);
-            String porcen[] = Porcentaje.getSelectedItem().toString().split("%");
-            Control.ejecuteUpdate("insert into promociones values(" + codPromo + ",'" + fechaString + "','" + fecha2String
-                    + "'," + Integer.parseInt(porcen[0].trim()) + ",'" + Tipo.getSelectedItem().toString() + "','"
-                    + Cate.getSelectedItem().toString().trim() + "')");
-
+            int actu = 0;
+            Control.ejecuteUpdate("insert into Kits values('" + codigo.getText().trim() + "',"
+                    + Double.parseDouble(Costo.getText()) + "," + Double.parseDouble(precio.getText())
+                    + "," + Integer.parseInt(Cantidad.getText()) + ",'A'," + numKit + ",'" + nombre.getText() + "'," + actu + ")");
+            int canti = 0;
             for (Producto LiProducto : productos) {
-                Control.ejecuteUpdate("insert into DetallePromociones values(" + codDetPro + "," + codPromo + "," + LiProducto.getCodigoProducto() + ","
-                        + LiProducto.getCosto() + ")");
-                codDetPro++;
-                Control.ejecuteUpdate("update producto set precio_desc=" + LiProducto.getPrecio_final() + ","
-                        + "descu=" + Integer.parseInt(porcen[0].trim()) + " where cod_producto=" + LiProducto.getCodigoProducto());
+                Control.ejecuteUpdate("insert into KitDetalle values(" + codKitDel + ",'" + codigo.getText().trim() + "',"
+                        + LiProducto.getCodigoProducto() + "," + LiProducto.getPrecio_venta() + ")");
+                codKitDel++;
+                canti = LiProducto.getCantidad() - Integer.parseInt(Cantidad.getText());
+                Control.ejecuteUpdate("update producto set cantidad=" + canti + " where cod_producto=" + LiProducto.getCodigoProducto());
+                canti = 0;
             }
+            Control.ejecuteUpdate("update Numerador set secuencia=" + (numKit + 1) + " where tiponumerador='Kits'");
+
             r = true;
         } catch (Exception ex) {
 
@@ -123,8 +125,8 @@ public class PromocionRegistro extends javax.swing.JDialog {
             Control.cerrarConexion();
         }
         if (r) {
-            Entrada.muestreMensajeV("Se registro Exitosamente la promocion");
-            promo.inicio();
+            Entrada.muestreMensajeV("Se registro Exitosamente el Kit");
+            kit.inicio();
             this.dispose();
         } else {
             Entrada.muestreMensajeV("Error Al Crear Promocion");
@@ -155,33 +157,30 @@ public class PromocionRegistro extends javax.swing.JDialog {
                 try {
                     Control.conectar();
                     Producto temp = null;
-                    String query = "select distinct * from (\n"
-                            + "select nombre,precio_venta,0,cod_producto from producto\n"
+                    String query = "select nombre,precio_venta,costo,cod_producto,cantidad from producto\n"
                             + "where\n"
-                            + "producto.estado='A' and serie_producto like ('%" + cod + "')\n"
-                            + "union all \n"
-                            + "select nombre,precio_venta,0,cod_producto from producto \n"
-                            + "where\n"
-                            + "producto.estado='A' and serie_producto like ('%" + cod + "%') )Y";
+                            + "producto.estado='A' and rtrim(ltrim(serie_producto))='" + cod.trim() + "'";
                     Control.ejecuteQuery(query);
                     String nom = "";
-                    double precio = 0, desc = 0;
-                    int iva = 0;
+                    double precio = 0, costo = 0;
+                    int cantidad = 0;
                     int cod_producto = 0;
                     boolean r = false;
                     while (Control.rs.next()) {
                         r = true;
                         nom = Control.rs.getString(1);
                         precio = Control.rs.getDouble(2);
-                        desc = Control.rs.getInt(3);
+                        costo = Control.rs.getInt(3);
                         cod_producto = Control.rs.getInt(4);
+                        cantidad = Control.rs.getInt(5);
                     }
                     if (r) {
-                        temp = new Producto(cod, nom, precio, 0, precio);
-                        temp.setCodigoProducto(cod_producto);
-                        temp.setCosto(0);
+                        temp = new Producto(cod, cod_producto, nom, costo, precio);
+                        temp.setCantidad(cantidad);
                         productos.add(temp);
                         jTextField2.setText("");
+                        Costo.setText("" + (Double.parseDouble(Costo.getText()) + costo));
+                        this.precio.setText("" + (Double.parseDouble(this.precio.getText()) + precio));
                     } else {
                         Entrada.muestreMensajeV("Codigo  de producto no valido");
                         jTextField2.setText("");
@@ -219,25 +218,26 @@ public class PromocionRegistro extends javax.swing.JDialog {
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jLabel7 = new javax.swing.JLabel();
-        jDateChooser1 = new com.alee.extended.date.WebDateField();
         jLabel6 = new javax.swing.JLabel();
-        jDateChooser2 = new com.alee.extended.date.WebDateField();
         jLabel2 = new javax.swing.JLabel();
-        Tipo = new javax.swing.JComboBox();
-        Porcentaje = new javax.swing.JComboBox();
-        jLabel3 = new javax.swing.JLabel();
         jTextField2 = new javax.swing.JTextField();
         c = new javax.swing.JScrollPane();
         jTable2 = new javax.swing.JTable();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jLabel4 = new javax.swing.JLabel();
-        Cate = new javax.swing.JComboBox();
+        Costo = new javax.swing.JTextField();
+        codigo = new javax.swing.JTextField();
+        Cantidad = new javax.swing.JTextField();
+        precio = new javax.swing.JTextField();
+        nombre = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
 
         jCheckBox2.setText("jCheckBox2");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Gestion Promocion - BackBox");
+        setPreferredSize(new java.awt.Dimension(697, 500));
         setResizable(false);
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
@@ -259,7 +259,7 @@ public class PromocionRegistro extends javax.swing.JDialog {
                 jButton1ActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 340, -1, -1));
+        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 410, -1, -1));
 
         jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-xhdpi/ic_arrow_back_black_24dp.png"))); // NOI18N
         jButton2.setBorder(null);
@@ -275,64 +275,19 @@ public class PromocionRegistro extends javax.swing.JDialog {
                 jButton2ActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 340, -1, -1));
+        jPanel1.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 410, -1, -1));
 
         jLabel7.setFont(new java.awt.Font("Segoe UI Light", 1, 14)); // NOI18N
-        jLabel7.setText("Fecha Inicial");
-        jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(21, 25, -1, -1));
-
-        jDateChooser1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jDateChooser1ActionPerformed(evt);
-            }
-        });
-        jDateChooser1.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                jDateChooser1KeyPressed(evt);
-            }
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                jDateChooser1KeyReleased(evt);
-            }
-        });
-        jPanel1.add(jDateChooser1, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 24, 133, -1));
+        jLabel7.setText("Codigo ");
+        jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 20, -1, -1));
 
         jLabel6.setFont(new java.awt.Font("Segoe UI Light", 1, 14)); // NOI18N
-        jLabel6.setText("Fecha Final");
-        jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 30, -1, -1));
-        jPanel1.add(jDateChooser2, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 30, 133, -1));
+        jLabel6.setText("Costo ");
+        jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 60, -1, -1));
 
         jLabel2.setFont(new java.awt.Font("Segoe UI Light", 1, 14)); // NOI18N
-        jLabel2.setText("Tipo");
-        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 70, -1, -1));
-
-        Tipo.setFont(new java.awt.Font("Segoe UI Light", 0, 18)); // NOI18N
-        Tipo.setMaximumRowCount(10);
-        Tipo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Producto", "Categoria" }));
-        Tipo.setAutoscrolls(true);
-        Tipo.setMinimumSize(new java.awt.Dimension(31, 22));
-        Tipo.setPreferredSize(new java.awt.Dimension(31, 25));
-        Tipo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                TipoActionPerformed(evt);
-            }
-        });
-        jPanel1.add(Tipo, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 70, 134, -1));
-
-        Porcentaje.setFont(new java.awt.Font("Segoe UI Light", 0, 18)); // NOI18N
-        Porcentaje.setMaximumRowCount(10);
-        Porcentaje.setAutoscrolls(true);
-        Porcentaje.setMinimumSize(new java.awt.Dimension(31, 22));
-        Porcentaje.setPreferredSize(new java.awt.Dimension(31, 25));
-        Porcentaje.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                PorcentajeActionPerformed(evt);
-            }
-        });
-        jPanel1.add(Porcentaje, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 350, 80, -1));
-
-        jLabel3.setFont(new java.awt.Font("Segoe UI Light", 1, 14)); // NOI18N
-        jLabel3.setText("Promocion :");
-        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 350, 90, -1));
+        jLabel2.setText("Nombre");
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 20, -1, -1));
 
         jTextField2.setFont(new java.awt.Font("Segoe UI Light", 0, 18)); // NOI18N
         jTextField2.addActionListener(new java.awt.event.ActionListener() {
@@ -347,8 +302,11 @@ public class PromocionRegistro extends javax.swing.JDialog {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 jTextField2KeyReleased(evt);
             }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                jTextField2KeyTyped(evt);
+            }
         });
-        jPanel1.add(jTextField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 120, 590, 30));
+        jPanel1.add(jTextField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 160, 650, 30));
 
         jTable2.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -362,117 +320,117 @@ public class PromocionRegistro extends javax.swing.JDialog {
         });
         c.setViewportView(jTable2);
 
-        jPanel1.add(c, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 150, 590, 130));
+        jPanel1.add(c, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 190, 650, 130));
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
             },
             new String [] {
-                "Codigo", "Nombre", "Precio_Neto", "Descuento %", "Descuento $", "Total"
+                "Codigo", "Nombre", "Cantidad", "Precio Venta"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false
+                false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -486,23 +444,42 @@ public class PromocionRegistro extends javax.swing.JDialog {
         });
         jScrollPane1.setViewportView(jTable1);
 
-        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 170, 590, 160));
+        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 220, 650, 160));
 
         jLabel4.setFont(new java.awt.Font("Segoe UI Light", 1, 14)); // NOI18N
-        jLabel4.setText("Categoria");
-        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 70, 80, -1));
+        jLabel4.setText("Cantidad");
+        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 100, 80, -1));
 
-        Cate.setFont(new java.awt.Font("Segoe UI Light", 0, 18)); // NOI18N
-        Cate.setMaximumRowCount(10);
-        Cate.setAutoscrolls(true);
-        Cate.setMinimumSize(new java.awt.Dimension(31, 22));
-        Cate.setPreferredSize(new java.awt.Dimension(31, 25));
-        Cate.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                CateActionPerformed(evt);
+        Costo.setFont(new java.awt.Font("Segoe UI Light", 0, 18)); // NOI18N
+        Costo.setEnabled(false);
+        jPanel1.add(Costo, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 60, 160, -1));
+
+        codigo.setFont(new java.awt.Font("Segoe UI Light", 0, 18)); // NOI18N
+        codigo.setEnabled(false);
+        jPanel1.add(codigo, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 20, 160, -1));
+
+        Cantidad.setFont(new java.awt.Font("Segoe UI Light", 0, 18)); // NOI18N
+        Cantidad.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                CantidadFocusLost(evt);
             }
         });
-        jPanel1.add(Cate, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 70, 230, -1));
+        Cantidad.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CantidadActionPerformed(evt);
+            }
+        });
+        jPanel1.add(Cantidad, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 100, 160, -1));
+
+        precio.setFont(new java.awt.Font("Segoe UI Light", 0, 18)); // NOI18N
+        jPanel1.add(precio, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 60, 160, -1));
+
+        nombre.setFont(new java.awt.Font("Segoe UI Light", 0, 18)); // NOI18N
+        jPanel1.add(nombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 20, 310, -1));
+
+        jLabel5.setFont(new java.awt.Font("Segoe UI Light", 1, 14)); // NOI18N
+        jLabel5.setText("Precio");
+        jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 60, -1, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -512,7 +489,7 @@ public class PromocionRegistro extends javax.swing.JDialog {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 403, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 473, Short.MAX_VALUE)
         );
 
         pack();
@@ -520,38 +497,37 @@ public class PromocionRegistro extends javax.swing.JDialog {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         try {
-            String valorIva[] = Porcentaje.getSelectedItem().toString().split("%");
-            if (valorIva[0].trim().equalsIgnoreCase("0")) {
-                Entrada.muestreMensajeV("El (%)Porcentaje de la promocion no puede ser cero");
+            if (nombre.getText().length()==0) {
+                Entrada.muestreMensajeV("EL nombre es obligatorio");
+                nombre.requestFocus();
+            } else if (Cantidad.getText().equalsIgnoreCase("0") || Cantidad.getText().length()==0) {
+                Entrada.muestreMensajeV("La cantidad debe ser mayor a cero");
+                Cantidad.requestFocus();
             } else {
-                registrarPromocion();
-            }
+                if (validarCantidad()) {
+                    registrarKit();
+                } else {
+                    Entrada.muestreMensajeV("Uno de los productos no tiene la cantidad suficiente \n para crear el kit.");
+                }
 
+            }
         } catch (Exception ex) {
-//
+
         }
     }//GEN-LAST:event_jButton1ActionPerformed
-
+    public boolean validarCantidad() {
+        boolean r = true;
+        int cant = Integer.parseInt(Cantidad.getText());
+        for (Producto producto : productos) {
+            if (producto.getCantidad() < cant) {
+                r = false;
+            }
+        }
+        return r;
+    }
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         this.dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
-
-    private void TipoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TipoActionPerformed
-        if (Tipo.getSelectedIndex() == 1) {
-            Cate.setEnabled(true);
-            jTextField2.setEnabled(false);
-            productos.clear();
-            iniciar();
-            Borrar();
-
-        } else {
-            Cate.setEnabled(false);
-            jTextField2.setEnabled(true);
-            productos.clear();
-            iniciar();
-            Borrar();
-        }
-    }//GEN-LAST:event_TipoActionPerformed
 
     private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
         // TODO add your handling code here:
@@ -584,29 +560,31 @@ public class PromocionRegistro extends javax.swing.JDialog {
                     try {
                         Control.conectar();
                         Producto temp = null;
-                        String query = "select nombre,precio_venta,0,cod_producto from producto\n"
+                        String query = "select nombre,precio_venta,costo,cod_producto,cantidad from producto\n"
                                 + "where\n"
                                 + "producto.estado='A' and rtrim(ltrim(serie_producto))='" + cod.trim() + "'";
                         System.out.println(query);
                         Control.ejecuteQuery(query);
                         String nom = "";
-                        double precio = 0, desc = 0;
-                        int iva = 0;
+                        double precio = 0, costo = 0;
+                        int cantidad = 0;
                         int cod_producto = 0;
                         boolean r = false;
                         while (Control.rs.next()) {
                             r = true;
                             nom = Control.rs.getString(1);
                             precio = Control.rs.getDouble(2);
-                            desc = Control.rs.getInt(3);
+                            costo = Control.rs.getDouble(3);
                             cod_producto = Control.rs.getInt(4);
+                            cantidad = Control.rs.getInt(5);
                         }
                         if (r) {
-                            temp = new Producto(cod, nom, precio, 0, precio);
-                            temp.setCodigoProducto(cod_producto);
-                            temp.setCosto(0);
+                            temp = new Producto(cod, cod_producto, nom, costo, precio);
+                            temp.setCantidad(cantidad);
                             productos.add(temp);
                             jTextField2.setText("");
+                            Costo.setText("" + (Double.parseDouble(Costo.getText()) + costo));
+                            this.precio.setText("" + (Double.parseDouble(this.precio.getText()) + precio));
                         } else {
                             Entrada.muestreMensajeV("Codigo  de producto no valido");
                             jTextField2.setText("");
@@ -638,43 +616,6 @@ public class PromocionRegistro extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_jTextField2KeyReleased
 
-    private void PorcentajeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PorcentajeActionPerformed
-
-        double valor = 0;
-        double descuento = 0;
-        double porcent = 0;
-        String valorIva[] = Porcentaje.getSelectedItem().toString().split("%");
-        if (Integer.parseInt(valorIva[0].trim()) == 0) {
-            porcent = 0;
-        } else {
-            porcent = Double.parseDouble(valorIva[0].trim());
-        }
-        for (Producto producto : productos) {
-            valor = producto.getPrecio_venta();
-            descuento = valor * (porcent / 100);
-            producto.setPrecio_final(Math.round(valor - descuento));
-            producto.setDesc(Integer.parseInt(valorIva[0].trim()));
-            producto.setCosto(Math.round(descuento));
-            valor = 0;
-            descuento = 0;
-        }
-        iniciar();
-
-    }//GEN-LAST:event_PorcentajeActionPerformed
-
-    private void jDateChooser1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jDateChooser1KeyPressed
-        Date fecha = new Date();
-        System.out.println("Entro aqui");
-    }//GEN-LAST:event_jDateChooser1KeyPressed
-
-    private void jDateChooser1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jDateChooser1ActionPerformed
-        System.out.println("----- DAto");
-    }//GEN-LAST:event_jDateChooser1ActionPerformed
-
-    private void jDateChooser1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jDateChooser1KeyReleased
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jDateChooser1KeyReleased
-
     private void jTable2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTable2KeyPressed
         try {
             if (evt.getKeyCode() == 10) {
@@ -693,49 +634,26 @@ public class PromocionRegistro extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_jTable2MouseClicked
 
-    private void CateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CateActionPerformed
-        if (Cate.getSelectedItem().toString().equalsIgnoreCase("Seleccione")) {
+    private void jTextField2KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField2KeyTyped
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField2KeyTyped
 
-        } else {
-            try {
-                Control.conectar();
-                productos.clear();
-                Borrar();
-                Producto temp = null;
-                String query = "select nombre,precio_venta,0,cod_producto,serie_producto from producto , categoria "
-                        + "where producto.cod_categoria=categoria.cod_categoria and "
-                        + " rtrim(ltrim(categoria.descripcion))='" + Cate.getSelectedItem().toString().trim() + "'";
-                Control.ejecuteQuery(query);
-                String nom = "", serie = "";
-                double precio = 0, desc = 0;
-                int iva = 0;
-                int cod_producto = 0;
-                while (Control.rs.next()) {
-                    nom = Control.rs.getString(1);
-                    precio = Control.rs.getDouble(2);
-                    desc = Control.rs.getInt(3);
-                    cod_producto = Control.rs.getInt(4);
-                    serie = Control.rs.getString(5);
-                    temp = new Producto(serie, nom, precio, 0, precio);
-                    temp.setCodigoProducto(cod_producto);
-                    productos.add(temp);
-                }
-
-            } catch (ClassNotFoundException ex) {
-                Logger.getLogger(Venta.class
-                        .getName()).log(Level.SEVERE, null, ex);
-
-            } catch (SQLException ex) {
-                Logger.getLogger(Venta.class
-                        .getName()).log(Level.SEVERE, null, ex);
-            } finally {
-                Control.cerrarConexion();
-            }
-            iniciar();
-            //jTable2.requestFocus();
+    private void CantidadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CantidadActionPerformed
+        int Cant = Integer.parseInt(Cantidad.getText());
+        if (productos.size() == 0 && Cant > 0) {
+            Entrada.muestreMensajeV("Primero debe agregar los productos");
+            Cantidad.setText("0");
         }
+    }//GEN-LAST:event_CantidadActionPerformed
 
-    }//GEN-LAST:event_CateActionPerformed
+    private void CantidadFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_CantidadFocusLost
+        int Cant = Integer.parseInt(Cantidad.getText());
+        if (productos.size() == 0 && Cant > 0) {
+            Entrada.muestreMensajeV("Primero debe agregar los productos");
+            Cantidad.setText("0");
+        }
+    }//GEN-LAST:event_CantidadFocusLost
+
     public void borrar() {
         String op[] = new String[2];
         op[0] = "Si";
@@ -775,24 +693,23 @@ public class PromocionRegistro extends javax.swing.JDialog {
 
     public void iniciar() {
         System.out.println("Tamañ de productos " + productos.size());
-        Tabla2 t = new Tabla2(productos, 6);
-        t.calculeFrecuenciasPromocion();
+        Tabla2 t = new Tabla2(productos, 4);
+        t.calculeFrecuenciasKits();
         muevaLosDatosFre(t);
 
     }
 
     public void Borrar() {
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 4; i++) {
             for (int k = 0; k < productos.size() + 1; k++) {
                 jTable1.setValueAt("", k, i);
-
             }
         }
         iniciar();
     }
 
     public void muevaLosDatosFre(Tabla2 x) {
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < 4; i++) {
             for (int k = 0; k < x.getNrofreq(); k++) {
                 jTable1.setValueAt(x.frecuencias[i][k], k, i);
             }
@@ -920,18 +837,16 @@ public class PromocionRegistro extends javax.swing.JDialog {
 //    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JComboBox Cate;
-    private javax.swing.JComboBox Porcentaje;
-    private javax.swing.JComboBox Tipo;
+    private javax.swing.JTextField Cantidad;
+    private javax.swing.JTextField Costo;
     private javax.swing.JScrollPane c;
+    private javax.swing.JTextField codigo;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JCheckBox jCheckBox2;
-    private com.alee.extended.date.WebDateField jDateChooser1;
-    private com.alee.extended.date.WebDateField jDateChooser2;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
@@ -939,5 +854,7 @@ public class PromocionRegistro extends javax.swing.JDialog {
     private javax.swing.JTable jTable1;
     private javax.swing.JTable jTable2;
     private javax.swing.JTextField jTextField2;
+    private javax.swing.JTextField nombre;
+    private javax.swing.JTextField precio;
     // End of variables declaration//GEN-END:variables
 }

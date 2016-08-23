@@ -199,25 +199,38 @@ public class FacturaDetalle extends javax.swing.JDialog {
         DecimalFormat formateador = new DecimalFormat("###,###,###");
         Control.conectar();
         Producto temp = null;
-        String query = "select "
-                + "producto.serie_producto \"Producto\","
-                + "nombre \"Nombre\","
-                + "precio_venta \"Precio\","
-                + "venta_pro.cantidad \"Cantidad\",(precio_venta*venta_pro.cantidad) \"Total\""
-                + "from venta,venta_pro,producto\n"
-                + "               where\n"
-                + "                 venta.cod_factura=venta_pro.cod_factura\n"
+        String query = "	select * from (\n"
+                + "                select \n"
+                + "                producto.serie_producto Producto,\n"
+                + "                nombre Nombre,\n"
+                + "                (venta_pro.valor_total+venta_pro.valoriva) Precio,\n"
+                + "                venta_pro.cantidad Cantidad,((venta_pro.valor_total+venta_pro.valoriva) *venta_pro.cantidad) Total\n"
+                + "                from venta,venta_pro,producto\n"
+                + "                where\n"
+                + "                venta.cod_factura=venta_pro.cod_factura\n"
                 + "                and venta_pro.cod_producto=producto.cod_producto\n"
-                + "                and venta.cod_factura='" + factura + "'";
-        String codi = "", total = "", cant = "", nombre = "",totalValor="";
+                + "                and venta.cod_factura=" + factura + " and producto.cod_producto<>0\n"
+                + "                union \n"
+                + "                 select \n"
+                + "                A.cod_kit Producto,\n"
+                + "                A.nombre Nombre,\n"
+                + "                (venta_pro.valor_total+venta_pro.valoriva) Precio,\n"
+                + "                venta_pro.cantidad Cantidad,((venta_pro.valor_total+venta_pro.valoriva) *venta_pro.cantidad) Total\n"
+                + "                from venta,venta_pro,Kits A\n"
+                + "                where\n"
+                + "                venta.cod_factura=venta_pro.cod_factura\n"
+                + "                and venta_pro.cod_kit=A.cod_kit		\n"
+                + "                and venta.cod_factura=" + factura + " \n"                
+                + "                )Y";
+
+        String codi = "", total = "", cant = "", nombre = "", totalValor = "";
         DefaultTableModel modeloEmpleado = new DefaultTableModel();
         int numeroPreguntas;
         ResultSetMetaData rsetMetaData;
         this.jTable1.setModel(modeloEmpleado);
         try {
-        boolean r = Control.ejecuteQuery(query);
+            boolean r = Control.ejecuteQuery(query);
 
-        
             rsetMetaData = Control.rs.getMetaData();
             numeroPreguntas = rsetMetaData.getColumnCount();
             //Establece los nombres de las columnas de las tablas
@@ -230,8 +243,8 @@ public class FacturaDetalle extends javax.swing.JDialog {
                 nombre = Control.rs.getString(2);
                 total = Control.rs.getString(3);
                 cant = Control.rs.getString(4);
-                totalValor=Control.rs.getString(5);
-                totalVenta=totalVenta+(Double.parseDouble(total)*Integer.parseInt(cant));
+                totalValor = Control.rs.getString(5);
+                totalVenta = totalVenta + (Double.parseDouble(total) * Integer.parseInt(cant));
 
                 Object[] registroEmpleado = new Object[numeroPreguntas];
 
@@ -240,7 +253,7 @@ public class FacturaDetalle extends javax.swing.JDialog {
                 }
                 modeloEmpleado.addRow(registroEmpleado);
             }
-           
+
             jLabel3.setText("" + formateador.format(totalVenta));
             Control.cerrarConexion();
 
