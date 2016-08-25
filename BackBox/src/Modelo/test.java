@@ -5,6 +5,7 @@
  */
 package Modelo;
 
+import Control.Entrada;
 import java.text.DecimalFormat;
 import org.fife.ui.rsyntaxtextarea.Theme;
 
@@ -15,10 +16,7 @@ import org.fife.ui.rsyntaxtextarea.Theme;
 public class test {
 
     public static void main(String juan[]) throws InterruptedException {
-        String v = "Kit-1";
-        if(v.contains("Kit")){
-            System.out.println("Si");
-        }
-        System.out.println(v.substring(2, v.length()));
+       int a=Entrada.leaNroEnteroV("mns");
+        System.out.println("- " + a);
     }
 }

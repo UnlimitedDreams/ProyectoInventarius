@@ -19,7 +19,6 @@ public class Control {
             Class.forName(driver);
             con = DriverManager.getConnection(connectString, user, password);
             stat = con.createStatement();
-            System.out.println("Conecto Bien");
             r = true;
             return r;
         } catch (SQLException e) {
@@ -27,21 +26,6 @@ public class Control {
             return r;
         }
 
-    }
-//METODOS PARA POSICIONAR EN EL RESULT SET
-    // INDEPENDIENTE DE CUAL SEA 
-    // LA TABLA
-
-    public static boolean ejecuteQuery() throws SQLException {
-        boolean r = false;
-        try {
-            rs = stat.executeQuery(query);
-            r = true;
-        } catch (Exception e) {
-            System.out.println("Hubo un Error en Ejecute Query -> " + e);
-            r = false;
-        }
-        return r;
     }
 
     public static boolean ejecuteQuery(String x) throws SQLException {
@@ -56,7 +40,7 @@ public class Control {
         return r;
     }
 
-    public static boolean ejecuteUpdate() {
+    public static boolean ejecuteUpdate(String query) {
         boolean r = true;
         try {
             stat.executeUpdate(query);
@@ -67,80 +51,6 @@ public class Control {
         }
         return r;
     }
-
-    public static boolean ejecuteUpdate(String q) {
-        query = q;
-        return (ejecuteUpdate());
-    }
-
-    public static boolean primero() {
-        boolean r = true;
-        try {
-
-            if (Control.rs.first()) {
-                r = true;
-            } else {
-                r = false;
-            }
-
-        } catch (SQLException e) {
-            System.out.println("Error en Primero Actividad" + e.toString());
-            r = false;
-
-        }
-
-        return r;
-    }
-
-    public static boolean anterior() {
-        boolean r = true;
-        try {
-            if (Control.rs.previous()) {
-                r = true;
-            } else {
-                r = false;
-            }
-        } catch (SQLException e) {
-            System.out.println("Error en Primero Actividad" + e.toString());
-            r = false;
-
-        }
-        return r;
-
-    }
-
-    public static boolean siguiente() {
-        boolean r = true;
-        try {
-            if (Control.rs.next()) {
-                r = true;
-            } else {
-                r = false;
-            }
-        } catch (SQLException e) {
-            System.out.println("Error en Primero Actividad" + e.toString());
-            r = false;
-
-        }
-        return r;
-
-    }
-
-    public static boolean ultimo() {
-        boolean r = true;
-        try {
-            if (Control.rs.last()) {
-                r = true;
-            } else {
-                r = false;
-            }
-        } catch (SQLException e) {
-            System.out.println("Error en Primero Actividad" + e.toString());
-            r = false;
-        }
-        return r;
-    }
-
     public static void cerrarConexion() {
         try {
             stat.close();

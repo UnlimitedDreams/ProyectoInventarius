@@ -8,7 +8,7 @@ package vw.dialogs;
 import Control.Control;
 import Control.Entrada;
 import Control.Sequence;
-import Control.Tabla2;
+import Control.TablaModel;
 import Modelo.ContenedorMenus;
 import Modelo.List_Categoria;
 import Modelo.Producto;
@@ -1765,7 +1765,7 @@ public class PromocionUpdate extends javax.swing.JDialog {
     }//GEN-LAST:event_CateMouseClicked
 
     public void iniciar() {
-        Tabla2 t = new Tabla2(productos, 6);
+        TablaModel t = new TablaModel(productos, 6);
         t.calculeFrecuenciasPromocion();
         muevaLosDatosFre(t);
 
@@ -1781,7 +1781,7 @@ public class PromocionUpdate extends javax.swing.JDialog {
 
     }
 
-    public void muevaLosDatosFre(Tabla2 x) {
+    public void muevaLosDatosFre(TablaModel x) {
         for (int i = 0; i < 6; i++) {
             for (int k = 0; k < x.getNrofreq(); k++) {
                 jTable1.setValueAt(x.frecuencias[i][k], k, i);

@@ -8,9 +8,9 @@ package vw.components;
 import Control.Entrada;
 import Modelo.Producto;
 import vw.main.Menu;
-import Control.Tabla;
 import Control.Control;
 import Control.Sequence;
+import Control.TablaModel;
 import Modelo.List_Categoria;
 import java.awt.Toolkit;
 import java.net.URL;
@@ -133,12 +133,12 @@ public class CargaArchivo extends javax.swing.JFrame {
                     "Codigo", "Nombre", "Costo", "Iva", "Precio", "Cantidad", "Estado"
                 }
         ));
-        Tabla t = new Tabla(p);
-        t.calculeFrecuenciasV();
+        TablaModel t = new TablaModel(p,7);
+        t.DatosCargaArchivo();
         muevaLosDatosFre(t);
     }
 
-    public void muevaLosDatosFre(Tabla x) {
+    public void muevaLosDatosFre(TablaModel x) {
         jTable1.getDefaultEditor(null);
         for (int i = 0; i < 7; i++) {
             for (int k = 0; k < x.getNrofreq(); k++) {

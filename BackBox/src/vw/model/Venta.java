@@ -6,7 +6,7 @@
 package vw.model;
 
 import Control.Control;
-import Control.Tabla2;
+import Control.TablaModel;
 import Modelo.ContenedorMenus;
 import Modelo.MenuRedireccionar;
 import Modelo.acciones;
@@ -340,13 +340,13 @@ public class Venta extends javax.swing.JFrame implements KeyListener {
 
     public void iniciar() {
         System.out.println("Tamañ de productos " + productos.size());
-        Tabla2 t = new Tabla2(productos, 5);
+        TablaModel t = new TablaModel(productos, 5);
         t.calculeFrecuenciasV();
         muevaLosDatosFre(t);
 
     }
 
-    public void muevaLosDatosFre(Tabla2 x) {
+    public void muevaLosDatosFre(TablaModel x) {
         for (int i = 0; i < 4; i++) {
             for (int k = 0; k < x.getNrofreq(); k++) {
                 jTable2.setValueAt(x.frecuencias[i][k], k, i);

@@ -9,8 +9,8 @@ import Control.Sequence;
 import Control.Entrada;
 import Modelo.Producto;
 import Modelo.List_Categoria;
-import Control.Tabla3;
 import Control.Control;
+import Control.TablaModel;
 import com.alee.extended.date.WebCalendar;
 import java.net.URL;
 import java.sql.Connection;
@@ -126,12 +126,12 @@ public class Entrada_Nueva extends javax.swing.JFrame {
     }
 
     public void iniciar() {
-        Tabla3 t = new Tabla3(productos);
-        t.calculeFrecuenciasV();
+        TablaModel t = new TablaModel(productos,7);
+        t.DatosEntradaNueva();
         muevaLosDatosFre(t);
     }
 
-    public void muevaLosDatosFre(Tabla3 x) {
+    public void muevaLosDatosFre(TablaModel x) {
         jTable2.getDefaultEditor(null);
         for (int i = 0; i < 7; i++) {
             for (int k = 0; k < x.getNrofreq(); k++) {

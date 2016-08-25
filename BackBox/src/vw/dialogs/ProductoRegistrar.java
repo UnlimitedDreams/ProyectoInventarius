@@ -17,7 +17,7 @@ import Control.Entrada;
 import Modelo.List_Categoria;
 import Modelo.Producto;
 import Control.Sequence;
-import Control.Tabla3;
+import Control.TablaModel;
 import java.awt.Color;
 import javax.swing.BorderFactory;
 import javax.swing.border.Border;
@@ -201,8 +201,8 @@ public class ProductoRegistrar extends javax.swing.JDialog {
         if (proceso) {
             System.out.println("Entro a nueva ventana");
 
-            Tabla3 t = new Tabla3(pr);
-            t.calculeFrecuenciasV();
+            TablaModel t = new TablaModel(pr,7);
+            t.DatosEntradaNueva();
 
             v.jTable2.getDefaultEditor(null);
             for (int i = 0; i < 6; i++) {
