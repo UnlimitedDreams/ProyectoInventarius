@@ -319,33 +319,21 @@ public class Acceder extends javax.swing.JFrame {
         } else {
             Control.conectar();
             try {
-                boolean r = Control.ejecuteQuery("select "
-                        + "rol.cod_rol,"
-                        + "persona.nombre, "
-                        + "persona.apellido,usuario.cod_usuario "
-                        + "from usuario,rol,persona\n"
+                boolean r = Control.ejecuteQuery("select cod_usuario "
+                        + "from usuario "
                         + "where\n"
-                        + "usuario.cod_rol=rol.cod_rol and\n"
-                        + "persona.cedula=usuario.cedula\n"
-                        + "and usuario.usuario=lower('" + field01.getText() + "') and\n"
-                        + " usuario.clave=lower('" + field02.getText() + "')");
-                int rol = 0;
-                String Usuario = "";
-                String Usu = "";
+                        + "usuario.usuario=lower('" + field01.getText() + "') and\n"
+                        + " usuario.clave='" + field02.getText() + "'");
                 boolean f = false;
-
+                String cod_usuario="";
                 while (Control.rs.next()) {
-                    rol = Control.rs.getInt(1);
-                    Usuario = Control.rs.getString(2) + " " + Control.rs.getString(3);
-                    Usu = Control.rs.getString(4);
                     f = true;
+                    cod_usuario=Control.rs.getString(1);
                 }
-                if (f) {
-                    if (rol >= 1) {
-                        Menu newMenu = new Menu(Usu);
+                if (f) {                    
+                        Menu newMenu = new Menu(cod_usuario);
                         newMenu.setVisible(true);
-                        this.setVisible(false);
-                    }
+                        this.dispose();
                 } else {
                     Entrada.muestreMensajeV("El usuario o la clave no son correctos",
                             javax.swing.JOptionPane.ERROR_MESSAGE);
