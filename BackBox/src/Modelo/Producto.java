@@ -29,6 +29,7 @@ public class Producto {
     private int IvaCargeArchivo;
     private boolean MarcaKits;
     private int cantidadKit;
+    private int cantidadKit2;
 
     public Producto(String codigo, String nombre, double Costo, int iva, double precio_venta, int cantidad, int desc) {
         this.codigo = codigo;
@@ -231,6 +232,15 @@ public class Producto {
     public void setCantidadKit(int cantidadKit) {
         this.cantidadKit = cantidadKit;
     }
+
+    public int getCantidadKit2() {
+        return cantidadKit2;
+    }
+
+    public void setCantidadKit2(int cantidadKit2) {
+        this.cantidadKit2 = cantidadKit2;
+    }
+    
     
     
     
