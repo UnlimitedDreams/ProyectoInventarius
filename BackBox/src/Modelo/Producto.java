@@ -28,6 +28,7 @@ public class Producto {
     private int CantBD;
     private int IvaCargeArchivo;
     private boolean MarcaKits;
+    private int cantidadKit;
 
     public Producto(String codigo, String nombre, double Costo, int iva, double precio_venta, int cantidad, int desc) {
         this.codigo = codigo;
@@ -222,6 +223,16 @@ public class Producto {
     public void setMarcaKits(boolean MarcaKits) {
         this.MarcaKits = MarcaKits;
     }
+
+    public int getCantidadKit() {
+        return cantidadKit;
+    }
+
+    public void setCantidadKit(int cantidadKit) {
+        this.cantidadKit = cantidadKit;
+    }
+    
+    
     
 
 }

@@ -8,7 +8,7 @@ package vw.dialogs;
 import Control.Control;
 import Control.Entrada;
 import Control.Sequence;
-import Control.Tabla2;
+import Control.TablaModel;
 import Modelo.ContenedorMenus;
 import Modelo.List_Categoria;
 import Modelo.Producto;
@@ -60,8 +60,7 @@ public class PromocionUpdate extends javax.swing.JDialog {
         c.setVisible(false);
         promo = (Promociones) parent;
         this.codPromocion = codPromo;
-        recuperarDatos();
-        Categoria();
+        recuperarDatos();        
         this.condicion = 1;
 
     }
@@ -79,19 +78,31 @@ public class PromocionUpdate extends javax.swing.JDialog {
                 Cate.addItem(Control.rs.getString(6));
                 Estado.addItem(Control.rs.getString(7));
             }
+            
+            System.out.println("---------------------------------");
+
+            Control.ejecuteQuery("select cod_categoria,rtrim(ltrim(descripcion)) from categoria order by descripcion");
+            while (Control.rs.next()) {
+                Cate.addItem(Control.rs.getString(2));
+            }
+            
+            System.out.println("---------------------------------");
+            System.out.println("-- : " + Tipo.getSelectedItem().toString());
             if (Tipo.getSelectedItem().toString().trim().equalsIgnoreCase("Categoria")) {
+                System.out.println("-------------1");
                 Cate.setEnabled(true);
                 Tipo.addItem("Producto");
                 this.condicionfiltro = true;
             } else {
+                System.out.println("------------2");
                 this.condicionfiltro = true;
                 Tipo.addItem("Categoria");
                 Cate.setEnabled(false);
             }
-            
-            if(Estado.getSelectedItem().toString().trim().equalsIgnoreCase("A")){
+
+            if (Estado.getSelectedItem().toString().trim().equalsIgnoreCase("A")) {
                 Estado.addItem("D");
-            }else{
+            } else {
                 Estado.addItem("A");
             }
 
@@ -119,74 +130,85 @@ public class PromocionUpdate extends javax.swing.JDialog {
         }
         iniciar();
     }
+    
 
-    public void Categoria() {
-        try {
-            Control.conectar();
-            Control.ejecuteQuery("select cod_categoria,rtrim(ltrim(descripcion)) from categoria order by descripcion");
-            while (Control.rs.next()) {
-                Cate.addItem(Control.rs.getString(2));
+    public boolean ValidarTable() {
+        boolean r = false;
+
+        for (Producto producto : productos) {
+            if (producto.getDesc() == 0) {
+                r = false;
+                break;
             }
-            Control.cerrarConexion();
-        } catch (ClassNotFoundException ex) {
-            System.out.println("Error al conectar" + ex.toString());
-        } catch (SQLException ex) {
-            System.out.println("Sintaxis de la consulta mal hecha" + ex.toString());
         }
-    }
 
-    public void BorrarDatos() {
-        try {
-
-        } catch (Exception ex) {
-
-        }
+        return r;
     }
 
     public void UpdatePromocion() throws SQLException, ClassNotFoundException {
-        boolean r = false;
-        try {
-            int codPromo = Sequence.seque("select max(cod_promocion) from promociones");
+        if (ValidarTable()) {
+            boolean r = false;
             int codDetPro = Sequence.seque("select max(codDetallePromo) from DetallePromociones");
-            Date date = jDateChooser1.getDate();
-            SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd");
-            String fechaString = format2.format(date);
+            try {
+                Date date = jDateChooser1.getDate();
+                SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd");
+                String fechaString = format2.format(date);
 
-            Date date2 = jDateChooser2.getDate();
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-            String fecha2String = format.format(date2);
-            Control.conectar();
-            Control.con.setAutoCommit(false);
-            Control.ejecuteUpdate("delete from detallepromociones where codpromo=" + codPromocion);
-            Control.ejecuteUpdate("delete from promociones where cod_promocion=" + codPromocion);
+                Date date2 = jDateChooser2.getDate();
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                String fecha2String = format.format(date2);
 
-            String porcen[] = Porcentaje.getSelectedItem().toString().split("%");
+                ArrayList<Integer> listCodigos = new ArrayList();
+                Control.conectar();
+                Control.con.setAutoCommit(false);
+                r = Control.ejecuteQuery("select a.cod_producto "
+                        + "from producto a,promociones b,detallepromociones c\n"
+                        + "where\n"
+                        + "a.cod_producto=c.codproducto and \n"
+                        + "b.cod_promocion=c.codpromo and b.cod_promocion=" + codPromocion);
 
-            Control.ejecuteUpdate("insert into promociones values(" + codPromo + ",'" + fechaString + "','" + fecha2String
-                    + "'," + Integer.parseInt(porcen[0].trim()) + ",'" + Tipo.getSelectedItem().toString() + "','"
-                    + Cate.getSelectedItem().toString().trim() + "')");
+                while (Control.rs.next()) {
+                    listCodigos.add(Control.rs.getInt(1));
+                }
 
-            for (Producto LiProducto : productos) {
-                Control.ejecuteUpdate("insert into DetallePromociones values(" + codDetPro + "," + codPromo + "," + LiProducto.getCodigoProducto() + ")"
-                        + LiProducto.getCosto() + ")");
-                codDetPro++;
-                Control.ejecuteUpdate("update producto set precio_desc=" + LiProducto.getPrecio_final() + ","
-                        + "descu=" + Integer.parseInt(porcen[0].trim()) + " where cod_producto=" + LiProducto.getCodigoProducto());
+                for (Integer integer : listCodigos) {
+                    r = Control.ejecuteUpdate("update producto set precio_desc=precio_venta,"
+                            + "descu=0 where cod_producto=" + integer);
+                }
+
+                r = Control.ejecuteUpdate("delete from detallepromociones where codpromo=" + codPromocion);
+                r = Control.ejecuteUpdate("delete from promociones where cod_promocion=" + codPromocion);
+
+                String porcen[] = Porcentaje.getSelectedItem().toString().split("%");
+
+                r = Control.ejecuteUpdate("insert into promociones values(" + this.codPromocion + ",'" + fechaString + "','" + fecha2String
+                        + "'," + Integer.parseInt(porcen[0].trim()) + ",'" + Tipo.getSelectedItem().toString() + "','"
+                        + Cate.getSelectedItem().toString().trim() + "','A')");
+
+                for (Producto LiProducto : productos) {
+                    r = Control.ejecuteUpdate("insert into DetallePromociones values(" + codDetPro + "," + this.codPromocion + "," + LiProducto.getCodigoProducto() + ","
+                            + LiProducto.getCosto() + ")");
+                    codDetPro++;
+
+                    r = Control.ejecuteUpdate("update producto set precio_desc=" + LiProducto.getPrecio_final() + ","
+                            + "descu=" + Integer.parseInt(porcen[0].trim()) + " where cod_producto=" + LiProducto.getCodigoProducto());
+                }
+            } catch (SQLException ex) {
+                r = false;
+            } finally {
+                Control.con.commit();
+                Control.con.setAutoCommit(true);
+                Control.cerrarConexion();
             }
-            r = true;
-        } catch (Exception ex) {
-
-        } finally {
-            Control.con.commit();
-            Control.con.setAutoCommit(true);
-            Control.cerrarConexion();
-        }
-        if (r) {
-            Entrada.muestreMensajeV("Se Actualizo Exitosamente la promocion");
-            promo.inicio();
-            this.dispose();
+            if (r) {
+                Entrada.muestreMensajeV("Se Actualizo Exitosamente la promocion");
+                promo.inicio();
+                this.dispose();
+            } else {
+                Entrada.muestreMensajeV("Error Al Crear Promocion");
+            }
         } else {
-            Entrada.muestreMensajeV("Error Al Crear Promocion");
+            Entrada.muestreMensajeV("Debe Asignar el porcentaje de descuento, de nuevo");
         }
     }
 
@@ -306,7 +328,7 @@ public class PromocionUpdate extends javax.swing.JDialog {
 
         jButton1.setFont(new java.awt.Font("Segoe UI Light", 0, 11)); // NOI18N
         jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-mdpi/ic_update_black_24dp.png"))); // NOI18N
-        jButton1.setText("Registrar");
+        jButton1.setText("Actualizar");
         jButton1.setBorder(null);
         jButton1.setBorderPainted(false);
         jButton1.setContentAreaFilled(false);
@@ -1504,7 +1526,7 @@ public class PromocionUpdate extends javax.swing.JDialog {
             }
 
         } catch (Exception ex) {
-//
+            System.out.println("------------------");
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -1513,17 +1535,22 @@ public class PromocionUpdate extends javax.swing.JDialog {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void TipoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TipoActionPerformed
+
         if (Tipo.getSelectedItem().toString().trim().equalsIgnoreCase("Producto")) {
             Cate.setEnabled(false);
-            jTextField2.setEnabled(false);
+            jTextField2.setEnabled(true);
+            Borrar();
             productos.clear();
             iniciar();
-            Borrar();
-            
-        } else {
             this.condicion = 1;
+
+        } else {
+            Borrar();
+            productos.clear();
+            iniciar();
+            this.condicion = 2;
             Cate.setEnabled(true);
-            jTextField2.setEnabled(true);
+            jTextField2.setEnabled(false);
         }
     }//GEN-LAST:event_TipoActionPerformed
 
@@ -1673,16 +1700,22 @@ public class PromocionUpdate extends javax.swing.JDialog {
     }//GEN-LAST:event_jTable2MouseClicked
 
     private void CateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CateActionPerformed
-        System.err.println("entro aqui");
+        System.err.println("entro aqui " + this.condicion);
         if (this.condicion == 2) {
             if (Cate.getSelectedItem().toString().equalsIgnoreCase("Seleccione")) {
 
             } else {
                 try {
+                    Borrar();
                     productos.clear();
+                    iniciar();
+                    System.out.println("tamaño size " + productos.size());
                     String categoria[] = Cate.getSelectedItem().toString().split("-");
                     Control.conectar();
                     Producto temp = null;
+                    System.out.println("select nombre,precio_venta,0,cod_producto,serie_producto from producto , categoria "
+                            + "where producto.cod_categoria=categoria.cod_categoria and "
+                            + " rtrim(ltrim(categoria.descripcion))='" + Cate.getSelectedItem().toString().trim() + "'");
                     String query = "select nombre,precio_venta,0,cod_producto,serie_producto from producto , categoria "
                             + "where producto.cod_categoria=categoria.cod_categoria and "
                             + " rtrim(ltrim(categoria.descripcion))='" + Cate.getSelectedItem().toString().trim() + "'";
@@ -1713,8 +1746,8 @@ public class PromocionUpdate extends javax.swing.JDialog {
                 } finally {
                     Control.cerrarConexion();
                 }
-                Borrar();
                 iniciar();
+
                 //jTable2.requestFocus();
             }
         }
@@ -1725,11 +1758,11 @@ public class PromocionUpdate extends javax.swing.JDialog {
     }//GEN-LAST:event_EstadoActionPerformed
 
     private void CateMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_CateMouseClicked
-       this.condicion=2;
+        this.condicion = 2;
     }//GEN-LAST:event_CateMouseClicked
 
     public void iniciar() {
-        Tabla2 t = new Tabla2(productos, 6);
+        TablaModel t = new TablaModel(productos, 6);
         t.calculeFrecuenciasPromocion();
         muevaLosDatosFre(t);
 
@@ -1745,7 +1778,7 @@ public class PromocionUpdate extends javax.swing.JDialog {
 
     }
 
-    public void muevaLosDatosFre(Tabla2 x) {
+    public void muevaLosDatosFre(TablaModel x) {
         for (int i = 0; i < 6; i++) {
             for (int k = 0; k < x.getNrofreq(); k++) {
                 jTable1.setValueAt(x.frecuencias[i][k], k, i);

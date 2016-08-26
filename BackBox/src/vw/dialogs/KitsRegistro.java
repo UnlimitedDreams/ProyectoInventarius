@@ -8,7 +8,7 @@ package vw.dialogs;
 import Control.Control;
 import Control.Entrada;
 import Control.Sequence;
-import Control.Tabla2;
+import Control.TablaModel;
 import Modelo.ContenedorMenus;
 import Modelo.List_Categoria;
 import Modelo.Producto;
@@ -74,24 +74,27 @@ public class KitsRegistro extends javax.swing.JDialog {
                 this.numKit = Integer.parseInt(Control.rs.getString(1));
                 codigo.setText("Kit-" + Control.rs.getString(1));
             }
-            Control.cerrarConexion();
+
         } catch (ClassNotFoundException ex) {
             System.out.println("Error al conectar" + ex.toString());
         } catch (SQLException ex) {
             System.out.println("Sintaxis de la consulta mal hecha" + ex.toString());
+        } finally {
+            Control.cerrarConexion();
         }
     }
-    public boolean ValidarCampos(){
-        boolean r=true;
-        if(nombre.getText().length()>0){
+
+    public boolean ValidarCampos() {
+        boolean r = true;
+        if (nombre.getText().length() > 0) {
             nombre.requestFocus();
-            r=false;
+            r = false;
         }
-        if(Cantidad.getText().length()>0){
+        if (Cantidad.getText().length() > 0) {
             Cantidad.requestFocus();
-            r=false;
+            r = false;
         }
-        
+
         return r;
     }
 
@@ -108,7 +111,7 @@ public class KitsRegistro extends javax.swing.JDialog {
             int canti = 0;
             for (Producto LiProducto : productos) {
                 Control.ejecuteUpdate("insert into KitDetalle values(" + codKitDel + ",'" + codigo.getText().trim() + "',"
-                        + LiProducto.getCodigoProducto() + "," + LiProducto.getPrecio_venta() + ")");
+                        + LiProducto.getCodigoProducto() + "," + LiProducto.getPrecio_venta() + "," + LiProducto.getCantidadKit() + ")");
                 codKitDel++;
                 canti = LiProducto.getCantidad() - Integer.parseInt(Cantidad.getText());
                 Control.ejecuteUpdate("update producto set cantidad=" + canti + " where cod_producto=" + LiProducto.getCodigoProducto());
@@ -177,6 +180,7 @@ public class KitsRegistro extends javax.swing.JDialog {
                     if (r) {
                         temp = new Producto(cod, cod_producto, nom, costo, precio);
                         temp.setCantidad(cantidad);
+                        temp.setCantidadKit(1);
                         productos.add(temp);
                         jTextField2.setText("");
                         Costo.setText("" + (Double.parseDouble(Costo.getText()) + costo));
@@ -324,113 +328,113 @@ public class KitsRegistro extends javax.swing.JDialog {
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
-                "Codigo", "Nombre", "Cantidad", "Precio Venta"
+                "Codigo", "Nombre", "Stock", "Cant. Kit", "Precio Venta"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false
+                false, false, false, true, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -497,10 +501,10 @@ public class KitsRegistro extends javax.swing.JDialog {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         try {
-            if (nombre.getText().length()==0) {
+            if (nombre.getText().length() == 0) {
                 Entrada.muestreMensajeV("EL nombre es obligatorio");
                 nombre.requestFocus();
-            } else if (Cantidad.getText().equalsIgnoreCase("0") || Cantidad.getText().length()==0) {
+            } else if (Cantidad.getText().equalsIgnoreCase("0") || Cantidad.getText().length() == 0) {
                 Entrada.muestreMensajeV("La cantidad debe ser mayor a cero");
                 Cantidad.requestFocus();
             } else {
@@ -519,8 +523,9 @@ public class KitsRegistro extends javax.swing.JDialog {
         boolean r = true;
         int cant = Integer.parseInt(Cantidad.getText());
         for (Producto producto : productos) {
-            if (producto.getCantidad() < cant) {
+            if ((producto.getCantidadKit() * cant) >= cant) {
                 r = false;
+                break;
             }
         }
         return r;
@@ -563,7 +568,6 @@ public class KitsRegistro extends javax.swing.JDialog {
                         String query = "select nombre,precio_venta,costo,cod_producto,cantidad from producto\n"
                                 + "where\n"
                                 + "producto.estado='A' and rtrim(ltrim(serie_producto))='" + cod.trim() + "'";
-                        System.out.println(query);
                         Control.ejecuteQuery(query);
                         String nom = "";
                         double precio = 0, costo = 0;
@@ -581,6 +585,7 @@ public class KitsRegistro extends javax.swing.JDialog {
                         if (r) {
                             temp = new Producto(cod, cod_producto, nom, costo, precio);
                             temp.setCantidad(cantidad);
+                            temp.setCantidadKit(1);
                             productos.add(temp);
                             jTextField2.setText("");
                             Costo.setText("" + (Double.parseDouble(Costo.getText()) + costo));
@@ -685,6 +690,27 @@ public class KitsRegistro extends javax.swing.JDialog {
         try {
             if (evt.getKeyCode() == 127) {
                 borrar();
+            } else if (evt.getKeyCode() == 10) {
+                int i = jTable1.getSelectedRow();
+                String cod = (String) jTable1.getValueAt(i, 0).toString();
+                String cant = (String) jTable1.getValueAt(i, 3).toString();
+                System.out.println("cod: " + cod);
+                System.out.println("cant: " + cant);
+                int c = 0;
+                try {
+                    c = Integer.parseInt(cant);
+                    if (c > 0) {
+                        for (Producto producto : productos) {
+                            if (producto.getCodigo().equalsIgnoreCase(cod)) {
+                                System.out.println("se registro");
+                                producto.setCantidadKit(c);
+                            }
+                        }
+                    }
+
+                } catch (Exception ex) {
+                    Entrada.muestreMensajeV("El tipo de dato debe ser numerico");
+                }
             }
         } catch (Exception ex) {
             System.err.println("Error al borrar producto :" + ex.toString());
@@ -693,14 +719,14 @@ public class KitsRegistro extends javax.swing.JDialog {
 
     public void iniciar() {
         System.out.println("Tamañ de productos " + productos.size());
-        Tabla2 t = new Tabla2(productos, 4);
+        TablaModel t = new TablaModel(productos, 5);
         t.calculeFrecuenciasKits();
         muevaLosDatosFre(t);
 
     }
 
     public void Borrar() {
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 5; i++) {
             for (int k = 0; k < productos.size() + 1; k++) {
                 jTable1.setValueAt("", k, i);
             }
@@ -708,8 +734,8 @@ public class KitsRegistro extends javax.swing.JDialog {
         iniciar();
     }
 
-    public void muevaLosDatosFre(Tabla2 x) {
-        for (int i = 0; i < 4; i++) {
+    public void muevaLosDatosFre(TablaModel x) {
+        for (int i = 0; i < 5; i++) {
             for (int k = 0; k < x.getNrofreq(); k++) {
                 jTable1.setValueAt(x.frecuencias[i][k], k, i);
             }
@@ -729,19 +755,19 @@ public class KitsRegistro extends javax.swing.JDialog {
     public void Buscar() throws ClassNotFoundException {
         String query = "";
         if (SoloNumeros(jTextField2.getText())) {
-            query = " select distinct * from (select distinct  serie_producto \"Codigo\",nombre,precio_venta \"Precio Venta\""
+            query = " select distinct * from (select distinct  serie_producto \"Codigo\",nombre,cantidad,precio_venta \"Precio Venta\""
                     + " from producto,categoria where\n"
                     + "  producto.cod_categoria=categoria.cod_categoria and \n"
                     + "  \n"
                     + "  producto.serie_producto ILIKE ('%" + jTextField2.getText() + "')  and producto.estado='A'"
                     + "  union all"
-                    + " select distinct  serie_producto \"Codigo\",nombre,precio_venta \"Precio Venta\""
+                    + " select distinct  serie_producto \"Codigo\",nombre,cantidad,precio_venta \"Precio Venta\""
                     + "  from producto,categoria where\n"
                     + "  producto.cod_categoria=categoria.cod_categoria and \n"
                     + "  \n"
                     + "  producto.serie_producto ILIKE ('%" + jTextField2.getText() + "%')  and producto.estado='A')Y limit 10 ";
         } else {
-            query = "select distinct  serie_producto \"Codigo\",nombre,precio_venta \"Precio Venta\""
+            query = "select distinct  serie_producto \"Codigo\",nombre,cantidad,precio_venta \"Precio Venta\""
                     + "  from producto,categoria where "
                     + "  producto.cod_categoria=categoria.cod_categoria and "
                     + " (categoria.descripcion ILIKE ('%" + jTextField2.getText() + "%') or  "
@@ -752,7 +778,7 @@ public class KitsRegistro extends javax.swing.JDialog {
         Producto temp = null;
         String cod = "", nom = "", valor = "", cant = "", costo = "", iva = "", precio = "";
         String cate = "";
-        String cabeceras[] = {"Producto", "Nombre", "Precio"};
+        String cabeceras[] = {"Producto", "Nombre", "Cantidad", "Precio"};
         DefaultTableModel modeloEmpleado = new DefaultTableModel(null, cabeceras) {
             @Override
             public boolean isCellEditable(int row, int column) {//para evitar que las celdas sean editables
