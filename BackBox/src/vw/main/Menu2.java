@@ -10,10 +10,10 @@ import Modelo.ContenedorMenus;
 import Modelo.MenuRedireccionar;
 import Modelo.acciones;
 import Modelo.seccion;
-import com.backbox.util.VerticalLabelUI;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -29,9 +29,9 @@ import javax.swing.KeyStroke;
 
 /**
  *
- * @author Miguel Lemoz
+ * @author Microinformatica
  */
-public class Menu extends javax.swing.JFrame {
+public class Menu2 extends javax.swing.JFrame implements Runnable {
 
     Thread Hilo1;
     String usuario;
@@ -45,12 +45,13 @@ public class Menu extends javax.swing.JFrame {
     int codigoEmpresa;
 
     /**
-     * Creates new form temp
+     * Creates new form Bodega
      */
-    public Menu(String usuario) {
+    public Menu2(String usuario) {
         initComponents();
         this.usuario = usuario;
         this.setLocationRelativeTo(null);
+        this.setResizable(false);
         URL url = getClass().getResource("/images/facelet/icon.png");
         ImageIcon img = new ImageIcon(url);
         setIconImage(img.getImage());
@@ -143,7 +144,7 @@ public class Menu extends javax.swing.JFrame {
                             menuItem.addActionListener(new ActionListener() {
                                 @Override
                                 public void actionPerformed(ActionEvent e) {
-                                    MenuRedireccionar MenuF = new MenuRedireccionar(Menu.this, e.getActionCommand().toString(), List_Menu, usuario, codigoEmpresa);
+                                    MenuRedireccionar MenuF = new MenuRedireccionar(Menu2.this, e.getActionCommand().toString(), List_Menu, usuario, codigoEmpresa);
                                     try {
                                         MenuF.reDireccion();
                                         if (e.getActionCommand().equalsIgnoreCase("Crear Categoria ")
@@ -152,7 +153,7 @@ public class Menu extends javax.swing.JFrame {
                                                 || e.getActionCommand().equalsIgnoreCase("Crear Rol")) {
                                             System.out.println("No cierra Ventana");
                                         } else {
-                                            Menu.this.dispose();
+                                            Menu2.this.dispose();
                                         }
                                     } catch (IOException ex) {
                                         Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
@@ -176,7 +177,6 @@ public class Menu extends javax.swing.JFrame {
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
     }
 
     private void MenuAyuda() {
@@ -271,7 +271,6 @@ public class Menu extends javax.swing.JFrame {
         }
         this.codigoEmpresa = empresa;
         this.feld01.setText("Bienvenido " + nombre);
-        this.feld01.setUI(new VerticalLabelUI(true));
         Control.cerrarConexion();
 
     }
@@ -292,20 +291,13 @@ public class Menu extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        mainFrame = new javax.swing.JPanel();
-        centro = new javax.swing.JPanel();
-        contenedorCentral = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
+        bntAnalitics = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
-        jPanel3 = new javax.swing.JPanel();
-        superior = new javax.swing.JPanel();
-        jLabel3 = new javax.swing.JLabel();
-        inferior = new javax.swing.JPanel();
-        cerrar = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
-        izquierda = new javax.swing.JPanel();
-        derecha = new javax.swing.JPanel();
         feld01 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        btnSalir = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         file = new javax.swing.JMenu();
         inicio = new javax.swing.JMenuItem();
@@ -314,115 +306,86 @@ public class Menu extends javax.swing.JFrame {
         salir = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Menú - BackBox");
-        setMinimumSize(new java.awt.Dimension(800, 600));
+        setTitle("Menu - BackBox ");
+        setResizable(false);
 
-        mainFrame.setMinimumSize(new java.awt.Dimension(800, 400));
-        mainFrame.setPreferredSize(new java.awt.Dimension(800, 400));
-        mainFrame.setLayout(new java.awt.BorderLayout());
+        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        centro.setBackground(java.awt.Color.white);
-        centro.setLayout(new java.awt.BorderLayout());
+        bntAnalitics.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
+        bntAnalitics.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-xxxhdpi/sense_24dp.png"))); // NOI18N
+        bntAnalitics.setText("BackBox - Analitics");
+        bntAnalitics.setBorder(null);
+        bntAnalitics.setBorderPainted(false);
+        bntAnalitics.setContentAreaFilled(false);
+        bntAnalitics.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        bntAnalitics.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        bntAnalitics.setPreferredSize(new java.awt.Dimension(99, 117));
+        bntAnalitics.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
+        bntAnalitics.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        bntAnalitics.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bntAnaliticsActionPerformed(evt);
+            }
+        });
+        jPanel1.add(bntAnalitics, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 400, 120, 120));
 
-        contenedorCentral.setBorder(javax.swing.BorderFactory.createCompoundBorder());
-        contenedorCentral.setTabLayoutPolicy(javax.swing.JTabbedPane.SCROLL_TAB_LAYOUT);
-        contenedorCentral.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
-        contenedorCentral.setOpaque(true);
+        jPanel2.setBackground(new java.awt.Color(196, 70, 38));
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 745, Short.MAX_VALUE)
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 399, Short.MAX_VALUE)
-        );
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/facelet/img001.png"))); // NOI18N
 
-        contenedorCentral.addTab("Ventas", jPanel1);
+        feld01.setFont(new java.awt.Font("Segoe UI Light", 1, 14)); // NOI18N
+        feld01.setText("jLabel1");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 745, Short.MAX_VALUE)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(feld01)
+                .addContainerGap(294, Short.MAX_VALUE))
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 399, Short.MAX_VALUE)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(58, 58, 58)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 101, Short.MAX_VALUE)
+                .addComponent(feld01)
+                .addContainerGap())
         );
 
-        contenedorCentral.addTab("Compras", jPanel2);
-
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 745, Short.MAX_VALUE)
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 399, Short.MAX_VALUE)
-        );
-
-        contenedorCentral.addTab("Devoluciones", jPanel3);
-
-        centro.add(contenedorCentral, java.awt.BorderLayout.CENTER);
-
-        mainFrame.add(centro, java.awt.BorderLayout.CENTER);
-
-        superior.setBackground(java.awt.Color.white);
-        superior.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 5, 10));
+        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
         jLabel3.setFont(new java.awt.Font("Segoe UI Light", 1, 18)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(102, 0, 0));
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel3.setText("Tip: Presiona (CTRL + V). Para hacer una venta");
         jLabel3.setVerticalAlignment(javax.swing.SwingConstants.TOP);
-        superior.add(jLabel3);
+        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 10, 400, 30));
 
-        mainFrame.add(superior, java.awt.BorderLayout.PAGE_START);
-
-        inferior.setBackground(new java.awt.Color(196, 70, 38));
-        inferior.setMinimumSize(new java.awt.Dimension(800, 100));
-        inferior.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT, 25, 7));
-
-        cerrar.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
-        cerrar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-xxhdpi/ic_archive_black_24dp.png"))); // NOI18N
-        cerrar.setText("Salir");
-        cerrar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        cerrar.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        cerrar.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        cerrar.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                cerrarMouseClicked(evt);
+        btnSalir.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
+        btnSalir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-xxxhdpi/ic_archive_black_24dp.png"))); // NOI18N
+        btnSalir.setText("Salir");
+        btnSalir.setBorder(null);
+        btnSalir.setBorderPainted(false);
+        btnSalir.setContentAreaFilled(false);
+        btnSalir.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnSalir.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnSalir.setPreferredSize(new java.awt.Dimension(99, 117));
+        btnSalir.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-xxxhdpi/ic_archive_gray_24dp.png"))); // NOI18N
+        btnSalir.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
+        btnSalir.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnSalir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSalirActionPerformed(evt);
             }
         });
-        inferior.add(cerrar);
-
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-xxhdpi/sense_24dp.png"))); // NOI18N
-        jLabel1.setText("Analitics");
-        jLabel1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jLabel1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jLabel1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        inferior.add(jLabel1);
-
-        mainFrame.add(inferior, java.awt.BorderLayout.PAGE_END);
-
-        izquierda.setBackground(java.awt.Color.white);
-        izquierda.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 10, 10));
-        mainFrame.add(izquierda, java.awt.BorderLayout.LINE_END);
-
-        derecha.setBackground(java.awt.Color.white);
-
-        feld01.setFont(new java.awt.Font("Segoe UI Light", 1, 14)); // NOI18N
-        feld01.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        feld01.setText("jLabel1");
-        feld01.setPreferredSize(new java.awt.Dimension(20, 220));
-        derecha.add(feld01);
-
-        mainFrame.add(derecha, java.awt.BorderLayout.LINE_START);
+        jPanel1.add(btnSalir, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 400, 120, 120));
 
         file.setText("Archivo");
         file.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
@@ -465,19 +428,21 @@ public class Menu extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 800, Short.MAX_VALUE)
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(mainFrame, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 770, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 577, Short.MAX_VALUE)
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(mainFrame, javax.swing.GroupLayout.DEFAULT_SIZE, 577, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void bntAnaliticsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntAnaliticsActionPerformed
+
+    }//GEN-LAST:event_bntAnaliticsActionPerformed
 
     private void inicioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inicioActionPerformed
         new Menu(usuario).setVisible(true);
@@ -493,67 +458,37 @@ public class Menu extends javax.swing.JFrame {
         System.exit(0);
     }//GEN-LAST:event_salirActionPerformed
 
-    private void cerrarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cerrarMouseClicked
-        this.dispose();
-        new Acceder().setVisible(true);
-        
-    }//GEN-LAST:event_cerrarMouseClicked
+    private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
+        cerrarSesionActionPerformed(evt);
+    }//GEN-LAST:event_btnSalirActionPerformed
 
-//    /**
-//     * @param args the command line arguments
-//     */
-//    public static void main(String args[]) {
-//        /* Set the Nimbus look and feel */
-//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-//         */
-//        try {
-//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-//                if ("Nimbus".equals(info.getName())) {
-//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-//                    break;
-//                }
-//            }
-//        } catch (ClassNotFoundException ex) {
-//            java.util.logging.Logger.getLogger(Menu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (InstantiationException ex) {
-//            java.util.logging.Logger.getLogger(Menu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (IllegalAccessException ex) {
-//            java.util.logging.Logger.getLogger(Menu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-//            java.util.logging.Logger.getLogger(Menu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        }
-//        //</editor-fold>
-//
-//        /* Create and display the form */
-//        java.awt.EventQueue.invokeLater(new Runnable() {
-//            public void run() {
-//                new Menu().setVisible(true);
-//            }
-//        });
-//    }
+    /**
+     * @param args the command line arguments
+     */
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel centro;
-    private javax.swing.JLabel cerrar;
+    private javax.swing.JButton bntAnalitics;
+    private javax.swing.JButton btnSalir;
     private javax.swing.JMenuItem cerrarSesion;
-    private javax.swing.JTabbedPane contenedorCentral;
-    private javax.swing.JPanel derecha;
     private javax.swing.JLabel feld01;
     private javax.swing.JMenu file;
-    private javax.swing.JPanel inferior;
     private javax.swing.JMenuItem inicio;
-    private javax.swing.JPanel izquierda;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
     private javax.swing.JPopupMenu.Separator jSeparator1;
-    private javax.swing.JPanel mainFrame;
     private javax.swing.JMenuItem salir;
-    private javax.swing.JPanel superior;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void run() {
+        Thread ct = Thread.currentThread();
+
+        while (ct == Hilo1) {
+            System.out.println("---");
+
+        }
+    }
 }
