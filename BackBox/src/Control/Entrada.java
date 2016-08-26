@@ -8,8 +8,10 @@ package Control;
 import javax.swing.JOptionPane;
 
 /**
+ * Esta clase se usa para los mensajes
  *
- * @author Family
+ * @author: Unlimited Dreams
+ * @version: 25/08/2016
  */
 public class Entrada {
 
@@ -22,36 +24,26 @@ public class Entrada {
     }
 
     public static int leaNroEnteroV(String mensaje) {
-        String snro = "";
-        int nro = 0;
-        snro = JOptionPane.showInputDialog(null, mensaje, "BackBox", JOptionPane.INFORMATION_MESSAGE);
-        nro = Integer.parseInt(snro);
-        return nro;
+        String snro = JOptionPane.showInputDialog(null, mensaje, "BackBox", JOptionPane.INFORMATION_MESSAGE);
+        return Integer.parseInt(snro.equalsIgnoreCase("") ? "0" : snro);
     }
 
     public static double leaNroRealV(String mensaje) {
-        String snro = "";
-        double nro = 0;
-        snro = JOptionPane.showInputDialog(null, mensaje, "BackBox", JOptionPane.INFORMATION_MESSAGE);
-        nro = Double.parseDouble(snro);
-        return nro;
+        String snro = JOptionPane.showInputDialog(null, mensaje, "BackBox", JOptionPane.INFORMATION_MESSAGE);
+        return Double.parseDouble(snro.equalsIgnoreCase("") ? "0" : snro);
     }
 
     public static char LeaCaracterV(String mensaje) {
         char x;
-
         String str;
         str = "";
         str = JOptionPane.showInputDialog(mensaje, "A");
         x = str.charAt(0);
-
         return x;
     }
 
     public static String leaCadenaV(String mensaje) {
-        String f = null;
-        f = JOptionPane.showInputDialog(mensaje);
-        return f;
+        return "" + JOptionPane.showInputDialog(mensaje);
     }
 
     public static int menu(String titulo, String menu, String[] opciones) {

@@ -17,7 +17,6 @@ import Control.Entrada;
 import Modelo.List_Categoria;
 import Modelo.Producto;
 import Control.Sequence;
-import Control.Tabla3;
 import java.awt.Color;
 import javax.swing.BorderFactory;
 import javax.swing.border.Border;

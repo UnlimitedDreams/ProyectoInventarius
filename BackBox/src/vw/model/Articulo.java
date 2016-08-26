@@ -670,35 +670,35 @@ public class Articulo extends javax.swing.JFrame implements Runnable {
         String nombres[] = null;
         String stock[] = null;
         LeerExcel Hoja = new LeerExcel();
-        Hoja.f_datos_1(ruta, 0);//codigo
+        Hoja.Archivo(ruta, 0);//codigo
         jProgressBar1.setValue(10);
         jProgressBar1.setStringPainted(true);
         movimiento = Hoja.Carga();
-        Hoja.f_datos_1(ruta, 1);//Nombre
+        Hoja.Archivo(ruta, 1);//Nombre
         jProgressBar1.setValue(20);
         jProgressBar1.setStringPainted(true);
         nombres = Hoja.Carga();
-        Hoja.f_datos_1(ruta, 2);//categoria
+        Hoja.Archivo(ruta, 2);//categoria
         jProgressBar1.setValue(30);
         jProgressBar1.setStringPainted(true);
         categoria = Hoja.Carga();
-        Hoja.f_datos_1(ruta, 3);//costo
+        Hoja.Archivo(ruta, 3);//costo
         jProgressBar1.setValue(40);
         jProgressBar1.setStringPainted(true);
         costo = Hoja.Carga();
-        Hoja.f_datos_1(ruta, 4);//iva
+        Hoja.Archivo(ruta, 4);//iva
         jProgressBar1.setValue(50);
         jProgressBar1.setStringPainted(true);
         iva = Hoja.Carga();
-        Hoja.f_datos_1(ruta, 5);//precio
+        Hoja.Archivo(ruta, 5);//precio
         jProgressBar1.setValue(60);
         jProgressBar1.setStringPainted(true);
         precio = Hoja.Carga();
-        Hoja.f_datos_1(ruta, 6);//stock
+        Hoja.Archivo(ruta, 6);//stock
         jProgressBar1.setValue(70);
         jProgressBar1.setStringPainted(true);
         precio = Hoja.Carga();
-        Hoja.f_datos_1(ruta, 7);//cantidad
+        Hoja.Archivo(ruta, 7);//cantidad
         jProgressBar1.setValue(80);
         jProgressBar1.setStringPainted(true);
         cantidad = Hoja.Carga();
