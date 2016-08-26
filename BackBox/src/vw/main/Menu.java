@@ -302,7 +302,7 @@ public class Menu extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         inferior = new javax.swing.JPanel();
         cerrar = new javax.swing.JLabel();
-        jLabel1 = new javax.swing.JLabel();
+        sense = new javax.swing.JLabel();
         izquierda = new javax.swing.JPanel();
         derecha = new javax.swing.JPanel();
         feld01 = new javax.swing.JLabel();
@@ -401,12 +401,12 @@ public class Menu extends javax.swing.JFrame {
         });
         inferior.add(cerrar);
 
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-xxhdpi/sense_24dp.png"))); // NOI18N
-        jLabel1.setText("Analitics");
-        jLabel1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jLabel1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jLabel1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        inferior.add(jLabel1);
+        sense.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-xxhdpi/sense_24dp.png"))); // NOI18N
+        sense.setText("Analitics");
+        sense.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        sense.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        sense.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        inferior.add(sense);
 
         mainFrame.add(inferior, java.awt.BorderLayout.PAGE_END);
 
@@ -545,7 +545,6 @@ public class Menu extends javax.swing.JFrame {
     private javax.swing.JPanel inferior;
     private javax.swing.JMenuItem inicio;
     private javax.swing.JPanel izquierda;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel1;
@@ -554,6 +553,7 @@ public class Menu extends javax.swing.JFrame {
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPanel mainFrame;
     private javax.swing.JMenuItem salir;
+    private javax.swing.JLabel sense;
     private javax.swing.JPanel superior;
     // End of variables declaration//GEN-END:variables
 }
