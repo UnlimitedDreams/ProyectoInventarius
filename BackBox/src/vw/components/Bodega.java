@@ -280,7 +280,7 @@ public class Bodega extends javax.swing.JFrame {
         DefaultTableModel modeloEmpleado = new DefaultTableModel();
         int numeroPreguntas;
         ResultSetMetaData rsetMetaData;
-        String cabeceras[] = {"Codigo", "Nombre", "Categoria", "Costo", "Iva", "Precio", "Descuento", "Cantidad"};
+        String cabeceras[] = {"Codigo", "Nombre", "Categoria", "Costo", "Iva", "Precio", "(%)Desc.", "Cantidad"};
         modeloEmpleado = new DefaultTableModel(null, cabeceras) {
             @Override
             public boolean isCellEditable(int row, int column) {//para evitar que las celdas sean editables
@@ -288,14 +288,23 @@ public class Bodega extends javax.swing.JFrame {
             }
         };
         this.tablaProductos.setModel(modeloEmpleado);
+        tablaProductos.getColumnModel().getColumn(0).setPreferredWidth(100);
+        tablaProductos.getColumnModel().getColumn(1).setPreferredWidth(500);
+        tablaProductos.getColumnModel().getColumn(2).setPreferredWidth(150);
+        tablaProductos.getColumnModel().getColumn(3).setPreferredWidth(65);
+        tablaProductos.getColumnModel().getColumn(4).setPreferredWidth(45);
+        tablaProductos.getColumnModel().getColumn(5).setPreferredWidth(65);
+        tablaProductos.getColumnModel().getColumn(6).setPreferredWidth(90);
+        tablaProductos.getColumnModel().getColumn(7).setPreferredWidth(100);
+        //tablaProductos.getColumnModel().getColumn(1).setMaxWidth(1);
+        tablaProductos.setRowHeight(30);
+        this.tablaProductos.setModel(modeloEmpleado);
+
         try {
             Control.ejecuteQuery("select codigo \"Codigo\",nombre \"Nombre\",categoria \"Categoria\",costo \"Costo\",iva \"Iva\",precio \"Precio\""
                     + ",descuento \"Descuento\",cantidad \"Cantidad\" from BodegaInicio() limit 500");
             rsetMetaData = Control.rs.getMetaData();
             numeroPreguntas = rsetMetaData.getColumnCount();
-            for (int i = 0; i < numeroPreguntas; i++) {
-//                modeloEmpleado.addColumn(rsetMetaData.getColumnLabel(i + 1));
-            }
             while (Control.rs.next()) {
                 Object[] registroEmpleado = new Object[numeroPreguntas];
                 for (int i = 0; i < numeroPreguntas; i++) {
@@ -333,14 +342,16 @@ public class Bodega extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Inventarius - Bodega");
+        setPreferredSize(new java.awt.Dimension(950, 650));
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel1.setPreferredSize(new java.awt.Dimension(950, 567));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         tablaProductos.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
         jScrollPane1.setViewportView(tablaProductos);
 
-        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 98, 711, 390));
+        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 98, 910, 410));
 
         entrada.setFont(new java.awt.Font("Segoe UI Light", 0, 11)); // NOI18N
         entrada.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-mdpi/ic_vertical_align_top_black_24dp.png"))); // NOI18N
@@ -395,7 +406,7 @@ public class Bodega extends javax.swing.JFrame {
                 actualizarActionPerformed(evt);
             }
         });
-        jPanel1.add(actualizar, new org.netbeans.lib.awtextra.AbsoluteConstraints(725, 450, -1, -1));
+        jPanel1.add(actualizar, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 520, -1, -1));
 
         borrar.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
         borrar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-mdpi/ic_remove_black_24dp.png"))); // NOI18N
@@ -413,7 +424,7 @@ public class Bodega extends javax.swing.JFrame {
                 borrarActionPerformed(evt);
             }
         });
-        jPanel1.add(borrar, new org.netbeans.lib.awtextra.AbsoluteConstraints(725, 400, -1, -1));
+        jPanel1.add(borrar, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 520, -1, -1));
 
         jTextField2.setFont(new java.awt.Font("Segoe UI Light", 0, 18)); // NOI18N
         jTextField2.addActionListener(new java.awt.event.ActionListener() {
@@ -429,7 +440,7 @@ public class Bodega extends javax.swing.JFrame {
                 jTextField2KeyReleased(evt);
             }
         });
-        jPanel1.add(jTextField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 30, 590, 40));
+        jPanel1.add(jTextField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 30, 590, 40));
 
         jButton6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-xhdpi/ic_home_black_24dp.png"))); // NOI18N
         jButton6.setBorder(null);
@@ -445,7 +456,7 @@ public class Bodega extends javax.swing.JFrame {
                 jButton6ActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(725, 520, -1, -1));
+        jPanel1.add(jButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(870, 520, -1, -1));
 
         stock.setFont(new java.awt.Font("Segoe UI Light", 0, 11)); // NOI18N
         stock.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-mdpi/ic_assignment_black_24dp.png"))); // NOI18N
@@ -506,11 +517,15 @@ public class Bodega extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 779, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 581, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();
@@ -620,6 +635,24 @@ public class Bodega extends javax.swing.JFrame {
             DefaultTableModel modeloEmpleado = new DefaultTableModel();
             int numeroPreguntas;
             ResultSetMetaData rsetMetaData;
+            String cabeceras[] = {"Codigo", "Nombre", "Categoria", "Costo", "Iva", "Precio", "(%)Desc.", "Cantidad"};
+            modeloEmpleado = new DefaultTableModel(null, cabeceras) {
+                @Override
+                public boolean isCellEditable(int row, int column) {//para evitar que las celdas sean editables
+                    return false;
+                }
+            };
+            this.tablaProductos.setModel(modeloEmpleado);
+            tablaProductos.getColumnModel().getColumn(0).setPreferredWidth(100);
+            tablaProductos.getColumnModel().getColumn(1).setPreferredWidth(500);
+            tablaProductos.getColumnModel().getColumn(2).setPreferredWidth(150);
+            tablaProductos.getColumnModel().getColumn(3).setPreferredWidth(65);
+            tablaProductos.getColumnModel().getColumn(4).setPreferredWidth(45);
+            tablaProductos.getColumnModel().getColumn(5).setPreferredWidth(65);
+            tablaProductos.getColumnModel().getColumn(6).setPreferredWidth(90);
+            tablaProductos.getColumnModel().getColumn(7).setPreferredWidth(100);
+            //tablaProductos.getColumnModel().getColumn(1).setMaxWidth(1);
+            tablaProductos.setRowHeight(30);
             this.tablaProductos.setModel(modeloEmpleado);
             try {
                 Control.ejecuteQuery(query);
@@ -674,7 +707,7 @@ public class Bodega extends javax.swing.JFrame {
                 new KitUpdate2(this, true, cod, 2).setVisible(true);
             } else {
                 ProductoUpdate2 p = new ProductoUpdate2(this, true, producto, codEmpresa);
-                p.setVisible(true);                
+                p.setVisible(true);
             }
         }
     }
