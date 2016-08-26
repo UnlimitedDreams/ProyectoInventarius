@@ -16,7 +16,7 @@ import org.fife.ui.rsyntaxtextarea.Theme;
 public class test {
 
     public static void main(String juan[]) throws InterruptedException {
-       int a=Entrada.leaNroEnteroV("mns");
-        System.out.println("- " + a);
+        String a="2";
+        System.out.println("- " + Double.parseDouble(a));
     }
 }

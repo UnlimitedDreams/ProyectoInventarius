@@ -60,8 +60,7 @@ public class PromocionUpdate extends javax.swing.JDialog {
         c.setVisible(false);
         promo = (Promociones) parent;
         this.codPromocion = codPromo;
-        recuperarDatos();
-        Categoria();
+        recuperarDatos();        
         this.condicion = 1;
 
     }
@@ -79,11 +78,23 @@ public class PromocionUpdate extends javax.swing.JDialog {
                 Cate.addItem(Control.rs.getString(6));
                 Estado.addItem(Control.rs.getString(7));
             }
+            
+            System.out.println("---------------------------------");
+
+            Control.ejecuteQuery("select cod_categoria,rtrim(ltrim(descripcion)) from categoria order by descripcion");
+            while (Control.rs.next()) {
+                Cate.addItem(Control.rs.getString(2));
+            }
+            
+            System.out.println("---------------------------------");
+            System.out.println("-- : " + Tipo.getSelectedItem().toString());
             if (Tipo.getSelectedItem().toString().trim().equalsIgnoreCase("Categoria")) {
+                System.out.println("-------------1");
                 Cate.setEnabled(true);
                 Tipo.addItem("Producto");
                 this.condicionfiltro = true;
             } else {
+                System.out.println("------------2");
                 this.condicionfiltro = true;
                 Tipo.addItem("Categoria");
                 Cate.setEnabled(false);
@@ -119,21 +130,7 @@ public class PromocionUpdate extends javax.swing.JDialog {
         }
         iniciar();
     }
-
-    public void Categoria() {
-        try {
-            Control.conectar();
-            Control.ejecuteQuery("select cod_categoria,rtrim(ltrim(descripcion)) from categoria order by descripcion");
-            while (Control.rs.next()) {
-                Cate.addItem(Control.rs.getString(2));
-            }
-            Control.cerrarConexion();
-        } catch (ClassNotFoundException ex) {
-            System.out.println("Error al conectar" + ex.toString());
-        } catch (SQLException ex) {
-            System.out.println("Sintaxis de la consulta mal hecha" + ex.toString());
-        }
-    }
+    
 
     public boolean ValidarTable() {
         boolean r = false;
@@ -164,7 +161,7 @@ public class PromocionUpdate extends javax.swing.JDialog {
                 ArrayList<Integer> listCodigos = new ArrayList();
                 Control.conectar();
                 Control.con.setAutoCommit(false);
-                Control.ejecuteQuery("select a.cod_producto "
+                r = Control.ejecuteQuery("select a.cod_producto "
                         + "from producto a,promociones b,detallepromociones c\n"
                         + "where\n"
                         + "a.cod_producto=c.codproducto and \n"
@@ -175,7 +172,7 @@ public class PromocionUpdate extends javax.swing.JDialog {
                 }
 
                 for (Integer integer : listCodigos) {
-                    Control.ejecuteUpdate("update producto set precio_desc=precio_venta,"
+                    r = Control.ejecuteUpdate("update producto set precio_desc=precio_venta,"
                             + "descu=0 where cod_producto=" + integer);
                 }
 
@@ -210,7 +207,7 @@ public class PromocionUpdate extends javax.swing.JDialog {
             } else {
                 Entrada.muestreMensajeV("Error Al Crear Promocion");
             }
-        }else{
+        } else {
             Entrada.muestreMensajeV("Debe Asignar el porcentaje de descuento, de nuevo");
         }
     }

@@ -76,7 +76,8 @@ public class TablaModel implements TableCellRenderer {
             frecuencias[0][nrofreq] = "" + pro.get(i).getCodigo();
             frecuencias[1][nrofreq] = "" + pro.get(i).getNombre();
             frecuencias[2][nrofreq] = "" + pro.get(i).getCantidad();
-            frecuencias[3][nrofreq] = "" + pro.get(i).getPrecio_venta();
+            frecuencias[3][nrofreq] = "" + pro.get(i).getCantidadKit();
+            frecuencias[4][nrofreq] = "" + pro.get(i).getPrecio_venta();
             nrofreq++;
         }
     }
