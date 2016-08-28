@@ -5,12 +5,9 @@
  */
 package vw.components;
 
-import Control.Entrada;
+import Control.*;
 import Modelo.Producto;
 import vw.main.Menu;
-import Control.Control;
-import Control.Sequence;
-import Control.TablaModel;
 import Modelo.List_Categoria;
 import java.awt.Toolkit;
 import java.net.URL;
@@ -48,7 +45,7 @@ public class CargaArchivo extends javax.swing.JFrame {
             this.setLocationRelativeTo(null);
             this.setResizable(false);
             this.p = p;
-            ConfigurarIva();
+            ConfigurarInicio();
             iniciar();
             cargarUsuario();
             jTextField1.setText("" + p.size());
@@ -72,29 +69,12 @@ public class CargaArchivo extends javax.swing.JFrame {
         Control.cerrarConexion();
     }
 
-    public void ConfigurarIva() throws SQLException {
+    public void ConfigurarInicio() throws SQLException {
         try {
-            listIvas.clear();
             Control.conectar();
-            Control.ejecuteQuery("select * from CargaIva()");
-            while (Control.rs.next()) {
-                listIvas.add(new List_Categoria(Control.rs.getInt(1), "" + Control.rs.getInt(2)));
-            }
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(Venta.class
-                    .getName()).log(Level.SEVERE, null, ex);
-        }finally
-        {
-            Control.cerrarConexion();
-        }
-
-    }
-
-    public void iniciar() throws SQLException {
-        try {
+            
             String r = "";
-            Control.conectar();
-            Control.con.setAutoCommit(false);
+            Control.conectar();            
             Producto temp = null;
             int cantidad = 0;
             int iva = 0;
@@ -120,12 +100,30 @@ public class CargaArchivo extends javax.swing.JFrame {
                     }
                 }
             }
+            
+            
+            listIvas.clear();            
+            Control.ejecuteQuery("select * from CargaIva()");
+            while (Control.rs.next()) {
+                listIvas.add(new List_Categoria(Control.rs.getInt(1), "" + Control.rs.getInt(2)));
+            }
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Venta.class
+                    .getName()).log(Level.SEVERE, null, ex);
+        }finally
+        {
+            Control.cerrarConexion();
+        }
+
+    }
+
+    public void iniciar() throws SQLException {
+        try {
+            
 
         } catch (Exception ex) {
 
-        } finally {
-            Control.con.commit();
-            Control.con.setAutoCommit(true);
+        } finally {                                   
             Control.cerrarConexion();
         }
         jTable1.setModel(new javax.swing.table.DefaultTableModel(

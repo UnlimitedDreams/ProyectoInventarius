@@ -5,13 +5,8 @@
  */
 package vw.components;
 
-import Control.Control;
-import Control.Entrada;
-import Modelo.ContenedorMenus;
-import Modelo.MenuRedireccionar;
-import Modelo.Producto;
-import Modelo.acciones;
-import Modelo.seccion;
+import Control.*;
+import Modelo.*;
 import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -56,14 +51,12 @@ public class Bodega extends javax.swing.JFrame {
 
     public Bodega(String usuario, ArrayList acciones, int codEmpresa) throws ClassNotFoundException, SQLException {
         initComponents();
-        inicio();
         this.usuario = usuario;
-        System.out.println("USUARIO : " + usuario);
         this.List_Menu = acciones;
         this.codEmpresa = codEmpresa;
         this.setLocationRelativeTo(null);
         this.setResizable(false);
-        Stock();
+        inicio();
         URL url = getClass().getResource("/images/facelet/icon.png");
         ImageIcon img = new ImageIcon(url);
         setIconImage(img.getImage());
@@ -169,7 +162,6 @@ public class Bodega extends javax.swing.JFrame {
             }
         }
         MenuAyuda();
-        Permisos();
 
     }
 
@@ -214,9 +206,27 @@ public class Bodega extends javax.swing.JFrame {
         }
     }
 
-    public void Permisos() throws ClassNotFoundException {
-        Control.conectar();
+    /**
+     * Cargar la informacion inicial de la tabla de la bodega
+     *
+     * @throws ClassNotFoundException
+     */
+    public void inicio() throws ClassNotFoundException {
         try {
+            Control.conectar();
+            //Reporte de productos en stock
+            Control.ejecuteQuery("select * from Reporte_Stock()");
+            int count = 0;
+
+            while (Control.rs.next()) {
+                count++;
+            }
+            if (count > 0) {
+                Entrada.muestreMensajeV("Hay " + count + " productos en cero cantidad",
+                        javax.swing.JOptionPane.INFORMATION_MESSAGE);
+            }
+
+            //Configuracion de los permisos
             ArrayList<String> acciones = new ArrayList();
             Control.ejecuteQuery("select * from Permisos(" + usuario + ",'Bodega')");
             while (Control.rs.next()) {
@@ -242,65 +252,30 @@ public class Bodega extends javax.swing.JFrame {
                 }
             }
 
-        } catch (SQLException ex) {
-            Logger.getLogger(Bodega.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            Control.cerrarConexion();
-        }
-    }
+            //Reporte de tabla
+            DefaultTableModel modeloEmpleado = new DefaultTableModel();
+            int numeroPreguntas;
+            ResultSetMetaData rsetMetaData;
+            String cabeceras[] = {"Codigo", "Nombre", "Categoria", "Costo", "Iva", "Precio", "(%)Desc.", "Cantidad"};
+            modeloEmpleado = new DefaultTableModel(null, cabeceras) {
+                @Override
+                public boolean isCellEditable(int row, int column) {//para evitar que las celdas sean editables
+                    return false;
+                }
+            };
+            this.tablaProductos.setModel(modeloEmpleado);
+            tablaProductos.getColumnModel().getColumn(0).setPreferredWidth(100);
+            tablaProductos.getColumnModel().getColumn(1).setPreferredWidth(500);
+            tablaProductos.getColumnModel().getColumn(2).setPreferredWidth(150);
+            tablaProductos.getColumnModel().getColumn(3).setPreferredWidth(65);
+            tablaProductos.getColumnModel().getColumn(4).setPreferredWidth(45);
+            tablaProductos.getColumnModel().getColumn(5).setPreferredWidth(65);
+            tablaProductos.getColumnModel().getColumn(6).setPreferredWidth(90);
+            tablaProductos.getColumnModel().getColumn(7).setPreferredWidth(100);
+            //tablaProductos.getColumnModel().getColumn(1).setMaxWidth(1);
+            tablaProductos.setRowHeight(30);
+            this.tablaProductos.setModel(modeloEmpleado);
 
-    public void Stock() throws ClassNotFoundException {
-        Control.conectar();
-        try {
-            Control.ejecuteQuery("select * from Reporte_Stock()");
-            int count = 0;
-
-            while (Control.rs.next()) {
-                count++;
-            }
-            if (count > 0) {
-                Entrada.muestreMensajeV("Hay " + count + " productos en cero cantidad",
-                        javax.swing.JOptionPane.INFORMATION_MESSAGE);
-            }
-            Control.cerrarConexion();
-        } catch (Exception ex) {
-            Entrada.muestreMensajeV("Error al Cargar Stock de Productos " + ex.getMessage());
-        } finally {
-            Control.cerrarConexion();
-        }
-    }
-
-    /**
-     * Cargar la informacion inicial de la tabla de la bodega
-     *
-     * @throws ClassNotFoundException
-     */
-    public void inicio() throws ClassNotFoundException {
-        Control.conectar();
-        DefaultTableModel modeloEmpleado = new DefaultTableModel();
-        int numeroPreguntas;
-        ResultSetMetaData rsetMetaData;
-        String cabeceras[] = {"Codigo", "Nombre", "Categoria", "Costo", "Iva", "Precio", "(%)Desc.", "Cantidad"};
-        modeloEmpleado = new DefaultTableModel(null, cabeceras) {
-            @Override
-            public boolean isCellEditable(int row, int column) {//para evitar que las celdas sean editables
-                return false;
-            }
-        };
-        this.tablaProductos.setModel(modeloEmpleado);
-        tablaProductos.getColumnModel().getColumn(0).setPreferredWidth(100);
-        tablaProductos.getColumnModel().getColumn(1).setPreferredWidth(500);
-        tablaProductos.getColumnModel().getColumn(2).setPreferredWidth(150);
-        tablaProductos.getColumnModel().getColumn(3).setPreferredWidth(65);
-        tablaProductos.getColumnModel().getColumn(4).setPreferredWidth(45);
-        tablaProductos.getColumnModel().getColumn(5).setPreferredWidth(65);
-        tablaProductos.getColumnModel().getColumn(6).setPreferredWidth(90);
-        tablaProductos.getColumnModel().getColumn(7).setPreferredWidth(100);
-        //tablaProductos.getColumnModel().getColumn(1).setMaxWidth(1);
-        tablaProductos.setRowHeight(30);
-        this.tablaProductos.setModel(modeloEmpleado);
-
-        try {
             Control.ejecuteQuery("select codigo \"Codigo\",nombre \"Nombre\",categoria \"Categoria\",costo \"Costo\",iva \"Iva\",precio \"Precio\""
                     + ",descuento \"Descuento\",cantidad \"Cantidad\" from BodegaInicio() limit 500");
             rsetMetaData = Control.rs.getMetaData();
@@ -312,6 +287,7 @@ public class Bodega extends javax.swing.JFrame {
                 }
                 modeloEmpleado.addRow(registroEmpleado);
             }
+
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error al Cargar Bodega " + e.getMessage());
         } finally {
@@ -440,7 +416,7 @@ public class Bodega extends javax.swing.JFrame {
                 jTextField2KeyReleased(evt);
             }
         });
-        jPanel1.add(jTextField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 30, 590, 40));
+        jPanel1.add(jTextField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 30, 780, 40));
 
         jButton6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-xhdpi/ic_home_black_24dp.png"))); // NOI18N
         jButton6.setBorder(null);
@@ -580,8 +556,8 @@ public class Bodega extends javax.swing.JFrame {
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
         Menu m = new Menu(usuario);
-        this.setVisible(false);
         m.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void stockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stockActionPerformed
@@ -605,8 +581,8 @@ public class Bodega extends javax.swing.JFrame {
     }//GEN-LAST:event_inicioActionPerformed
 
     private void cerrarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cerrarSesionActionPerformed
-        this.dispose();
         new Acceder().setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_cerrarSesionActionPerformed
 
     private void salirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_salirActionPerformed
