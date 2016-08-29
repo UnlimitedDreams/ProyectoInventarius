@@ -310,6 +310,8 @@ public class CargaArchivo extends javax.swing.JFrame {
         inferior = new javax.swing.JPanel();
         Nuevo = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
+        derecha = new javax.swing.JPanel();
+        izquierda = new javax.swing.JPanel();
 
         jButton3.setText("Nuevo");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
@@ -319,7 +321,7 @@ public class CargaArchivo extends javax.swing.JFrame {
         });
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("BackBox - Carga masiva de datos");
+        setTitle("BackBox - Carga Masiva de datos");
         setPreferredSize(new java.awt.Dimension(815, 560));
 
         centro.setBackground(new java.awt.Color(255, 255, 255));
@@ -389,6 +391,12 @@ public class CargaArchivo extends javax.swing.JFrame {
 
         getContentPane().add(inferior, java.awt.BorderLayout.PAGE_END);
 
+        derecha.setBackground(java.awt.Color.white);
+        getContentPane().add(derecha, java.awt.BorderLayout.LINE_END);
+
+        izquierda.setBackground(java.awt.Color.white);
+        getContentPane().add(izquierda, java.awt.BorderLayout.LINE_START);
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -417,7 +425,9 @@ public class CargaArchivo extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Nuevo;
     private javax.swing.JPanel centro;
+    private javax.swing.JPanel derecha;
     private javax.swing.JPanel inferior;
+    private javax.swing.JPanel izquierda;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel2;
