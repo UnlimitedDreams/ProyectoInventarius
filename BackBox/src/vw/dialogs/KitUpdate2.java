@@ -55,6 +55,7 @@ public class KitUpdate2 extends javax.swing.JDialog {
     public KitUpdate2(java.awt.Frame parent, boolean modal, String codkit, int condicion) {
         super(parent, modal);
         initComponents();
+        System.out.println("-----------------------");
         this.setLocationRelativeTo(null);
         this.setResizable(false);
         URL url = getClass().getResource("/images/facelet/icon.png");
@@ -66,7 +67,7 @@ public class KitUpdate2 extends javax.swing.JDialog {
         this.Costo.setText("0");
         this.precio.setText("0");
         this.Cantidad.setText("0");
-        this.condicion=condicion;
+        this.condicion = condicion;
         if (condicion == 1) {
             this.kit = (Kits) parent;
         } else if (condicion == 2) {
@@ -94,7 +95,7 @@ public class KitUpdate2 extends javax.swing.JDialog {
 
             Producto temp = null;
             System.out.println("va por aqui");
-            Control.ejecuteQuery("select a.serie_producto,a.nombre,a.precio_venta,a.descu,a.precio_desc,a.cod_producto,a.cantidad "
+            Control.ejecuteQuery("select a.serie_producto,a.nombre,a.precio_venta,a.descu,a.precio_desc,a.cod_producto,a.cantidad,c.cantidadkit "
                     + "from producto a,Kits b,kitdetalle c\n"
                     + "where\n"
                     + "a.cod_producto=c.cod_producto and \n"
@@ -103,6 +104,8 @@ public class KitUpdate2 extends javax.swing.JDialog {
                 temp = new Producto(Control.rs.getString(1), Control.rs.getString(2), Control.rs.getDouble(3), Control.rs.getInt(4), Control.rs.getDouble(5));
                 temp.setCodigoProducto(Control.rs.getInt(6));
                 temp.setCantidad(Control.rs.getInt(7));
+                temp.setCantidadKit(Control.rs.getInt(8));
+                temp.setCantidadKit2(Control.rs.getInt(8));
                 temp.setMarcaKits(true);
                 productos.add(temp);
             }
@@ -112,6 +115,7 @@ public class KitUpdate2 extends javax.swing.JDialog {
         } finally {
             Control.cerrarConexion();
         }
+
         iniciar();
     }
 
@@ -134,7 +138,7 @@ public class KitUpdate2 extends javax.swing.JDialog {
                 Control.ejecuteUpdate("insert into KitDetalle values(" + codKitDel + ",'" + codigo.getText().trim() + "',"
                         + LiProducto.getCodigoProducto() + "," + LiProducto.getPrecio_venta() + ")");
                 codKitDel++;
-                canti = (LiProducto.getCantidad() + this.CantProducto) - Integer.parseInt(Cantidad.getText());
+                canti = (LiProducto.getCantidad() + (this.CantProducto*LiProducto.getCantidadKit2())) - Integer.parseInt(Cantidad.getText());
                 Control.ejecuteUpdate("update producto set cantidad=" + canti + " where cod_producto=" + LiProducto.getCodigoProducto());
                 canti = 0;
             }
@@ -351,113 +355,113 @@ public class KitUpdate2 extends javax.swing.JDialog {
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
-                "Codigo", "Nombre", "Cantidad", "Precio Venta"
+                "Codigo", "Nombre", "Stock", "Cant. Kit", "Precio_Venta"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false
+                false, false, false, true, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -717,14 +721,14 @@ public class KitUpdate2 extends javax.swing.JDialog {
 
     public void iniciar() {
         System.out.println("Tamañ de productos " + productos.size());
-        TablaModel t = new TablaModel(productos, 4);
+        TablaModel t = new TablaModel(productos, 5);
         t.calculeFrecuenciasKits();
         muevaLosDatosFre(t);
 
     }
 
     public void Borrar() {
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 5; i++) {
             for (int k = 0; k < productos.size() + 1; k++) {
                 jTable1.setValueAt("", k, i);
             }
@@ -733,7 +737,7 @@ public class KitUpdate2 extends javax.swing.JDialog {
     }
 
     public void muevaLosDatosFre(TablaModel x) {
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 5; i++) {
             for (int k = 0; k < x.getNrofreq(); k++) {
                 jTable1.setValueAt(x.frecuencias[i][k], k, i);
             }

@@ -105,23 +105,21 @@ public class KitsRegistro extends javax.swing.JDialog {
             Control.conectar();
             Control.con.setAutoCommit(false);
             int actu = 0;
-            Control.ejecuteUpdate("insert into Kits values('" + codigo.getText().trim() + "',"
+            r = Control.ejecuteUpdate("insert into Kits values('" + codigo.getText().trim() + "',"
                     + Double.parseDouble(Costo.getText()) + "," + Double.parseDouble(precio.getText())
                     + "," + Integer.parseInt(Cantidad.getText()) + ",'A'," + numKit + ",'" + nombre.getText() + "'," + actu + ")");
             int canti = 0;
             for (Producto LiProducto : productos) {
-                Control.ejecuteUpdate("insert into KitDetalle values(" + codKitDel + ",'" + codigo.getText().trim() + "',"
+                r = Control.ejecuteUpdate("insert into KitDetalle values(" + codKitDel + ",'" + codigo.getText().trim() + "',"
                         + LiProducto.getCodigoProducto() + "," + LiProducto.getPrecio_venta() + "," + LiProducto.getCantidadKit() + ")");
                 codKitDel++;
-                canti = LiProducto.getCantidad() - Integer.parseInt(Cantidad.getText());
-                Control.ejecuteUpdate("update producto set cantidad=" + canti + " where cod_producto=" + LiProducto.getCodigoProducto());
+                canti = LiProducto.getCantidad() - (Integer.parseInt(Cantidad.getText())*LiProducto.getCantidadKit());
+                r = Control.ejecuteUpdate("update producto set cantidad=" + canti + " where cod_producto=" + LiProducto.getCodigoProducto());
                 canti = 0;
             }
-            Control.ejecuteUpdate("update Numerador set secuencia=" + (numKit + 1) + " where tiponumerador='Kits'");
-
-            r = true;
+            r = Control.ejecuteUpdate("update Numerador set secuencia=" + (numKit + 1) + " where tiponumerador='Kits'");
         } catch (Exception ex) {
-
+            r = false;
         } finally {
             Control.con.commit();
             Control.con.setAutoCommit(true);
@@ -507,13 +505,10 @@ public class KitsRegistro extends javax.swing.JDialog {
             } else if (Cantidad.getText().equalsIgnoreCase("0") || Cantidad.getText().length() == 0) {
                 Entrada.muestreMensajeV("La cantidad debe ser mayor a cero");
                 Cantidad.requestFocus();
+            } else if (validarCantidad()) {
+                registrarKit();
             } else {
-                if (validarCantidad()) {
-                    registrarKit();
-                } else {
-                    Entrada.muestreMensajeV("Uno de los productos no tiene la cantidad suficiente \n para crear el kit.");
-                }
-
+                Entrada.muestreMensajeV("Uno de los productos no tiene la cantidad suficiente \n para crear el kit.");
             }
         } catch (Exception ex) {
 
@@ -523,7 +518,7 @@ public class KitsRegistro extends javax.swing.JDialog {
         boolean r = true;
         int cant = Integer.parseInt(Cantidad.getText());
         for (Producto producto : productos) {
-            if ((producto.getCantidadKit() * cant) >= cant) {
+            if ((producto.getCantidadKit() * cant) > producto.getCantidad()) {
                 r = false;
                 break;
             }

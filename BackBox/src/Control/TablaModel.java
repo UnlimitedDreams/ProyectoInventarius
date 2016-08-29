@@ -16,26 +16,25 @@ import javax.swing.table.TableCellRenderer;
  * @author: Unlimited Dreams
  * @version: 25/08/2016
  */
-
-
 public class TablaModel implements TableCellRenderer {
 
     ArrayList<Producto> pro = new ArrayList();
     public String frecuencias[][];
     int nrofreq;
 
-    
-     /**
-     * Método que se encargar de recibir el arrayList y la cantidad de columnas para la matriz.
+    /**
+     * Método que se encargar de recibir el arrayList y la cantidad de columnas
+     * para la matriz.
      *
      * @param x El parámetro x define los registros del arreglo producto.
-     * @param Columnas El parámetro columna define la cantidad de columnas para crear la matriz.
+     * @param Columnas El parámetro columna define la cantidad de columnas para
+     * crear la matriz.
      */
     public TablaModel(ArrayList x, int Columnas) {
         nuevo();
         frecuencias = new String[Columnas][x.size()];
         nrofreq = 0;
-        this.pro=x;
+        this.pro = x;
 //        Producto temp = null;
 //        for (int i = 0; i < x.size(); i++) {
 //            temp = (Producto) x.get(i);
@@ -81,9 +80,10 @@ public class TablaModel implements TableCellRenderer {
             nrofreq++;
         }
     }
-    
+
     /**
-     * Método que se encargar de cargar la matriz en cada posicion. de acuerdo a la ventana CargaArchivo
+     * Método que se encargar de cargar la matriz en cada posicion. de acuerdo a
+     * la ventana CargaArchivo
      *
      */
     public void DatosCargaArchivo() {
@@ -100,9 +100,10 @@ public class TablaModel implements TableCellRenderer {
             nrofreq++;
         }
     }
-    
+
     /**
-     * Método que se encargar de cargar la matriz en cada posicion. de acuerdo a la ventana Entrada Nueva
+     * Método que se encargar de cargar la matriz en cada posicion. de acuerdo a
+     * la ventana Entrada Nueva
      *
      */
     public void DatosEntradaNueva() {
