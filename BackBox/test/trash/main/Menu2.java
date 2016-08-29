@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package vw.main;
+package trash.main;
 
 import Control.Control;
 import Modelo.ContenedorMenus;
@@ -26,6 +26,8 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
+import vw.main.Acceder;
+import vw.main.Menu;
 
 /**
  *
