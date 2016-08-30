@@ -61,176 +61,176 @@ public class RolRegistrarPrueba extends javax.swing.JDialog {
     }
 
     public void Insertar() throws ClassNotFoundException, SQLException {
-        boolean cerrar = false;
-        try {
-            int codigo = Sequence.seque("select max(cod_rol) from rol");
-            int codigoAct = Sequence.seque("select max(cod_detalleAc) from detalleactividad");
-            Control.conectar();
-            Control.con.setAutoCommit(false);
-            int a = 0;
-            boolean r = Control.ejecuteUpdate("insert into rol values(" + codigo + ",'" + jTextField3.getText() + "','A')");
-            if (r) {
-                System.out.println("insert rol");
-                if (LisBodega.isSelected()) {
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",4)");
-                    codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",3)");
-                    codigoAct++;
-                }
-                System.out.println("- " + a++);
-                if (ListArti.isSelected() && NewCompra.isSelected()) {
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",9)");
-                    codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",10)");
-                    codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",3)");
-                    codigoAct++;
-                } else if (ListArti.isSelected()) {
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",9)");
-                    codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",3)");
-                    codigoAct++;
-
-                } else if (NewCompra.isSelected()) {
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",10)");
-                    codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",3)");
-                    codigoAct++;
-
-                }
-                System.out.println("- " + a++);
-                if (ListCate.isSelected() && NewCate.isSelected()) {
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",11)");
-                    codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",12)");
-                    codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",3)");
-                    codigoAct++;
-                } else if (ListCate.isSelected()) {
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",11)");
-                    codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",3)");
-                    codigoAct++;
-                } else if (NewCate.isSelected()) {
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",12)");
-                    codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",3)");
-                    codigoAct++;
-                }
-                System.out.println("- " + a++);
-                if (ListUsu.isSelected() && NewUsu.isSelected()) {
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",1)");
-                    codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",2)");
-                    codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",3)");
-                    codigoAct++;
-                } else if (ListUsu.isSelected()) {
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",1)");
-                    codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",3)");
-                    codigoAct++;
-                } else if (NewUsu.isSelected()) {
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",2)");
-                    codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",3)");
-                    codigoAct++;
-                }
-                System.out.println("- " + a++);
-                if (VVentas.isSelected()) {
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",2," + codigo + ",16)");
-                    codigoAct++;
-                }
-                System.out.println("- " + a++);
-                if (VDevol.isSelected()) {
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",2," + codigo + ",17)");
-                    codigoAct++;
-                }
-
-                if (VDiaria.isSelected()) {
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",2," + codigo + ",18)");
-                    codigoAct++;
-                }
-                System.out.println("- " + a++);
-                Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",2," + codigo + ",3)");
-                codigoAct++;
-                System.out.println("- " + a++);
-                if (RVentas.isSelected()) {
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",3," + codigo + ",20)");
-                    codigoAct++;
-                }
-
-                if (rcompras.isSelected()) {
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",3," + codigo + ",21)");
-                    codigoAct++;
-                }
-
-                if (Rentradas.isSelected()) {
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",3," + codigo + ",22)");
-                    codigoAct++;
-                }
-                Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",3," + codigo + ",3)");
-                codigoAct++;
-                System.out.println("- " + a++);
-                if (ListPro.isSelected() && NewPro.isSelected()) {
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",5)");
-                    codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",6)");
-                    codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",3)");
-                    codigoAct++;
-                } else if (ListPro.isSelected()) {
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",5)");
-                    codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",3)");
-                    codigoAct++;
-                } else if (NewPro.isSelected()) {
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",6)");
-                    codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",3)");
-                    codigoAct++;
-                }
-                System.out.println("- " + a++);
-                if (ListRol.isSelected() && NewRol.isSelected()) {
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",7)");
-                    codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",8)");
-                    codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",3)");
-                    codigoAct++;
-                } else if (ListRol.isSelected()) {
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",7)");
-                    codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",3)");
-                    codigoAct++;
-                } else if (NewRol.isSelected()) {
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",8)");
-                    codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",3)");
-                    codigoAct++;
-                }
-                if (ListClientes.isSelected()) {
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",30)");
-                    codigoAct++;
-                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",3)");
-                    codigoAct++;
-                }
-            }
-            cerrar = true;
-        } catch (SQLException ex) {
-            System.out.println("Error : " + ex.toString());
-            cerrar = false;
-        } finally {
-            Control.con.commit();
-            Control.con.setAutoCommit(true);
-            Control.cerrarConexion();
-        }
-
-        if (cerrar) {
-            this.dispose();
-        } else {
-            Entrada.muestreMensajeV("Error Comuniquese con soporte");
-        }
+//        boolean cerrar = false;
+//        try {
+//            int codigo = Sequence.seque("select max(cod_rol) from rol");
+//            int codigoAct = Sequence.seque("select max(cod_detalleAc) from detalleactividad");
+//            Control.conectar();
+//            Control.con.setAutoCommit(false);
+//            int a = 0;
+//            boolean r = Control.ejecuteUpdate("insert into rol values(" + codigo + ",'" + jTextField3.getText() + "','A')");
+//            if (r) {
+//                System.out.println("insert rol");
+//                if (LisBodega.isSelected()) {
+//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",4)");
+//                    codigoAct++;
+//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",3)");
+//                    codigoAct++;
+//                }
+//                System.out.println("- " + a++);
+//                if (ListArti.isSelected() && NewCompra.isSelected()) {
+//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",9)");
+//                    codigoAct++;
+//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",10)");
+//                    codigoAct++;
+//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",3)");
+//                    codigoAct++;
+//                } else if (ListArti.isSelected()) {
+//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",9)");
+//                    codigoAct++;
+//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",3)");
+//                    codigoAct++;
+//
+//                } else if (NewCompra.isSelected()) {
+//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",10)");
+//                    codigoAct++;
+//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",3)");
+//                    codigoAct++;
+//
+//                }
+//                System.out.println("- " + a++);
+//                if (ListCate.isSelected() && NewCate.isSelected()) {
+//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",11)");
+//                    codigoAct++;
+//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",12)");
+//                    codigoAct++;
+//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",3)");
+//                    codigoAct++;
+//                } else if (ListCate.isSelected()) {
+//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",11)");
+//                    codigoAct++;
+//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",3)");
+//                    codigoAct++;
+//                } else if (NewCate.isSelected()) {
+//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",12)");
+//                    codigoAct++;
+//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",3)");
+//                    codigoAct++;
+//                }
+//                System.out.println("- " + a++);
+//                if (ListUsu.isSelected() && NewUsu.isSelected()) {
+//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",1)");
+//                    codigoAct++;
+//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",2)");
+//                    codigoAct++;
+//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",3)");
+//                    codigoAct++;
+//                } else if (ListUsu.isSelected()) {
+//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",1)");
+//                    codigoAct++;
+//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",3)");
+//                    codigoAct++;
+//                } else if (NewUsu.isSelected()) {
+//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",2)");
+//                    codigoAct++;
+//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",3)");
+//                    codigoAct++;
+//                }
+//                System.out.println("- " + a++);
+//                if (VVentas.isSelected()) {
+//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",2," + codigo + ",16)");
+//                    codigoAct++;
+//                }
+//                System.out.println("- " + a++);
+//                if (VDevol.isSelected()) {
+//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",2," + codigo + ",17)");
+//                    codigoAct++;
+//                }
+//
+//                if (VDiaria.isSelected()) {
+//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",2," + codigo + ",18)");
+//                    codigoAct++;
+//                }
+//                System.out.println("- " + a++);
+//                Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",2," + codigo + ",3)");
+//                codigoAct++;
+//                System.out.println("- " + a++);
+//                if (RVentas.isSelected()) {
+//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",3," + codigo + ",20)");
+//                    codigoAct++;
+//                }
+//
+//                if (rcompras.isSelected()) {
+//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",3," + codigo + ",21)");
+//                    codigoAct++;
+//                }
+//
+//                if (Rentradas.isSelected()) {
+//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",3," + codigo + ",22)");
+//                    codigoAct++;
+//                }
+//                Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",3," + codigo + ",3)");
+//                codigoAct++;
+//                System.out.println("- " + a++);
+//                if (ListPro.isSelected() && NewPro.isSelected()) {
+//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",5)");
+//                    codigoAct++;
+//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",6)");
+//                    codigoAct++;
+//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",3)");
+//                    codigoAct++;
+//                } else if (ListPro.isSelected()) {
+//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",5)");
+//                    codigoAct++;
+//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",3)");
+//                    codigoAct++;
+//                } else if (NewPro.isSelected()) {
+//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",6)");
+//                    codigoAct++;
+//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",3)");
+//                    codigoAct++;
+//                }
+//                System.out.println("- " + a++);
+//                if (ListRol.isSelected() && NewRol.isSelected()) {
+//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",7)");
+//                    codigoAct++;
+//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",8)");
+//                    codigoAct++;
+//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",3)");
+//                    codigoAct++;
+//                } else if (ListRol.isSelected()) {
+//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",7)");
+//                    codigoAct++;
+//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",3)");
+//                    codigoAct++;
+//                } else if (NewRol.isSelected()) {
+//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",8)");
+//                    codigoAct++;
+//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",3)");
+//                    codigoAct++;
+//                }
+//                if (ListClientes.isSelected()) {
+//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",30)");
+//                    codigoAct++;
+//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",3)");
+//                    codigoAct++;
+//                }
+//            }
+//            cerrar = true;
+//        } catch (SQLException ex) {
+//            System.out.println("Error : " + ex.toString());
+//            cerrar = false;
+//        } finally {
+//            Control.con.commit();
+//            Control.con.setAutoCommit(true);
+//            Control.cerrarConexion();
+//        }
+//
+//        if (cerrar) {
+//            this.dispose();
+//        } else {
+//            Entrada.muestreMensajeV("Error Comuniquese con soporte");
+//        }
     }
 
     /**
