@@ -35,6 +35,8 @@ public class CategoriaGestion extends javax.swing.JFrame {
 
     /**
      * Creates new form categoriaGestion
+     * @param Usuario
+     * @param Acciones
      */
     public CategoriaGestion(String Usuario, ArrayList Acciones) {
         initComponents();
@@ -204,7 +206,7 @@ public class CategoriaGestion extends javax.swing.JFrame {
         try {
             Update();
             inicio();
-        } catch (Exception ex) {
+        } catch (ClassNotFoundException | SQLException ex) {
             /*Nothing Here*/
         }
     }//GEN-LAST:event_actualizarActionPerformed
@@ -222,7 +224,7 @@ public class CategoriaGestion extends javax.swing.JFrame {
         if (i == -1) {
             Entrada.muestreMensajeV("Favor... seleccione una fila",
                     JOptionPane.WARNING_MESSAGE);
-        } else if (JOptionPane.showConfirmDialog(this, "¿Está seguro de borrar esta categoría?", "Inventarius", JOptionPane.YES_NO_OPTION) == 0) {
+        } else if (JOptionPane.showConfirmDialog(this, "¿Está seguro de borrar esta categoría?", "BackBox", JOptionPane.YES_NO_OPTION) == 0) {
             String cod = (String) categoriaLista.getValueAt(i, 0).toString();
             boolean r = Control.ejecuteUpdate("update categoria "
                     + "set estado='I' " /*Estado Inactivo*/
@@ -243,7 +245,8 @@ public class CategoriaGestion extends javax.swing.JFrame {
      * Actuaizar una categoría
      *
      * @throws ClassNotFoundException no encuentra la librería de conexion
-     * DataBase
+     * DataBase.
+     * @throws java.sql.SQLException Error al realizar la consulta.
      */
     public void Update() throws ClassNotFoundException, SQLException {
         boolean r = false;
@@ -263,7 +266,7 @@ public class CategoriaGestion extends javax.swing.JFrame {
             }
         } catch (SQLException ex) {
             r = false;
-            System.out.println("Erro SQl " + ex.toString());
+            System.out.println("Error SQl " + ex.toString());
         } finally {
             Control.con.commit();
             Control.con.setAutoCommit(true);
@@ -293,7 +296,10 @@ public class CategoriaGestion extends javax.swing.JFrame {
         this.categoriaLista.setModel(modeloEmpleado);
         try {
             Control.conectar();
-            Control.ejecuteQuery("select * from CategoriaBusqueda()");
+            Control.ejecuteQuery("select    "
+                    + "codigo \"Código\","
+                    + "descripcion \"Descripción\" "
+                    + "from CategoriaBusqueda()");
             rsetMetaData = Control.rs.getMetaData();
             numeroPreguntas = rsetMetaData.getColumnCount();
             //Establece los nombres de las columnas de las tablas
@@ -309,48 +315,12 @@ public class CategoriaGestion extends javax.swing.JFrame {
                 }
                 modeloEmpleado.addRow(registroEmpleado);
             }
-        } catch (Exception e) {
+        } catch (ClassNotFoundException | SQLException e) {
             JOptionPane.showMessageDialog(null, "ERROR " + e.getMessage());
         } finally {
             Control.cerrarConexion();
         }
     }
-
-    /**
-     * @param args the command line arguments
-     */
-//    public static void main(String args[]) {
-//        /* Set the Nimbus look and feel */
-//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-//         */
-//        try {
-//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-//                if ("Nimbus".equals(info.getName())) {
-//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-//                    break;
-//                }
-//            }
-//        } catch (ClassNotFoundException ex) {
-//            java.util.logging.Logger.getLogger(CategoriaGestion.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (InstantiationException ex) {
-//            java.util.logging.Logger.getLogger(CategoriaGestion.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (IllegalAccessException ex) {
-//            java.util.logging.Logger.getLogger(CategoriaGestion.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-//            java.util.logging.Logger.getLogger(CategoriaGestion.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        }
-//        //</editor-fold>
-//        //</editor-fold>
-//
-//        /* Create and display the form */
-//        java.awt.EventQueue.invokeLater(new Runnable() {
-//            public void run() {
-//                new CategoriaGestion().setVisible(true);
-//            }
-//        });
-//    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton actualizar;
