@@ -5,14 +5,17 @@
  */
 package vw.components;
 
-import Control.*;
-import Modelo.*;
-import java.awt.Desktop;
+import Control.Control;
+import Control.Entrada;
+import Modelo.ContenedorMenus;
+import Modelo.MenuRedireccionar;
+import Modelo.Producto;
+import Modelo.acciones;
+import Modelo.seccion;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.sql.ResultSetMetaData;
@@ -27,18 +30,15 @@ import javax.swing.JOptionPane;
 import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
 import javax.swing.table.DefaultTableModel;
-import vw.dialogs.AcercaDe;
 import vw.dialogs.KitUpdate2;
-import vw.dialogs.ProductoUpdate;
 import vw.dialogs.ProductoUpdate2;
 import vw.dialogs.SalidaEntrada;
 import vw.main.Acceder;
 import vw.main.Menu;
-import vw.model.Articulo;
 
 /**
  *
- * @author Microinformatica
+ * @author usuario
  */
 public class Bodega extends javax.swing.JFrame {
 
@@ -51,12 +51,12 @@ public class Bodega extends javax.swing.JFrame {
 
     public Bodega(String usuario, ArrayList acciones, int codEmpresa) throws ClassNotFoundException, SQLException {
         initComponents();
+        inicio();
         this.usuario = usuario;
         this.List_Menu = acciones;
         this.codEmpresa = codEmpresa;
         this.setLocationRelativeTo(null);
-        this.setResizable(false);
-        inicio();
+        Stock();
         URL url = getClass().getResource("/images/facelet/icon.png");
         ImageIcon img = new ImageIcon(url);
         setIconImage(img.getImage());
@@ -147,9 +147,7 @@ public class Bodega extends javax.swing.JFrame {
                                     } else {
                                         Bodega.this.dispose();
                                     }
-                                } catch (IOException ex) {
-                                    Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
-                                } catch (URISyntaxException ex) {
+                                } catch (IOException | URISyntaxException ex) {
                                     Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
                                 } catch (ClassNotFoundException ex) {
                                     Logger.getLogger(Bodega.class.getName()).log(Level.SEVERE, null, ex);
@@ -162,10 +160,76 @@ public class Bodega extends javax.swing.JFrame {
             }
         }
         MenuAyuda();
+        Permisos();
 
     }
 
-    public void MenuAyuda() {
+    private void inicio() throws ClassNotFoundException {
+        Control.conectar();
+        DefaultTableModel modeloEmpleado = new DefaultTableModel();
+        int numeroPreguntas;
+        ResultSetMetaData rsetMetaData;
+        String cabeceras[] = {"Codigo", "Nombre", "Categoria", "Costo", "Iva", "Precio", "(%)Desc.", "Cantidad"};
+        modeloEmpleado = new DefaultTableModel(null, cabeceras) {
+            @Override
+            public boolean isCellEditable(int row, int column) {//para evitar que las celdas sean editables
+                return false;
+            }
+        };
+        this.tablaProductos.setModel(modeloEmpleado);
+        tablaProductos.getColumnModel().getColumn(0).setPreferredWidth(100);
+        tablaProductos.getColumnModel().getColumn(1).setPreferredWidth(500);
+        tablaProductos.getColumnModel().getColumn(2).setPreferredWidth(150);
+        tablaProductos.getColumnModel().getColumn(3).setPreferredWidth(65);
+        tablaProductos.getColumnModel().getColumn(4).setPreferredWidth(45);
+        tablaProductos.getColumnModel().getColumn(5).setPreferredWidth(65);
+        tablaProductos.getColumnModel().getColumn(6).setPreferredWidth(90);
+        tablaProductos.getColumnModel().getColumn(7).setPreferredWidth(100);
+        //tablaProductos.getColumnModel().getColumn(1).setMaxWidth(1);
+        tablaProductos.setRowHeight(30);
+        this.tablaProductos.setModel(modeloEmpleado);
+
+        try {
+            Control.ejecuteQuery("select codigo \"Codigo\",nombre \"Nombre\",categoria \"Categoria\",costo \"Costo\",iva \"Iva\",precio \"Precio\""
+                    + ",descuento \"Descuento\",cantidad \"Cantidad\" from BodegaInicio() limit 500");
+            rsetMetaData = Control.rs.getMetaData();
+            numeroPreguntas = rsetMetaData.getColumnCount();
+            while (Control.rs.next()) {
+                Object[] registroEmpleado = new Object[numeroPreguntas];
+                for (int i = 0; i < numeroPreguntas; i++) {
+                    registroEmpleado[i] = Control.rs.getObject(i + 1);
+                }
+                modeloEmpleado.addRow(registroEmpleado);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error al Cargar Bodega " + e.getMessage());
+        } finally {
+            Control.cerrarConexion();
+        }
+    }
+
+    private void Stock() throws ClassNotFoundException {
+        Control.conectar();
+        try {
+            Control.ejecuteQuery("select * from Reporte_Stock()");
+            int count = 0;
+
+            while (Control.rs.next()) {
+                count++;
+            }
+            if (count > 0) {
+                Entrada.muestreMensajeV("Hay " + count + " productos en cero cantidad",
+                        javax.swing.JOptionPane.INFORMATION_MESSAGE);
+            }
+            Control.cerrarConexion();
+        } catch (Exception ex) {
+            Entrada.muestreMensajeV("Error al Cargar Stock de Productos " + ex.getMessage());
+        } finally {
+            Control.cerrarConexion();
+        }
+    }
+
+    private void MenuAyuda() {
         ArrayList<String> Ayuda = new ArrayList();
         Ayuda.add("Ayuda en Linea");
         Ayuda.add("Linea");
@@ -206,27 +270,9 @@ public class Bodega extends javax.swing.JFrame {
         }
     }
 
-    /**
-     * Cargar la informacion inicial de la tabla de la bodega
-     *
-     * @throws ClassNotFoundException
-     */
-    public void inicio() throws ClassNotFoundException {
+    private void Permisos() throws ClassNotFoundException {
+        Control.conectar();
         try {
-            Control.conectar();
-            //Reporte de productos en stock
-            Control.ejecuteQuery("select * from Reporte_Stock()");
-            int count = 0;
-
-            while (Control.rs.next()) {
-                count++;
-            }
-            if (count > 0) {
-                Entrada.muestreMensajeV("Hay " + count + " productos en cero cantidad",
-                        javax.swing.JOptionPane.INFORMATION_MESSAGE);
-            }
-
-            //Configuracion de los permisos
             ArrayList<String> acciones = new ArrayList();
             Control.ejecuteQuery("select * from Permisos(" + usuario + ",'Bodega')");
             while (Control.rs.next()) {
@@ -252,118 +298,115 @@ public class Bodega extends javax.swing.JFrame {
                 }
             }
 
-            //Reporte de tabla
-            DefaultTableModel modeloEmpleado = new DefaultTableModel();
-            int numeroPreguntas;
-            ResultSetMetaData rsetMetaData;
-            String cabeceras[] = {"Codigo", "Nombre", "Categoria", "Costo", "Iva", "Precio", "(%)Desc.", "Cantidad"};
-            modeloEmpleado = new DefaultTableModel(null, cabeceras) {
-                @Override
-                public boolean isCellEditable(int row, int column) {//para evitar que las celdas sean editables
-                    return false;
-                }
-            };
-            this.tablaProductos.setModel(modeloEmpleado);
-            tablaProductos.getColumnModel().getColumn(0).setPreferredWidth(100);
-            tablaProductos.getColumnModel().getColumn(1).setPreferredWidth(500);
-            tablaProductos.getColumnModel().getColumn(2).setPreferredWidth(150);
-            tablaProductos.getColumnModel().getColumn(3).setPreferredWidth(65);
-            tablaProductos.getColumnModel().getColumn(4).setPreferredWidth(45);
-            tablaProductos.getColumnModel().getColumn(5).setPreferredWidth(65);
-            tablaProductos.getColumnModel().getColumn(6).setPreferredWidth(90);
-            tablaProductos.getColumnModel().getColumn(7).setPreferredWidth(100);
-            //tablaProductos.getColumnModel().getColumn(1).setMaxWidth(1);
-            tablaProductos.setRowHeight(30);
-            this.tablaProductos.setModel(modeloEmpleado);
-
-            Control.ejecuteQuery("select codigo \"Codigo\",nombre \"Nombre\",categoria \"Categoria\",costo \"Costo\",iva \"Iva\",precio \"Precio\""
-                    + ",descuento \"Descuento\",cantidad \"Cantidad\" from BodegaInicio() limit 500");
-            rsetMetaData = Control.rs.getMetaData();
-            numeroPreguntas = rsetMetaData.getColumnCount();
-            while (Control.rs.next()) {
-                Object[] registroEmpleado = new Object[numeroPreguntas];
-                for (int i = 0; i < numeroPreguntas; i++) {
-                    registroEmpleado[i] = Control.rs.getObject(i + 1);
-                }
-                modeloEmpleado.addRow(registroEmpleado);
-            }
-
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Error al Cargar Bodega " + e.getMessage());
+        } catch (SQLException ex) {
+            Logger.getLogger(Bodega.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             Control.cerrarConexion();
         }
     }
 
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
+        centro = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tablaProductos = new javax.swing.JTable();
-        entrada = new javax.swing.JButton();
-        salida = new javax.swing.JButton();
+        superior = new javax.swing.JPanel();
+        busca = new javax.swing.JTextField();
+        inferior = new javax.swing.JPanel();
+        inicio = new javax.swing.JButton();
+        jSeparator1 = new javax.swing.JSeparator();
         actualizar = new javax.swing.JButton();
         borrar = new javax.swing.JButton();
-        jTextField2 = new javax.swing.JTextField();
-        jButton6 = new javax.swing.JButton();
         stock = new javax.swing.JButton();
+        entrada = new javax.swing.JButton();
+        salida = new javax.swing.JButton();
+        derecha = new javax.swing.JPanel();
+        izquierda = new javax.swing.JPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
         file = new javax.swing.JMenu();
-        inicio = new javax.swing.JMenuItem();
+        inicio1 = new javax.swing.JMenuItem();
         cerrarSesion = new javax.swing.JMenuItem();
-        jSeparator1 = new javax.swing.JPopupMenu.Separator();
+        jSeparator2 = new javax.swing.JPopupMenu.Separator();
         salir = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Inventarius - Bodega");
-        setPreferredSize(new java.awt.Dimension(950, 650));
+        setTitle("BackBox - Bodega");
+        setMinimumSize(new java.awt.Dimension(800, 600));
+        setPreferredSize(new java.awt.Dimension(800, 600));
 
-        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel1.setPreferredSize(new java.awt.Dimension(950, 567));
-        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        centro.setBackground(java.awt.Color.white);
+        centro.setLayout(new javax.swing.BoxLayout(centro, javax.swing.BoxLayout.LINE_AXIS));
 
         tablaProductos.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
+        tablaProductos.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+
+            }
+        ));
         jScrollPane1.setViewportView(tablaProductos);
 
-        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 98, 910, 410));
+        centro.add(jScrollPane1);
 
-        entrada.setFont(new java.awt.Font("Segoe UI Light", 0, 11)); // NOI18N
-        entrada.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-mdpi/ic_vertical_align_top_black_24dp.png"))); // NOI18N
-        entrada.setText("Entrada");
-        entrada.setBorder(null);
-        entrada.setBorderPainted(false);
-        entrada.setContentAreaFilled(false);
-        entrada.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        entrada.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        entrada.setPreferredSize(new java.awt.Dimension(55, 47));
-        entrada.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
-        entrada.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        entrada.addActionListener(new java.awt.event.ActionListener() {
+        getContentPane().add(centro, java.awt.BorderLayout.CENTER);
+
+        superior.setBackground(java.awt.Color.white);
+        java.awt.FlowLayout flowLayout1 = new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 10, 10);
+        flowLayout1.setAlignOnBaseline(true);
+        superior.setLayout(flowLayout1);
+
+        busca.setFont(new java.awt.Font("Segoe UI Light", 0, 18)); // NOI18N
+        busca.setMinimumSize(new java.awt.Dimension(600, 40));
+        busca.setPreferredSize(new java.awt.Dimension(780, 40));
+        busca.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                entradaActionPerformed(evt);
+                buscaActionPerformed(evt);
             }
         });
-        jPanel1.add(entrada, new org.netbeans.lib.awtextra.AbsoluteConstraints(85, 520, -1, -1));
-
-        salida.setFont(new java.awt.Font("Segoe UI Light", 0, 11)); // NOI18N
-        salida.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-mdpi/ic_vertical_align_bottom_black_24dp.png"))); // NOI18N
-        salida.setText("Salida");
-        salida.setBorder(null);
-        salida.setBorderPainted(false);
-        salida.setContentAreaFilled(false);
-        salida.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        salida.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        salida.setPreferredSize(new java.awt.Dimension(55, 47));
-        salida.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
-        salida.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        salida.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                salidaActionPerformed(evt);
+        busca.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                buscaKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                buscaKeyReleased(evt);
             }
         });
-        jPanel1.add(salida, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 520, -1, -1));
+        superior.add(busca);
+
+        getContentPane().add(superior, java.awt.BorderLayout.PAGE_START);
+
+        inferior.setBackground(java.awt.Color.white);
+        inferior.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
+
+        inicio.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-xhdpi/ic_home_black_24dp.png"))); // NOI18N
+        inicio.setBorder(null);
+        inicio.setBorderPainted(false);
+        inicio.setContentAreaFilled(false);
+        inicio.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        inicio.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        inicio.setPreferredSize(new java.awt.Dimension(55, 47));
+        inicio.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
+        inicio.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        inicio.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                inicioActionPerformed(evt);
+            }
+        });
+        inferior.add(inicio);
+
+        jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
+        jSeparator1.setPreferredSize(new java.awt.Dimension(160, 40));
+        jSeparator1.setRequestFocusEnabled(false);
+        inferior.add(jSeparator1);
 
         actualizar.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
         actualizar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-mdpi/ic_update_black_24dp.png"))); // NOI18N
@@ -382,7 +425,7 @@ public class Bodega extends javax.swing.JFrame {
                 actualizarActionPerformed(evt);
             }
         });
-        jPanel1.add(actualizar, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 520, -1, -1));
+        inferior.add(actualizar);
 
         borrar.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
         borrar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-mdpi/ic_remove_black_24dp.png"))); // NOI18N
@@ -400,39 +443,7 @@ public class Bodega extends javax.swing.JFrame {
                 borrarActionPerformed(evt);
             }
         });
-        jPanel1.add(borrar, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 520, -1, -1));
-
-        jTextField2.setFont(new java.awt.Font("Segoe UI Light", 0, 18)); // NOI18N
-        jTextField2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField2ActionPerformed(evt);
-            }
-        });
-        jTextField2.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                jTextField2KeyPressed(evt);
-            }
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                jTextField2KeyReleased(evt);
-            }
-        });
-        jPanel1.add(jTextField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 30, 780, 40));
-
-        jButton6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-xhdpi/ic_home_black_24dp.png"))); // NOI18N
-        jButton6.setBorder(null);
-        jButton6.setBorderPainted(false);
-        jButton6.setContentAreaFilled(false);
-        jButton6.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jButton6.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton6.setPreferredSize(new java.awt.Dimension(55, 47));
-        jButton6.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
-        jButton6.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jButton6.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton6ActionPerformed(evt);
-            }
-        });
-        jPanel1.add(jButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(870, 520, -1, -1));
+        inferior.add(borrar);
 
         stock.setFont(new java.awt.Font("Segoe UI Light", 0, 11)); // NOI18N
         stock.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-mdpi/ic_assignment_black_24dp.png"))); // NOI18N
@@ -450,20 +461,64 @@ public class Bodega extends javax.swing.JFrame {
                 stockActionPerformed(evt);
             }
         });
-        jPanel1.add(stock, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 520, -1, -1));
+        inferior.add(stock);
+
+        entrada.setFont(new java.awt.Font("Segoe UI Light", 0, 11)); // NOI18N
+        entrada.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-mdpi/ic_vertical_align_top_black_24dp.png"))); // NOI18N
+        entrada.setText("Entrada");
+        entrada.setBorder(null);
+        entrada.setBorderPainted(false);
+        entrada.setContentAreaFilled(false);
+        entrada.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        entrada.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        entrada.setPreferredSize(new java.awt.Dimension(55, 47));
+        entrada.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
+        entrada.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        entrada.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                entradaActionPerformed(evt);
+            }
+        });
+        inferior.add(entrada);
+
+        salida.setFont(new java.awt.Font("Segoe UI Light", 0, 11)); // NOI18N
+        salida.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-mdpi/ic_vertical_align_bottom_black_24dp.png"))); // NOI18N
+        salida.setText("Salida");
+        salida.setBorder(null);
+        salida.setBorderPainted(false);
+        salida.setContentAreaFilled(false);
+        salida.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        salida.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        salida.setPreferredSize(new java.awt.Dimension(55, 47));
+        salida.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
+        salida.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        salida.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                salidaActionPerformed(evt);
+            }
+        });
+        inferior.add(salida);
+
+        getContentPane().add(inferior, java.awt.BorderLayout.PAGE_END);
+
+        derecha.setBackground(java.awt.Color.white);
+        getContentPane().add(derecha, java.awt.BorderLayout.LINE_END);
+
+        izquierda.setBackground(java.awt.Color.white);
+        getContentPane().add(izquierda, java.awt.BorderLayout.LINE_START);
 
         file.setText("Archivo");
         file.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
 
-        inicio.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_H, java.awt.event.InputEvent.SHIFT_MASK | java.awt.event.InputEvent.CTRL_MASK));
-        inicio.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
-        inicio.setText("Inicio");
-        inicio.addActionListener(new java.awt.event.ActionListener() {
+        inicio1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_H, java.awt.event.InputEvent.SHIFT_MASK | java.awt.event.InputEvent.CTRL_MASK));
+        inicio1.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
+        inicio1.setText("Inicio");
+        inicio1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                inicioActionPerformed(evt);
+                inicio1ActionPerformed(evt);
             }
         });
-        file.add(inicio);
+        file.add(inicio1);
 
         cerrarSesion.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
         cerrarSesion.setText("Cerrar Sesión");
@@ -473,7 +528,7 @@ public class Bodega extends javax.swing.JFrame {
             }
         });
         file.add(cerrarSesion);
-        file.add(jSeparator1);
+        file.add(jSeparator2);
 
         salir.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F4, java.awt.event.InputEvent.ALT_MASK));
         salir.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
@@ -489,35 +544,33 @@ public class Bodega extends javax.swing.JFrame {
 
         setJMenuBar(jMenuBar1);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 581, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
-        );
-
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextField2KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField2KeyReleased
+    private void buscaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buscaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_buscaActionPerformed
+
+    private void buscaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_buscaKeyPressed
+
+    }//GEN-LAST:event_buscaKeyPressed
+
+    private void buscaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_buscaKeyReleased
         try {
             Buscar();
         } catch (Exception ex) {
 
         }
-    }//GEN-LAST:event_jTextField2KeyReleased
+    }//GEN-LAST:event_buscaKeyReleased
 
-    private void jTextField2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField2KeyPressed
-
-    }//GEN-LAST:event_jTextField2KeyPressed
+    private void actualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_actualizarActionPerformed
+        try {
+            update();
+        } catch (Exception ex) {
+            Entrada.muestreMensajeV("Error Al Actualizar Datos",
+                    javax.swing.JOptionPane.INFORMATION_MESSAGE);
+        }
+    }//GEN-LAST:event_actualizarActionPerformed
 
     private void borrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_borrarActionPerformed
         try {
@@ -527,24 +580,16 @@ public class Bodega extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_borrarActionPerformed
 
-    private void actualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_actualizarActionPerformed
+    private void stockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stockActionPerformed
         try {
-            update();
+            Stock st = new Stock(usuario, List_Menu, codEmpresa);
+            st.setVisible(true);
+            this.dispose();
         } catch (Exception ex) {
-            Entrada.muestreMensajeV("Error Al Actualizar Datos",
-                    javax.swing.JOptionPane.INFORMATION_MESSAGE);
+
         }
-
-    }//GEN-LAST:event_actualizarActionPerformed
-
-    private void salidaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_salidaActionPerformed
-        try {
-            Sacar();
-        } catch (Exception ex) {
-            //nothing here
-        }
-
-    }//GEN-LAST:event_salidaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_stockActionPerformed
 
     private void entradaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_entradaActionPerformed
         try {
@@ -554,40 +599,34 @@ public class Bodega extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_entradaActionPerformed
 
-    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-        Menu m = new Menu(usuario);
-        m.setVisible(true);
-        this.dispose();
-    }//GEN-LAST:event_jButton6ActionPerformed
-
-    private void stockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stockActionPerformed
+    private void salidaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_salidaActionPerformed
         try {
-            Stock st = new Stock(usuario, List_Menu, codEmpresa);
-            st.setVisible(true);
-            this.dispose();
+            Sacar();
         } catch (Exception ex) {
-
+            //nothing here
         }
-// TODO add your handling code here:
-    }//GEN-LAST:event_stockActionPerformed
-
-    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField2ActionPerformed
+    }//GEN-LAST:event_salidaActionPerformed
 
     private void inicioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inicioActionPerformed
-        new Menu(usuario).setVisible(true);
-        this.dispose();
+        Menu m = new Menu(usuario);
+        this.setVisible(false);
+        m.setVisible(true);
     }//GEN-LAST:event_inicioActionPerformed
 
-    private void cerrarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cerrarSesionActionPerformed
-        new Acceder().setVisible(true);
+    private void inicio1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inicio1ActionPerformed
+        new Menu(usuario).setVisible(true);
         this.dispose();
+    }//GEN-LAST:event_inicio1ActionPerformed
+
+    private void cerrarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cerrarSesionActionPerformed
+        this.dispose();
+        new Acceder().setVisible(true);
     }//GEN-LAST:event_cerrarSesionActionPerformed
 
     private void salirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_salirActionPerformed
         System.exit(0);
     }//GEN-LAST:event_salirActionPerformed
+
     public boolean SoloNumeros(String cadena) {
         try {
             Long.parseLong(cadena);
@@ -598,14 +637,14 @@ public class Bodega extends javax.swing.JFrame {
     }
 
     public void Buscar() throws ClassNotFoundException {
-        if (jTextField2.getText().length() > 0) {
+        if (busca.getText().length() > 0) {
             String query = "";
-            if (SoloNumeros(jTextField2.getText())) {
+            if (SoloNumeros(busca.getText())) {
                 query = "select codigo \"Codigo\",nombre \"Nombre\",cate \"Categoria\",rcosto \"Costo\",riva \"Iva\",rprecio \"Precio\","
-                        + "rdescuento \"Descuento\",rcantidad \"Cantidad\"  from BodegaInicioBuscar(1,'" + jTextField2.getText() + "') ";
+                        + "rdescuento \"Descuento\",rcantidad \"Cantidad\"  from BodegaInicioBuscar(1,'" + busca.getText() + "') ";
             } else {
                 query = "select codigo \"Codigo\",nombre \"Nombre\",cate \"Categoria\",rcosto \"Costo\",riva \"Iva\",rprecio \"Precio\","
-                        + "rdescuento \"Descuento\",rcantidad \"Cantidad\"  from BodegaInicioBuscar(2,'" + jTextField2.getText() + "')";
+                        + "rdescuento \"Descuento\",rcantidad \"Cantidad\"  from BodegaInicioBuscar(2,'" + busca.getText() + "')";
             }
             Control.conectar();
             DefaultTableModel modeloEmpleado = new DefaultTableModel();
@@ -783,26 +822,28 @@ public class Bodega extends javax.swing.JFrame {
         }
     }
 
-    /**
-     * @param args the command line arguments
-     */
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton actualizar;
     private javax.swing.JButton borrar;
+    private javax.swing.JTextField busca;
+    private javax.swing.JPanel centro;
     private javax.swing.JMenuItem cerrarSesion;
+    private javax.swing.JPanel derecha;
     private javax.swing.JButton entrada;
     private javax.swing.JMenu file;
-    private javax.swing.JMenuItem inicio;
-    private javax.swing.JButton jButton6;
+    private javax.swing.JPanel inferior;
+    private javax.swing.JButton inicio;
+    private javax.swing.JMenuItem inicio1;
+    private javax.swing.JPanel izquierda;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JPopupMenu.Separator jSeparator1;
-    private javax.swing.JTextField jTextField2;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JButton salida;
     private javax.swing.JMenuItem salir;
     private javax.swing.JButton stock;
+    private javax.swing.JPanel superior;
     private javax.swing.JTable tablaProductos;
     // End of variables declaration//GEN-END:variables
 }
