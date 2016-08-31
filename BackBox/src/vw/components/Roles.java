@@ -5,14 +5,11 @@
  */
 package vw.components;
 
-import Control.Entrada;
-import Modelo.Producto;
-import vw.main.Menu;
-import vw.main.Acceder;
-import vw.model.Venta;
 import Control.Control;
+import Control.Entrada;
 import Modelo.ContenedorMenus;
 import Modelo.MenuRedireccionar;
+import Modelo.Producto;
 import Modelo.acciones;
 import Modelo.seccion;
 import java.awt.Desktop;
@@ -22,7 +19,6 @@ import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import vw.model.Articulo;
 import java.net.URL;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -41,8 +37,13 @@ import vw.dialogs.CategoriasRegistrar;
 import vw.dialogs.ProveedoresRegistrar;
 import vw.dialogs.RolActualizar;
 import vw.dialogs.RolRegistrarF;
+import vw.dialogs.RolRegistrarPrueba;
 import vw.dialogs.UsuarioPermiso;
 import vw.dialogs.UsuariosRegistrar;
+import vw.main.Acceder;
+import vw.main.Menu;
+import vw.model.Articulo;
+import vw.model.Venta;
 
 /**
  *
@@ -511,7 +512,9 @@ public class Roles extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         try {
-            new RolRegistrarF(this, true).setVisible(true);
+            //new RolRegistrarF(this, true).setVisible(true);
+            new RolRegistrarPrueba().setVisible(true);
+            this.dispose();
         } catch (Exception e) {
             System.out.println("Error: " + e.toString());
         } finally {

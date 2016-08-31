@@ -131,7 +131,7 @@ public class CargaArchivo extends javax.swing.JFrame {
                     "Codigo", "Nombre", "Costo", "Iva", "Precio", "Cantidad", "Estado"
                 }
         ));
-        TablaModel t = new TablaModel(p,7);
+        TablaModel t = new TablaModel(p,7,1);
         t.DatosCargaArchivo();
         muevaLosDatosFre(t);
     }
@@ -301,14 +301,17 @@ public class CargaArchivo extends javax.swing.JFrame {
     private void initComponents() {
 
         jButton3 = new javax.swing.JButton();
-        jPanel1 = new javax.swing.JPanel();
-        Nuevo = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        centro = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
+        superior = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
-        jLabel1 = new javax.swing.JLabel();
+        inferior = new javax.swing.JPanel();
+        Nuevo = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
+        derecha = new javax.swing.JPanel();
+        izquierda = new javax.swing.JPanel();
 
         jButton3.setText("Nuevo");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
@@ -318,36 +321,11 @@ public class CargaArchivo extends javax.swing.JFrame {
         });
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("BackBox - Carga Masiva de datos");
         setPreferredSize(new java.awt.Dimension(815, 560));
 
-        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        Nuevo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-mdpi/ic_add_black_24dp.png"))); // NOI18N
-        Nuevo.setText("CARGAR");
-        Nuevo.setBorder(null);
-        Nuevo.setBorderPainted(false);
-        Nuevo.setContentAreaFilled(false);
-        Nuevo.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        Nuevo.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        Nuevo.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
-        Nuevo.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        Nuevo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                NuevoActionPerformed(evt);
-            }
-        });
-        jPanel1.add(Nuevo, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 460, 82, -1));
-
-        jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-xhdpi/ic_arrow_back_black_24dp.png"))); // NOI18N
-        jButton4.setBorder(null);
-        jButton4.setOpaque(false);
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
-            }
-        });
-        jPanel1.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 450, -1, -1));
+        centro.setBackground(new java.awt.Color(255, 255, 255));
+        centro.setLayout(new javax.swing.BoxLayout(centro, javax.swing.BoxLayout.LINE_AXIS));
 
         jTable1.setDropMode(javax.swing.DropMode.INSERT_ROWS);
         jTable1.setEditingColumn(0);
@@ -355,29 +333,69 @@ public class CargaArchivo extends javax.swing.JFrame {
         jTable1.setGridColor(new java.awt.Color(102, 102, 102));
         jScrollPane2.setViewportView(jTable1);
 
-        jPanel1.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(15, 65, 770, 370));
+        centro.add(jScrollPane2);
 
-        jLabel2.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        jLabel2.setText("Cantidad");
-        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 40, -1, -1));
+        getContentPane().add(centro, java.awt.BorderLayout.CENTER);
 
+        superior.setBackground(java.awt.Color.white);
+        superior.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
+
+        jLabel2.setFont(new java.awt.Font("Segoe UI Light", 1, 14)); // NOI18N
+        jLabel2.setText("Cantidad:");
+        jLabel2.setPreferredSize(new java.awt.Dimension(70, 25));
+        superior.add(jLabel2);
+
+        jTextField1.setFont(new java.awt.Font("Segoe UI Light", 0, 11)); // NOI18N
         jTextField1.setEnabled(false);
-        jPanel1.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(693, 40, 91, -1));
+        jTextField1.setMinimumSize(new java.awt.Dimension(250, 20));
+        jTextField1.setPreferredSize(new java.awt.Dimension(250, 20));
+        superior.add(jTextField1);
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel1.setText("CARGA MASIVA DE DATOS");
-        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 40, -1, -1));
+        getContentPane().add(superior, java.awt.BorderLayout.PAGE_START);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 804, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 539, Short.MAX_VALUE)
-        );
+        inferior.setBackground(java.awt.Color.white);
+        inferior.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
+
+        Nuevo.setFont(new java.awt.Font("Segoe UI Light", 0, 11)); // NOI18N
+        Nuevo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-mdpi/ic_attach_file_black_24dp.png"))); // NOI18N
+        Nuevo.setText("Cargar");
+        Nuevo.setBorder(null);
+        Nuevo.setBorderPainted(false);
+        Nuevo.setContentAreaFilled(false);
+        Nuevo.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        Nuevo.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        Nuevo.setMaximumSize(new java.awt.Dimension(55, 47));
+        Nuevo.setMinimumSize(new java.awt.Dimension(55, 47));
+        Nuevo.setPreferredSize(new java.awt.Dimension(55, 47));
+        Nuevo.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
+        Nuevo.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        Nuevo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                NuevoActionPerformed(evt);
+            }
+        });
+        inferior.add(Nuevo);
+
+        jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-xhdpi/ic_arrow_back_black_24dp.png"))); // NOI18N
+        jButton4.setBorder(null);
+        jButton4.setMaximumSize(new java.awt.Dimension(55, 47));
+        jButton4.setMinimumSize(new java.awt.Dimension(55, 47));
+        jButton4.setOpaque(false);
+        jButton4.setPreferredSize(new java.awt.Dimension(55, 47));
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
+        inferior.add(jButton4);
+
+        getContentPane().add(inferior, java.awt.BorderLayout.PAGE_END);
+
+        derecha.setBackground(java.awt.Color.white);
+        getContentPane().add(derecha, java.awt.BorderLayout.LINE_END);
+
+        izquierda.setBackground(java.awt.Color.white);
+        getContentPane().add(izquierda, java.awt.BorderLayout.LINE_START);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -406,13 +424,16 @@ public class CargaArchivo extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Nuevo;
+    private javax.swing.JPanel centro;
+    private javax.swing.JPanel derecha;
+    private javax.swing.JPanel inferior;
+    private javax.swing.JPanel izquierda;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextField1;
+    private javax.swing.JPanel superior;
     // End of variables declaration//GEN-END:variables
 }

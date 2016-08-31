@@ -17,6 +17,7 @@ public class acciones {
         this.cod_actividad = cod_seccion;
         this.accion = accion;
     }
+    
 
     public int getCod_seccion() {
         return cod_actividad;
@@ -32,6 +33,11 @@ public class acciones {
 
     public void setAccion(String accion) {
         this.accion = accion;
+    }
+
+    @Override
+    public String toString() {
+        return "acciones{" + "cod_actividad=" + cod_actividad + ", accion=" + accion + '}';
     }
 
    

@@ -775,7 +775,7 @@ public class PromocionRegistro extends javax.swing.JDialog {
 
     public void iniciar() {
         System.out.println("Tamañ de productos " + productos.size());
-        TablaModel t = new TablaModel(productos, 6);
+        TablaModel t = new TablaModel(productos, 6,1);
         t.calculeFrecuenciasPromocion();
         muevaLosDatosFre(t);
 

@@ -60,17 +60,17 @@ public class MenuRedireccionar {
 
     public void reDireccion() throws IOException, URISyntaxException, ClassNotFoundException, ClassNotFoundException, ClassNotFoundException {
         try {
-            if (CadenaMenu.equalsIgnoreCase("Lista Bodega")) {
+            if (CadenaMenu.equalsIgnoreCase("Bodega")) {
                 new Bodega(Usuario, listMenu, codEmpresa).setVisible(true);
-            } else if (CadenaMenu.equalsIgnoreCase("Lista Usuarios")) {
+            } else if (CadenaMenu.equalsIgnoreCase("Usuarios")) {
                 new Usuarios(Usuario, listMenu, codEmpresa).setVisible(true);
             } else if (CadenaMenu.equalsIgnoreCase("Crear Usuario")) {
                 new UsuariosRegistrar(this.parent, true).setVisible(true);
-            } else if (CadenaMenu.equalsIgnoreCase("Lista Rol")) {
+            } else if (CadenaMenu.equalsIgnoreCase("Rol")) {
                 new Roles(Usuario, listMenu, codEmpresa).setVisible(true);
             } else if (CadenaMenu.equalsIgnoreCase("Crear Rol")) {
                 new RolRegistrarF(this.parent, true).setVisible(true);
-            } else if (CadenaMenu.equalsIgnoreCase("Lista Proveedores")) {
+            } else if (CadenaMenu.equalsIgnoreCase("Proveedores")) {
                 new Provedores(Usuario, listMenu).setVisible(true);
             } else if (CadenaMenu.equalsIgnoreCase("Crear Proveedor")) {
                 new ProveedoresRegistrar(this.parent, true).setVisible(true);
@@ -106,14 +106,14 @@ public class MenuRedireccionar {
                 Desktop.getDesktop().browse(new URI("http://www.qmanager.com.co"));
             } else if (CadenaMenu.equalsIgnoreCase("Acerca De")) {
                 new AcercaDe(this.parent, true).setVisible(true);
-            } else if (CadenaMenu.equalsIgnoreCase("Lista Clientes")) {
+            } else if (CadenaMenu.equalsIgnoreCase("Clientes")) {
                 new Clientes(Usuario, listMenu, codEmpresa).setVisible(true);
             } else if (CadenaMenu.equalsIgnoreCase("Crear Cliente")) {
                 RegistroCliente r = null;
                 ArrayList<Producto> productos = new ArrayList();
                 r = new RegistroCliente(this.parent, true, productos, Usuario, listMenu, 2);
                 r.setVisible(true);
-            } else if (CadenaMenu.equalsIgnoreCase("Lista Iva")) {
+            } else if (CadenaMenu.equalsIgnoreCase(" Iva")) {
                 new MaestroIva(Usuario, listMenu).setVisible(true);
             } else if (CadenaMenu.equalsIgnoreCase("Promocion")) {
                 new Promociones(Usuario, listMenu).setVisible(true);

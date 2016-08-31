@@ -18,18 +18,20 @@ import javax.swing.ImageIcon;
 import javax.swing.JMenu;
 import Control.Entrada;
 import Control.Sequence;
+import Control.TablaModel;
+import vw.dialogs.Acciones;
 
 /**
  *
  * @author usuario
  */
-public class RolRegistrarPrueba extends javax.swing.JDialog {
-
+public class RolRegistrarPrueba extends javax.swing.JFrame {
 
     String nomRol = "";
     ArrayList<seccion> listaSeccion = new ArrayList();
     ArrayList<acciones> listaaccion = new ArrayList();
     ArrayList<ContenedorMenus> List_Menu = new ArrayList();
+    ArrayList<acciones> listAcciones = new ArrayList();
 
     /**
      * Creates new form RolActualizar
@@ -38,8 +40,7 @@ public class RolRegistrarPrueba extends javax.swing.JDialog {
      * @param modal
      * @param cod
      */
-    public RolRegistrarPrueba(java.awt.Frame parent, boolean modal) {
-        super(parent, modal);
+    public RolRegistrarPrueba() {
         initComponents();
 
 //        ContenedorMenus con_menu = new ContenedorMenus();
@@ -60,177 +61,208 @@ public class RolRegistrarPrueba extends javax.swing.JDialog {
         setIconImage(img.getImage());
     }
 
+    public void iniciar() {
+        System.out.println("Tamañ de productos " + listaaccion.size());
+        TablaModel t = new TablaModel(listaaccion, 1, 2);
+        t.RegistroRolTable();
+        muevaLosDatosFre(t);
+
+    }
+
+    public void Borrar() {
+        for (int i = 0; i < 1; i++) {
+            for (int k = 0; k < listaaccion.size() + 1; k++) {
+                jTable1.setValueAt("", k, i);
+            }
+        }
+        iniciar();
+    }
+
+    public void muevaLosDatosFre(TablaModel x) {
+        for (int i = 0; i < 1; i++) {
+            for (int k = 0; k < x.getNrofreq(); k++) {
+                jTable1.setValueAt(x.frecuencias[i][k], k, i);
+            }
+        }
+    }
+
     public void Insertar() throws ClassNotFoundException, SQLException {
-//        boolean cerrar = false;
-//        try {
-//            int codigo = Sequence.seque("select max(cod_rol) from rol");
-//            int codigoAct = Sequence.seque("select max(cod_detalleAc) from detalleactividad");
-//            Control.conectar();
-//            Control.con.setAutoCommit(false);
-//            int a = 0;
-//            boolean r = Control.ejecuteUpdate("insert into rol values(" + codigo + ",'" + jTextField3.getText() + "','A')");
-//            if (r) {
-//                System.out.println("insert rol");
-//                if (LisBodega.isSelected()) {
-//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",4)");
-//                    codigoAct++;
-//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",3)");
-//                    codigoAct++;
-//                }
-//                System.out.println("- " + a++);
-//                if (ListArti.isSelected() && NewCompra.isSelected()) {
-//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",9)");
-//                    codigoAct++;
-//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",10)");
-//                    codigoAct++;
-//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",3)");
-//                    codigoAct++;
-//                } else if (ListArti.isSelected()) {
-//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",9)");
-//                    codigoAct++;
-//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",3)");
-//                    codigoAct++;
-//
-//                } else if (NewCompra.isSelected()) {
-//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",10)");
-//                    codigoAct++;
-//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",3)");
-//                    codigoAct++;
-//
-//                }
-//                System.out.println("- " + a++);
-//                if (ListCate.isSelected() && NewCate.isSelected()) {
-//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",11)");
-//                    codigoAct++;
-//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",12)");
-//                    codigoAct++;
-//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",3)");
-//                    codigoAct++;
-//                } else if (ListCate.isSelected()) {
-//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",11)");
-//                    codigoAct++;
-//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",3)");
-//                    codigoAct++;
-//                } else if (NewCate.isSelected()) {
-//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",12)");
-//                    codigoAct++;
-//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",3)");
-//                    codigoAct++;
-//                }
-//                System.out.println("- " + a++);
-//                if (ListUsu.isSelected() && NewUsu.isSelected()) {
-//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",1)");
-//                    codigoAct++;
-//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",2)");
-//                    codigoAct++;
-//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",3)");
-//                    codigoAct++;
-//                } else if (ListUsu.isSelected()) {
-//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",1)");
-//                    codigoAct++;
-//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",3)");
-//                    codigoAct++;
-//                } else if (NewUsu.isSelected()) {
-//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",2)");
-//                    codigoAct++;
-//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",3)");
-//                    codigoAct++;
-//                }
-//                System.out.println("- " + a++);
-//                if (VVentas.isSelected()) {
-//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",2," + codigo + ",16)");
-//                    codigoAct++;
-//                }
-//                System.out.println("- " + a++);
-//                if (VDevol.isSelected()) {
-//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",2," + codigo + ",17)");
-//                    codigoAct++;
-//                }
-//
-//                if (VDiaria.isSelected()) {
-//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",2," + codigo + ",18)");
-//                    codigoAct++;
-//                }
-//                System.out.println("- " + a++);
-//                Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",2," + codigo + ",3)");
-//                codigoAct++;
-//                System.out.println("- " + a++);
-//                if (RVentas.isSelected()) {
-//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",3," + codigo + ",20)");
-//                    codigoAct++;
-//                }
-//
-//                if (rcompras.isSelected()) {
-//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",3," + codigo + ",21)");
-//                    codigoAct++;
-//                }
-//
-//                if (Rentradas.isSelected()) {
-//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",3," + codigo + ",22)");
-//                    codigoAct++;
-//                }
-//                Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",3," + codigo + ",3)");
-//                codigoAct++;
-//                System.out.println("- " + a++);
-//                if (ListPro.isSelected() && NewPro.isSelected()) {
-//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",5)");
-//                    codigoAct++;
-//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",6)");
-//                    codigoAct++;
-//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",3)");
-//                    codigoAct++;
-//                } else if (ListPro.isSelected()) {
-//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",5)");
-//                    codigoAct++;
-//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",3)");
-//                    codigoAct++;
-//                } else if (NewPro.isSelected()) {
-//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",6)");
-//                    codigoAct++;
-//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",3)");
-//                    codigoAct++;
-//                }
-//                System.out.println("- " + a++);
-//                if (ListRol.isSelected() && NewRol.isSelected()) {
-//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",7)");
-//                    codigoAct++;
-//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",8)");
-//                    codigoAct++;
-//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",3)");
-//                    codigoAct++;
-//                } else if (ListRol.isSelected()) {
-//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",7)");
-//                    codigoAct++;
-//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",3)");
-//                    codigoAct++;
-//                } else if (NewRol.isSelected()) {
-//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",8)");
-//                    codigoAct++;
-//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",3)");
-//                    codigoAct++;
-//                }
-//                if (ListClientes.isSelected()) {
-//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",30)");
-//                    codigoAct++;
-//                    Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",3)");
-//                    codigoAct++;
-//                }
-//            }
-//            cerrar = true;
-//        } catch (SQLException ex) {
-//            System.out.println("Error : " + ex.toString());
-//            cerrar = false;
-//        } finally {
-//            Control.con.commit();
-//            Control.con.setAutoCommit(true);
-//            Control.cerrarConexion();
-//        }
-//
-//        if (cerrar) {
-//            this.dispose();
-//        } else {
-//            Entrada.muestreMensajeV("Error Comuniquese con soporte");
-//        }
+        boolean cerrar = false;
+        try {
+            int codigo = Sequence.seque("select max(cod_rol) from rol");
+            int codigoAct = Sequence.seque("select max(cod_detalleAc) from detalleactividad");
+            Control.conectar();
+            Control.con.setAutoCommit(false);
+            int a = 0;
+            boolean validacion = false;
+            boolean r = Control.ejecuteUpdate("insert into rol values(" + codigo + ",'" + jTextField3.getText() + "','A')");
+            if (r) {
+                System.out.println("insert rol");
+                for (acciones object : listaaccion) {
+                    System.out.println("-- registrar - " + object.getAccion());
+                    validacion=false;
+                    if (object.getAccion().equalsIgnoreCase("Bodega")) {
+                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",4)");
+                        codigoAct++;
+                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",3)");
+                        codigoAct++;
+                    }
+
+                    if (object.getAccion().equalsIgnoreCase("Articulo") && object.getAccion().equalsIgnoreCase("Nueva Compra")) {
+                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",9)");
+                        codigoAct++;
+                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",10)");
+                        codigoAct++;
+                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",3)");
+                        codigoAct++;
+                    } else if (object.getAccion().equalsIgnoreCase("Articulo")) {
+                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",9)");
+                        codigoAct++;
+                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",3)");
+                        codigoAct++;
+
+                    } else if (object.getAccion().equalsIgnoreCase("Nueva Compra")) {
+                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",10)");
+                        codigoAct++;
+                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",3)");
+                        codigoAct++;
+
+                    }
+                    System.out.println("- " + a++);
+                    if (object.getAccion().equalsIgnoreCase("Categoria") && object.getAccion().equalsIgnoreCase("Crear Categoria")) {
+                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",11)");
+                        codigoAct++;
+                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",12)");
+                        codigoAct++;
+                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",3)");
+                        codigoAct++;
+                    } else if (object.getAccion().equalsIgnoreCase("Categoria")) {
+                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",11)");
+                        codigoAct++;
+                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",3)");
+                        codigoAct++;
+                    } else if (object.getAccion().equalsIgnoreCase("Crear Categoria")) {
+                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",12)");
+                        codigoAct++;
+                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",3)");
+                        codigoAct++;
+                    }
+
+                    if (object.getAccion().equalsIgnoreCase("Usuarios") && object.getAccion().equalsIgnoreCase("Crear Usuarios")) {
+                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",1)");
+                        codigoAct++;
+                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",2)");
+                        codigoAct++;
+                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",3)");
+                        codigoAct++;
+                    } else if (object.getAccion().equalsIgnoreCase("Usuarios")) {
+                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",1)");
+                        codigoAct++;
+                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",3)");
+                        codigoAct++;
+                    } else if (object.getAccion().equalsIgnoreCase("Crear Usuarios")) {
+                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",2)");
+                        codigoAct++;
+                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",3)");
+                        codigoAct++;
+                    }
+                    System.out.println("- " + a++);
+                    if (object.getAccion().equalsIgnoreCase("Realizar Venta")) {
+                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",2," + codigo + ",16)");
+                        codigoAct++;
+                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",2," + codigo + ",17)");
+                        codigoAct++;
+                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",2," + codigo + ",18)");
+                        codigoAct++;
+                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",2," + codigo + ",3)");
+                        codigoAct++;
+                    }
+
+                    if (object.getAccion().equalsIgnoreCase("Reporte Venta")) {
+                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",3," + codigo + ",20)");
+                        codigoAct++;
+                        validacion = true;
+                    }
+
+                    if (object.getAccion().equalsIgnoreCase("Reporte Compra")) {
+                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",3," + codigo + ",21)");
+                        codigoAct++;
+                        validacion = true;
+                    }
+
+                    if (object.getAccion().equalsIgnoreCase("Reporte Entrada y Salidas")) {
+                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",3," + codigo + ",22)");
+                        codigoAct++;
+                        validacion = true;
+                    }
+                    if (validacion) {
+                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",3," + codigo + ",3)");
+                        codigoAct++;
+                    }
+
+                    System.out.println("- " + a++);
+                    if (object.getAccion().equalsIgnoreCase("Proveedores") && object.getAccion().equalsIgnoreCase("Crear Proveedor")) {
+                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",5)");
+                        codigoAct++;
+                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",6)");
+                        codigoAct++;
+                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",3)");
+                        codigoAct++;
+                    } else if (object.getAccion().equalsIgnoreCase("Proveedores")) {
+                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",5)");
+                        codigoAct++;
+                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",3)");
+                        codigoAct++;
+                    } else if (object.getAccion().equalsIgnoreCase("Crear Proveedor")) {
+                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",6)");
+                        codigoAct++;
+                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",3)");
+                        codigoAct++;
+                    }
+                    System.out.println("- " + a++);
+                    if (object.getAccion().equalsIgnoreCase("Rol") && object.getAccion().equalsIgnoreCase("Crear Rol")) {
+                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",7)");
+                        codigoAct++;
+                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",8)");
+                        codigoAct++;
+                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",3)");
+                        codigoAct++;
+                    } else if (object.getAccion().equalsIgnoreCase("Rol")) {
+                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",7)");
+                        codigoAct++;
+                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",3)");
+                        codigoAct++;
+                    } else if (object.getAccion().equalsIgnoreCase("Crear Rol")) {
+                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",8)");
+                        codigoAct++;
+                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",3)");
+                        codigoAct++;
+                    }
+                    if (object.getAccion().equalsIgnoreCase("Clientes")) {
+                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",30)");
+                        codigoAct++;
+                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",3)");
+                        codigoAct++;
+                    }
+                }
+
+            }
+
+            cerrar = true;
+        } catch (SQLException ex) {
+            System.out.println("Error : " + ex.toString());
+            cerrar = false;
+        } finally {
+            Control.con.commit();
+            Control.con.setAutoCommit(true);
+            Control.cerrarConexion();
+        }
+
+        if (cerrar) {
+            this.dispose();
+        } else {
+            Entrada.muestreMensajeV("Error Comuniquese con soporte");
+        }
     }
 
     /**
@@ -251,6 +283,7 @@ public class RolRegistrarPrueba extends javax.swing.JDialog {
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
+        jButton3 = new javax.swing.JButton();
 
         jCheckBox2.setText("jCheckBox2");
 
@@ -303,33 +336,95 @@ public class RolRegistrarPrueba extends javax.swing.JDialog {
         jPanel1.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 340, -1, -1));
 
         jLabel1.setFont(new java.awt.Font("Segoe UI Light", 1, 18)); // NOI18N
-        jLabel1.setText("Acciones Menu");
+        jLabel1.setText("Funciones");
         jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 60, -1, -1));
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null},
+                {null},
+                {null},
+                {null},
+                {null},
+                {null},
+                {null},
+                {null},
+                {null},
+                {null},
+                {null},
+                {null},
+                {null},
+                {null},
+                {null},
+                {null},
+                {null},
+                {null},
+                {null},
+                {null},
+                {null},
+                {null},
+                {null},
+                {null},
+                {null},
+                {null},
+                {null},
+                {null},
+                {null},
+                {null},
+                {null},
+                {null},
+                {null},
+                {null},
+                {null},
+                {null},
+                {null},
+                {null},
+                {null},
+                {null},
+                {null},
+                {null},
+                {null},
+                {null},
+                {null},
+                {null},
+                {null},
+                {null},
+                {null},
+                {null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Acciones"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane1.setViewportView(jTable1);
 
-        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 90, 470, 220));
+        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 100, 580, 200));
+
+        jButton3.setText("Agregar");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 310, -1, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 697, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 697, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 403, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 403, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
@@ -346,6 +441,10 @@ public class RolRegistrarPrueba extends javax.swing.JDialog {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         this.dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        new Acciones(this, true).setVisible(true);
+    }//GEN-LAST:event_jButton3ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -392,6 +491,7 @@ public class RolRegistrarPrueba extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JCheckBox jCheckBox2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel4;

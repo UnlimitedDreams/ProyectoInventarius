@@ -201,7 +201,7 @@ public class ProductoRegistrar extends javax.swing.JDialog {
         if (proceso) {
             System.out.println("Entro a nueva ventana");
 
-            TablaModel t = new TablaModel(pr,7);
+            TablaModel t = new TablaModel(pr,7,1);
             t.DatosEntradaNueva();
 
             v.jTable2.getDefaultEditor(null);

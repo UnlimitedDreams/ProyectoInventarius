@@ -4,8 +4,9 @@
  */
 package Control;
 
-import java.awt.Component;
 import Modelo.Producto;
+import Modelo.acciones;
+import java.awt.Component;
 import java.util.ArrayList;
 import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
@@ -19,6 +20,7 @@ import javax.swing.table.TableCellRenderer;
 public class TablaModel implements TableCellRenderer {
 
     ArrayList<Producto> pro = new ArrayList();
+    ArrayList<acciones> ListAcciones = new ArrayList();
     public String frecuencias[][];
     int nrofreq;
 
@@ -30,11 +32,16 @@ public class TablaModel implements TableCellRenderer {
      * @param Columnas El parámetro columna define la cantidad de columnas para
      * crear la matriz.
      */
-    public TablaModel(ArrayList x, int Columnas) {
+    public TablaModel(ArrayList x, int Columnas, int condicion) {
         nuevo();
         frecuencias = new String[Columnas][x.size()];
         nrofreq = 0;
-        this.pro = x;
+        if (condicion == 1) {
+            this.pro = x;
+        } else if (condicion == 2) {
+            this.ListAcciones = x;
+        }
+
 //        Producto temp = null;
 //        for (int i = 0; i < x.size(); i++) {
 //            temp = (Producto) x.get(i);
@@ -50,6 +57,15 @@ public class TablaModel implements TableCellRenderer {
             frecuencias[1][nrofreq] = "" + pro.get(i).getNombre();
             frecuencias[2][nrofreq] = "" + pro.get(i).getPrecio_venta();
             frecuencias[3][nrofreq] = "" + pro.get(i).getCantidad();
+            nrofreq++;
+        }
+    }
+    
+        public void RegistroRolTable() {
+        acciones temp = null;
+        for (int i = 0; i < ListAcciones.size(); i++) {
+            temp = (acciones) ListAcciones.get(i);
+            frecuencias[0][nrofreq] = "" + ListAcciones.get(i).getAccion();
             nrofreq++;
         }
     }

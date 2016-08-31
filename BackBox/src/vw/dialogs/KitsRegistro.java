@@ -728,7 +728,7 @@ public class KitsRegistro extends javax.swing.JDialog {
 
     public void iniciar() {
         System.out.println("Tamañ de productos " + productos.size());
-        TablaModel t = new TablaModel(productos, 5);
+        TablaModel t = new TablaModel(productos, 5,1);
         t.calculeFrecuenciasKits();
         muevaLosDatosFre(t);
 
