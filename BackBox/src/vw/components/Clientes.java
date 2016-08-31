@@ -12,12 +12,10 @@ import Modelo.ContenedorMenus;
 import Modelo.MenuRedireccionar;
 import Modelo.acciones;
 import Modelo.seccion;
-import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.sql.ResultSetMetaData;
@@ -59,7 +57,6 @@ public class Clientes extends javax.swing.JFrame {
         inicio(1);
         this.usuario = nom;
         this.setLocationRelativeTo(null);
-        this.setResizable(false);
         URL url = getClass().getResource("/images/facelet/icon.png");
         ImageIcon img = new ImageIcon(url);
         setIconImage(img.getImage());
@@ -169,7 +166,7 @@ public class Clientes extends javax.swing.JFrame {
         Permisos();
     }
 
-    public void Permisos() throws ClassNotFoundException {
+    private void Permisos() throws ClassNotFoundException {
         try {
             Control.conectar();
             ArrayList<String> acciones = new ArrayList();
@@ -178,8 +175,8 @@ public class Clientes extends javax.swing.JFrame {
                 acciones.add(Control.rs.getString(1));
             }
             agregarUsuario.setEnabled(false);
-            jButton2.setEnabled(false);
-            jButton5.setEnabled(false);
+            borrar.setEnabled(false);
+            actualizar.setEnabled(false);
 
             String acci = "";
             for (String accione : acciones) {
@@ -187,9 +184,9 @@ public class Clientes extends javax.swing.JFrame {
                 if (acci.equalsIgnoreCase("CliCrear")) {
                     agregarUsuario.setEnabled(true);
                 } else if (acci.equalsIgnoreCase("CliEditar")) {
-                    jButton5.setEnabled(true);
+                    actualizar.setEnabled(true);
                 } else if (acci.equalsIgnoreCase("CliBorrar")) {
-                    jButton2.setEnabled(true);
+                    borrar.setEnabled(true);
                 }
             }
 
@@ -200,7 +197,7 @@ public class Clientes extends javax.swing.JFrame {
         }
     }
 
-    public void MenuAyuda() {
+    private void MenuAyuda() {
         ArrayList<String> Ayuda = new ArrayList();
         Ayuda.add("Ayuda en Linea");
         Ayuda.add("Linea");
@@ -251,14 +248,19 @@ public class Clientes extends javax.swing.JFrame {
     private void initComponents() {
 
         jButton3 = new javax.swing.JButton();
-        jPanel1 = new javax.swing.JPanel();
+        centro = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
-        volver = new javax.swing.JButton();
-        agregarUsuario = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
+        superior = new javax.swing.JPanel();
         buscaUsu = new javax.swing.JTextField();
+        inferior = new javax.swing.JPanel();
+        agregarUsuario = new javax.swing.JButton();
+        borrar = new javax.swing.JButton();
+        actualizar = new javax.swing.JButton();
+        jSeparator2 = new javax.swing.JSeparator();
+        volver = new javax.swing.JButton();
+        derecha = new javax.swing.JPanel();
+        izquierda = new javax.swing.JPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
         file = new javax.swing.JMenu();
         inicio = new javax.swing.JMenuItem();
@@ -275,26 +277,60 @@ public class Clientes extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Clientes - BackBox");
+        setMinimumSize(new java.awt.Dimension(800, 600));
+        setPreferredSize(new java.awt.Dimension(800, 600));
 
-        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+        centro.setBackground(new java.awt.Color(255, 255, 255));
 
         jTable1.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
         jScrollPane1.setViewportView(jTable1);
 
-        volver.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-xhdpi/ic_arrow_back_black_24dp.png"))); // NOI18N
-        volver.setBorder(null);
-        volver.setBorderPainted(false);
-        volver.setContentAreaFilled(false);
-        volver.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        volver.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        volver.setPreferredSize(new java.awt.Dimension(55, 47));
-        volver.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
-        volver.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        volver.addActionListener(new java.awt.event.ActionListener() {
+        javax.swing.GroupLayout centroLayout = new javax.swing.GroupLayout(centro);
+        centro.setLayout(centroLayout);
+        centroLayout.setHorizontalGroup(
+            centroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(centroLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 760, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        centroLayout.setVerticalGroup(
+            centroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(centroLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 448, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        getContentPane().add(centro, java.awt.BorderLayout.CENTER);
+
+        superior.setBackground(java.awt.Color.white);
+
+        buscaUsu.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
+        buscaUsu.setMinimumSize(new java.awt.Dimension(760, 40));
+        buscaUsu.setPreferredSize(new java.awt.Dimension(760, 40));
+        buscaUsu.setSelectionColor(new java.awt.Color(51, 0, 255));
+        buscaUsu.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                volverActionPerformed(evt);
+                buscaUsuActionPerformed(evt);
             }
         });
+        buscaUsu.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                buscaUsuKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                buscaUsuKeyReleased(evt);
+            }
+        });
+        superior.add(buscaUsu);
+
+        getContentPane().add(superior, java.awt.BorderLayout.PAGE_START);
+
+        inferior.setBackground(java.awt.Color.white);
+        java.awt.FlowLayout flowLayout1 = new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT);
+        flowLayout1.setAlignOnBaseline(true);
+        inferior.setLayout(flowLayout1);
 
         agregarUsuario.setFont(new java.awt.Font("Segoe UI Light", 0, 11)); // NOI18N
         agregarUsuario.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-mdpi/ic_add_black_24dp.png"))); // NOI18N
@@ -312,95 +348,72 @@ public class Clientes extends javax.swing.JFrame {
                 agregarUsuarioActionPerformed(evt);
             }
         });
+        inferior.add(agregarUsuario);
 
-        jButton2.setFont(new java.awt.Font("Segoe UI Light", 0, 11)); // NOI18N
-        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-mdpi/ic_delete_black_24dp.png"))); // NOI18N
-        jButton2.setText("Borrar");
-        jButton2.setBorder(null);
-        jButton2.setBorderPainted(false);
-        jButton2.setContentAreaFilled(false);
-        jButton2.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jButton2.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton2.setPreferredSize(new java.awt.Dimension(55, 47));
-        jButton2.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
-        jButton2.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        borrar.setFont(new java.awt.Font("Segoe UI Light", 0, 11)); // NOI18N
+        borrar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-mdpi/ic_delete_black_24dp.png"))); // NOI18N
+        borrar.setText("Borrar");
+        borrar.setBorder(null);
+        borrar.setBorderPainted(false);
+        borrar.setContentAreaFilled(false);
+        borrar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        borrar.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        borrar.setPreferredSize(new java.awt.Dimension(55, 47));
+        borrar.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
+        borrar.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        borrar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                borrarActionPerformed(evt);
             }
         });
+        inferior.add(borrar);
 
-        jButton5.setFont(new java.awt.Font("Segoe UI Light", 0, 11)); // NOI18N
-        jButton5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-mdpi/ic_update_black_24dp.png"))); // NOI18N
-        jButton5.setText("Actualizar");
-        jButton5.setBorder(null);
-        jButton5.setBorderPainted(false);
-        jButton5.setContentAreaFilled(false);
-        jButton5.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jButton5.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton5.setPreferredSize(new java.awt.Dimension(55, 47));
-        jButton5.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
-        jButton5.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jButton5.addActionListener(new java.awt.event.ActionListener() {
+        actualizar.setFont(new java.awt.Font("Segoe UI Light", 0, 11)); // NOI18N
+        actualizar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-mdpi/ic_update_black_24dp.png"))); // NOI18N
+        actualizar.setText("Actualizar");
+        actualizar.setBorder(null);
+        actualizar.setBorderPainted(false);
+        actualizar.setContentAreaFilled(false);
+        actualizar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        actualizar.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        actualizar.setPreferredSize(new java.awt.Dimension(55, 47));
+        actualizar.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
+        actualizar.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        actualizar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton5ActionPerformed(evt);
+                actualizarActionPerformed(evt);
             }
         });
+        inferior.add(actualizar);
 
-        buscaUsu.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
-        buscaUsu.setSelectionColor(new java.awt.Color(51, 0, 255));
-        buscaUsu.addActionListener(new java.awt.event.ActionListener() {
+        jSeparator2.setOrientation(javax.swing.SwingConstants.VERTICAL);
+        jSeparator2.setPreferredSize(new java.awt.Dimension(160, 40));
+        jSeparator2.setRequestFocusEnabled(false);
+        inferior.add(jSeparator2);
+
+        volver.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-xhdpi/ic_arrow_back_black_24dp.png"))); // NOI18N
+        volver.setBorder(null);
+        volver.setBorderPainted(false);
+        volver.setContentAreaFilled(false);
+        volver.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        volver.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        volver.setPreferredSize(new java.awt.Dimension(55, 47));
+        volver.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
+        volver.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        volver.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buscaUsuActionPerformed(evt);
+                volverActionPerformed(evt);
             }
         });
-        buscaUsu.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                buscaUsuKeyPressed(evt);
-            }
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                buscaUsuKeyReleased(evt);
-            }
-        });
+        inferior.add(volver);
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane1)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(0, 439, Short.MAX_VALUE)
-                        .addComponent(agregarUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(91, 91, 91)
-                        .addComponent(volver, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(56, 56, 56)
-                .addComponent(buscaUsu, javax.swing.GroupLayout.PREFERRED_SIZE, 667, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(17, 17, 17)
-                .addComponent(buscaUsu, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 376, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(volver, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(agregarUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
+        getContentPane().add(inferior, java.awt.BorderLayout.PAGE_END);
+
+        derecha.setBackground(java.awt.Color.white);
+        getContentPane().add(derecha, java.awt.BorderLayout.LINE_END);
+
+        izquierda.setBackground(java.awt.Color.white);
+        getContentPane().add(izquierda, java.awt.BorderLayout.LINE_START);
 
         file.setText("Archivo");
         file.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
@@ -439,17 +452,6 @@ public class Clientes extends javax.swing.JFrame {
 
         setJMenuBar(jMenuBar1);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -462,7 +464,7 @@ public class Clientes extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_volverActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void borrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_borrarActionPerformed
 
         try {
             borrar();
@@ -470,9 +472,9 @@ public class Clientes extends javax.swing.JFrame {
         } catch (Exception ex) {
             /*Nothing Here*/
         }
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_borrarActionPerformed
 
-    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+    private void actualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_actualizarActionPerformed
 
         try {
             Update();
@@ -482,7 +484,7 @@ public class Clientes extends javax.swing.JFrame {
             System.out.println("Error:" + ex.toString());
         }
 
-    }//GEN-LAST:event_jButton5ActionPerformed
+    }//GEN-LAST:event_actualizarActionPerformed
 
     private void agregarUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_agregarUsuarioActionPerformed
         try {
@@ -588,7 +590,7 @@ public class Clientes extends javax.swing.JFrame {
         }
     }
      
-    public void inicio(int condicion) throws ClassNotFoundException {
+    private void inicio(int condicion) throws ClassNotFoundException {
         Control.conectar();
         Producto temp = null;
         String query="";
@@ -633,20 +635,25 @@ public class Clientes extends javax.swing.JFrame {
      */
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton actualizar;
     private javax.swing.JButton agregarUsuario;
+    private javax.swing.JButton borrar;
     private javax.swing.JTextField buscaUsu;
+    private javax.swing.JPanel centro;
     private javax.swing.JMenuItem cerrarSesion;
+    private javax.swing.JPanel derecha;
     private javax.swing.JMenu file;
+    private javax.swing.JPanel inferior;
     private javax.swing.JMenuItem inicio;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JPanel izquierda;
     private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton5;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPopupMenu.Separator jSeparator1;
+    private javax.swing.JSeparator jSeparator2;
     private javax.swing.JTable jTable1;
     private javax.swing.JMenuItem salir;
+    private javax.swing.JPanel superior;
     private javax.swing.JButton volver;
     // End of variables declaration//GEN-END:variables
 }

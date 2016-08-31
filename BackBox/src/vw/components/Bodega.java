@@ -367,7 +367,7 @@ public class Bodega extends javax.swing.JFrame {
 
         busca.setFont(new java.awt.Font("Segoe UI Light", 0, 18)); // NOI18N
         busca.setMinimumSize(new java.awt.Dimension(600, 40));
-        busca.setPreferredSize(new java.awt.Dimension(780, 40));
+        busca.setPreferredSize(new java.awt.Dimension(760, 40));
         busca.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buscaActionPerformed(evt);

@@ -11,15 +11,11 @@ import Modelo.exportar_excel;
 import java.awt.Toolkit;
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.sql.ResultSetMetaData;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -40,11 +36,10 @@ public class DatallesPorFecha extends javax.swing.JFrame {
         this.ListAcciones = acciones;
         this.setLocationRelativeTo(null);
         setTitle("REPORTE ENTRADA Y SALIDA DE PRODUCTOS EN BODEGA");
-        this.setResizable(false);
         setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/facelet/icon.png")));
         Date fecha = new Date();
-        jDateChooser1.setDate(fecha);
-        jDateChooser2.setDate(fecha);
+        fechaInicial.setDate(fecha);
+        fechaFinal.setDate(fecha);
 
     }
 
@@ -52,11 +47,11 @@ public class DatallesPorFecha extends javax.swing.JFrame {
         Control.conectar();
         Producto temp = null;
         String query = "";
-        Date date = jDateChooser1.getDate();
+        Date date = fechaInicial.getDate();
         SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd");
         String fecha = format2.format(date);
 
-        Date date2 = jDateChooser2.getDate();
+        Date date2 = fechaFinal.getDate();
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         String fecha2 = format2.format(date2);
 
@@ -115,42 +110,108 @@ public class DatallesPorFecha extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
+        centro = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
-        volver = new javax.swing.JButton();
-        exportar = new javax.swing.JButton();
-        jLabel2 = new javax.swing.JLabel();
-        jDateChooser1 = new com.alee.extended.date.WebDateField();
-        jDateChooser2 = new com.alee.extended.date.WebDateField();
-        jButton1 = new javax.swing.JButton();
+        superior = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
+        fechaInicial = new com.alee.extended.date.WebDateField();
+        jSeparator4 = new javax.swing.JSeparator();
+        jLabel2 = new javax.swing.JLabel();
+        fechaFinal = new com.alee.extended.date.WebDateField();
+        jSeparator3 = new javax.swing.JSeparator();
+        jButton1 = new javax.swing.JButton();
+        inferior = new javax.swing.JPanel();
+        exportar = new javax.swing.JButton();
+        jSeparator2 = new javax.swing.JSeparator();
+        volver = new javax.swing.JButton();
+        derecha = new javax.swing.JPanel();
+        izquierda = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setMinimumSize(new java.awt.Dimension(800, 600));
+        setPreferredSize(new java.awt.Dimension(800, 600));
 
-        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        jPanel1.setPreferredSize(new java.awt.Dimension(750, 561));
-        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        centro.setBackground(new java.awt.Color(255, 255, 255));
+        centro.setPreferredSize(new java.awt.Dimension(750, 561));
 
+        jTable1.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
         jScrollPane1.setViewportView(jTable1);
 
-        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 80, 700, 350));
+        javax.swing.GroupLayout centroLayout = new javax.swing.GroupLayout(centro);
+        centro.setLayout(centroLayout);
+        centroLayout.setHorizontalGroup(
+            centroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(centroLayout.createSequentialGroup()
+                .addGap(9, 9, 9)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 761, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        centroLayout.setVerticalGroup(
+            centroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(centroLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 471, Short.MAX_VALUE)
+                .addContainerGap())
+        );
 
-        volver.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-xhdpi/ic_arrow_back_black_24dp.png"))); // NOI18N
-        volver.setBorder(null);
-        volver.setBorderPainted(false);
-        volver.setContentAreaFilled(false);
-        volver.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        volver.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        volver.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
-        volver.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        volver.addActionListener(new java.awt.event.ActionListener() {
+        getContentPane().add(centro, java.awt.BorderLayout.CENTER);
+
+        superior.setBackground(java.awt.Color.white);
+        java.awt.FlowLayout flowLayout1 = new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 5, 10);
+        flowLayout1.setAlignOnBaseline(true);
+        superior.setLayout(flowLayout1);
+
+        jLabel6.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
+        jLabel6.setText("Fecha Inicial");
+        superior.add(jLabel6);
+
+        fechaInicial.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
+        fechaInicial.setMinimumSize(new java.awt.Dimension(130, 30));
+        fechaInicial.setPreferredSize(new java.awt.Dimension(130, 30));
+        superior.add(fechaInicial);
+
+        jSeparator4.setOrientation(javax.swing.SwingConstants.VERTICAL);
+        jSeparator4.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        jSeparator4.setPreferredSize(new java.awt.Dimension(30, 30));
+        jSeparator4.setRequestFocusEnabled(false);
+        superior.add(jSeparator4);
+
+        jLabel2.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
+        jLabel2.setText("Fecha Final");
+        superior.add(jLabel2);
+
+        fechaFinal.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
+        fechaFinal.setMinimumSize(new java.awt.Dimension(130, 30));
+        fechaFinal.setPreferredSize(new java.awt.Dimension(130, 30));
+        superior.add(fechaFinal);
+
+        jSeparator3.setOrientation(javax.swing.SwingConstants.VERTICAL);
+        jSeparator3.setPreferredSize(new java.awt.Dimension(160, 30));
+        jSeparator3.setRequestFocusEnabled(false);
+        superior.add(jSeparator3);
+
+        jButton1.setFont(new java.awt.Font("Segoe UI Light", 0, 11)); // NOI18N
+        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-mdpi/ic_find_in_page_black_24dp.png"))); // NOI18N
+        jButton1.setToolTipText("Buscar");
+        jButton1.setBorder(null);
+        jButton1.setBorderPainted(false);
+        jButton1.setContentAreaFilled(false);
+        jButton1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jButton1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButton1.setPreferredSize(new java.awt.Dimension(30, 30));
+        jButton1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                volverActionPerformed(evt);
+                jButton1ActionPerformed(evt);
             }
         });
-        jPanel1.add(volver, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 470, -1, -1));
+        superior.add(jButton1);
+
+        getContentPane().add(superior, java.awt.BorderLayout.PAGE_START);
+
+        inferior.setBackground(java.awt.Color.white);
+        inferior.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
 
         exportar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-xhdpi/export_to_excel_24dp.png"))); // NOI18N
         exportar.setBorder(null);
@@ -158,6 +219,7 @@ public class DatallesPorFecha extends javax.swing.JFrame {
         exportar.setContentAreaFilled(false);
         exportar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         exportar.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        exportar.setPreferredSize(new java.awt.Dimension(55, 47));
         exportar.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
         exportar.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         exportar.addActionListener(new java.awt.event.ActionListener() {
@@ -165,44 +227,36 @@ public class DatallesPorFecha extends javax.swing.JFrame {
                 exportarActionPerformed(evt);
             }
         });
-        jPanel1.add(exportar, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 470, -1, -1));
+        inferior.add(exportar);
 
-        jLabel2.setText("Fecha Final");
-        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 20, -1, -1));
-        jPanel1.add(jDateChooser1, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 17, 170, -1));
-        jPanel1.add(jDateChooser2, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 17, 170, -1));
+        jSeparator2.setOrientation(javax.swing.SwingConstants.VERTICAL);
+        jSeparator2.setPreferredSize(new java.awt.Dimension(160, 40));
+        jSeparator2.setRequestFocusEnabled(false);
+        inferior.add(jSeparator2);
 
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-mdpi/ic_find_in_page_black_24dp.png"))); // NOI18N
-        jButton1.setText("Buscar");
-        jButton1.setBorder(null);
-        jButton1.setBorderPainted(false);
-        jButton1.setContentAreaFilled(false);
-        jButton1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jButton1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton1.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
-        jButton1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        volver.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-xhdpi/ic_arrow_back_black_24dp.png"))); // NOI18N
+        volver.setBorder(null);
+        volver.setBorderPainted(false);
+        volver.setContentAreaFilled(false);
+        volver.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        volver.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        volver.setPreferredSize(new java.awt.Dimension(55, 47));
+        volver.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
+        volver.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        volver.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                volverActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(543, 10, 50, 50));
+        inferior.add(volver);
 
-        jLabel6.setText("Fecha Inicial");
-        jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, -1, -1));
+        getContentPane().add(inferior, java.awt.BorderLayout.PAGE_END);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 732, javax.swing.GroupLayout.PREFERRED_SIZE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 545, Short.MAX_VALUE)
-                .addGap(0, 0, 0))
-        );
+        derecha.setBackground(java.awt.Color.white);
+        getContentPane().add(derecha, java.awt.BorderLayout.LINE_END);
+
+        izquierda.setBackground(java.awt.Color.white);
+        getContentPane().add(izquierda, java.awt.BorderLayout.LINE_START);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -264,15 +318,22 @@ public class DatallesPorFecha extends javax.swing.JFrame {
      */
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel centro;
+    private javax.swing.JPanel derecha;
     private javax.swing.JButton exportar;
+    private com.alee.extended.date.WebDateField fechaFinal;
+    private com.alee.extended.date.WebDateField fechaInicial;
+    private javax.swing.JPanel inferior;
+    private javax.swing.JPanel izquierda;
     private javax.swing.JButton jButton1;
-    private com.alee.extended.date.WebDateField jDateChooser1;
-    private com.alee.extended.date.WebDateField jDateChooser2;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JSeparator jSeparator3;
+    private javax.swing.JSeparator jSeparator4;
     private javax.swing.JTable jTable1;
+    private javax.swing.JPanel superior;
     private javax.swing.JButton volver;
     // End of variables declaration//GEN-END:variables
 }
