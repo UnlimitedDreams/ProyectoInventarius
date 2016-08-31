@@ -340,7 +340,7 @@ public class Venta extends javax.swing.JFrame implements KeyListener {
 
     public void iniciar() {
         System.out.println("Tamañ de productos " + productos.size());
-        TablaModel t = new TablaModel(productos, 5);
+        TablaModel t = new TablaModel(productos, 5,1);
         t.calculeFrecuenciasV();
         muevaLosDatosFre(t);
 

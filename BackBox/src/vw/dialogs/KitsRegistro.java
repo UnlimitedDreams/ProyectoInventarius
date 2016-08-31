@@ -60,6 +60,7 @@ public class KitsRegistro extends javax.swing.JDialog {
         this.Costo.setText("0");
         this.precio.setText("0");
         this.Cantidad.setText("0");
+        this.iva.setText("0");
         this.kit = (Kits) parent;
         Numerador();
         nombre.requestFocus();
@@ -104,16 +105,15 @@ public class KitsRegistro extends javax.swing.JDialog {
             int codKitDel = Sequence.seque("select max(codKitDet) from KitDetalle");
             Control.conectar();
             Control.con.setAutoCommit(false);
-            int actu = 0;
             r = Control.ejecuteUpdate("insert into Kits values('" + codigo.getText().trim() + "',"
                     + Double.parseDouble(Costo.getText()) + "," + Double.parseDouble(precio.getText())
-                    + "," + Integer.parseInt(Cantidad.getText()) + ",'A'," + numKit + ",'" + nombre.getText() + "'," + actu + ")");
+                    + "," + Integer.parseInt(Cantidad.getText()) + ",'A'," + numKit + ",'" + nombre.getText() + "'," + Double.parseDouble(iva.getText())  + ")");
             int canti = 0;
             for (Producto LiProducto : productos) {
                 r = Control.ejecuteUpdate("insert into KitDetalle values(" + codKitDel + ",'" + codigo.getText().trim() + "',"
                         + LiProducto.getCodigoProducto() + "," + LiProducto.getPrecio_venta() + "," + LiProducto.getCantidadKit() + ")");
                 codKitDel++;
-                canti = LiProducto.getCantidad() - (Integer.parseInt(Cantidad.getText())*LiProducto.getCantidadKit());
+                canti = LiProducto.getCantidad() - (Integer.parseInt(Cantidad.getText()) * LiProducto.getCantidadKit());
                 r = Control.ejecuteUpdate("update producto set cantidad=" + canti + " where cod_producto=" + LiProducto.getCodigoProducto());
                 canti = 0;
             }
@@ -234,6 +234,8 @@ public class KitsRegistro extends javax.swing.JDialog {
         precio = new javax.swing.JTextField();
         nombre = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        iva = new javax.swing.JTextField();
 
         jCheckBox2.setText("jCheckBox2");
 
@@ -449,8 +451,8 @@ public class KitsRegistro extends javax.swing.JDialog {
         jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 220, 650, 160));
 
         jLabel4.setFont(new java.awt.Font("Segoe UI Light", 1, 14)); // NOI18N
-        jLabel4.setText("Cantidad");
-        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 100, 80, -1));
+        jLabel4.setText("Unidades");
+        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 100, 80, -1));
 
         Costo.setFont(new java.awt.Font("Segoe UI Light", 0, 18)); // NOI18N
         Costo.setEnabled(false);
@@ -471,7 +473,7 @@ public class KitsRegistro extends javax.swing.JDialog {
                 CantidadActionPerformed(evt);
             }
         });
-        jPanel1.add(Cantidad, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 100, 160, -1));
+        jPanel1.add(Cantidad, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 100, 160, -1));
 
         precio.setFont(new java.awt.Font("Segoe UI Light", 0, 18)); // NOI18N
         jPanel1.add(precio, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 60, 160, -1));
@@ -482,6 +484,14 @@ public class KitsRegistro extends javax.swing.JDialog {
         jLabel5.setFont(new java.awt.Font("Segoe UI Light", 1, 14)); // NOI18N
         jLabel5.setText("Precio");
         jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 60, -1, -1));
+
+        jLabel3.setFont(new java.awt.Font("Segoe UI Light", 1, 14)); // NOI18N
+        jLabel3.setText("Iva:");
+        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 100, -1, -1));
+
+        iva.setFont(new java.awt.Font("Segoe UI Light", 0, 18)); // NOI18N
+        iva.setEnabled(false);
+        jPanel1.add(iva, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 100, 160, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -560,12 +570,13 @@ public class KitsRegistro extends javax.swing.JDialog {
                     try {
                         Control.conectar();
                         Producto temp = null;
-                        String query = "select nombre,precio_venta,costo,cod_producto,cantidad from producto\n"
-                                + "where\n"
+                        String query = "select nombre,precio_venta,costo,cod_producto,cantidad,"
+                                + "cast(((precio_venta-costo)*(maestro_iva.porcentaje/100)) as numeric(10)) from producto,maestro_iva\n"
+                                + "where producto.iva=maestro_iva.codiva and \n"
                                 + "producto.estado='A' and rtrim(ltrim(serie_producto))='" + cod.trim() + "'";
                         Control.ejecuteQuery(query);
                         String nom = "";
-                        double precio = 0, costo = 0;
+                        double precio = 0, costo = 0, Viva = 0;
                         int cantidad = 0;
                         int cod_producto = 0;
                         boolean r = false;
@@ -576,14 +587,17 @@ public class KitsRegistro extends javax.swing.JDialog {
                             costo = Control.rs.getDouble(3);
                             cod_producto = Control.rs.getInt(4);
                             cantidad = Control.rs.getInt(5);
+                            Viva = Control.rs.getDouble(6);
                         }
                         if (r) {
                             temp = new Producto(cod, cod_producto, nom, costo, precio);
                             temp.setCantidad(cantidad);
                             temp.setCantidadKit(1);
+                            temp.setValorIva(Viva);
                             productos.add(temp);
                             jTextField2.setText("");
                             Costo.setText("" + (Double.parseDouble(Costo.getText()) + costo));
+                            this.iva.setText("" + (Double.parseDouble(iva.getText()) + Viva));
                             this.precio.setText("" + (Double.parseDouble(this.precio.getText()) + precio));
                         } else {
                             Entrada.muestreMensajeV("Codigo  de producto no valido");
@@ -714,7 +728,7 @@ public class KitsRegistro extends javax.swing.JDialog {
 
     public void iniciar() {
         System.out.println("Tamañ de productos " + productos.size());
-        TablaModel t = new TablaModel(productos, 5);
+        TablaModel t = new TablaModel(productos, 5,1);
         t.calculeFrecuenciasKits();
         muevaLosDatosFre(t);
 
@@ -862,10 +876,12 @@ public class KitsRegistro extends javax.swing.JDialog {
     private javax.swing.JTextField Costo;
     private javax.swing.JScrollPane c;
     private javax.swing.JTextField codigo;
+    private javax.swing.JTextField iva;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JCheckBox jCheckBox2;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;

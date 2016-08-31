@@ -1729,7 +1729,7 @@ public class KitsUpdate extends javax.swing.JDialog {
     }//GEN-LAST:event_CateMouseClicked
 
     public void iniciar() {
-        TablaModel t = new TablaModel(productos, 6);
+        TablaModel t = new TablaModel(productos, 6,1);
         t.calculeFrecuenciasPromocion();
         muevaLosDatosFre(t);
 

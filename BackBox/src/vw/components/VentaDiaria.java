@@ -225,7 +225,7 @@ public class VentaDiaria extends javax.swing.JFrame {
         Control.conectar();
         Producto temp = null;
         String query = "select to_char(fecha_venta, 'HH24:MI:SS')  \"Hora\","
-                + " cod_factura \"Código Factura\","
+                + " cod_factura \"Numero Factura\","
                 + " total_venta \"Venta Total\","
                 + " Upper(b.descripcion) \"Detalle\" "
                 + "from venta a, tipo_venta b\n"

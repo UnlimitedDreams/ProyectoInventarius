@@ -107,7 +107,6 @@ public class UsuariosRegistrar extends javax.swing.JDialog {
             while (Control.rs.next()) {
                 r = true;
             }
-            Control.cerrarConexion();
         } catch (Exception ex) {
         } finally {
             Control.cerrarConexion();
@@ -121,6 +120,7 @@ public class UsuariosRegistrar extends javax.swing.JDialog {
                 int cod_rol = traerCod();
                 int S = sexo.getSelectedIndex();
                 int usu = Sequence.seque("select max(cod_usuario) from usuario  ");
+                boolean f = false;
                 try {
                     Control.conectar();
                     Control.con.setAutoCommit(false);
@@ -130,34 +130,35 @@ public class UsuariosRegistrar extends javax.swing.JDialog {
                     } else if (S == 2) {
                         sexo = "F";
                     }
-                    boolean r = Control.ejecuteUpdate("insert into persona values("
+                    f = Control.ejecuteUpdate("insert into persona values("
                             + cedula.getText() + ",'"
                             + nombre.getText() + "','"
                             + apellido.getText() + "','"
                             + sexo + "',"
                             + "'A','" + email.getText() + "','" + telefono.getText() + "','" + cedular.getText() + "')");
-                    if (r) {
+                    if (f) {
 
-                        boolean f = Control.ejecuteUpdate("insert into usuario"
+                        f = Control.ejecuteUpdate("insert into usuario"
                                 + " values(" + usu + ",'" + usuario.getText() + "','"
                                 + clave.getText() + "'," + cod_rol + "," + cedula.getText() + ")");
-                        if (f) {
-                            Entrada.muestreMensajeV("REGISTRO EXITOSO", javax.swing.JOptionPane.INFORMATION_MESSAGE);
-                            Control.cerrarConexion();
-                            this.dispose();
-                        } else {
-                            Entrada.muestreMensajeV("ERROR ", javax.swing.JOptionPane.ERROR_MESSAGE);
-                        }
+
                     } else {
                         Entrada.muestreMensajeV("ERROR ", javax.swing.JOptionPane.ERROR_MESSAGE);
                     }
 
                 } catch (Exception ex) {
-
+                    f=false;
                 } finally {
                     Control.con.commit();
                     Control.con.setAutoCommit(true);
                     Control.cerrarConexion();
+                }
+
+                if (f) {
+                    Entrada.muestreMensajeV("REGISTRO EXITOSO", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+                    this.dispose();
+                } else {
+                    Entrada.muestreMensajeV("ERROR ", javax.swing.JOptionPane.ERROR_MESSAGE);
                 }
 
             } else {
@@ -214,11 +215,10 @@ public class UsuariosRegistrar extends javax.swing.JDialog {
             while (Control.rs.next()) {
                 cod = Control.rs.getInt(1);
             }
-            Control.cerrarConexion();
 
         } catch (Exception ex) {
             System.out.println("error " + ex.getMessage());
-        }finally{
+        } finally {
             Control.cerrarConexion();
         }
         return cod;
