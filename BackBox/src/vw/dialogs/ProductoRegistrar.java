@@ -75,7 +75,7 @@ public class ProductoRegistrar extends javax.swing.JDialog {
             listIvas.clear();
             //iva.addItem("No Aplica");
             Control.conectar();
-            Control.ejecuteQuery("select codiva,porcentaje from maestro_iva");
+            Control.ejecuteQuery("select codiva,porcentaje from maestro_iva where estado='A'");
             while (Control.rs.next()) {
                 iva.addItem(Control.rs.getString(2) + " %");
                 listIvas.add(new List_Categoria(Control.rs.getInt(1), "" + Control.rs.getInt(2)));
