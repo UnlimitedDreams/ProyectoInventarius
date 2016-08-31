@@ -116,6 +116,7 @@ public class DatallesPorFecha extends javax.swing.JFrame {
         superior = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
         fechaInicial = new com.alee.extended.date.WebDateField();
+        jSeparator4 = new javax.swing.JSeparator();
         jLabel2 = new javax.swing.JLabel();
         fechaFinal = new com.alee.extended.date.WebDateField();
         jSeparator3 = new javax.swing.JSeparator();
@@ -150,30 +151,37 @@ public class DatallesPorFecha extends javax.swing.JFrame {
             centroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(centroLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 479, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 471, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
         getContentPane().add(centro, java.awt.BorderLayout.CENTER);
 
         superior.setBackground(java.awt.Color.white);
-        java.awt.FlowLayout flowLayout1 = new java.awt.FlowLayout(java.awt.FlowLayout.LEFT);
+        java.awt.FlowLayout flowLayout1 = new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 5, 10);
         flowLayout1.setAlignOnBaseline(true);
         superior.setLayout(flowLayout1);
 
-        jLabel6.setFont(new java.awt.Font("Segoe UI Light", 0, 11)); // NOI18N
+        jLabel6.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
         jLabel6.setText("Fecha Inicial");
         superior.add(jLabel6);
 
+        fechaInicial.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
         fechaInicial.setMinimumSize(new java.awt.Dimension(130, 30));
         fechaInicial.setPreferredSize(new java.awt.Dimension(130, 30));
         superior.add(fechaInicial);
 
-        jLabel2.setFont(new java.awt.Font("Segoe UI Light", 0, 11)); // NOI18N
+        jSeparator4.setOrientation(javax.swing.SwingConstants.VERTICAL);
+        jSeparator4.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        jSeparator4.setPreferredSize(new java.awt.Dimension(30, 30));
+        jSeparator4.setRequestFocusEnabled(false);
+        superior.add(jSeparator4);
+
+        jLabel2.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
         jLabel2.setText("Fecha Final");
         superior.add(jLabel2);
 
-        fechaFinal.setFont(new java.awt.Font("Segoe UI Light", 0, 11)); // NOI18N
+        fechaFinal.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
         fechaFinal.setMinimumSize(new java.awt.Dimension(130, 30));
         fechaFinal.setPreferredSize(new java.awt.Dimension(130, 30));
         superior.add(fechaFinal);
@@ -191,7 +199,7 @@ public class DatallesPorFecha extends javax.swing.JFrame {
         jButton1.setContentAreaFilled(false);
         jButton1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jButton1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton1.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
+        jButton1.setPreferredSize(new java.awt.Dimension(30, 30));
         jButton1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -211,6 +219,7 @@ public class DatallesPorFecha extends javax.swing.JFrame {
         exportar.setContentAreaFilled(false);
         exportar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         exportar.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        exportar.setPreferredSize(new java.awt.Dimension(55, 47));
         exportar.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
         exportar.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         exportar.addActionListener(new java.awt.event.ActionListener() {
@@ -231,6 +240,7 @@ public class DatallesPorFecha extends javax.swing.JFrame {
         volver.setContentAreaFilled(false);
         volver.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         volver.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        volver.setPreferredSize(new java.awt.Dimension(55, 47));
         volver.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
         volver.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         volver.addActionListener(new java.awt.event.ActionListener() {
@@ -321,6 +331,7 @@ public class DatallesPorFecha extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
+    private javax.swing.JSeparator jSeparator4;
     private javax.swing.JTable jTable1;
     private javax.swing.JPanel superior;
     private javax.swing.JButton volver;
