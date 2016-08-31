@@ -5,12 +5,9 @@
  */
 package vw.components;
 
-import Control.Entrada;
+import Control.*;
 import Modelo.Producto;
 import vw.main.Menu;
-import Control.Control;
-import Control.Sequence;
-import Control.TablaModel;
 import Modelo.List_Categoria;
 import java.awt.Toolkit;
 import java.net.URL;
@@ -46,49 +43,45 @@ public class CargaArchivo extends javax.swing.JFrame {
             this.nombre = "";
             this.ListAcciones = acciones;
             this.setLocationRelativeTo(null);
+            this.setResizable(false);
             this.p = p;
-            ConfigurarIva();
+            ConfigurarInicio();
             iniciar();
             cargarUsuario();
             jTextField1.setText("" + p.size());
             URL url = getClass().getResource("/images/facelet/icon.png");
             ImageIcon img = new ImageIcon(url);
-            this.setIconImage(img.getImage());
+            setIconImage(img.getImage());
         } catch (SQLException ex) {
             Logger.getLogger(CargaArchivo.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }
 
-    private void ConfigurarIva() throws SQLException {
-        try {
-            listIvas.clear();
-            Control.conectar();
-            Control.ejecuteQuery("select * from CargaIva()");
-            while (Control.rs.next()) {
-                listIvas.add(new List_Categoria(Control.rs.getInt(1), "" + Control.rs.getInt(2)));
-            }
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(Venta.class
-                    .getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            Control.cerrarConexion();
+    public void cargarUsuario() throws SQLException, ClassNotFoundException {
+        Control.conectar();
+        Control.ejecuteQuery("select * from CargaUsuario(" + usuario + ")");
+        String nombre = "";
+        while (Control.rs.next()) {
+            nombre = Control.rs.getString(1) + " " + Control.rs.getString(2);
         }
-
+        this.nombre = nombre;
+        Control.cerrarConexion();
     }
 
-    private void iniciar() throws SQLException {
+    public void ConfigurarInicio() throws SQLException {
         try {
-            String r = "";
             Control.conectar();
-            Control.con.setAutoCommit(false);
+            
+            String r = "";
+            Control.conectar();            
             Producto temp = null;
             int cantidad = 0;
             int iva = 0;
             int ivaF = 0;
             for (int i = 0; i < p.size(); i++) {
                 temp = (Producto) p.get(i);
-                Control.ejecuteQuery("select * from CargaProductoBuqueda('" + temp.getCodigo() + "')");
+                Control.ejecuteQuery("select * from CargaProductoBuqueda('"+temp.getCodigo()+"')");
                 if (Control.rs.next()) {
                     temp.setEsta("Existe");
                     temp.setCantBD(Control.rs.getInt(1));
@@ -107,12 +100,30 @@ public class CargaArchivo extends javax.swing.JFrame {
                     }
                 }
             }
+            
+            
+            listIvas.clear();            
+            Control.ejecuteQuery("select * from CargaIva()");
+            while (Control.rs.next()) {
+                listIvas.add(new List_Categoria(Control.rs.getInt(1), "" + Control.rs.getInt(2)));
+            }
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Venta.class
+                    .getName()).log(Level.SEVERE, null, ex);
+        }finally
+        {
+            Control.cerrarConexion();
+        }
 
-        } catch (ClassNotFoundException | SQLException | NumberFormatException ex) {
+    }
 
-        } finally {
-            Control.con.commit();
-            Control.con.setAutoCommit(true);
+    public void iniciar() throws SQLException {
+        try {
+            
+
+        } catch (Exception ex) {
+
+        } finally {                                   
             Control.cerrarConexion();
         }
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
@@ -120,20 +131,9 @@ public class CargaArchivo extends javax.swing.JFrame {
                     "Codigo", "Nombre", "Costo", "Iva", "Precio", "Cantidad", "Estado"
                 }
         ));
-        TablaModel t = new TablaModel(p, 7);
+        TablaModel t = new TablaModel(p,7,1);
         t.DatosCargaArchivo();
         muevaLosDatosFre(t);
-    }
-
-    private void cargarUsuario() throws SQLException, ClassNotFoundException {
-        Control.conectar();
-        Control.ejecuteQuery("select * from CargaUsuario(" + usuario + ")");
-        String nombre = "";
-        while (Control.rs.next()) {
-            nombre = Control.rs.getString(1) + " " + Control.rs.getString(2);
-        }
-        this.nombre = nombre;
-        Control.cerrarConexion();
     }
 
     public void muevaLosDatosFre(TablaModel x) {
@@ -240,7 +240,7 @@ public class CargaArchivo extends javax.swing.JFrame {
                             tipo = "Salida";
                             cantFinal = pr.getCantidad();
                             cantSAlida = cantidad;
-                        }
+                        }                        
                         f = Control.ejecuteUpdate("insert into Salida_Entrada values("
                                 + codigo_sal + ",'" + tipo + "'," + Math.abs(cantSAlida) + ",'" + fecha + "','" + mns + "','" + nombre + "'," + pr.getCodigoProducto() + ")");
                         System.out.println("paso 2");
@@ -407,7 +407,7 @@ public class CargaArchivo extends javax.swing.JFrame {
     private void NuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NuevoActionPerformed
         try {
             insertarLibro();
-        } catch (ClassNotFoundException | SQLException ex) {
+        } catch (Exception ex) {
 
         }
 //        jLabel3.setVisible(false);

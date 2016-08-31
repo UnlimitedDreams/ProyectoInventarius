@@ -340,7 +340,7 @@ public class VentaAux extends javax.swing.JFrame {
 
     public void iniciar() {
         System.out.println("Tamañ de productos " + productos.size());
-        TablaModel t = new TablaModel(productos, 5);
+        TablaModel t = new TablaModel(productos, 5,1);
         t.calculeFrecuenciasV();
         muevaLosDatosFre(t);
 

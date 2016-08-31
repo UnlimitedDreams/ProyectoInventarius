@@ -164,8 +164,8 @@ public class Bodega extends javax.swing.JFrame {
 
     }
 
-    public void inicio() throws ClassNotFoundException {
-        Control.conectar();
+    private void inicio() throws ClassNotFoundException {
+
         DefaultTableModel modeloEmpleado = new DefaultTableModel();
         int numeroPreguntas;
         ResultSetMetaData rsetMetaData;
@@ -190,6 +190,7 @@ public class Bodega extends javax.swing.JFrame {
         this.tablaProductos.setModel(modeloEmpleado);
 
         try {
+            Control.conectar();
             Control.ejecuteQuery("select codigo \"Codigo\",nombre \"Nombre\",categoria \"Categoria\",costo \"Costo\",iva \"Iva\",precio \"Precio\""
                     + ",descuento \"Descuento\",cantidad \"Cantidad\" from BodegaInicio() limit 500");
             rsetMetaData = Control.rs.getMetaData();

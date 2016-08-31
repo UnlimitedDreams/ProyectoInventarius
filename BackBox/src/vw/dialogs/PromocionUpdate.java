@@ -99,7 +99,7 @@ public class PromocionUpdate extends javax.swing.JDialog {
                 Tipo.addItem("Categoria");
                 Cate.setEnabled(false);
             }
-
+            System.out.println("Estado");
             if (Estado.getSelectedItem().toString().trim().equalsIgnoreCase("A")) {
                 Estado.addItem("D");
             } else {
@@ -1762,7 +1762,7 @@ public class PromocionUpdate extends javax.swing.JDialog {
     }//GEN-LAST:event_CateMouseClicked
 
     public void iniciar() {
-        TablaModel t = new TablaModel(productos, 6);
+        TablaModel t = new TablaModel(productos, 6,1);
         t.calculeFrecuenciasPromocion();
         muevaLosDatosFre(t);
 
