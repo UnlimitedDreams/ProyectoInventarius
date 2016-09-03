@@ -6,6 +6,8 @@
 package Modelo;
 
 import java.awt.Desktop;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -13,6 +15,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JMenuItem;
+import javax.swing.KeyStroke;
 import vw.components.Bodega;
 import vw.components.CategoriaGestion;
 import vw.components.Clientes;
@@ -48,14 +52,99 @@ public class MenuRedireccionar {
     private java.awt.Frame parent;
     private int codEmpresa;
 
+    public MenuRedireccionar() {
+    }
+
     public MenuRedireccionar(java.awt.Frame parent, String CadenaMenu, ArrayList acciones,
-            String usuario, int codigoEmpresa) {
+            String usuario, int codigoEmpresa
+
+    
+        ) {
         this.CadenaMenu = CadenaMenu;
         this.listMenu = acciones;
         this.Usuario = usuario;
         this.parent = parent;
         this.codEmpresa = codigoEmpresa;
 
+    }
+
+    public static JMenuItem Atajos(String accion) {
+        System.out.println("Entro : " + accion);
+        JMenuItem menuItem = new JMenuItem(accion.trim());
+        if (accion.trim().equalsIgnoreCase("Bodega")) {
+            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_B, 10));
+        }
+        if (accion.trim().equalsIgnoreCase("Usuarios")) {
+            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_U, 10));
+        }
+        if (accion.trim().equalsIgnoreCase("Crear Usuario")) {
+            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_U, ActionEvent.CTRL_MASK));
+        }
+        if (accion.trim().equalsIgnoreCase("Rol")) {
+            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, 10));
+        }
+        if (accion.trim().equalsIgnoreCase("Crear Rol")) {
+            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, ActionEvent.CTRL_MASK));
+        }
+        if (accion.trim().equalsIgnoreCase("Proveedores")) {
+            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, 10));
+        }
+        if (accion.trim().equalsIgnoreCase("Crear Proveedor")) {
+            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, ActionEvent.CTRL_MASK));
+        }
+        if (accion.trim().equalsIgnoreCase("Articulos")) {
+            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, 10));
+        }
+        if (accion.trim().equalsIgnoreCase("Nueva Compra")) {
+            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, ActionEvent.CTRL_MASK));
+        }
+        if (accion.trim().equalsIgnoreCase("Categoria")) {
+            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, 10));
+        }
+        if (accion.trim().equalsIgnoreCase("Crear Categoria")) {
+            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, ActionEvent.CTRL_MASK));
+        }
+        if (accion.trim().equalsIgnoreCase("Realizar Venta")) {
+            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V, ActionEvent.CTRL_MASK));
+        }
+        if (accion.trim().equalsIgnoreCase("Realizar Devolucion")) {
+            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, ActionEvent.CTRL_MASK));
+        }
+        if (accion.trim().equalsIgnoreCase("Venta Diaria")) {
+            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_T, 10));
+        }
+        if (accion.trim().equalsIgnoreCase("Reporte Venta")) {
+            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, ActionEvent.CTRL_MASK));
+        }
+        if (accion.trim().equalsIgnoreCase("Reporte Compras")) {
+            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_W, ActionEvent.CTRL_MASK));
+        }
+        if (accion.trim().equalsIgnoreCase("Reporte Entrada y Salidas")) {
+            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, ActionEvent.CTRL_MASK));
+        }
+        if (accion.trim().equalsIgnoreCase("Clientes")) {
+            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, 10));
+        }
+        if (accion.trim().equalsIgnoreCase("Crear Clientes")) {
+            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK));
+        }
+        if (accion.trim().equalsIgnoreCase("Iva")) {
+            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_I, 10));
+        }
+        if (accion.trim().equalsIgnoreCase("Promocion")) {
+            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_J, 10));
+        }
+        if (accion.trim().equalsIgnoreCase("Crear Promocion")) {
+            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_J, ActionEvent.CTRL_MASK));
+        }
+        if (accion.trim().equalsIgnoreCase("Kits")) {
+            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_K, 10));
+        }
+        if (accion.trim().equalsIgnoreCase("Crear Kits")) {
+            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_K, ActionEvent.CTRL_MASK));
+        }
+
+        return menuItem;
     }
 
     public void reDireccion() throws IOException, URISyntaxException, ClassNotFoundException, ClassNotFoundException, ClassNotFoundException {
@@ -117,7 +206,7 @@ public class MenuRedireccionar {
                 new MaestroIva(Usuario, listMenu).setVisible(true);
             } else if (CadenaMenu.equalsIgnoreCase("Promocion")) {
                 new Promociones(Usuario, listMenu).setVisible(true);
-            }else if (CadenaMenu.equalsIgnoreCase("Kits")) {
+            } else if (CadenaMenu.equalsIgnoreCase("Kits")) {
                 new Kits(Usuario, listMenu).setVisible(true);
             }
 

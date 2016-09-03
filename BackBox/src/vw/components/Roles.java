@@ -85,67 +85,8 @@ public class Roles extends javax.swing.JFrame {
                         menu.add(new JSeparator());
                     } else {
                         //10 = Control + Alt
-                        JMenuItem menuItem = new JMenuItem(object1.getAccion());
-                        if (object1.getAccion().equalsIgnoreCase("Lista Bodega")) {
-                            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_B, 10));
-                        }
-                        if (object1.getAccion().equalsIgnoreCase("Lista Usuarios")) {
-                            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_U, 10));
-                        }
-                        if (object1.getAccion().equalsIgnoreCase("Crear Usuario")) {
-                            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_U, ActionEvent.CTRL_MASK));
-                        }
-                        if (object1.getAccion().equalsIgnoreCase("Lista Rol")) {
-                            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, 10));
-                        }
-                        if (object1.getAccion().equalsIgnoreCase("Crear Rol")) {
-                            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, ActionEvent.CTRL_MASK));
-                        }
-                        if (object1.getAccion().equalsIgnoreCase("Lista Proveedores")) {
-                            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, 10));
-                        }
-                        if (object1.getAccion().equalsIgnoreCase("Crear Proveedor")) {
-                            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, ActionEvent.CTRL_MASK));
-                        }
-                        if (object1.getAccion().equalsIgnoreCase("Ver Articulos")) {
-                            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, 10));
-                        }
-                        if (object1.getAccion().equalsIgnoreCase("Nueva Compra")) {
-                            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, ActionEvent.CTRL_MASK));
-                        }
-                        if (object1.getAccion().equalsIgnoreCase("Ver Categoria")) {
-                            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, 10));
-                        }
-                        if (object1.getAccion().equalsIgnoreCase("Crear Categoria ")) {
-                            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, ActionEvent.CTRL_MASK));
-                        }
-                        if (object1.getAccion().equalsIgnoreCase("Realizar Venta")) {
-                            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V, ActionEvent.CTRL_MASK));
-                        }
-                        if (object1.getAccion().equalsIgnoreCase("Realizar Devolucion")) {
-                            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, ActionEvent.CTRL_MASK));
-                        }
-                        if (object1.getAccion().equalsIgnoreCase("Ver Venta Diaria")) {
-                            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_T, 10));
-                        }
-                        if (object1.getAccion().equalsIgnoreCase("Venta")) {
-                            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, ActionEvent.CTRL_MASK));
-                        }
-                        if (object1.getAccion().equalsIgnoreCase("Compras")) {
-                            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_W, ActionEvent.CTRL_MASK));
-                        }
-                        if (object1.getAccion().equalsIgnoreCase("Entrada y Salidas")) {
-                            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, ActionEvent.CTRL_MASK));
-                        }
-                        if (object1.getAccion().equalsIgnoreCase("Venta")) {
-                            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, ActionEvent.CTRL_MASK));
-                        }
-                        if (object1.getAccion().equalsIgnoreCase("Lista Clientes")) {
-                            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, 10));
-                        }
-                        if (object1.getAccion().equalsIgnoreCase("Crear Cliente")) {
-                            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, ActionEvent.CTRL_MASK));
-                        }
+                      JMenuItem menuItem = new JMenuItem();
+                        menuItem = MenuRedireccionar.Atajos(object1.getAccion());
                         menuItem.addActionListener(new ActionListener() {
                             @Override
                             public void actionPerformed(ActionEvent e) {
