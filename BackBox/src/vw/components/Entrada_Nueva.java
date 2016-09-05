@@ -163,7 +163,7 @@ public class Entrada_Nueva extends javax.swing.JFrame {
     private void initComponents() {
 
         jButton3 = new javax.swing.JButton();
-        jPanel1 = new javax.swing.JPanel();
+        centro = new javax.swing.JPanel();
         c = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jButton1 = new javax.swing.JButton();
@@ -193,14 +193,14 @@ public class Entrada_Nueva extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("BackBox - Agregar Productos");
 
-        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel1.setPreferredSize(new java.awt.Dimension(740, 620));
-        jPanel1.addFocusListener(new java.awt.event.FocusAdapter() {
+        centro.setBackground(new java.awt.Color(255, 255, 255));
+        centro.setPreferredSize(new java.awt.Dimension(740, 620));
+        centro.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
-                jPanel1FocusLost(evt);
+                centroFocusLost(evt);
             }
         });
-        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        centro.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jTable1.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
             public void mouseDragged(java.awt.event.MouseEvent evt) {
@@ -233,7 +233,7 @@ public class Entrada_Nueva extends javax.swing.JFrame {
         });
         c.setViewportView(jTable1);
 
-        jPanel1.add(c, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 120, 620, 140));
+        centro.add(c, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 120, 620, 140));
 
         jButton1.setFont(new java.awt.Font("Segoe UI Light", 0, 11)); // NOI18N
         jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-mdpi/ic_save_black_24dp.png"))); // NOI18N
@@ -252,7 +252,7 @@ public class Entrada_Nueva extends javax.swing.JFrame {
                 jButton1ActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 560, -1, -1));
+        centro.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 560, -1, -1));
 
         jTable2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         jTable2.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
@@ -397,11 +397,11 @@ public class Entrada_Nueva extends javax.swing.JFrame {
         });
         jScrollPane2.setViewportView(jTable2);
 
-        jPanel1.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 166, 656, 380));
+        centro.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 166, 656, 380));
 
         jLabel6.setFont(new java.awt.Font("Segoe UI Light", 1, 12)); // NOI18N
         jLabel6.setText("Compra");
-        jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 50, -1, -1));
+        centro.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 50, -1, -1));
 
         crearProducto.setFont(new java.awt.Font("Segoe UI Light", 0, 11)); // NOI18N
         crearProducto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-mdpi/ic_assignment_turned_in_black_24dp.png"))); // NOI18N
@@ -420,11 +420,11 @@ public class Entrada_Nueva extends javax.swing.JFrame {
                 crearProductoActionPerformed(evt);
             }
         });
-        jPanel1.add(crearProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 170, -1, -1));
+        centro.add(crearProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 170, -1, -1));
 
         jLabel2.setFont(new java.awt.Font("Segoe UI Light", 1, 12)); // NOI18N
         jLabel2.setText("Fecha:");
-        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 50, -1, -1));
+        centro.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 50, -1, -1));
 
         jButton5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-xhdpi/ic_arrow_back_black_24dp.png"))); // NOI18N
         jButton5.setBorder(null);
@@ -440,11 +440,11 @@ public class Entrada_Nueva extends javax.swing.JFrame {
                 jButton5ActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 560, -1, -1));
+        centro.add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 560, -1, -1));
 
         jLabel7.setFont(new java.awt.Font("Segoe UI Light", 1, 12)); // NOI18N
         jLabel7.setText("Factura No.");
-        jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 20, -1, -1));
+        centro.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 20, -1, -1));
 
         jTextField1.setMinimumSize(new java.awt.Dimension(6, 22));
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
@@ -452,17 +452,17 @@ public class Entrada_Nueva extends javax.swing.JFrame {
                 jTextField1ActionPerformed(evt);
             }
         });
-        jPanel1.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 20, 170, -1));
+        centro.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 20, 170, -1));
 
         jLabel3.setFont(new java.awt.Font("Segoe UI Light", 1, 30)); // NOI18N
         jLabel3.setText("Total");
-        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 560, -1, -1));
+        centro.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 560, -1, -1));
 
         jLabel4.setFont(new java.awt.Font("Segoe UI Light", 1, 30)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(204, 102, 0));
         jLabel4.setText("Total");
         jLabel4.setToolTipText("");
-        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 560, 199, -1));
+        centro.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 560, 199, -1));
 
         fechaActual.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
         fechaActual.addActionListener(new java.awt.event.ActionListener() {
@@ -470,12 +470,12 @@ public class Entrada_Nueva extends javax.swing.JFrame {
                 fechaActualActionPerformed(evt);
             }
         });
-        jPanel1.add(fechaActual, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 50, 170, -1));
+        centro.add(fechaActual, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 50, 170, -1));
 
         comprass.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
         comprass.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Credito", "De Contado" }));
         comprass.setPreferredSize(new java.awt.Dimension(31, 20));
-        jPanel1.add(comprass, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 50, 170, 25));
+        centro.add(comprass, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 50, 170, 25));
 
         jTextField2.setFont(new java.awt.Font("Segoe UI Light", 0, 18)); // NOI18N
         jTextField2.setToolTipText("Busca un codigo de Producto");
@@ -495,25 +495,25 @@ public class Entrada_Nueva extends javax.swing.JFrame {
                 jTextField2KeyTyped(evt);
             }
         });
-        jPanel1.add(jTextField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 90, 620, -1));
+        centro.add(jTextField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 90, 620, -1));
 
         jLabel8.setFont(new java.awt.Font("Segoe UI Light", 1, 12)); // NOI18N
         jLabel8.setText("Proveedor:");
-        jPanel1.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 20, -1, -1));
+        centro.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 20, -1, -1));
 
         proveedores.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
         proveedores.setPreferredSize(new java.awt.Dimension(31, 20));
-        jPanel1.add(proveedores, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 20, 170, 25));
+        centro.add(proveedores, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 20, 170, 25));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 741, Short.MAX_VALUE)
+            .addComponent(centro, javax.swing.GroupLayout.DEFAULT_SIZE, 800, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(centro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
@@ -1144,10 +1144,10 @@ public class Entrada_Nueva extends javax.swing.JFrame {
         jTextField2.setText("");
     }//GEN-LAST:event_jTable2FocusLost
 
-    private void jPanel1FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jPanel1FocusLost
+    private void centroFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_centroFocusLost
         c.setVisible(false);
         jTextField2.setText("");
-    }//GEN-LAST:event_jPanel1FocusLost
+    }//GEN-LAST:event_centroFocusLost
 
     /**
      * @param args the command line arguments
@@ -1155,6 +1155,7 @@ public class Entrada_Nueva extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane c;
+    private javax.swing.JPanel centro;
     private javax.swing.JComboBox comprass;
     private javax.swing.JButton crearProducto;
     private com.alee.extended.date.WebDateField fechaActual;
@@ -1167,7 +1168,6 @@ public class Entrada_Nueva extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable1;
     public javax.swing.JTable jTable2;

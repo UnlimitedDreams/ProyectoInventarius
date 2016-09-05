@@ -18,13 +18,11 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.ImageIcon;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -88,9 +86,7 @@ public class Clientes extends javax.swing.JFrame {
                                     } else {
                                         Clientes.this.dispose();
                                     }
-                                } catch (IOException ex) {
-                                    Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
-                                } catch (URISyntaxException ex) {
+                                } catch (IOException | URISyntaxException ex) {
                                     Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
                                 } catch (ClassNotFoundException ex) {
                                     Logger.getLogger(Clientes.class.getName()).log(Level.SEVERE, null, ex);
@@ -535,12 +531,33 @@ public class Clientes extends javax.swing.JFrame {
         Producto temp = null;
         String query = "";
         if (condicion == 1) {
-            query = "select * from ClientesBuscar(1,'-')";
+            query = "select "
+                    + "cedula \"Cédula\","
+                    + "nombre \"Nombre\","
+                    + "apellido \"Apellido\","
+                    + "email \"Correo\","
+                    + "telefono \"Teléfono\","
+                    + "celular \"Celular\","
+                    + "direccion \"Dirección\" from ClientesBuscar(1,'-')";
         } else if (condicion == 2) {
             if (SoloNumeros(buscaUsu.getText())) {
-                query = "select * from ClientesBuscar(2,'" + buscaUsu.getText() + "')";
+                query = "select  "
+                    + "cedula \"Cédula\","
+                    + "nombre \"Nombre\","
+                    + "apellido \"Apellido\","
+                    + "email \"Correo\","
+                    + "telefono \"Teléfono\","
+                    + "celular \"Celular\","
+                    + "direccion \"Dirección\" from ClientesBuscar(2,'" + buscaUsu.getText() + "')";
             } else {
-                query = "select * from ClientesBuscar(3,'" + buscaUsu.getText() + "')";
+                query = "select  "
+                    + "cedula \"Cédula\","
+                    + "nombre \"Nombre\","
+                    + "apellido \"Apellido\","
+                    + "email \"Correo\","
+                    + "telefono \"Teléfono\","
+                    + "celular \"Celular\","
+                    + "direccion \"Dirección\" from ClientesBuscar(3,'" + buscaUsu.getText() + "')";
             }
         }
         DefaultTableModel modeloEmpleado = new DefaultTableModel();

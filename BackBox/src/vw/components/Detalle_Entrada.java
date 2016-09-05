@@ -120,7 +120,7 @@ public class Detalle_Entrada extends javax.swing.JFrame {
 
         getContentPane().add(centro, java.awt.BorderLayout.CENTER);
 
-        superior.setLayout(new java.awt.GridLayout());
+        superior.setLayout(new java.awt.GridLayout(1, 0));
 
         jPanel1.setBackground(java.awt.Color.white);
         jPanel1.setLayout(new javax.swing.BoxLayout(jPanel1, javax.swing.BoxLayout.Y_AXIS));
