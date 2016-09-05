@@ -12,18 +12,17 @@ import Modelo.ContenedorMenus;
 import Modelo.MenuRedireccionar;
 import Modelo.acciones;
 import Modelo.seccion;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.ImageIcon;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -57,9 +56,7 @@ public class Clientes extends javax.swing.JFrame {
         inicio(1);
         this.usuario = nom;
         this.setLocationRelativeTo(null);
-        URL url = getClass().getResource("/images/facelet/icon.png");
-        ImageIcon img = new ImageIcon(url);
-        setIconImage(img.getImage());
+        this.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/facelet/icon.png")));
         ContenedorMenus con_menu = new ContenedorMenus();
         con_menu = (ContenedorMenus) List_Menu.get(0);
         listaSeccion = con_menu.getListaSeccion();
@@ -89,9 +86,7 @@ public class Clientes extends javax.swing.JFrame {
                                     } else {
                                         Clientes.this.dispose();
                                     }
-                                } catch (IOException ex) {
-                                    Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
-                                } catch (URISyntaxException ex) {
+                                } catch (IOException | URISyntaxException ex) {
                                     Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
                                 } catch (ClassNotFoundException ex) {
                                     Logger.getLogger(Clientes.class.getName()).log(Level.SEVERE, null, ex);
@@ -522,7 +517,7 @@ public class Clientes extends javax.swing.JFrame {
         }
     }
 
-     public boolean SoloNumeros(String cadena) {
+    public boolean SoloNumeros(String cadena) {
         try {
             Long.parseLong(cadena);
             return true;
@@ -530,20 +525,41 @@ public class Clientes extends javax.swing.JFrame {
             return false;
         }
     }
-     
+
     private void inicio(int condicion) throws ClassNotFoundException {
         Control.conectar();
         Producto temp = null;
-        String query="";
+        String query = "";
         if (condicion == 1) {
-             query = "select * from ClientesBuscar(1,'-')";
+            query = "select "
+                    + "cedula \"Cédula\","
+                    + "nombre \"Nombre\","
+                    + "apellido \"Apellido\","
+                    + "email \"Correo\","
+                    + "telefono \"Teléfono\","
+                    + "celular \"Celular\","
+                    + "direccion \"Dirección\" from ClientesBuscar(1,'-')";
         } else if (condicion == 2) {
             if (SoloNumeros(buscaUsu.getText())) {
-                 query = "select * from ClientesBuscar(2,'"+buscaUsu.getText()+"')";
+                query = "select  "
+                    + "cedula \"Cédula\","
+                    + "nombre \"Nombre\","
+                    + "apellido \"Apellido\","
+                    + "email \"Correo\","
+                    + "telefono \"Teléfono\","
+                    + "celular \"Celular\","
+                    + "direccion \"Dirección\" from ClientesBuscar(2,'" + buscaUsu.getText() + "')";
             } else {
-                 query = "select * from ClientesBuscar(3,'"+buscaUsu.getText()+"')";
+                query = "select  "
+                    + "cedula \"Cédula\","
+                    + "nombre \"Nombre\","
+                    + "apellido \"Apellido\","
+                    + "email \"Correo\","
+                    + "telefono \"Teléfono\","
+                    + "celular \"Celular\","
+                    + "direccion \"Dirección\" from ClientesBuscar(3,'" + buscaUsu.getText() + "')";
             }
-        }                           
+        }
         DefaultTableModel modeloEmpleado = new DefaultTableModel();
         int numeroPreguntas;
         ResultSetMetaData rsetMetaData;
@@ -563,7 +579,7 @@ public class Clientes extends javax.swing.JFrame {
                     registroEmpleado[i] = Control.rs.getObject(i + 1);
                 }
                 modeloEmpleado.addRow(registroEmpleado);
-            }            
+            }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "ERROR " + e.getMessage());
         } finally {

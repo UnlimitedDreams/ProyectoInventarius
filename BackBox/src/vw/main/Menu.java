@@ -11,6 +11,7 @@ import Modelo.MenuRedireccionar;
 import Modelo.acciones;
 import Modelo.seccion;
 import com.backbox.util.VerticalLabelUI;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -46,14 +47,14 @@ public class Menu extends javax.swing.JFrame {
 
     /**
      * Creates new form temp
+     *
+     * @param usuario
      */
     public Menu(String usuario) {
         initComponents();
         this.usuario = usuario;
         this.setLocationRelativeTo(null);
-        URL url = getClass().getResource("/images/facelet/icon.png");
-        ImageIcon img = new ImageIcon(url);
-        setIconImage(img.getImage());
+        this.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/facelet/icon.png")));
         VerBodega = 0;
         VerArticulos = 0;
         VerVenta = 0;
@@ -145,14 +146,10 @@ public class Menu extends javax.swing.JFrame {
                     menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_2, ActionEvent.ALT_MASK));
                 }
                 menuItem.addActionListener((ActionEvent e) -> {
-                    MenuRedireccionar MenuF = new MenuRedireccionar(this, e.getActionCommand().toString(), List_Menu, usuario, codigoEmpresa);
+                    MenuRedireccionar MenuF = new MenuRedireccionar(this, e.getActionCommand(), List_Menu, usuario, codigoEmpresa);
                     try {
                         MenuF.reDireccion();
-                    } catch (IOException ex) {
-                        Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (URISyntaxException ex) {
-                        Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (ClassNotFoundException ex) {
+                    } catch (IOException | URISyntaxException | ClassNotFoundException ex) {
                         Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 });
@@ -187,7 +184,7 @@ public class Menu extends javax.swing.JFrame {
             listaaccion.clear();
             Control.ejecuteQuery("select detalleactividad.cod_actividad,acciones.nom_accion,detalleactividad.cod_detalleac from rol,detalleactividad,usuario,acciones where \n"
                     + "                rol.cod_rol=detalleactividad.cod_rol and \n"
-                    + "                 acciones.codacciones=detalleactividad.cod_accion and "
+                    + "                acciones.codacciones=detalleactividad.cod_accion and "
                     + "                usuario.cod_rol=rol.cod_rol\n"
                     + "                and usuario.cod_usuario=" + usuario + " order by cod_detalleac");
             while (Control.rs.next()) {
@@ -235,10 +232,6 @@ public class Menu extends javax.swing.JFrame {
 
         mainFrame = new javax.swing.JPanel();
         centro = new javax.swing.JPanel();
-        contenedorCentral = new javax.swing.JTabbedPane();
-        jPanel1 = new javax.swing.JPanel();
-        jPanel2 = new javax.swing.JPanel();
-        jPanel3 = new javax.swing.JPanel();
         superior = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         inferior = new javax.swing.JPanel();
@@ -264,53 +257,6 @@ public class Menu extends javax.swing.JFrame {
 
         centro.setBackground(java.awt.Color.white);
         centro.setLayout(new java.awt.BorderLayout());
-
-        contenedorCentral.setBorder(javax.swing.BorderFactory.createCompoundBorder());
-        contenedorCentral.setTabLayoutPolicy(javax.swing.JTabbedPane.SCROLL_TAB_LAYOUT);
-        contenedorCentral.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
-        contenedorCentral.setOpaque(true);
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 745, Short.MAX_VALUE)
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 399, Short.MAX_VALUE)
-        );
-
-        contenedorCentral.addTab("Ventas", jPanel1);
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 745, Short.MAX_VALUE)
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 399, Short.MAX_VALUE)
-        );
-
-        contenedorCentral.addTab("Compras", jPanel2);
-
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 745, Short.MAX_VALUE)
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 399, Short.MAX_VALUE)
-        );
-
-        contenedorCentral.addTab("Devoluciones", jPanel3);
-
-        centro.add(contenedorCentral, java.awt.BorderLayout.CENTER);
-
         mainFrame.add(centro, java.awt.BorderLayout.CENTER);
 
         superior.setBackground(java.awt.Color.white);
@@ -437,49 +383,13 @@ public class Menu extends javax.swing.JFrame {
     private void cerrarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cerrarMouseClicked
         this.dispose();
         new Acceder().setVisible(true);
-
     }//GEN-LAST:event_cerrarMouseClicked
 
-//    /**
-//     * @param args the command line arguments
-//     */
-//    public static void main(String args[]) {
-//        /* Set the Nimbus look and feel */
-//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-//         */
-//        try {
-//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-//                if ("Nimbus".equals(info.getName())) {
-//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-//                    break;
-//                }
-//            }
-//        } catch (ClassNotFoundException ex) {
-//            java.util.logging.Logger.getLogger(Menu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (InstantiationException ex) {
-//            java.util.logging.Logger.getLogger(Menu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (IllegalAccessException ex) {
-//            java.util.logging.Logger.getLogger(Menu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-//            java.util.logging.Logger.getLogger(Menu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        }
-//        //</editor-fold>
-//
-//        /* Create and display the form */
-//        java.awt.EventQueue.invokeLater(new Runnable() {
-//            public void run() {
-//                new Menu().setVisible(true);
-//            }
-//        });
-//    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel centro;
     private javax.swing.JLabel cerrar;
     private javax.swing.JMenuItem cerrarSesion;
-    private javax.swing.JTabbedPane contenedorCentral;
     private javax.swing.JPanel derecha;
     private javax.swing.JLabel feld01;
     private javax.swing.JMenu file;
@@ -488,9 +398,6 @@ public class Menu extends javax.swing.JFrame {
     private javax.swing.JPanel izquierda;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPanel mainFrame;
     private javax.swing.JMenuItem salir;
