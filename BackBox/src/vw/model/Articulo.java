@@ -94,67 +94,8 @@ public class Articulo extends javax.swing.JFrame implements Runnable {
                         menu.add(new JSeparator());
                     } else {
                         //10 = Control + Alt
-                        JMenuItem menuItem = new JMenuItem(object1.getAccion());
-                        if (object1.getAccion().equalsIgnoreCase("Lista Bodega")) {
-                            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_B, 10));
-                        }
-                        if (object1.getAccion().equalsIgnoreCase("Lista Usuarios")) {
-                            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_U, 10));
-                        }
-                        if (object1.getAccion().equalsIgnoreCase("Crear Usuario")) {
-                            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_U, ActionEvent.CTRL_MASK));
-                        }
-                        if (object1.getAccion().equalsIgnoreCase("Lista Rol")) {
-                            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, 10));
-                        }
-                        if (object1.getAccion().equalsIgnoreCase("Crear Rol")) {
-                            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, ActionEvent.CTRL_MASK));
-                        }
-                        if (object1.getAccion().equalsIgnoreCase("Lista Proveedores")) {
-                            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, 10));
-                        }
-                        if (object1.getAccion().equalsIgnoreCase("Crear Proveedor")) {
-                            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, ActionEvent.CTRL_MASK));
-                        }
-                        if (object1.getAccion().equalsIgnoreCase("Ver Articulos")) {
-                            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, 10));
-                        }
-                        if (object1.getAccion().equalsIgnoreCase("Nueva Compra")) {
-                            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, ActionEvent.CTRL_MASK));
-                        }
-                        if (object1.getAccion().equalsIgnoreCase("Ver Categoria")) {
-                            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, 10));
-                        }
-                        if (object1.getAccion().equalsIgnoreCase("Crear Categoria ")) {
-                            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, ActionEvent.CTRL_MASK));
-                        }
-                        if (object1.getAccion().equalsIgnoreCase("Realizar Venta")) {
-                            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V, ActionEvent.CTRL_MASK));
-                        }
-                        if (object1.getAccion().equalsIgnoreCase("Realizar Devolucion")) {
-                            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, ActionEvent.CTRL_MASK));
-                        }
-                        if (object1.getAccion().equalsIgnoreCase("Ver Venta Diaria")) {
-                            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_T, 10));
-                        }
-                        if (object1.getAccion().equalsIgnoreCase("Venta")) {
-                            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, ActionEvent.CTRL_MASK));
-                        }
-                        if (object1.getAccion().equalsIgnoreCase("Compras")) {
-                            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_W, ActionEvent.CTRL_MASK));
-                        }
-                        if (object1.getAccion().equalsIgnoreCase("Entrada y Salidas")) {
-                            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, ActionEvent.CTRL_MASK));
-                        }
-                        if (object1.getAccion().equalsIgnoreCase("Venta")) {
-                            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, ActionEvent.CTRL_MASK));
-                        }
-                        if (object1.getAccion().equalsIgnoreCase("Lista Clientes")) {
-                            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, 10));
-                        }
-                        if (object1.getAccion().equalsIgnoreCase("Crear Cliente")) {
-                            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK));
-                        }
+                        JMenuItem menuItem = new JMenuItem();
+                        menuItem = MenuRedireccionar.Atajos(object1.getAccion());
                         menuItem.addActionListener(new ActionListener() {
                             @Override
                             public void actionPerformed(ActionEvent e) {
@@ -566,7 +507,7 @@ public class Articulo extends javax.swing.JFrame implements Runnable {
     }//GEN-LAST:event_bajarExcelActionPerformed
 
     private void volverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_volverActionPerformed
-       new Menu(usuario).setVisible(true);
+        new Menu(usuario).setVisible(true);
 //        miAyuda.dispose();
         this.dispose();
     }//GEN-LAST:event_volverActionPerformed
@@ -656,7 +597,6 @@ public class Articulo extends javax.swing.JFrame implements Runnable {
 //            this.setVisible(false);
 //        }
 //    }
-
     public void pasar_datos(String ruta) throws ClassNotFoundException, InterruptedException {
         //jProgressBar1.setForeground(Color.ORANGE);
         jProgressBar1.setValue(0);
@@ -830,7 +770,7 @@ public class Articulo extends javax.swing.JFrame implements Runnable {
                     break;
                 }
             }
-        } 
+        }
         if (mnserror != "N") {
             Entrada.muestreMensajeV(mnserror);
         }
@@ -862,11 +802,11 @@ public class Articulo extends javax.swing.JFrame implements Runnable {
     public void Buscar() throws ClassNotFoundException {
         String query = "";
         if (SoloNumeros(jTextField2.getText())) {
-             query = "select codigo \"Codigo\",nombre \"Nombre\",cate \"Categoria\",rcosto \"Costo\",riva \"Iva\",rprecio \"Precio\","
-                        + "rdescuento \"Stock\",rcantidad \"Cantidad\"  from BodegaInicioBuscar(3,'" + jTextField2.getText() + "') ";
+            query = "select codigo \"Codigo\",nombre \"Nombre\",cate \"Categoria\",rcosto \"Costo\",riva \"Iva\",rprecio \"Precio\","
+                    + "rdescuento \"Stock\",rcantidad \"Cantidad\"  from BodegaInicioBuscar(3,'" + jTextField2.getText() + "') ";
         } else {
-             query = "select codigo \"Codigo\",nombre \"Nombre\",cate \"Categoria\",rcosto \"Costo\",riva \"Iva\",rprecio \"Precio\","
-                        + "rdescuento \"Stock\",rcantidad \"Cantidad\"  from BodegaInicioBuscar(4,'" + jTextField2.getText() + "')";
+            query = "select codigo \"Codigo\",nombre \"Nombre\",cate \"Categoria\",rcosto \"Costo\",riva \"Iva\",rprecio \"Precio\","
+                    + "rdescuento \"Stock\",rcantidad \"Cantidad\"  from BodegaInicioBuscar(4,'" + jTextField2.getText() + "')";
         }
         Control.conectar();
         Producto temp = null;

@@ -27,12 +27,21 @@ public class Acciones extends javax.swing.JDialog {
      * @param modal
      */
     ArrayList<acciones> listAcciones = new ArrayList();
-    RolRegistrarPrueba rol;
+    ArrayList<acciones> listOrden = new ArrayList();
+    RolRegistrar rol;
+    RolUpdate rolU;
+    int condicion;
 
-    public Acciones(java.awt.Frame parent, boolean modal) {
+    public Acciones(java.awt.Frame parent, boolean modal, int condicion) {
         super(parent, modal);
         initComponents();
-        rol = (RolRegistrarPrueba) parent;
+        this.condicion = condicion;
+        if (condicion == 1) {
+            rol = (RolRegistrar) parent;
+        } else if (condicion == 2) {
+            rolU = (RolUpdate) parent;
+        }
+
         this.setLocationRelativeTo(null);
         try {
             inicio();
@@ -94,7 +103,7 @@ public class Acciones extends javax.swing.JDialog {
 
     public void añadirDatos() {
 
-int rowIndexStart = jTable1.getSelectedRow();
+        int rowIndexStart = jTable1.getSelectedRow();
         int rowIndexEnd = jTable1.getSelectionModel().getMaxSelectionIndex();
         int colIndexStart = jTable1.getSelectedColumn();
         int colIndexEnd = jTable1.getColumnModel().getSelectionModel().getMaxSelectionIndex();
@@ -102,18 +111,56 @@ int rowIndexStart = jTable1.getSelectedRow();
 // Check each cell in the range
         for (int r = rowIndexStart; r <= rowIndexEnd; r++) {
             for (int c = colIndexStart; c <= colIndexEnd; c++) {
-                if (jTable1.isCellSelected(r, c)) {                    
-                    listAcciones.add(new acciones(Integer.parseInt((String) jTable1.getValueAt(r, 0).toString()),
-                    (String) jTable1.getValueAt(r, 1).toString()));
+                if (jTable1.isCellSelected(r, c)) {
+                    acciones a = new acciones(Integer.parseInt((String) jTable1.getValueAt(r, 0).toString().trim()),
+                            (String) jTable1.getValueAt(r, 1).toString());
+
+                    listAcciones.add(a);
+
 // cell is selected
                 }
             }
         }
-        
+
         for (acciones object : listAcciones) {
-            rol.listaaccion.add(object);            
+            for (acciones object1 : listOrden) {
+
+                if (object1.getCod_seccion() == object.getCod_seccion()) {
+                    object.setOrden(object1.getOrden());
+                    System.out.println("agrego");
+                }
+            }
         }
-        rol.iniciar();
+        boolean r = false;
+        if (condicion == 1) {
+            for (acciones object : listAcciones) {
+                r = false;
+                for (acciones object1 : rol.listaaccion) {
+                    if (object.getCod_seccion() == object1.getCod_seccion()) {
+                        r = true;
+                    }
+                }
+                if (r == false) {
+                    rol.listaaccion.add(object);
+                }
+            }
+            rol.iniciar();
+        } else if (condicion == 2) {
+            for (acciones object : listAcciones) {
+                r = false;
+                for (acciones object1 : rolU.listaaccion) {
+                    if (object.getCod_seccion() == object1.getCod_seccion()) {
+                        r = true;
+                    }
+                }
+                if (r == false) {
+                    rolU.listaaccion.add(object);
+                }
+            }
+            rolU.iniciar();
+
+        }
+
         this.dispose();
     }
 
@@ -138,10 +185,11 @@ int rowIndexStart = jTable1.getSelectedRow();
 
         try {
             Control.conectar();
-            Control.ejecuteQuery("select * from acciones where codacciones not in (3,17,18)");
+            Control.ejecuteQuery("select * from acciones where codacciones not in (3,17,18) order by orden");
             rsetMetaData = Control.rs.getMetaData();
             numeroPreguntas = rsetMetaData.getColumnCount();
             while (Control.rs.next()) {
+                listOrden.add(new acciones(Control.rs.getInt(1), Control.rs.getInt(3)));
                 Object[] registroEmpleado = new Object[numeroPreguntas];
                 for (int i = 0; i < numeroPreguntas; i++) {
                     registroEmpleado[i] = Control.rs.getObject(i + 1);
