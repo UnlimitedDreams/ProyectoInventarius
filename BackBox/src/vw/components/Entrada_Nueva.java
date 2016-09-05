@@ -11,8 +11,7 @@ import Modelo.Producto;
 import Modelo.List_Categoria;
 import Control.Control;
 import Control.TablaModel;
-import com.alee.extended.date.WebCalendar;
-import java.net.URL;
+import java.awt.Toolkit;
 import java.sql.Connection;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -23,7 +22,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import net.sf.jasperreports.engine.JRException;
@@ -52,21 +50,18 @@ public class Entrada_Nueva extends javax.swing.JFrame {
     public Entrada_Nueva(ArrayList x, String nom, String fac, ArrayList acciones, int codEmpresa) throws ClassNotFoundException {
         try {
             initComponents();
-            URL url = getClass().getResource("/images/facelet/icon.png");
-            ImageIcon img = new ImageIcon(url);
-            setIconImage(img.getImage());
-            c.setVisible(false);
+            this.setLocationRelativeTo(null);
+            this.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/facelet/icon.png")));
+            //this.rsContent.setVisible(false);
             this.nom = nom;
             this.codEmpresa = codEmpresa;
             this.condicionfiltro = false;
             this.ListAcciones = acciones;
-            this.setLocationRelativeTo(null);
-            this.setResizable(false);
             Categoria2();
             this.productos = x;
             iniciar();
             recuperar_fecha();
-            jTextField1.setText(fac);
+            nroFactura.setText(fac);
             jLabel4.setText("0.0");
             sumarTot();
             ConfigurarIva();
@@ -126,17 +121,17 @@ public class Entrada_Nueva extends javax.swing.JFrame {
     }
 
     public void iniciar() {
-        TablaModel t = new TablaModel(productos,7,1);
+        TablaModel t = new TablaModel(productos, 7, 1);
         t.DatosEntradaNueva();
         muevaLosDatosFre(t);
     }
 
     public void muevaLosDatosFre(TablaModel x) {
-        jTable2.getDefaultEditor(null);
+        compras.getDefaultEditor(null);
         for (int i = 0; i < 7; i++) {
             for (int k = 0; k < x.getNrofreq(); k++) {
                 System.out.println("--- : " + x.frecuencias[i][k]);
-                jTable2.setValueAt(x.frecuencias[i][k], k, i);
+                compras.setValueAt(x.frecuencias[i][k], k, i);
 
             }
         }
@@ -161,27 +156,38 @@ public class Entrada_Nueva extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        java.awt.GridBagConstraints gridBagConstraints;
 
         jButton3 = new javax.swing.JButton();
         centro = new javax.swing.JPanel();
-        c = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
-        jButton1 = new javax.swing.JButton();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        jTable2 = new javax.swing.JTable();
-        jLabel6 = new javax.swing.JLabel();
-        crearProducto = new javax.swing.JButton();
-        jLabel2 = new javax.swing.JLabel();
-        jButton5 = new javax.swing.JButton();
-        jLabel7 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        fechaActual = new com.alee.extended.date.WebDateField();
-        comprass = new javax.swing.JComboBox();
         jTextField2 = new javax.swing.JTextField();
+        jPanel5 = new javax.swing.JPanel();
+        rsContent = new javax.swing.JScrollPane();
+        rsQuery = new javax.swing.JTable();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        compras = new javax.swing.JTable();
+        superior = new javax.swing.JPanel();
+        jPanel1 = new javax.swing.JPanel();
+        nroFactura = new javax.swing.JTextField();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        fechaActual = new com.alee.extended.date.WebDateField();
+        jPanel2 = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
         proveedores = new javax.swing.JComboBox();
+        jLabel6 = new javax.swing.JLabel();
+        comprass = new javax.swing.JComboBox();
+        inferior = new javax.swing.JPanel();
+        jPanel3 = new javax.swing.JPanel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jPanel4 = new javax.swing.JPanel();
+        jButton1 = new javax.swing.JButton();
+        jSeparator1 = new javax.swing.JSeparator();
+        jButton5 = new javax.swing.JButton();
+        derecha = new javax.swing.JPanel();
+        crearProducto = new javax.swing.JButton();
+        izquierda = new javax.swing.JPanel();
 
         jButton3.setText("Nuevo");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
@@ -192,6 +198,8 @@ public class Entrada_Nueva extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("BackBox - Agregar Productos");
+        setMinimumSize(new java.awt.Dimension(800, 600));
+        setPreferredSize(new java.awt.Dimension(800, 600));
 
         centro.setBackground(new java.awt.Color(255, 255, 255));
         centro.setPreferredSize(new java.awt.Dimension(740, 620));
@@ -200,63 +208,74 @@ public class Entrada_Nueva extends javax.swing.JFrame {
                 centroFocusLost(evt);
             }
         });
-        centro.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        centro.setLayout(new javax.swing.BoxLayout(centro, javax.swing.BoxLayout.Y_AXIS));
 
-        jTable1.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
-            public void mouseDragged(java.awt.event.MouseEvent evt) {
-                jTable1MouseDragged(evt);
+        jTextField2.setFont(new java.awt.Font("Segoe UI Light", 0, 18)); // NOI18N
+        jTextField2.setToolTipText("Busca un codigo de Producto");
+        jTextField2.setMaximumSize(new java.awt.Dimension(2147483647, 31));
+        jTextField2.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jTextField2KeyReleased(evt);
             }
         });
-        jTable1.addFocusListener(new java.awt.event.FocusAdapter() {
+        centro.add(jTextField2);
+
+        jPanel5.setBackground(java.awt.Color.white);
+        jPanel5.setMinimumSize(new java.awt.Dimension(25, 78));
+        jPanel5.setPreferredSize(new java.awt.Dimension(25, 78));
+
+        rsContent.setMinimumSize(new java.awt.Dimension(25, 78));
+        rsContent.setPreferredSize(new java.awt.Dimension(25, 78));
+
+        rsQuery.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseDragged(java.awt.event.MouseEvent evt) {
+                rsQueryMouseDragged(evt);
+            }
+        });
+        rsQuery.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
-                jTable1FocusGained(evt);
+                rsQueryFocusGained(evt);
             }
             public void focusLost(java.awt.event.FocusEvent evt) {
-                jTable1FocusLost(evt);
+                rsQueryFocusLost(evt);
             }
         });
-        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+        rsQuery.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jTable1MouseClicked(evt);
+                rsQueryMouseClicked(evt);
             }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                jTable1MouseEntered(evt);
+                rsQueryMouseEntered(evt);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                jTable1MouseExited(evt);
+                rsQueryMouseExited(evt);
             }
         });
-        jTable1.addKeyListener(new java.awt.event.KeyAdapter() {
+        rsQuery.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                jTable1KeyPressed(evt);
+                rsQueryKeyPressed(evt);
             }
         });
-        c.setViewportView(jTable1);
+        rsContent.setViewportView(rsQuery);
 
-        centro.add(c, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 120, 620, 140));
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(rsContent, javax.swing.GroupLayout.DEFAULT_SIZE, 745, Short.MAX_VALUE)
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addComponent(rsContent, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
 
-        jButton1.setFont(new java.awt.Font("Segoe UI Light", 0, 11)); // NOI18N
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-mdpi/ic_save_black_24dp.png"))); // NOI18N
-        jButton1.setText("Guardar");
-        jButton1.setToolTipText("Hacer registro de la entrada");
-        jButton1.setBorder(null);
-        jButton1.setBorderPainted(false);
-        jButton1.setContentAreaFilled(false);
-        jButton1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jButton1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton1.setPreferredSize(new java.awt.Dimension(55, 47));
-        jButton1.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
-        jButton1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-        centro.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 560, -1, -1));
+        centro.add(jPanel5);
 
-        jTable2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        jTable2.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
-        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+        compras.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        compras.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
+        compras.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null, null},
                 {null, null, null, null, null, null, null},
@@ -371,37 +390,211 @@ public class Entrada_Nueva extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jTable2.addFocusListener(new java.awt.event.FocusAdapter() {
+        compras.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
-                jTable2FocusGained(evt);
+                comprasFocusGained(evt);
             }
             public void focusLost(java.awt.event.FocusEvent evt) {
-                jTable2FocusLost(evt);
+                comprasFocusLost(evt);
             }
         });
-        jTable2.addMouseListener(new java.awt.event.MouseAdapter() {
+        compras.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                jTable2MouseEntered(evt);
+                comprasMouseEntered(evt);
             }
             public void mousePressed(java.awt.event.MouseEvent evt) {
-                jTable2MousePressed(evt);
+                comprasMousePressed(evt);
             }
         });
-        jTable2.addKeyListener(new java.awt.event.KeyAdapter() {
+        compras.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                jTable2KeyPressed(evt);
+                comprasKeyPressed(evt);
             }
             public void keyReleased(java.awt.event.KeyEvent evt) {
-                jTable2KeyReleased(evt);
+                comprasKeyReleased(evt);
             }
         });
-        jScrollPane2.setViewportView(jTable2);
+        jScrollPane2.setViewportView(compras);
 
-        centro.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 166, 656, 380));
+        centro.add(jScrollPane2);
 
-        jLabel6.setFont(new java.awt.Font("Segoe UI Light", 1, 12)); // NOI18N
+        getContentPane().add(centro, java.awt.BorderLayout.CENTER);
+
+        superior.setBackground(java.awt.Color.white);
+        superior.setLayout(new java.awt.GridLayout(1, 2, 2, 3));
+
+        jPanel1.setBackground(java.awt.Color.white);
+        jPanel1.setLayout(new java.awt.GridBagLayout());
+
+        nroFactura.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
+        nroFactura.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                nroFacturaActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridheight = 2;
+        gridBagConstraints.ipadx = 164;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(22, 10, 0, 75);
+        jPanel1.add(nroFactura, gridBagConstraints);
+
+        jLabel7.setFont(new java.awt.Font("Segoe UI Light", 1, 14)); // NOI18N
+        jLabel7.setText("Factura No.");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(22, 74, 0, 0);
+        jPanel1.add(jLabel7, gridBagConstraints);
+
+        jLabel2.setFont(new java.awt.Font("Segoe UI Light", 1, 14)); // NOI18N
+        jLabel2.setText("Fecha:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(10, 74, 0, 0);
+        jPanel1.add(jLabel2, gridBagConstraints);
+
+        fechaActual.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
+        fechaActual.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fechaActualActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridheight = 2;
+        gridBagConstraints.ipadx = 139;
+        gridBagConstraints.ipady = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 22, 75);
+        jPanel1.add(fechaActual, gridBagConstraints);
+
+        superior.add(jPanel1);
+
+        jPanel2.setBackground(java.awt.Color.white);
+        jPanel2.setLayout(new java.awt.GridBagLayout());
+
+        jLabel8.setFont(new java.awt.Font("Segoe UI Light", 1, 14)); // NOI18N
+        jLabel8.setText("Proveedor:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(23, 79, 0, 0);
+        jPanel2.add(jLabel8, gridBagConstraints);
+
+        proveedores.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridheight = 2;
+        gridBagConstraints.ipadx = 139;
+        gridBagConstraints.ipady = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(23, 4, 0, 80);
+        jPanel2.add(proveedores, gridBagConstraints);
+
+        jLabel6.setFont(new java.awt.Font("Segoe UI Light", 1, 14)); // NOI18N
         jLabel6.setText("Compra");
-        centro.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 50, -1, -1));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(5, 79, 0, 0);
+        jPanel2.add(jLabel6, gridBagConstraints);
+
+        comprass.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
+        comprass.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Credito", "De Contado" }));
+        comprass.setMinimumSize(new java.awt.Dimension(31, 24));
+        comprass.setPreferredSize(new java.awt.Dimension(31, 24));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridheight = 2;
+        gridBagConstraints.ipadx = 81;
+        gridBagConstraints.ipady = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(5, 4, 24, 80);
+        jPanel2.add(comprass, gridBagConstraints);
+
+        superior.add(jPanel2);
+
+        getContentPane().add(superior, java.awt.BorderLayout.PAGE_START);
+
+        inferior.setBackground(java.awt.Color.white);
+        inferior.setLayout(new java.awt.GridLayout(1, 2));
+
+        jPanel3.setBackground(java.awt.Color.white);
+        jPanel3.setLayout(new java.awt.GridLayout(1, 0, 5, 0));
+
+        jLabel3.setFont(new java.awt.Font("Segoe UI Light", 1, 30)); // NOI18N
+        jLabel3.setText("Total");
+        jPanel3.add(jLabel3);
+
+        jLabel4.setFont(new java.awt.Font("Segoe UI Light", 1, 30)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(204, 102, 0));
+        jLabel4.setText("Total");
+        jLabel4.setToolTipText("");
+        jPanel3.add(jLabel4);
+
+        inferior.add(jPanel3);
+
+        jPanel4.setBackground(java.awt.Color.white);
+        jPanel4.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
+
+        jButton1.setFont(new java.awt.Font("Segoe UI Light", 0, 11)); // NOI18N
+        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-mdpi/ic_save_black_24dp.png"))); // NOI18N
+        jButton1.setText("Guardar");
+        jButton1.setToolTipText("Hacer registro de la entrada");
+        jButton1.setBorder(null);
+        jButton1.setBorderPainted(false);
+        jButton1.setContentAreaFilled(false);
+        jButton1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jButton1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButton1.setPreferredSize(new java.awt.Dimension(55, 47));
+        jButton1.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
+        jButton1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        jPanel4.add(jButton1);
+
+        jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
+        jSeparator1.setPreferredSize(new java.awt.Dimension(160, 40));
+        jSeparator1.setRequestFocusEnabled(false);
+        jPanel4.add(jSeparator1);
+
+        jButton5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-xhdpi/ic_arrow_back_black_24dp.png"))); // NOI18N
+        jButton5.setBorder(null);
+        jButton5.setBorderPainted(false);
+        jButton5.setContentAreaFilled(false);
+        jButton5.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jButton5.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButton5.setPreferredSize(new java.awt.Dimension(55, 47));
+        jButton5.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
+        jButton5.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
+        jPanel4.add(jButton5);
+
+        inferior.add(jPanel4);
+
+        getContentPane().add(inferior, java.awt.BorderLayout.PAGE_END);
+
+        derecha.setBackground(java.awt.Color.white);
 
         crearProducto.setFont(new java.awt.Font("Segoe UI Light", 0, 11)); // NOI18N
         crearProducto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-mdpi/ic_assignment_turned_in_black_24dp.png"))); // NOI18N
@@ -420,101 +613,12 @@ public class Entrada_Nueva extends javax.swing.JFrame {
                 crearProductoActionPerformed(evt);
             }
         });
-        centro.add(crearProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 170, -1, -1));
+        derecha.add(crearProducto);
 
-        jLabel2.setFont(new java.awt.Font("Segoe UI Light", 1, 12)); // NOI18N
-        jLabel2.setText("Fecha:");
-        centro.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 50, -1, -1));
+        getContentPane().add(derecha, java.awt.BorderLayout.LINE_END);
 
-        jButton5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-xhdpi/ic_arrow_back_black_24dp.png"))); // NOI18N
-        jButton5.setBorder(null);
-        jButton5.setBorderPainted(false);
-        jButton5.setContentAreaFilled(false);
-        jButton5.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jButton5.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton5.setPreferredSize(new java.awt.Dimension(55, 47));
-        jButton5.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
-        jButton5.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jButton5.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton5ActionPerformed(evt);
-            }
-        });
-        centro.add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 560, -1, -1));
-
-        jLabel7.setFont(new java.awt.Font("Segoe UI Light", 1, 12)); // NOI18N
-        jLabel7.setText("Factura No.");
-        centro.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 20, -1, -1));
-
-        jTextField1.setMinimumSize(new java.awt.Dimension(6, 22));
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
-            }
-        });
-        centro.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 20, 170, -1));
-
-        jLabel3.setFont(new java.awt.Font("Segoe UI Light", 1, 30)); // NOI18N
-        jLabel3.setText("Total");
-        centro.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 560, -1, -1));
-
-        jLabel4.setFont(new java.awt.Font("Segoe UI Light", 1, 30)); // NOI18N
-        jLabel4.setForeground(new java.awt.Color(204, 102, 0));
-        jLabel4.setText("Total");
-        jLabel4.setToolTipText("");
-        centro.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 560, 199, -1));
-
-        fechaActual.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
-        fechaActual.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                fechaActualActionPerformed(evt);
-            }
-        });
-        centro.add(fechaActual, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 50, 170, -1));
-
-        comprass.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
-        comprass.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Credito", "De Contado" }));
-        comprass.setPreferredSize(new java.awt.Dimension(31, 20));
-        centro.add(comprass, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 50, 170, 25));
-
-        jTextField2.setFont(new java.awt.Font("Segoe UI Light", 0, 18)); // NOI18N
-        jTextField2.setToolTipText("Busca un codigo de Producto");
-        jTextField2.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                jTextField2FocusLost(evt);
-            }
-        });
-        jTextField2.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                jTextField2KeyPressed(evt);
-            }
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                jTextField2KeyReleased(evt);
-            }
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                jTextField2KeyTyped(evt);
-            }
-        });
-        centro.add(jTextField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 90, 620, -1));
-
-        jLabel8.setFont(new java.awt.Font("Segoe UI Light", 1, 12)); // NOI18N
-        jLabel8.setText("Proveedor:");
-        centro.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 20, -1, -1));
-
-        proveedores.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
-        proveedores.setPreferredSize(new java.awt.Dimension(31, 20));
-        centro.add(proveedores, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 20, 170, 25));
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(centro, javax.swing.GroupLayout.DEFAULT_SIZE, 800, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(centro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-        );
+        izquierda.setBackground(java.awt.Color.white);
+        getContentPane().add(izquierda, java.awt.BorderLayout.LINE_START);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -526,9 +630,9 @@ public class Entrada_Nueva extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         if (productos.size() == 0) {
             Entrada.muestreMensajeV("No hay Productos para Registrar");
-        } else if (jTextField1.getText().isEmpty()) {
+        } else if (nroFactura.getText().isEmpty()) {
             Entrada.muestreMensajeV("No Registro Numero de Factura");
-            jTextField1.requestFocus();
+            nroFactura.requestFocus();
         } else if (ValidarDatosEnTabla()) {
             boolean Rfinal = false;
             if (ajustar_Datos_CalculoCosto()) {
@@ -549,7 +653,7 @@ public class Entrada_Nueva extends javax.swing.JFrame {
                                 pro = (Producto) productos.get(i);
                                 r = Control.ejecuteUpdate("insert into detalle values(" + codigo_detalle + ",'" + fecha + "',"
                                         + pro.getCantidad() + "," + pro.getCosto() + ","
-                                        + v[0] + ",'" + jTextField1.getText() + "','" + comprass.getSelectedItem().toString() + "'"
+                                        + v[0] + ",'" + nroFactura.getText() + "','" + comprass.getSelectedItem().toString() + "'"
                                         + "," + pro.getIva() + "," + pro.getPrecio_venta() + "," + codEmpresa + ",'" + nombreUsuario + "'," + pro.getCodigoProducto() + ")");
                                 codigo_detalle++;
                                 if (r) {
@@ -678,51 +782,51 @@ public class Entrada_Nueva extends javax.swing.JFrame {
                 cant = 0;
                 costo = 0;
                 precio = 0;
-                if (i == 2 && SoloNumeros((String) jTable2.getValueAt(k, i), 1) == false) {
+                if (i == 2 && SoloNumeros((String) compras.getValueAt(k, i), 1) == false) {
                     mnserror = "El valor del costo debe ser Numerico";
                     r = false;
                     break;
-                } else if (i == 2 && SoloNumeros((String) jTable2.getValueAt(k, i), 1)) {
-                    costo = Double.parseDouble((String) jTable2.getValueAt(k, i));
+                } else if (i == 2 && SoloNumeros((String) compras.getValueAt(k, i), 1)) {
+                    costo = Double.parseDouble((String) compras.getValueAt(k, i));
                     if (costo <= 0) {
                         mnserror = "El valor del costo Debe ser mayor a cero (0)";
                         r = false;
                         break;
                     }
-                } else if (i == 5 && SoloNumeros((String) jTable2.getValueAt(k, i), 2) == false) {
+                } else if (i == 5 && SoloNumeros((String) compras.getValueAt(k, i), 2) == false) {
                     mnserror = "La cantidad debe ser Numerica";
                     r = false;
                     break;
-                } else if (i == 5 && SoloNumeros((String) jTable2.getValueAt(k, i), 2)) {
-                    cant = Integer.parseInt((String) jTable2.getValueAt(k, i));
+                } else if (i == 5 && SoloNumeros((String) compras.getValueAt(k, i), 2)) {
+                    cant = Integer.parseInt((String) compras.getValueAt(k, i));
                     if (cant <= 0) {
                         mnserror = "La cantidad debe ser mayor a cero (0)";
                         r = false;
                         break;
                     }
-                } else if (i == 3 && SoloNumeros((String) jTable2.getValueAt(k, i), 1) == false) {
+                } else if (i == 3 && SoloNumeros((String) compras.getValueAt(k, i), 1) == false) {
                     mnserror = "El valor del Precio debe ser Numerico";
                     r = false;
                     break;
-                } else if (i == 3 && SoloNumeros((String) jTable2.getValueAt(k, i), 1)) {
-                    precio = Double.parseDouble((String) jTable2.getValueAt(k, i));
+                } else if (i == 3 && SoloNumeros((String) compras.getValueAt(k, i), 1)) {
+                    precio = Double.parseDouble((String) compras.getValueAt(k, i));
                     if (precio <= 0) {
                         mnserror = "El valor del Precio Debe ser mayor a cero (0)";
                         r = false;
                         break;
                     }
-                } else if (i == 6 && SoloNumeros((String) jTable2.getValueAt(k, i), 2) == false) {
+                } else if (i == 6 && SoloNumeros((String) compras.getValueAt(k, i), 2) == false) {
                     mnserror = "La cantidad del Stock debe ser Numerico";
                     r = false;
                     break;
 
-                } else if (i == 4 && SoloNumeros((String) jTable2.getValueAt(k, i), 1) == false) {
+                } else if (i == 4 && SoloNumeros((String) compras.getValueAt(k, i), 1) == false) {
                     mnserror = "El valor del iva debe ser Numerico";
                     r = false;
                     break;
-                } else if (i == 4 && SoloNumeros((String) jTable2.getValueAt(k, i), 1)) {
+                } else if (i == 4 && SoloNumeros((String) compras.getValueAt(k, i), 1)) {
                     for (int Valoriva : listIvas) {
-                        if (Integer.parseInt((String) jTable2.getValueAt(k, i)) == Valoriva) {
+                        if (Integer.parseInt((String) compras.getValueAt(k, i)) == Valoriva) {
                             iva = true;
                         }
                     }
@@ -748,17 +852,17 @@ public class Entrada_Nueva extends javax.swing.JFrame {
             for (int k = 0; k < productos.size(); k++) {
                 prod = (Producto) productos.get(k);
                 if (i == 1) {
-                    prod.setNombre((String) jTable2.getValueAt(k, i));
+                    prod.setNombre((String) compras.getValueAt(k, i));
                 } else if (i == 2) {
-                    prod.setCosto(Double.parseDouble((String) jTable2.getValueAt(k, i)));
+                    prod.setCosto(Double.parseDouble((String) compras.getValueAt(k, i)));
                 } else if (i == 3) {
-                    prod.setPrecio_venta(Double.parseDouble((String) jTable2.getValueAt(k, i)));
+                    prod.setPrecio_venta(Double.parseDouble((String) compras.getValueAt(k, i)));
                 } else if (i == 4) {
-                    prod.setIva(Integer.parseInt((String) jTable2.getValueAt(k, i)));
+                    prod.setIva(Integer.parseInt((String) compras.getValueAt(k, i)));
                 } else if (i == 5) {
-                    prod.setCantidad(Integer.parseInt((String) jTable2.getValueAt(k, i)));
+                    prod.setCantidad(Integer.parseInt((String) compras.getValueAt(k, i)));
                 } else if (i == 6) {
-                    prod.setStock(Integer.parseInt((String) jTable2.getValueAt(k, i)));
+                    prod.setStock(Integer.parseInt((String) compras.getValueAt(k, i)));
                 }
             }
         }
@@ -775,7 +879,7 @@ public class Entrada_Nueva extends javax.swing.JFrame {
         iniciar();
         for (int i = 0; i < 4; i++) {
             for (int k = 0; k < productos.size(); k++) {
-                jTable2.setValueAt("", k, i);
+                compras.setValueAt("", k, i);
             }
         }
         productos.clear();
@@ -788,7 +892,7 @@ public class Entrada_Nueva extends javax.swing.JFrame {
         try {
             String provedor[] = proveedores.getSelectedItem().toString().split("-");
             int a = Integer.parseInt(provedor[0]);
-            Control.ejecuteQuery("select factura from detalle where factura='" + jTextField1.getText() + "' and provedor=" + a);
+            Control.ejecuteQuery("select factura from detalle where factura='" + nroFactura.getText() + "' and provedor=" + a);
             while (Control.rs.next()) {
                 r = true;
             }
@@ -800,33 +904,33 @@ public class Entrada_Nueva extends javax.swing.JFrame {
         }
         return r;
     }
-    private void jTable2MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable2MouseEntered
+    private void comprasMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_comprasMouseEntered
 
-    }//GEN-LAST:event_jTable2MouseEntered
+    }//GEN-LAST:event_comprasMouseEntered
 
-    private void jTable2MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable2MousePressed
+    private void comprasMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_comprasMousePressed
 
-    }//GEN-LAST:event_jTable2MousePressed
+    }//GEN-LAST:event_comprasMousePressed
     public void borrar() {
         String op[] = new String[2];
         op[0] = "Si";
         op[1] = "No";
         int Condicion = Entrada.menu("Inventarius", "¿Esta Seguro que Desea Borrar el Producto? ", op);
         if (Condicion == 1) {
-            int i = jTable2.getSelectedRow();
+            int i = compras.getSelectedRow();
             if (i == -1) {
                 JOptionPane.showMessageDialog(null, "Favor... seleccione una fila");
-            } else {                
-                String cod = (String) jTable2.getValueAt(i, 0).toString();
+            } else {
+                String cod = (String) compras.getValueAt(i, 0).toString();
                 Producto p = null;
 
                 for (int k = 0; k < productos.size(); k++) {
                     p = (Producto) productos.get(k);
-                    if (p.getCodigo().equalsIgnoreCase(cod)) {                        
+                    if (p.getCodigo().equalsIgnoreCase(cod)) {
                         productos.remove(p);
                     }
-                }                
-                if (productos.size() == 0) {
+                }
+                if (productos.isEmpty()) {
                     Borrar2();
                 } else {
                     Borrar();
@@ -836,14 +940,13 @@ public class Entrada_Nueva extends javax.swing.JFrame {
         }
     }
     private void crearProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_crearProductoActionPerformed
-     new ProductoRegistrar(this, true, productos).setVisible(true);
+        new ProductoRegistrar(this, true, productos).setVisible(true);
         //this.setVisible(false);
 
 
     }//GEN-LAST:event_crearProductoActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-
         Articulo ar;
         try {
             ar = new Articulo(nom, ListAcciones, codEmpresa);
@@ -855,25 +958,17 @@ public class Entrada_Nueva extends javax.swing.JFrame {
 
     }//GEN-LAST:event_jButton5ActionPerformed
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+    private void nroFacturaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nroFacturaActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
+    }//GEN-LAST:event_nroFacturaActionPerformed
 
     private void fechaActualActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fechaActualActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_fechaActualActionPerformed
 
-    private void jTextField2FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextField2FocusLost
-
-    }//GEN-LAST:event_jTextField2FocusLost
-
-    private void jTextField2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField2KeyPressed
-
-    }//GEN-LAST:event_jTextField2KeyPressed
-
     private void jTextField2KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField2KeyReleased
         if (evt.getKeyCode() == 10 && condicionfiltro == false) {
-            c.setVisible(false);
+            //rsContent.setVisible(false);
             this.condicionfiltro = true;
             Producto p = null;
             String cod = "";
@@ -890,8 +985,8 @@ public class Entrada_Nueva extends javax.swing.JFrame {
             if (Esta == false) {
                 try {
                     Control.conectar();
-                    Producto temp = null;                    
-                    Control.ejecuteQuery("select * from ProductoBuqueda('"+cod+"',1)");
+                    Producto temp = null;
+                    Control.ejecuteQuery("select * from ProductoBuqueda('" + cod + "',1)");
                     String nom = "";
                     double precio = 0;
                     double costo = 0;
@@ -924,7 +1019,7 @@ public class Entrada_Nueva extends javax.swing.JFrame {
                     Control.cerrarConexion();
                 }
             }
-            c.setVisible(false);
+           // rsContent.setVisible(false);
             jTextField2.setText("");
             iniciar();
             jTextField2.requestFocus();
@@ -939,22 +1034,18 @@ public class Entrada_Nueva extends javax.swing.JFrame {
 
     }//GEN-LAST:event_jTextField2KeyReleased
 
-    private void jTextField2KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField2KeyTyped
+    private void rsQueryMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_rsQueryMouseDragged
 
-    }//GEN-LAST:event_jTextField2KeyTyped
+    }//GEN-LAST:event_rsQueryMouseDragged
 
-    private void jTable1MouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseDragged
-
-    }//GEN-LAST:event_jTable1MouseDragged
-
-    private void jTable1FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTable1FocusGained
+    private void rsQueryFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_rsQueryFocusGained
         System.out.println("Pierde focus");
-    }//GEN-LAST:event_jTable1FocusGained
+    }//GEN-LAST:event_rsQueryFocusGained
 
-    private void jTable1FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTable1FocusLost
-        c.setVisible(false);
+    private void rsQueryFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_rsQueryFocusLost
+        //rsContent.setVisible(false);
         jTextField2.setText("");
-    }//GEN-LAST:event_jTable1FocusLost
+    }//GEN-LAST:event_rsQueryFocusLost
     public boolean SoloNumeros(String cadena) {
         try {
             Long.parseLong(cadena);
@@ -968,7 +1059,7 @@ public class Entrada_Nueva extends javax.swing.JFrame {
         System.out.println("+++++");
         for (int i = 0; i < 5; i++) {
             for (int k = 0; k < productos.size() + 1; k++) {
-                jTable2.setValueAt("", k, i);
+                compras.setValueAt("", k, i);
 
             }
         }
@@ -978,7 +1069,7 @@ public class Entrada_Nueva extends javax.swing.JFrame {
     public void Borrar2() {
         for (int i = 0; i < 5; i++) {
             for (int k = 0; k < 1; k++) {
-                jTable2.setValueAt("", k, i);
+                compras.setValueAt("", k, i);
             }
         }
         iniciar();
@@ -987,10 +1078,10 @@ public class Entrada_Nueva extends javax.swing.JFrame {
     public void Buscar() throws ClassNotFoundException {
         String query = "";
         if (SoloNumeros(jTextField2.getText())) {
-            query = "select * from CompraVentaFiltro('"+jTextField2.getText()+"',1)";
+            query = "select * from CompraVentaFiltro('" + jTextField2.getText() + "',1)";
         } else {
-            query = "select * from CompraVentaFiltro('"+jTextField2.getText()+"',2)";
-        }        
+            query = "select * from CompraVentaFiltro('" + jTextField2.getText() + "',2)";
+        }
         Control.conectar();
         String cabeceras[] = {"Producto", "Nombre", "Precio"};
         DefaultTableModel modeloEmpleado = new DefaultTableModel(null, cabeceras) {
@@ -1003,7 +1094,7 @@ public class Entrada_Nueva extends javax.swing.JFrame {
         ResultSetMetaData rsetMetaData;
         boolean r2 = false;
 
-        this.jTable1.setModel(modeloEmpleado);
+        this.rsQuery.setModel(modeloEmpleado);
         try {
             boolean r = Control.ejecuteQuery(query);
 
@@ -1013,7 +1104,7 @@ public class Entrada_Nueva extends javax.swing.JFrame {
             for (int i = 0; i <= numeroPreguntas; i++) {
                 //modeloEmpleado.addColumn(rsetMetaData.getColumnLabel(i + 1));
             }
-            if (!jTextField2.getText().equals("")) {                
+            if (!jTextField2.getText().equals("")) {
                 while (Control.rs.next()) {
                     r2 = true;
                     Object[] registroEmpleado = new Object[numeroPreguntas];
@@ -1022,10 +1113,10 @@ public class Entrada_Nueva extends javax.swing.JFrame {
                     }
                     modeloEmpleado.addRow(registroEmpleado);
                 }
-                c.setVisible(true);
+                //rsContent.setVisible(true);
             } else {
-                c.setVisible(false);
-            }            
+               // rsContent.setVisible(false);
+            }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "ERROR " + e.getMessage());
         } finally {
@@ -1033,20 +1124,20 @@ public class Entrada_Nueva extends javax.swing.JFrame {
         }
 
     }
-    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+    private void rsQueryMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_rsQueryMouseClicked
         if (evt.getClickCount() == 2) {
-            int i = jTable1.getSelectedRow();
+            int i = rsQuery.getSelectedRow();
             AgregarProductos(i);
         }
-    }//GEN-LAST:event_jTable1MouseClicked
+    }//GEN-LAST:event_rsQueryMouseClicked
 
-    private void jTable1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseEntered
+    private void rsQueryMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_rsQueryMouseEntered
 
-    }//GEN-LAST:event_jTable1MouseEntered
+    }//GEN-LAST:event_rsQueryMouseEntered
 
-    private void jTable1MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseExited
+    private void rsQueryMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_rsQueryMouseExited
 
-    }//GEN-LAST:event_jTable1MouseExited
+    }//GEN-LAST:event_rsQueryMouseExited
     public void AgregarProductos(int i) {
         Producto p = null;
         String cod = "";
@@ -1054,7 +1145,7 @@ public class Entrada_Nueva extends javax.swing.JFrame {
         if (i == -1) {
             JOptionPane.showMessageDialog(null, "Favor... seleccione una fil");
         } else if (i >= 0) {
-            cod = (String) jTable1.getValueAt(i, 0).toString();            
+            cod = (String) rsQuery.getValueAt(i, 0).toString();
             boolean Esta = false;
             for (int k = 0; k < productos.size(); k++) {
                 p = (Producto) productos.get(k);
@@ -1063,11 +1154,11 @@ public class Entrada_Nueva extends javax.swing.JFrame {
                     p.setCantidad(p.getCantidad() + 1);
                 }
             }
-            if (Esta == false) {               
+            if (Esta == false) {
                 try {
                     Control.conectar();
                     Producto temp = null;
-                    String query = "select * from ProductoBuqueda('"+cod+"',1)";
+                    String query = "select * from ProductoBuqueda('" + cod + "',1)";
                     Control.ejecuteQuery(query);
                     String nom = "";
                     double precio = 0;
@@ -1100,27 +1191,27 @@ public class Entrada_Nueva extends javax.swing.JFrame {
                     Logger.getLogger(Venta.class.getName()).log(Level.SEVERE, null, ex);
                 }
             } else {
-                jTable1.setValueAt("", i, 0);
+                rsQuery.setValueAt("", i, 0);
             }
         }
 
-        c.setVisible(false);
+        //rsContent.setVisible(false);
         jTextField2.setText("");
         iniciar();
         jTextField2.requestFocus();
     }
-    private void jTable1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTable1KeyPressed
+    private void rsQueryKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_rsQueryKeyPressed
         try {
             if (evt.getKeyCode() == 10) {
-                int i = jTable1.getSelectedRow();
+                int i = rsQuery.getSelectedRow();
                 AgregarProductos(i);
             }
         } catch (Exception ex) {
             System.err.println("Error al cargar producto :" + ex.toString());
         }
-    }//GEN-LAST:event_jTable1KeyPressed
+    }//GEN-LAST:event_rsQueryKeyPressed
 
-    private void jTable2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTable2KeyPressed
+    private void comprasKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_comprasKeyPressed
         try {
             if (evt.getKeyCode() == 127) {
                 borrar();
@@ -1128,24 +1219,24 @@ public class Entrada_Nueva extends javax.swing.JFrame {
         } catch (Exception ex) {
             Entrada.muestreMensajeV("Error al borrar producto :" + ex.toString());
         }
-    }//GEN-LAST:event_jTable2KeyPressed
+    }//GEN-LAST:event_comprasKeyPressed
 
-    private void jTable2KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTable2KeyReleased
+    private void comprasKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_comprasKeyReleased
 
-    }//GEN-LAST:event_jTable2KeyReleased
+    }//GEN-LAST:event_comprasKeyReleased
 
-    private void jTable2FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTable2FocusGained
-        c.setVisible(false);
+    private void comprasFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_comprasFocusGained
+        //rsContent.setVisible(false);
         jTextField2.setText("");
-    }//GEN-LAST:event_jTable2FocusGained
+    }//GEN-LAST:event_comprasFocusGained
 
-    private void jTable2FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTable2FocusLost
-        c.setVisible(false);
+    private void comprasFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_comprasFocusLost
+        //rsContent.setVisible(false);
         jTextField2.setText("");
-    }//GEN-LAST:event_jTable2FocusLost
+    }//GEN-LAST:event_comprasFocusLost
 
     private void centroFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_centroFocusLost
-        c.setVisible(false);
+       // rsContent.setVisible(false);
         jTextField2.setText("");
     }//GEN-LAST:event_centroFocusLost
 
@@ -1154,11 +1245,14 @@ public class Entrada_Nueva extends javax.swing.JFrame {
      */
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JScrollPane c;
     private javax.swing.JPanel centro;
+    public javax.swing.JTable compras;
     private javax.swing.JComboBox comprass;
     private javax.swing.JButton crearProducto;
+    private javax.swing.JPanel derecha;
     private com.alee.extended.date.WebDateField fechaActual;
+    private javax.swing.JPanel inferior;
+    private javax.swing.JPanel izquierda;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton5;
@@ -1168,11 +1262,18 @@ public class Entrada_Nueva extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable jTable1;
-    public javax.swing.JTable jTable2;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTextField jTextField2;
+    private javax.swing.JTextField nroFactura;
     private javax.swing.JComboBox proveedores;
+    private javax.swing.JScrollPane rsContent;
+    private javax.swing.JTable rsQuery;
+    private javax.swing.JPanel superior;
     // End of variables declaration//GEN-END:variables
 }
