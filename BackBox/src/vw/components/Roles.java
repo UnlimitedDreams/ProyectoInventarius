@@ -37,7 +37,8 @@ import vw.dialogs.CategoriasRegistrar;
 import vw.dialogs.ProveedoresRegistrar;
 import vw.dialogs.RolActualizar;
 import vw.dialogs.RolRegistrarF;
-import vw.dialogs.RolRegistrarPrueba;
+import vw.dialogs.RolRegistrar;
+import vw.dialogs.RolUpdate;
 import vw.dialogs.UsuarioPermiso;
 import vw.dialogs.UsuariosRegistrar;
 import vw.main.Acceder;
@@ -85,7 +86,7 @@ public class Roles extends javax.swing.JFrame {
                         menu.add(new JSeparator());
                     } else {
                         //10 = Control + Alt
-                      JMenuItem menuItem = new JMenuItem();
+                        JMenuItem menuItem = new JMenuItem();
                         menuItem = MenuRedireccionar.Atajos(object1.getAccion());
                         menuItem.addActionListener(new ActionListener() {
                             @Override
@@ -438,7 +439,8 @@ public class Roles extends javax.swing.JFrame {
             } else {
                 cod = (String) jTable1.getValueAt(i, 0).toString();
                 Nom = (String) jTable1.getValueAt(i, 1).toString();
-                new RolActualizar(this, true, cod, List_Menu, Nom).setVisible(true);
+                //new RolActualizar(this, true, cod, List_Menu, Nom).setVisible(true);
+                new RolUpdate(Integer.parseInt(cod), Nom).setVisible(true);
             }
         } catch (Exception ex) {
             System.out.println("Error: " + ex.toString());
@@ -454,7 +456,7 @@ public class Roles extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         try {
             //new RolRegistrarF(this, true).setVisible(true);
-            new RolRegistrarPrueba().setVisible(true);
+            new RolRegistrar().setVisible(true);
             this.dispose();
         } catch (Exception e) {
             System.out.println("Error: " + e.toString());
@@ -502,6 +504,7 @@ public class Roles extends javax.swing.JFrame {
         if (i == -1) {
             JOptionPane.showMessageDialog(null, "Favor... seleccione una fila");
         } else {
+            boolean r = false;
             String cod = (String) jTable1.getValueAt(i, 0).toString();
             String op[] = new String[2];
             op[0] = "Si";
@@ -509,9 +512,9 @@ public class Roles extends javax.swing.JFrame {
             int Condicion = Entrada.menu("Inventarius", "¿Esta Seguro que Desea Borrar el Rol? ", op);
             if (Condicion == 1) {
                 Control.conectar();
-                boolean r = Control.ejecuteUpdate("update rol set estado='I' where cod_rol=" + cod);
+                r = Control.ejecuteUpdate("update rol set estado='I' where cod_rol=" + cod);
+                r = Control.ejecuteUpdate("delete from detalleactividad where cod_rol=" + cod);
                 if (r) {
-
                     Entrada.muestreMensajeV("Rol Borrado con Exito", javax.swing.JOptionPane.INFORMATION_MESSAGE);
                     inicio(1);
                 } else {
@@ -549,51 +552,51 @@ public class Roles extends javax.swing.JFrame {
                         + " where estado='A' and cast(cod_rol as varchar(10)) like ('%" + buscaUsu.getText() + "%'))Y";
             } else {
                 query = "select cod_rol \"Codigo\",descripcion \"Descripcion\" from rol"
-                        + " where estado='A' and descripcion ILIKE ('%"+buscaUsu.getText()+"%') order by descripcion";
+                        + " where estado='A' and descripcion ILIKE ('%" + buscaUsu.getText() + "%') order by descripcion";
 
             }
         }
         System.out.println(query);
-            String cod = "", nom = "";
-            String cate = "";
-            DefaultTableModel modeloEmpleado = new DefaultTableModel();
-            int numeroPreguntas;
-            ResultSetMetaData rsetMetaData;
-            this.jTable1.setModel(modeloEmpleado);
-            try {
-                boolean r = Control.ejecuteQuery(query);
+        String cod = "", nom = "";
+        String cate = "";
+        DefaultTableModel modeloEmpleado = new DefaultTableModel();
+        int numeroPreguntas;
+        ResultSetMetaData rsetMetaData;
+        this.jTable1.setModel(modeloEmpleado);
+        try {
+            boolean r = Control.ejecuteQuery(query);
 
-                rsetMetaData = Control.rs.getMetaData();
-                numeroPreguntas = rsetMetaData.getColumnCount();
-                //Establece los nombres de las columnas de las tablas
+            rsetMetaData = Control.rs.getMetaData();
+            numeroPreguntas = rsetMetaData.getColumnCount();
+            //Establece los nombres de las columnas de las tablas
+            for (int i = 0; i < numeroPreguntas; i++) {
+                modeloEmpleado.addColumn(rsetMetaData.getColumnLabel(i + 1));
+            }
+
+            while (Control.rs.next()) {
+                cod = Control.rs.getString(1);
+                nom = Control.rs.getString(2);
+
+                Object[] registroEmpleado = new Object[numeroPreguntas];
+
                 for (int i = 0; i < numeroPreguntas; i++) {
-                    modeloEmpleado.addColumn(rsetMetaData.getColumnLabel(i + 1));
+                    registroEmpleado[i] = Control.rs.getObject(i + 1);
                 }
-
-                while (Control.rs.next()) {
-                    cod = Control.rs.getString(1);
-                    nom = Control.rs.getString(2);
-
-                    Object[] registroEmpleado = new Object[numeroPreguntas];
-
-                    for (int i = 0; i < numeroPreguntas; i++) {
-                        registroEmpleado[i] = Control.rs.getObject(i + 1);
-                    }
-                    modeloEmpleado.addRow(registroEmpleado);
-                }
-                Control.cerrarConexion();
+                modeloEmpleado.addRow(registroEmpleado);
+            }
+            Control.cerrarConexion();
 
 //            Control.rs.close();
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(null, "ERROR " + e.getMessage());
-            } finally {
-                Control.cerrarConexion();
-            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "ERROR " + e.getMessage());
+        } finally {
+            Control.cerrarConexion();
         }
-    
-        /**
-         * @param args the command line arguments
-         */
+    }
+
+    /**
+     * @param args the command line arguments
+     */
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton actualizar;
     private javax.swing.JTextField buscaUsu;

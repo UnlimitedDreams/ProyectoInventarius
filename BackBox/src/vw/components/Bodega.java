@@ -105,7 +105,7 @@ public class Bodega extends javax.swing.JFrame {
 
     }
 
-    private void inicio() throws ClassNotFoundException {
+    public void inicio() throws ClassNotFoundException {
 
         DefaultTableModel modeloEmpleado = new DefaultTableModel();
         int numeroPreguntas;
@@ -615,10 +615,6 @@ public class Bodega extends javax.swing.JFrame {
                 Control.ejecuteQuery(query);
                 rsetMetaData = Control.rs.getMetaData();
                 numeroPreguntas = rsetMetaData.getColumnCount();
-                //Establece los nombres de las columnas de las tablas
-                for (int i = 0; i < numeroPreguntas; i++) {
-                    modeloEmpleado.addColumn(rsetMetaData.getColumnLabel(i + 1));
-                }
 
                 while (Control.rs.next()) {
                     Object[] registroEmpleado = new Object[numeroPreguntas];

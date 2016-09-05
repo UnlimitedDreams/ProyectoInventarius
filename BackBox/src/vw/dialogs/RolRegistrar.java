@@ -27,7 +27,7 @@ import vw.dialogs.Acciones;
  *
  * @author usuario
  */
-public class RolRegistrarPrueba extends javax.swing.JFrame {
+public class RolRegistrar extends javax.swing.JFrame {
 
     String nomRol = "";
     ArrayList<seccion> listaSeccion = new ArrayList();
@@ -42,7 +42,7 @@ public class RolRegistrarPrueba extends javax.swing.JFrame {
      * @param modal
      * @param cod
      */
-    public RolRegistrarPrueba() {
+    public RolRegistrar() {
         initComponents();
 
 //        ContenedorMenus con_menu = new ContenedorMenus();
@@ -462,7 +462,7 @@ public class RolRegistrarPrueba extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        new Acciones(this, true).setVisible(true);
+        new Acciones(this, true,1).setVisible(true);
     }//GEN-LAST:event_jButton3ActionPerformed
 
     /**

@@ -28,12 +28,20 @@ public class Acciones extends javax.swing.JDialog {
      */
     ArrayList<acciones> listAcciones = new ArrayList();
     ArrayList<acciones> listOrden = new ArrayList();
-    RolRegistrarPrueba rol;
+    RolRegistrar rol;
+    RolUpdate rolU;
+    int condicion;
 
-    public Acciones(java.awt.Frame parent, boolean modal) {
+    public Acciones(java.awt.Frame parent, boolean modal, int condicion) {
         super(parent, modal);
         initComponents();
-        rol = (RolRegistrarPrueba) parent;
+        this.condicion = condicion;
+        if (condicion == 1) {
+            rol = (RolRegistrar) parent;
+        } else if (condicion == 2) {
+            rolU = (RolUpdate) parent;
+        }
+
         this.setLocationRelativeTo(null);
         try {
             inicio();
@@ -124,18 +132,35 @@ public class Acciones extends javax.swing.JDialog {
             }
         }
         boolean r = false;
-        for (acciones object : listAcciones) {
-            r = false;
-            for (acciones object1 : rol.listaaccion) {
-                if (object.getCod_seccion() == object1.getCod_seccion()) {
-                    r = true;
+        if (condicion == 1) {
+            for (acciones object : listAcciones) {
+                r = false;
+                for (acciones object1 : rol.listaaccion) {
+                    if (object.getCod_seccion() == object1.getCod_seccion()) {
+                        r = true;
+                    }
+                }
+                if (r == false) {
+                    rol.listaaccion.add(object);
                 }
             }
-            if (r == false) {
-                rol.listaaccion.add(object);
+            rol.iniciar();
+        } else if (condicion == 2) {
+            for (acciones object : listAcciones) {
+                r = false;
+                for (acciones object1 : rolU.listaaccion) {
+                    if (object.getCod_seccion() == object1.getCod_seccion()) {
+                        r = true;
+                    }
+                }
+                if (r == false) {
+                    rolU.listaaccion.add(object);
+                }
             }
+            rolU.iniciar();
+
         }
-        rol.iniciar();
+
         this.dispose();
     }
 
