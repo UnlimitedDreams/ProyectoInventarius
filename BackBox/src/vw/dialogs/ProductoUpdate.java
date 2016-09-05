@@ -379,26 +379,15 @@ public class ProductoUpdate extends javax.swing.JDialog {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         Bodega b;
-        try {
-            try {
-                b = new Bodega(nom, ListAcciones, codEmpresa);
-                b.setVisible(true);
-                this.setVisible(false);
-            } catch (SQLException ex) {
-                Logger.getLogger(ProductoUpdate.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ProductoUpdate.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        b = new Bodega(nom, ListAcciones, codEmpresa);
+        b.setVisible(true);
+        this.setVisible(false);
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         try {
             update();
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ProductoUpdate.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex) {
+        } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(ProductoUpdate.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -544,8 +533,8 @@ public class ProductoUpdate extends javax.swing.JDialog {
             if (descuento > 0 && descuento != p.getDesc()) {
                 valorDescuento = ((Double.parseDouble(jTextField6.getText()))
                         - ((Double.parseDouble(jTextField6.getText())) * (descuento / 100)));
-            }else{
-                valorDescuento=(Double.parseDouble(jTextField6.getText()));
+            } else {
+                valorDescuento = (Double.parseDouble(jTextField6.getText()));
             }
 
             r = Control.ejecuteUpdate("update producto set nombre='" + jTextField3.getText() + "',"
