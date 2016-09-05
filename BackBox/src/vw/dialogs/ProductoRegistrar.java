@@ -204,10 +204,10 @@ public class ProductoRegistrar extends javax.swing.JDialog {
             TablaModel t = new TablaModel(pr,7,1);
             t.DatosEntradaNueva();
 
-            v.jTable2.getDefaultEditor(null);
+            v.compras.getDefaultEditor(null);
             for (int i = 0; i < 6; i++) {
                 for (int k = 0; k < t.getNrofreq(); k++) {
-                    v.jTable2.setValueAt(t.frecuencias[i][k], k, i);
+                    v.compras.setValueAt(t.frecuencias[i][k], k, i);
 
                 }
             }
