@@ -57,10 +57,10 @@ public class VentaDiaria extends javax.swing.JFrame {
     ArrayList<acciones> listaaccion = new ArrayList();
     ArrayList<ContenedorMenus> List_Menu = new ArrayList();
 
-    public VentaDiaria(String Usuario, ArrayList acciones,int codEmpresa) throws ClassNotFoundException {
+    public VentaDiaria(String Usuario, ArrayList acciones, int codEmpresa) throws ClassNotFoundException {
         initComponents();
         this.List_Menu = acciones;
-        this.codEmpresa=codEmpresa;
+        this.codEmpresa = codEmpresa;
         Date fec = new Date();
         this.Fecha = new SimpleDateFormat("dd-MM-yyyy").format(fec);
         jLabel4.setText(Fecha);
@@ -86,71 +86,12 @@ public class VentaDiaria extends javax.swing.JFrame {
                         menu.add(new JSeparator());
                     } else {
                         //10 = Control + Alt
-                        JMenuItem menuItem = new JMenuItem(object1.getAccion());
-                        if (object1.getAccion().equalsIgnoreCase("Lista Bodega")) {
-                            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_B, 10));
-                        }
-                        if (object1.getAccion().equalsIgnoreCase("Lista Usuarios")) {
-                            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_U, 10));
-                        }
-                        if (object1.getAccion().equalsIgnoreCase("Crear Usuario")) {
-                            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_U, ActionEvent.CTRL_MASK));
-                        }
-                        if (object1.getAccion().equalsIgnoreCase("Lista Rol")) {
-                            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, 10));
-                        }
-                        if (object1.getAccion().equalsIgnoreCase("Crear Rol")) {
-                            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, ActionEvent.CTRL_MASK));
-                        }
-                        if (object1.getAccion().equalsIgnoreCase("Lista Proveedores")) {
-                            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, 10));
-                        }
-                        if (object1.getAccion().equalsIgnoreCase("Crear Proveedor")) {
-                            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, ActionEvent.CTRL_MASK));
-                        }
-                        if (object1.getAccion().equalsIgnoreCase("Ver Articulos")) {
-                            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, 10));
-                        }
-                        if (object1.getAccion().equalsIgnoreCase("Nueva Compra")) {
-                            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, ActionEvent.CTRL_MASK));
-                        }
-                        if (object1.getAccion().equalsIgnoreCase("Ver Categoria")) {
-                            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, 10));
-                        }
-                        if (object1.getAccion().equalsIgnoreCase("Crear Categoria ")) {
-                            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, ActionEvent.CTRL_MASK));
-                        }
-                        if (object1.getAccion().equalsIgnoreCase("Realizar Venta")) {
-                            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V, ActionEvent.CTRL_MASK));
-                        }
-                        if (object1.getAccion().equalsIgnoreCase("Realizar Devolucion")) {
-                            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, ActionEvent.CTRL_MASK));
-                        }
-                        if (object1.getAccion().equalsIgnoreCase("Ver Venta Diaria")) {
-                            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_T, 10));
-                        }
-                        if (object1.getAccion().equalsIgnoreCase("Venta")) {
-                            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, ActionEvent.CTRL_MASK));
-                        }
-                        if (object1.getAccion().equalsIgnoreCase("Compras")) {
-                            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_W, ActionEvent.CTRL_MASK));
-                        }
-                        if (object1.getAccion().equalsIgnoreCase("Entrada y Salidas")) {
-                            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, ActionEvent.CTRL_MASK));
-                        }
-                        if (object1.getAccion().equalsIgnoreCase("Venta")) {
-                            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, ActionEvent.CTRL_MASK));
-                        }
-                        if (object1.getAccion().equalsIgnoreCase("Lista Clientes")) {
-                            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, 10));
-                        }
-                        if (object1.getAccion().equalsIgnoreCase("Crear Cliente")) {
-                            menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK));
-                        }
+                        JMenuItem menuItem = new JMenuItem();
+                        menuItem = MenuRedireccionar.Atajos(object1.getAccion());
                         menuItem.addActionListener(new ActionListener() {
                             @Override
                             public void actionPerformed(ActionEvent e) {
-                                MenuRedireccionar MenuF = new MenuRedireccionar(VentaDiaria.this, e.getActionCommand(), List_Menu, usuario,codEmpresa);
+                                MenuRedireccionar MenuF = new MenuRedireccionar(VentaDiaria.this, e.getActionCommand(), List_Menu, usuario, codEmpresa);
                                 try {
                                     MenuF.reDireccion();
                                     if (e.getActionCommand().equalsIgnoreCase("Crear Categoria ")
@@ -204,7 +145,7 @@ public class VentaDiaria extends javax.swing.JFrame {
                     menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_2, ActionEvent.ALT_MASK));
                 }
                 menuItem.addActionListener((ActionEvent e) -> {
-                    MenuRedireccionar MenuF = new MenuRedireccionar(this, e.getActionCommand().toString(), List_Menu, usuario,codEmpresa);
+                    MenuRedireccionar MenuF = new MenuRedireccionar(this, e.getActionCommand().toString(), List_Menu, usuario, codEmpresa);
                     try {
                         MenuF.reDireccion();
                     } catch (IOException ex) {
@@ -268,7 +209,7 @@ public class VentaDiaria extends javax.swing.JFrame {
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "ERROR " + e.getMessage());
         } finally {
-           Control.cerrarConexion();
+            Control.cerrarConexion();
         }
     }
 
@@ -428,7 +369,7 @@ public class VentaDiaria extends javax.swing.JFrame {
     private void ventasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ventasActionPerformed
         ArrayList<Producto> pro = new ArrayList();
         try {
-            new Venta(pro, usuario, 1, List_Menu, "1",codEmpresa).setVisible(true);;
+            new Venta(pro, usuario, 1, List_Menu, "1", codEmpresa).setVisible(true);;
             this.setVisible(false);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
@@ -457,7 +398,7 @@ public class VentaDiaria extends javax.swing.JFrame {
     private void devolucionesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_devolucionesActionPerformed
         ArrayList<Producto> pro = new ArrayList();
         try {
-            new Venta(pro, usuario, 2, List_Menu, "1",codEmpresa).setVisible(true);;
+            new Venta(pro, usuario, 2, List_Menu, "1", codEmpresa).setVisible(true);;
             this.dispose();
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
