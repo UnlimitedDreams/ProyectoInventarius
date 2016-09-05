@@ -71,7 +71,7 @@ public class Stock extends javax.swing.JFrame {
                         menu.add(new JSeparator());
                     } else {
                         //10 = Control + Alt
-                       JMenuItem menuItem = new JMenuItem();
+                        JMenuItem menuItem = new JMenuItem();
                         menuItem = MenuRedireccionar.Atajos(object1.getAccion());
                         menuItem.addActionListener(new ActionListener() {
                             @Override
@@ -172,7 +172,7 @@ public class Stock extends javax.swing.JFrame {
                 nom = Control.rs.getString(2);
                 costo = Control.rs.getString(3);
                 cant = Control.rs.getString(4);
-                
+
                 Object[] registroEmpleado = new Object[numeroPreguntas];
 
                 for (int i = 0; i < numeroPreguntas; i++) {
@@ -333,17 +333,9 @@ public class Stock extends javax.swing.JFrame {
 
     private void volverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_volverActionPerformed
         Bodega m;
-        try {
-            try {
-                m = new Bodega(usuario, List_Menu, codEmpresa);
-                this.setVisible(false);
-                m.setVisible(true);
-            } catch (SQLException ex) {
-                Logger.getLogger(Stock.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(Stock.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        m = new Bodega(usuario, List_Menu, codEmpresa);
+        this.setVisible(false);
+        m.setVisible(true);
     }//GEN-LAST:event_volverActionPerformed
 
     private void excelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_excelActionPerformed

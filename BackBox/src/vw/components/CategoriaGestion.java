@@ -10,6 +10,7 @@ import Control.Control;
 import Modelo.ContenedorMenus;
 import Modelo.acciones;
 import Modelo.seccion;
+import java.awt.Toolkit;
 import java.net.URL;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -43,9 +44,7 @@ public class CategoriaGestion extends javax.swing.JFrame {
         this.List_Menu = Acciones;
         this.usuario = Usuario;
         this.setLocationRelativeTo(null);
-        URL url = getClass().getResource("/images/facelet/icon.png");
-        ImageIcon img = new ImageIcon(url);
-        setIconImage(img.getImage());
+        this.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/facelet/icon.png")));
         try {
             inicio();
         } catch (ClassNotFoundException ex) {
@@ -76,7 +75,7 @@ public class CategoriaGestion extends javax.swing.JFrame {
         izquierda = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Gestión de Categrorías - Inventarius");
+        setTitle("Gestión de Categrorías - BackBox");
         setMinimumSize(new java.awt.Dimension(800, 600));
         setPreferredSize(new java.awt.Dimension(800, 600));
 

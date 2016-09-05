@@ -163,15 +163,15 @@ public class MenuRedireccionar {
                 new Provedores(Usuario, listMenu).setVisible(true);
             } else if (CadenaMenu.equalsIgnoreCase("Crear Proveedor")) {
                 new ProveedoresRegistrar(this.parent, true).setVisible(true);
-            } else if (CadenaMenu.equalsIgnoreCase("Ver Articulos")) {
+            } else if (CadenaMenu.equalsIgnoreCase("Articulos")) {
                 new Articulo(Usuario, listMenu, codEmpresa).setVisible(true);
             } else if (CadenaMenu.equalsIgnoreCase("Nueva Compra")) {
                 ArrayList<Producto> pr = new ArrayList();
                 String fac = "";
                 new Entrada_Nueva(pr, Usuario, fac, listMenu, codEmpresa).setVisible(true);
-            } else if (CadenaMenu.equalsIgnoreCase("Ver Categoria")) {
+            } else if (CadenaMenu.equalsIgnoreCase("Categoria")) {
                 new CategoriaGestion(Usuario, listMenu).setVisible(true);
-            } else if (CadenaMenu.equalsIgnoreCase("Crear Categoria ")) {
+            } else if (CadenaMenu.equalsIgnoreCase("Crear Categoria")) {
                 new CategoriasRegistrar(this.parent, true).setVisible(true);
             } else if (CadenaMenu.equalsIgnoreCase("Realizar Venta")) {
                 ArrayList<Producto> productos = new ArrayList();
@@ -181,11 +181,11 @@ public class MenuRedireccionar {
                 new Venta(productos, Usuario, 2, listMenu, "1", this.codEmpresa).setVisible(true);
             } else if (CadenaMenu.equalsIgnoreCase("Ver Venta Diaria")) {
                 new VentaDiaria(Usuario, listMenu, codEmpresa).setVisible(true);
-            } else if (CadenaMenu.equalsIgnoreCase("Venta")) {
+            } else if (CadenaMenu.equalsIgnoreCase("Reporte Venta")) {
                 new Reporte_Ventas(Usuario, listMenu).setVisible(true);
-            } else if (CadenaMenu.equalsIgnoreCase("Compras")) {
+            } else if (CadenaMenu.equalsIgnoreCase("Reporte Compras")) {
                 new Reporte_Entradas(Usuario, listMenu).setVisible(true);
-            } else if (CadenaMenu.equalsIgnoreCase("Entrada y Salidas")) {//Pendiente
+            } else if (CadenaMenu.equalsIgnoreCase("Reporte Entrada y Salidas")) {//Pendiente
                 new DatallesPorFecha(Usuario, listMenu).setVisible(true);
             } else if (CadenaMenu.equalsIgnoreCase("Ayuda en Linea")) {
                 Desktop.getDesktop().browse(new URI("http://www.qmanager.com.co"));
@@ -202,7 +202,7 @@ public class MenuRedireccionar {
                 ArrayList<Producto> productos = new ArrayList();
                 r = new RegistroCliente(this.parent, true, productos, Usuario, listMenu, 2);
                 r.setVisible(true);
-            } else if (CadenaMenu.equalsIgnoreCase(" Iva")) {
+            } else if (CadenaMenu.equalsIgnoreCase("Iva")) {
                 new MaestroIva(Usuario, listMenu).setVisible(true);
             } else if (CadenaMenu.equalsIgnoreCase("Promocion")) {
                 new Promociones(Usuario, listMenu).setVisible(true);
@@ -210,9 +210,7 @@ public class MenuRedireccionar {
                 new Kits(Usuario, listMenu).setVisible(true);
             }
 
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(MenuRedireccionar.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex) {
+        } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(MenuRedireccionar.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
