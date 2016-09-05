@@ -35,8 +35,7 @@ public class DatallesPorFecha extends javax.swing.JFrame {
         this.nom = nom;
         this.ListAcciones = acciones;
         this.setLocationRelativeTo(null);
-        setTitle("REPORTE ENTRADA Y SALIDA DE PRODUCTOS EN BODEGA");
-        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/facelet/icon.png")));
+        this.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/facelet/icon.png")));
         Date fecha = new Date();
         fechaInicial.setDate(fecha);
         fechaFinal.setDate(fecha);
@@ -129,6 +128,7 @@ public class DatallesPorFecha extends javax.swing.JFrame {
         izquierda = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Reportes - BackBox");
         setMinimumSize(new java.awt.Dimension(800, 600));
         setPreferredSize(new java.awt.Dimension(800, 600));
 

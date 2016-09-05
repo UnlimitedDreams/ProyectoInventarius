@@ -22,7 +22,6 @@ import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperPrintManager;
 import net.sf.jasperreports.engine.JasperReport;
-import net.sf.jasperreports.view.JasperViewer;
 
 /**
  *
@@ -42,16 +41,14 @@ public class Detalle_Entrada extends javax.swing.JFrame {
 
     public Detalle_Entrada(String cod, String nom, String fecha) throws ClassNotFoundException {
         initComponents();
-        this.cod = cod;
-        inicio();
+        this.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/facelet/icon.png")));
         this.setLocationRelativeTo(null);
-        setTitle("GALVISOFT DETALLE ENTRADA");
-        this.setResizable(false);
-        recuperarDatos();
-        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/facelet/icon.png")));
+        this.cod = cod;
+        this.inicio();
+        this.recuperarDatos();
     }
 
-    public void recuperarDatos() throws ClassNotFoundException {
+    private void recuperarDatos() throws ClassNotFoundException {
         Control.conectar();
         try {
             Control.ejecuteQuery("select distinct  detalle.factura ,provedor.empresa,sum(detalle.costo)from provedor,detalle where \n"
@@ -60,10 +57,10 @@ public class Detalle_Entrada extends javax.swing.JFrame {
                     + "detalle.factura ,provedor.empresa");
 
             while (Control.rs.next()) {
-                jLabel2.setText("Factura :      " + Control.rs.getString(1));
+                factura.setText("Factura :      " + Control.rs.getString(1));
                 provedor = Control.rs.getString(2);
-                jLabel3.setText("Empresa :      " + Control.rs.getString(2));
-                jLabel4.setText("Total :        " + Control.rs.getString(3));
+                proveedor.setText("Empresa :      " + Control.rs.getString(2));
+                total.setText("Total :        " + Control.rs.getString(3));
             }
             Control.cerrarConexion();
         } catch (Exception ex) {
@@ -84,14 +81,23 @@ public class Detalle_Entrada extends javax.swing.JFrame {
     private void initComponents() {
 
         jButton3 = new javax.swing.JButton();
-        jPanel1 = new javax.swing.JPanel();
+        centro = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
-        jButton4 = new javax.swing.JButton();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        superior = new javax.swing.JPanel();
+        jPanel1 = new javax.swing.JPanel();
+        factura = new javax.swing.JLabel();
+        jSeparator1 = new javax.swing.JSeparator();
+        proveedor = new javax.swing.JLabel();
+        jSeparator2 = new javax.swing.JSeparator();
+        jPanel2 = new javax.swing.JPanel();
+        total = new javax.swing.JLabel();
+        inferior = new javax.swing.JPanel();
+        imprimir = new javax.swing.JButton();
+        jSeparator3 = new javax.swing.JSeparator();
+        Salir = new javax.swing.JButton();
+        derecha = new javax.swing.JPanel();
+        izquierda = new javax.swing.JPanel();
 
         jButton3.setText("Nuevo");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
@@ -101,57 +107,96 @@ public class Detalle_Entrada extends javax.swing.JFrame {
         });
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Detalle de Compras - BackBox");
+        setMinimumSize(new java.awt.Dimension(800, 600));
+        setPreferredSize(new java.awt.Dimension(800, 600));
 
-        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        centro.setBackground(new java.awt.Color(255, 255, 255));
+        centro.setLayout(new javax.swing.BoxLayout(centro, javax.swing.BoxLayout.LINE_AXIS));
 
         jScrollPane1.setViewportView(jTable1);
 
-        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(11, 82, 730, 382));
+        centro.add(jScrollPane1);
 
-        jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-xhdpi/ic_arrow_back_black_24dp.png"))); // NOI18N
-        jButton4.setBorder(null);
-        jButton4.setBorderPainted(false);
-        jButton4.setContentAreaFilled(false);
-        jButton4.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jButton4.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton4.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
-        jButton4.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
+        getContentPane().add(centro, java.awt.BorderLayout.CENTER);
+
+        superior.setLayout(new java.awt.GridLayout());
+
+        jPanel1.setBackground(java.awt.Color.white);
+        jPanel1.setLayout(new javax.swing.BoxLayout(jPanel1, javax.swing.BoxLayout.Y_AXIS));
+
+        factura.setFont(new java.awt.Font("Segoe UI Light", 1, 18)); // NOI18N
+        factura.setText("Factura:");
+        factura.setMaximumSize(new java.awt.Dimension(300, 30));
+        factura.setMinimumSize(new java.awt.Dimension(300, 30));
+        factura.setPreferredSize(new java.awt.Dimension(300, 30));
+        jPanel1.add(factura);
+        jPanel1.add(jSeparator1);
+
+        proveedor.setFont(new java.awt.Font("Segoe UI Light", 1, 18)); // NOI18N
+        proveedor.setText("Empresa:");
+        proveedor.setMaximumSize(new java.awt.Dimension(300, 25));
+        proveedor.setMinimumSize(new java.awt.Dimension(300, 25));
+        proveedor.setPreferredSize(new java.awt.Dimension(300, 30));
+        jPanel1.add(proveedor);
+        jPanel1.add(jSeparator2);
+
+        superior.add(jPanel1);
+
+        jPanel2.setBackground(java.awt.Color.white);
+        jPanel2.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
+
+        total.setFont(new java.awt.Font("Segoe UI Light", 1, 18)); // NOI18N
+        total.setText("Total:");
+        total.setMaximumSize(new java.awt.Dimension(250, 25));
+        total.setMinimumSize(new java.awt.Dimension(250, 25));
+        total.setPreferredSize(new java.awt.Dimension(250, 50));
+        jPanel2.add(total);
+
+        superior.add(jPanel2);
+
+        getContentPane().add(superior, java.awt.BorderLayout.PAGE_START);
+
+        inferior.setBackground(java.awt.Color.white);
+        inferior.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
+
+        imprimir.setFont(new java.awt.Font("Segoe UI Light", 0, 11)); // NOI18N
+        imprimir.setText("Imprimir");
+        imprimir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                imprimirActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(679, 523, -1, -1));
+        inferior.add(imprimir);
 
-        jLabel2.setText("Factura");
-        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(11, 12, 253, 26));
+        jSeparator3.setOrientation(javax.swing.SwingConstants.VERTICAL);
+        jSeparator3.setPreferredSize(new java.awt.Dimension(160, 40));
+        jSeparator3.setRequestFocusEnabled(false);
+        inferior.add(jSeparator3);
 
-        jLabel3.setText("Empresa");
-        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(11, 44, 242, 32));
-
-        jLabel4.setText("Total");
-        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(597, 477, 147, 35));
-
-        jButton1.setText("Imprimir");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        Salir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-xhdpi/ic_arrow_back_black_24dp.png"))); // NOI18N
+        Salir.setBorder(null);
+        Salir.setBorderPainted(false);
+        Salir.setContentAreaFilled(false);
+        Salir.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        Salir.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        Salir.setPreferredSize(new java.awt.Dimension(55, 47));
+        Salir.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
+        Salir.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        Salir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                SalirActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 540, -1, -1));
+        inferior.add(Salir);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 591, Short.MAX_VALUE)
-        );
+        getContentPane().add(inferior, java.awt.BorderLayout.PAGE_END);
+
+        derecha.setBackground(java.awt.Color.white);
+        getContentPane().add(derecha, java.awt.BorderLayout.LINE_END);
+
+        izquierda.setBackground(java.awt.Color.white);
+        getContentPane().add(izquierda, java.awt.BorderLayout.LINE_START);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -160,7 +205,7 @@ public class Detalle_Entrada extends javax.swing.JFrame {
 
     }//GEN-LAST:event_jButton3ActionPerformed
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+    private void SalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SalirActionPerformed
 
         Reporte_Entradas m;
         try {
@@ -171,21 +216,19 @@ public class Detalle_Entrada extends javax.swing.JFrame {
             Logger.getLogger(Detalle_Entrada.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-    }//GEN-LAST:event_jButton4ActionPerformed
+    }//GEN-LAST:event_SalirActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void imprimirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_imprimirActionPerformed
         try {
             Control.conectar();
             cone = Control.con;
             generarFactura(cone);
             Control.cerrarConexion();
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(Detalle_Entrada.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (JRException ex) {
+        } catch (ClassNotFoundException | JRException ex) {
             Logger.getLogger(Detalle_Entrada.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_imprimirActionPerformed
     public void generarFactura(Connection c) throws JRException, ClassNotFoundException {
         try {
             HashMap<String, Object> parametros = new HashMap<String, Object>();
@@ -201,7 +244,7 @@ public class Detalle_Entrada extends javax.swing.JFrame {
         }
     }
 
-    public void inicio() throws ClassNotFoundException {
+    private void inicio() throws ClassNotFoundException {
         Control.conectar();
         Producto temp = null;
         String query = "select producto.cod_producto \"Codigo\""
@@ -253,14 +296,23 @@ public class Detalle_Entrada extends javax.swing.JFrame {
      */
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton Salir;
+    private javax.swing.JPanel centro;
+    private javax.swing.JPanel derecha;
+    private javax.swing.JLabel factura;
+    private javax.swing.JButton imprimir;
+    private javax.swing.JPanel inferior;
+    private javax.swing.JPanel izquierda;
     private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JSeparator jSeparator3;
     private javax.swing.JTable jTable1;
+    private javax.swing.JLabel proveedor;
+    private javax.swing.JPanel superior;
+    private javax.swing.JLabel total;
     // End of variables declaration//GEN-END:variables
 }

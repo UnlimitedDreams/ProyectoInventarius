@@ -12,6 +12,7 @@ import Modelo.MenuRedireccionar;
 import Modelo.Producto;
 import Modelo.acciones;
 import Modelo.seccion;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -49,17 +50,23 @@ public class Bodega extends javax.swing.JFrame {
     ArrayList<acciones> listaaccion = new ArrayList();
     ArrayList<ContenedorMenus> List_Menu = new ArrayList();
 
-    public Bodega(String usuario, ArrayList acciones, int codEmpresa) throws ClassNotFoundException, SQLException {
+    public Bodega(String usuario, ArrayList acciones, int codEmpresa) {
         initComponents();
-        inicio();
+        this.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/facelet/icon.png")));
+        try {
+            inicio();
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Bodega.class.getName()).log(Level.SEVERE, null, ex);
+        }
         this.usuario = usuario;
         this.List_Menu = acciones;
         this.codEmpresa = codEmpresa;
         this.setLocationRelativeTo(null);
-        Stock();
-        URL url = getClass().getResource("/images/facelet/icon.png");
-        ImageIcon img = new ImageIcon(url);
-        setIconImage(img.getImage());
+        try {
+            Stock();
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Bodega.class.getName()).log(Level.SEVERE, null, ex);
+        }
         ContenedorMenus con_menu = new ContenedorMenus();
         con_menu = (ContenedorMenus) List_Menu.get(0);
         listaSeccion = con_menu.getListaSeccion();
@@ -101,11 +108,15 @@ public class Bodega extends javax.swing.JFrame {
             }
         }
         MenuAyuda();
-        Permisos();
+        try {
+            Permisos();
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Bodega.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
     }
 
-    public void inicio() throws ClassNotFoundException {
+    public final void inicio() throws ClassNotFoundException {
 
         DefaultTableModel modeloEmpleado = new DefaultTableModel();
         int numeroPreguntas;
@@ -143,7 +154,7 @@ public class Bodega extends javax.swing.JFrame {
                 }
                 modeloEmpleado.addRow(registroEmpleado);
             }
-        } catch (Exception e) {
+        } catch (ClassNotFoundException | SQLException e) {
             JOptionPane.showMessageDialog(null, "Error al Cargar Bodega " + e.getMessage());
         } finally {
             Control.cerrarConexion();
@@ -199,9 +210,7 @@ public class Bodega extends javax.swing.JFrame {
                     MenuRedireccionar MenuF = new MenuRedireccionar(this, e.getActionCommand().toString(), List_Menu, usuario, codEmpresa);
                     try {
                         MenuF.reDireccion();
-                    } catch (IOException ex) {
-                        Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (URISyntaxException ex) {
+                    } catch (IOException | URISyntaxException ex) {
                         Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (ClassNotFoundException ex) {
                         Logger.getLogger(Bodega.class.getName()).log(Level.SEVERE, null, ex);
@@ -759,7 +768,6 @@ public class Bodega extends javax.swing.JFrame {
 
         }
     }
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton actualizar;
