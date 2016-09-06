@@ -249,6 +249,7 @@ public class Menu extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Menú - BackBox");
+        setExtendedState(6);
         setMinimumSize(new java.awt.Dimension(800, 600));
 
         mainFrame.setMinimumSize(new java.awt.Dimension(800, 400));

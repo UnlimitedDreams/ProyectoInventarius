@@ -158,7 +158,6 @@ public class Entrada_Nueva extends javax.swing.JFrame {
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
-        jButton3 = new javax.swing.JButton();
         centro = new javax.swing.JPanel();
         jTextField2 = new javax.swing.JTextField();
         jPanel5 = new javax.swing.JPanel();
@@ -189,15 +188,9 @@ public class Entrada_Nueva extends javax.swing.JFrame {
         crearProducto = new javax.swing.JButton();
         izquierda = new javax.swing.JPanel();
 
-        jButton3.setText("Nuevo");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
-            }
-        });
-
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("BackBox - Agregar Productos");
+        setExtendedState(6);
         setMinimumSize(new java.awt.Dimension(800, 600));
         setPreferredSize(new java.awt.Dimension(800, 600));
 
@@ -227,11 +220,6 @@ public class Entrada_Nueva extends javax.swing.JFrame {
         rsContent.setMinimumSize(new java.awt.Dimension(25, 78));
         rsContent.setPreferredSize(new java.awt.Dimension(25, 78));
 
-        rsQuery.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
-            public void mouseDragged(java.awt.event.MouseEvent evt) {
-                rsQueryMouseDragged(evt);
-            }
-        });
         rsQuery.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 rsQueryFocusGained(evt);
@@ -243,12 +231,6 @@ public class Entrada_Nueva extends javax.swing.JFrame {
         rsQuery.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 rsQueryMouseClicked(evt);
-            }
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                rsQueryMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                rsQueryMouseExited(evt);
             }
         });
         rsQuery.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -398,20 +380,9 @@ public class Entrada_Nueva extends javax.swing.JFrame {
                 comprasFocusLost(evt);
             }
         });
-        compras.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                comprasMouseEntered(evt);
-            }
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                comprasMousePressed(evt);
-            }
-        });
         compras.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 comprasKeyPressed(evt);
-            }
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                comprasKeyReleased(evt);
             }
         });
         jScrollPane2.setViewportView(compras);
@@ -427,11 +398,6 @@ public class Entrada_Nueva extends javax.swing.JFrame {
         jPanel1.setLayout(new java.awt.GridBagLayout());
 
         nroFactura.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
-        nroFactura.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                nroFacturaActionPerformed(evt);
-            }
-        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 0;
@@ -461,11 +427,6 @@ public class Entrada_Nueva extends javax.swing.JFrame {
         jPanel1.add(jLabel2, gridBagConstraints);
 
         fechaActual.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
-        fechaActual.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                fechaActualActionPerformed(evt);
-            }
-        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 2;
@@ -622,10 +583,6 @@ public class Entrada_Nueva extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-
-    }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         if (productos.size() == 0) {
@@ -903,15 +860,7 @@ public class Entrada_Nueva extends javax.swing.JFrame {
             Control.cerrarConexion();
         }
         return r;
-    }
-    private void comprasMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_comprasMouseEntered
-
-    }//GEN-LAST:event_comprasMouseEntered
-
-    private void comprasMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_comprasMousePressed
-
-    }//GEN-LAST:event_comprasMousePressed
-    public void borrar() {
+    }    public void borrar() {
         String op[] = new String[2];
         op[0] = "Si";
         op[1] = "No";
@@ -957,14 +906,6 @@ public class Entrada_Nueva extends javax.swing.JFrame {
         this.dispose();
 
     }//GEN-LAST:event_jButton5ActionPerformed
-
-    private void nroFacturaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nroFacturaActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_nroFacturaActionPerformed
-
-    private void fechaActualActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fechaActualActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_fechaActualActionPerformed
 
     private void jTextField2KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField2KeyReleased
         if (evt.getKeyCode() == 10 && condicionfiltro == false) {
@@ -1019,7 +960,7 @@ public class Entrada_Nueva extends javax.swing.JFrame {
                     Control.cerrarConexion();
                 }
             }
-           // rsContent.setVisible(false);
+            // rsContent.setVisible(false);
             jTextField2.setText("");
             iniciar();
             jTextField2.requestFocus();
@@ -1034,10 +975,6 @@ public class Entrada_Nueva extends javax.swing.JFrame {
 
     }//GEN-LAST:event_jTextField2KeyReleased
 
-    private void rsQueryMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_rsQueryMouseDragged
-
-    }//GEN-LAST:event_rsQueryMouseDragged
-
     private void rsQueryFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_rsQueryFocusGained
         System.out.println("Pierde focus");
     }//GEN-LAST:event_rsQueryFocusGained
@@ -1046,6 +983,7 @@ public class Entrada_Nueva extends javax.swing.JFrame {
         //rsContent.setVisible(false);
         jTextField2.setText("");
     }//GEN-LAST:event_rsQueryFocusLost
+    
     public boolean SoloNumeros(String cadena) {
         try {
             Long.parseLong(cadena);
@@ -1060,7 +998,6 @@ public class Entrada_Nueva extends javax.swing.JFrame {
         for (int i = 0; i < 5; i++) {
             for (int k = 0; k < productos.size() + 1; k++) {
                 compras.setValueAt("", k, i);
-
             }
         }
         iniciar();
@@ -1115,14 +1052,13 @@ public class Entrada_Nueva extends javax.swing.JFrame {
                 }
                 //rsContent.setVisible(true);
             } else {
-               // rsContent.setVisible(false);
+                // rsContent.setVisible(false);
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "ERROR " + e.getMessage());
         } finally {
             Control.cerrarConexion();
         }
-
     }
     private void rsQueryMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_rsQueryMouseClicked
         if (evt.getClickCount() == 2) {
@@ -1130,14 +1066,6 @@ public class Entrada_Nueva extends javax.swing.JFrame {
             AgregarProductos(i);
         }
     }//GEN-LAST:event_rsQueryMouseClicked
-
-    private void rsQueryMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_rsQueryMouseEntered
-
-    }//GEN-LAST:event_rsQueryMouseEntered
-
-    private void rsQueryMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_rsQueryMouseExited
-
-    }//GEN-LAST:event_rsQueryMouseExited
     public void AgregarProductos(int i) {
         Producto p = null;
         String cod = "";
@@ -1185,9 +1113,7 @@ public class Entrada_Nueva extends javax.swing.JFrame {
                         temp.setCodigoProducto(cod_producto);
                         productos.add(temp);
                     }
-                } catch (ClassNotFoundException ex) {
-                    Logger.getLogger(Venta.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (SQLException ex) {
+                } catch (ClassNotFoundException | SQLException ex) {
                     Logger.getLogger(Venta.class.getName()).log(Level.SEVERE, null, ex);
                 }
             } else {
@@ -1221,10 +1147,6 @@ public class Entrada_Nueva extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_comprasKeyPressed
 
-    private void comprasKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_comprasKeyReleased
-
-    }//GEN-LAST:event_comprasKeyReleased
-
     private void comprasFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_comprasFocusGained
         //rsContent.setVisible(false);
         jTextField2.setText("");
@@ -1236,13 +1158,9 @@ public class Entrada_Nueva extends javax.swing.JFrame {
     }//GEN-LAST:event_comprasFocusLost
 
     private void centroFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_centroFocusLost
-       // rsContent.setVisible(false);
+        // rsContent.setVisible(false);
         jTextField2.setText("");
     }//GEN-LAST:event_centroFocusLost
-
-    /**
-     * @param args the command line arguments
-     */
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel centro;
@@ -1254,7 +1172,6 @@ public class Entrada_Nueva extends javax.swing.JFrame {
     private javax.swing.JPanel inferior;
     private javax.swing.JPanel izquierda;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
