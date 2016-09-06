@@ -17,12 +17,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.ImageIcon;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JSeparator;
@@ -85,7 +83,7 @@ public class Menu extends javax.swing.JFrame {
                             menuItem.addActionListener(new ActionListener() {
                                 @Override
                                 public void actionPerformed(ActionEvent e) {
-                                    MenuRedireccionar MenuF = new MenuRedireccionar(Menu.this, e.getActionCommand().toString(), List_Menu, usuario, codigoEmpresa);
+                                    MenuRedireccionar MenuF = new MenuRedireccionar(Menu.this, e.getActionCommand(), List_Menu, usuario, codigoEmpresa);
                                     try {
                                         MenuF.reDireccion();
                                         if (e.getActionCommand().equalsIgnoreCase("Crear Categoria ")

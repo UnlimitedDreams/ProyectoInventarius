@@ -11,13 +11,11 @@ import Modelo.ContenedorMenus;
 import Modelo.acciones;
 import Modelo.seccion;
 import java.awt.Toolkit;
-import java.net.URL;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import vw.dialogs.CategoriasRegistrar;
@@ -314,7 +312,9 @@ public class CategoriaGestion extends javax.swing.JFrame {
                     registroEmpleado[i] = Control.rs.getObject(i + 1);
                 }
                 modeloEmpleado.addRow(registroEmpleado);
-            }
+            }            
+            categoriaLista.getColumnModel().getColumn(0).setMaxWidth(150);
+            categoriaLista.getColumnModel().getColumn(0).setMinWidth(150);            
         } catch (ClassNotFoundException | SQLException e) {
             JOptionPane.showMessageDialog(null, "ERROR " + e.getMessage());
         } finally {

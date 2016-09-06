@@ -11,19 +11,17 @@ import Modelo.ContenedorMenus;
 import Modelo.Producto;
 import Modelo.acciones;
 import Modelo.seccion;
-import java.net.URL;
+import java.awt.HeadlessException;
+import java.awt.Toolkit;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-import vw.dialogs.CategoriasRegistrar;
 import vw.dialogs.PromocionRegistro;
 import vw.dialogs.PromocionUpdate;
-import vw.dialogs.RolActualizar;
 import vw.main.Menu;
 
 /**
@@ -39,16 +37,16 @@ public class Promociones extends javax.swing.JFrame {
 
     /**
      * Creates new form categoriaGestion
+     *
+     * @param Usuario
+     * @param Acciones
      */
     public Promociones(String Usuario, ArrayList Acciones) {
         initComponents();
+        this.setLocationRelativeTo(null);
+        this.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/facelet/icon.png")));
         this.List_Menu = Acciones;
         this.usuario = Usuario;
-        this.setLocationRelativeTo(null);
-        this.setResizable(false);
-        URL url = getClass().getResource("/images/facelet/icon.png");
-        ImageIcon img = new ImageIcon(url);
-        setIconImage(img.getImage());
         try {
             inicio();
         } catch (ClassNotFoundException ex) {
@@ -65,37 +63,43 @@ public class Promociones extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
+        centro = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         promociones = new javax.swing.JTable();
-        jButton4 = new javax.swing.JButton();
+        superior = new javax.swing.JPanel();
+        inferior = new javax.swing.JPanel();
+        infIzq = new javax.swing.JPanel();
         nuevo = new javax.swing.JButton();
         borrar = new javax.swing.JButton();
         actualizar = new javax.swing.JButton();
+        infDer = new javax.swing.JPanel();
+        jSeparator1 = new javax.swing.JSeparator();
+        volver = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Gestión de Promociones - Inventarius");
+        setExtendedState(6);
+        setMinimumSize(new java.awt.Dimension(800, 600));
+        setPreferredSize(new java.awt.Dimension(800, 600));
 
-        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+        centro.setBackground(new java.awt.Color(255, 255, 255));
+        centro.setLayout(new javax.swing.BoxLayout(centro, javax.swing.BoxLayout.LINE_AXIS));
 
         promociones.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
         jScrollPane1.setViewportView(promociones);
 
-        jButton4.setFont(new java.awt.Font("Segoe UI Light", 0, 11)); // NOI18N
-        jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-xhdpi/ic_arrow_back_black_24dp.png"))); // NOI18N
-        jButton4.setBorder(null);
-        jButton4.setBorderPainted(false);
-        jButton4.setContentAreaFilled(false);
-        jButton4.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jButton4.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton4.setPreferredSize(new java.awt.Dimension(55, 47));
-        jButton4.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
-        jButton4.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
-            }
-        });
+        centro.add(jScrollPane1);
+
+        getContentPane().add(centro, java.awt.BorderLayout.CENTER);
+
+        superior.setBackground(java.awt.Color.white);
+        getContentPane().add(superior, java.awt.BorderLayout.PAGE_START);
+
+        inferior.setBackground(java.awt.Color.white);
+        inferior.setLayout(new java.awt.GridLayout());
+
+        infIzq.setBackground(java.awt.Color.white);
+        infIzq.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
         nuevo.setFont(new java.awt.Font("Segoe UI Light", 0, 11)); // NOI18N
         nuevo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-mdpi/ic_add_black_24dp.png"))); // NOI18N
@@ -113,6 +117,7 @@ public class Promociones extends javax.swing.JFrame {
                 nuevoActionPerformed(evt);
             }
         });
+        infIzq.add(nuevo);
 
         borrar.setFont(new java.awt.Font("Segoe UI Light", 0, 11)); // NOI18N
         borrar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-mdpi/ic_remove_black_24dp.png"))); // NOI18N
@@ -130,6 +135,7 @@ public class Promociones extends javax.swing.JFrame {
                 borrarActionPerformed(evt);
             }
         });
+        infIzq.add(borrar);
 
         actualizar.setFont(new java.awt.Font("Segoe UI Light", 0, 11)); // NOI18N
         actualizar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-mdpi/ic_update_black_24dp.png"))); // NOI18N
@@ -147,60 +153,46 @@ public class Promociones extends javax.swing.JFrame {
                 actualizarActionPerformed(evt);
             }
         });
+        infIzq.add(actualizar);
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(nuevo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(borrar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(actualizar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 742, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(borrar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(actualizar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(nuevo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
-        );
+        inferior.add(infIzq);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
+        infDer.setBackground(java.awt.Color.white);
+        infDer.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
+
+        jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
+        jSeparator1.setPreferredSize(new java.awt.Dimension(160, 40));
+        jSeparator1.setRequestFocusEnabled(false);
+        infDer.add(jSeparator1);
+
+        volver.setFont(new java.awt.Font("Segoe UI Light", 0, 11)); // NOI18N
+        volver.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-xhdpi/ic_arrow_back_black_24dp.png"))); // NOI18N
+        volver.setBorder(null);
+        volver.setBorderPainted(false);
+        volver.setContentAreaFilled(false);
+        volver.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        volver.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        volver.setPreferredSize(new java.awt.Dimension(55, 47));
+        volver.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
+        volver.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        volver.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                volverActionPerformed(evt);
+            }
+        });
+        infDer.add(volver);
+
+        inferior.add(infDer);
+
+        getContentPane().add(inferior, java.awt.BorderLayout.PAGE_END);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+    private void volverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_volverActionPerformed
         new Menu(usuario).setVisible(true);
         this.dispose();
-    }//GEN-LAST:event_jButton4ActionPerformed
+    }//GEN-LAST:event_volverActionPerformed
 
     private void nuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nuevoActionPerformed
         new PromocionRegistro(this, true).setVisible(true);
@@ -210,7 +202,7 @@ public class Promociones extends javax.swing.JFrame {
         try {
             borrar();
             inicio();
-        } catch (Exception ex) {
+        } catch (ClassNotFoundException | SQLException ex) {
             /*Nothing here*/
         }
 
@@ -227,7 +219,7 @@ public class Promociones extends javax.swing.JFrame {
                 new PromocionUpdate(this, true, Integer.parseInt(cod)).setVisible(true);
             }
 
-        } catch (Exception ex) {
+        } catch (HeadlessException | NumberFormatException ex) {
             /*Nothing Here*/
         }
     }//GEN-LAST:event_actualizarActionPerformed
@@ -237,6 +229,7 @@ public class Promociones extends javax.swing.JFrame {
      * Cambiar estado a una Categoría
      *
      * @throws ClassNotFoundException No se encuentra la librería de conexión
+     * @throws java.sql.SQLException
      */
     public void borrar() throws ClassNotFoundException, SQLException {
 
@@ -263,9 +256,9 @@ public class Promociones extends javax.swing.JFrame {
                 }
                 for (Producto producto : listPro) {
                     Control.ejecuteUpdate("update producto set descu=0,precio_desc=precio_venta where cod_producto=" + producto.getCodigoProducto());
-                }                
+                }
                 Control.ejecuteUpdate("update promociones  set estado='C' where cod_promocion=" + cod);
-                r=true;
+                r = true;
                 if (r) {
                     Entrada.muestreMensajeV("Promocion Borrada con éxito",
                             JOptionPane.INFORMATION_MESSAGE);
@@ -274,7 +267,7 @@ public class Promociones extends javax.swing.JFrame {
                             JOptionPane.ERROR_MESSAGE);
                 }
 
-            } catch (Exception ex) {
+            } catch (ClassNotFoundException | SQLException ex) {
 
             } finally {
                 Control.con.commit();
@@ -293,7 +286,6 @@ public class Promociones extends javax.swing.JFrame {
      * @throws ClassNotFoundException no encuentra la librería de conexion
      * DataBase
      */
-    
     /**
      * Iniciar la tabla definida en el inicio.
      *
@@ -326,56 +318,25 @@ public class Promociones extends javax.swing.JFrame {
                 }
                 modeloEmpleado.addRow(registroEmpleado);
             }
-        } catch (Exception e) {
+        } catch (ClassNotFoundException | SQLException e) {
             JOptionPane.showMessageDialog(null, "ERROR " + e.getMessage());
         } finally {
             Control.cerrarConexion();
         }
     }
 
-    /**
-     * @param args the command line arguments
-     */
-//    public static void main(String args[]) {
-//        /* Set the Nimbus look and feel */
-//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-//         */
-//        try {
-//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-//                if ("Nimbus".equals(info.getName())) {
-//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-//                    break;
-//                }
-//            }
-//        } catch (ClassNotFoundException ex) {
-//            java.util.logging.Logger.getLogger(CategoriaGestion.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (InstantiationException ex) {
-//            java.util.logging.Logger.getLogger(CategoriaGestion.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (IllegalAccessException ex) {
-//            java.util.logging.Logger.getLogger(CategoriaGestion.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-//            java.util.logging.Logger.getLogger(CategoriaGestion.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        }
-//        //</editor-fold>
-//        //</editor-fold>
-//
-//        /* Create and display the form */
-//        java.awt.EventQueue.invokeLater(new Runnable() {
-//            public void run() {
-//                new CategoriaGestion().setVisible(true);
-//            }
-//        });
-//    }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton actualizar;
     private javax.swing.JButton borrar;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel centro;
+    private javax.swing.JPanel infDer;
+    private javax.swing.JPanel infIzq;
+    private javax.swing.JPanel inferior;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JSeparator jSeparator1;
     private javax.swing.JButton nuevo;
     private javax.swing.JTable promociones;
+    private javax.swing.JPanel superior;
+    private javax.swing.JButton volver;
     // End of variables declaration//GEN-END:variables
 }

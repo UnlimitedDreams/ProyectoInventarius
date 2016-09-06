@@ -90,38 +90,64 @@ public class Provedores extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
+        centro = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
-        volver = new javax.swing.JButton();
+        superior = new javax.swing.JPanel();
+        buscaUsu = new javax.swing.JTextField();
+        inferior = new javax.swing.JPanel();
+        infIzq = new javax.swing.JPanel();
         nuevo = new javax.swing.JButton();
         borrar = new javax.swing.JButton();
         actualizar = new javax.swing.JButton();
-        buscaUsu = new javax.swing.JTextField();
+        infDer = new javax.swing.JPanel();
+        jSeparator1 = new javax.swing.JSeparator();
+        volver = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Lista de Proveedores - BackBox");
-        setPreferredSize(new java.awt.Dimension(810, 570));
+        setExtendedState(6);
+        setMinimumSize(new java.awt.Dimension(800, 600));
+        setPreferredSize(new java.awt.Dimension(800, 600));
 
-        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+        centro.setBackground(new java.awt.Color(255, 255, 255));
+        centro.setLayout(new javax.swing.BoxLayout(centro, javax.swing.BoxLayout.LINE_AXIS));
 
         jTable1.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
         jScrollPane1.setViewportView(jTable1);
 
-        volver.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-xhdpi/ic_arrow_back_black_24dp.png"))); // NOI18N
-        volver.setBorder(null);
-        volver.setBorderPainted(false);
-        volver.setContentAreaFilled(false);
-        volver.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        volver.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        volver.setPreferredSize(new java.awt.Dimension(55, 47));
-        volver.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
-        volver.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        volver.addActionListener(new java.awt.event.ActionListener() {
+        centro.add(jScrollPane1);
+
+        getContentPane().add(centro, java.awt.BorderLayout.CENTER);
+
+        superior.setBackground(java.awt.Color.white);
+
+        buscaUsu.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
+        buscaUsu.setMinimumSize(new java.awt.Dimension(700, 30));
+        buscaUsu.setPreferredSize(new java.awt.Dimension(700, 30));
+        buscaUsu.setSelectionColor(new java.awt.Color(51, 0, 255));
+        buscaUsu.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                volverActionPerformed(evt);
+                buscaUsuActionPerformed(evt);
             }
         });
+        buscaUsu.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                buscaUsuKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                buscaUsuKeyReleased(evt);
+            }
+        });
+        superior.add(buscaUsu);
+
+        getContentPane().add(superior, java.awt.BorderLayout.PAGE_START);
+
+        inferior.setBackground(java.awt.Color.white);
+        inferior.setLayout(new java.awt.GridLayout());
+
+        infIzq.setBackground(java.awt.Color.white);
+        infIzq.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
         nuevo.setFont(new java.awt.Font("Segoe UI Light", 0, 11)); // NOI18N
         nuevo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-mdpi/ic_add_black_24dp.png"))); // NOI18N
@@ -139,6 +165,7 @@ public class Provedores extends javax.swing.JFrame {
                 nuevoActionPerformed(evt);
             }
         });
+        infIzq.add(nuevo);
 
         borrar.setFont(new java.awt.Font("Segoe UI Light", 0, 11)); // NOI18N
         borrar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-mdpi/ic_delete_black_24dp.png"))); // NOI18N
@@ -156,6 +183,7 @@ public class Provedores extends javax.swing.JFrame {
                 borrarActionPerformed(evt);
             }
         });
+        infIzq.add(borrar);
 
         actualizar.setFont(new java.awt.Font("Segoe UI Light", 0, 11)); // NOI18N
         actualizar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-mdpi/ic_update_black_24dp.png"))); // NOI18N
@@ -173,72 +201,37 @@ public class Provedores extends javax.swing.JFrame {
                 actualizarActionPerformed(evt);
             }
         });
+        infIzq.add(actualizar);
 
-        buscaUsu.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
-        buscaUsu.setSelectionColor(new java.awt.Color(51, 0, 255));
-        buscaUsu.addActionListener(new java.awt.event.ActionListener() {
+        inferior.add(infIzq);
+
+        infDer.setBackground(java.awt.Color.white);
+        infDer.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
+
+        jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
+        jSeparator1.setPreferredSize(new java.awt.Dimension(160, 40));
+        jSeparator1.setRequestFocusEnabled(false);
+        infDer.add(jSeparator1);
+
+        volver.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-xhdpi/ic_arrow_back_black_24dp.png"))); // NOI18N
+        volver.setBorder(null);
+        volver.setBorderPainted(false);
+        volver.setContentAreaFilled(false);
+        volver.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        volver.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        volver.setPreferredSize(new java.awt.Dimension(55, 47));
+        volver.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
+        volver.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        volver.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buscaUsuActionPerformed(evt);
+                volverActionPerformed(evt);
             }
         });
-        buscaUsu.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                buscaUsuKeyPressed(evt);
-            }
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                buscaUsuKeyReleased(evt);
-            }
-        });
+        infDer.add(volver);
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 786, Short.MAX_VALUE)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(nuevo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(borrar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(actualizar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(volver, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(64, 64, 64)
-                .addComponent(buscaUsu, javax.swing.GroupLayout.PREFERRED_SIZE, 667, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(15, 15, 15)
-                .addComponent(buscaUsu, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 420, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(actualizar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(volver, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(borrar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(nuevo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
+        inferior.add(infDer);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-        );
+        getContentPane().add(inferior, java.awt.BorderLayout.PAGE_END);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -453,10 +446,15 @@ public class Provedores extends javax.swing.JFrame {
     private javax.swing.JButton actualizar;
     private javax.swing.JButton borrar;
     private javax.swing.JTextField buscaUsu;
-    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel centro;
+    private javax.swing.JPanel infDer;
+    private javax.swing.JPanel infIzq;
+    private javax.swing.JPanel inferior;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTable jTable1;
     private javax.swing.JButton nuevo;
+    private javax.swing.JPanel superior;
     private javax.swing.JButton volver;
     // End of variables declaration//GEN-END:variables
 }

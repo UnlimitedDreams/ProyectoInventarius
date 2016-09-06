@@ -22,6 +22,8 @@ public class CategoriasRegistrar extends javax.swing.JDialog {
 
     /**
      * Creates new form CategoriasRegistrar
+     * @param parent
+     * @param modal
      */
     public CategoriasRegistrar(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -174,9 +176,7 @@ public class CategoriasRegistrar extends javax.swing.JDialog {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         try {
             registrar();
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(CategoriasRegistrar.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex) {
+        } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(CategoriasRegistrar.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jButton1ActionPerformed
