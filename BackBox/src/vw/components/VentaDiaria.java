@@ -13,15 +13,13 @@ import Modelo.MenuRedireccionar;
 import Modelo.acciones;
 import Modelo.exportar_excel;
 import Modelo.seccion;
-import java.awt.Desktop;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
@@ -31,7 +29,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.ImageIcon;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -69,10 +66,7 @@ public class VentaDiaria extends javax.swing.JFrame {
         this.usuario = Usuario;
         //this.usu = Usuario;
         this.setLocationRelativeTo(null);
-        this.setResizable(false);
-        URL url = getClass().getResource("/images/facelet/icon.png");
-        ImageIcon img = new ImageIcon(url);
-        setIconImage(img.getImage());
+        this.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/facelet/icon.png")));
         ContenedorMenus con_menu = new ContenedorMenus();
         con_menu = (ContenedorMenus) List_Menu.get(0);
         listaSeccion = con_menu.getListaSeccion();
@@ -217,17 +211,21 @@ public class VentaDiaria extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
+        centro = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
-        volver = new javax.swing.JButton();
+        superior = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
+        inferior = new javax.swing.JPanel();
+        infIzq = new javax.swing.JPanel();
+        totalVlr = new javax.swing.JLabel();
         Total = new javax.swing.JLabel();
+        infDer = new javax.swing.JPanel();
         ventas = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        detalle = new javax.swing.JButton();
         devoluciones = new javax.swing.JButton();
+        volver = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         file = new javax.swing.JMenu();
         inicio = new javax.swing.JMenuItem();
@@ -237,16 +235,82 @@ public class VentaDiaria extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Ventas del Día - BackBox");
-        setPreferredSize(new java.awt.Dimension(770, 570));
-        setResizable(false);
+        setExtendedState(6);
+        setMinimumSize(new java.awt.Dimension(800, 600));
+        setPreferredSize(new java.awt.Dimension(800, 600));
 
-        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        centro.setBackground(new java.awt.Color(255, 255, 255));
+        centro.setLayout(new javax.swing.BoxLayout(centro, javax.swing.BoxLayout.LINE_AXIS));
 
         jTable1.setFont(new java.awt.Font("Segoe UI Light", 0, 11)); // NOI18N
         jScrollPane1.setViewportView(jTable1);
 
-        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, 740, 390));
+        centro.add(jScrollPane1);
+
+        getContentPane().add(centro, java.awt.BorderLayout.CENTER);
+
+        superior.setBackground(java.awt.Color.white);
+        superior.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
+
+        jLabel2.setFont(new java.awt.Font("Segoe UI Light", 0, 18)); // NOI18N
+        jLabel2.setText("Fecha :");
+        superior.add(jLabel2);
+
+        jLabel4.setFont(new java.awt.Font("Segoe UI Light", 1, 18)); // NOI18N
+        jLabel4.setText("jLabel4");
+        superior.add(jLabel4);
+
+        getContentPane().add(superior, java.awt.BorderLayout.PAGE_START);
+
+        inferior.setBackground(java.awt.Color.white);
+        inferior.setLayout(new java.awt.GridLayout(1, 2));
+
+        infIzq.setBackground(java.awt.Color.white);
+        infIzq.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
+
+        totalVlr.setFont(new java.awt.Font("Segoe UI Light", 0, 24)); // NOI18N
+        totalVlr.setText("Total :");
+        infIzq.add(totalVlr);
+
+        Total.setFont(new java.awt.Font("Segoe UI Light", 1, 36)); // NOI18N
+        Total.setForeground(new java.awt.Color(255, 102, 51));
+        Total.setText("jLabel4");
+        Total.setMaximumSize(new java.awt.Dimension(9999, 48));
+        Total.setMinimumSize(new java.awt.Dimension(290, 48));
+        Total.setPreferredSize(new java.awt.Dimension(290, 48));
+        infIzq.add(Total);
+
+        inferior.add(infIzq);
+
+        infDer.setBackground(java.awt.Color.white);
+
+        ventas.setFont(new java.awt.Font("Segoe UI Light", 0, 11)); // NOI18N
+        ventas.setText("Vender");
+        ventas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ventasActionPerformed(evt);
+            }
+        });
+        infDer.add(ventas);
+
+        detalle.setFont(new java.awt.Font("Segoe UI Light", 0, 11)); // NOI18N
+        detalle.setText("Detalle");
+        detalle.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                detalleActionPerformed(evt);
+            }
+        });
+        infDer.add(detalle);
+
+        devoluciones.setFont(new java.awt.Font("Segoe UI Light", 0, 11)); // NOI18N
+        devoluciones.setText("Devolucion");
+        devoluciones.setToolTipText("");
+        devoluciones.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                devolucionesActionPerformed(evt);
+            }
+        });
+        infDer.add(devoluciones);
 
         volver.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-xhdpi/ic_arrow_back_black_24dp.png"))); // NOI18N
         volver.setToolTipText("Volver a Bodega");
@@ -263,52 +327,11 @@ public class VentaDiaria extends javax.swing.JFrame {
                 volverActionPerformed(evt);
             }
         });
-        jPanel1.add(volver, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 460, -1, -1));
+        infDer.add(volver);
 
-        jLabel2.setFont(new java.awt.Font("Segoe UI Light", 0, 18)); // NOI18N
-        jLabel2.setText("Fecha :");
-        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, -1));
+        inferior.add(infDer);
 
-        jLabel3.setFont(new java.awt.Font("Segoe UI Light", 0, 24)); // NOI18N
-        jLabel3.setText("Total :");
-        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 430, -1, -1));
-
-        jLabel4.setFont(new java.awt.Font("Segoe UI Light", 1, 18)); // NOI18N
-        jLabel4.setText("jLabel4");
-        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 10, 107, -1));
-
-        Total.setFont(new java.awt.Font("Segoe UI Light", 1, 36)); // NOI18N
-        Total.setForeground(new java.awt.Color(255, 102, 51));
-        Total.setText("jLabel4");
-        jPanel1.add(Total, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 460, 370, -1));
-
-        ventas.setFont(new java.awt.Font("Segoe UI Light", 0, 11)); // NOI18N
-        ventas.setText("Vender");
-        ventas.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ventasActionPerformed(evt);
-            }
-        });
-        jPanel1.add(ventas, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 480, -1, -1));
-
-        jButton2.setFont(new java.awt.Font("Segoe UI Light", 0, 11)); // NOI18N
-        jButton2.setText("Detalle");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
-            }
-        });
-        jPanel1.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 480, -1, -1));
-
-        devoluciones.setFont(new java.awt.Font("Segoe UI Light", 0, 11)); // NOI18N
-        devoluciones.setText("Devolucion");
-        devoluciones.setToolTipText("");
-        devoluciones.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                devolucionesActionPerformed(evt);
-            }
-        });
-        jPanel1.add(devoluciones, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 480, -1, -1));
+        getContentPane().add(inferior, java.awt.BorderLayout.PAGE_END);
 
         file.setText("Archivo");
         file.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
@@ -347,17 +370,6 @@ public class VentaDiaria extends javax.swing.JFrame {
 
         setJMenuBar(jMenuBar1);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 765, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 518, Short.MAX_VALUE)
-        );
-
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -378,7 +390,7 @@ public class VentaDiaria extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_ventasActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void detalleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_detalleActionPerformed
         int i = jTable1.getSelectedRow();
         if (i == -1) {
             Entrada.muestreMensajeV("Seleccione una de las facturas primero",
@@ -393,7 +405,7 @@ public class VentaDiaria extends javax.swing.JFrame {
                 Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_detalleActionPerformed
 
     private void devolucionesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_devolucionesActionPerformed
         ArrayList<Producto> pro = new ArrayList();
@@ -455,20 +467,24 @@ public class VentaDiaria extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel Total;
+    private javax.swing.JPanel centro;
     private javax.swing.JMenuItem cerrarSesion;
+    private javax.swing.JButton detalle;
     private javax.swing.JButton devoluciones;
     private javax.swing.JMenu file;
+    private javax.swing.JPanel infDer;
+    private javax.swing.JPanel infIzq;
+    private javax.swing.JPanel inferior;
     private javax.swing.JMenuItem inicio;
-    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JTable jTable1;
     private javax.swing.JMenuItem salir;
+    private javax.swing.JPanel superior;
+    private javax.swing.JLabel totalVlr;
     private javax.swing.JButton ventas;
     private javax.swing.JButton volver;
     // End of variables declaration//GEN-END:variables

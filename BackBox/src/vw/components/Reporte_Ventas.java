@@ -8,10 +8,10 @@ package vw.components;
 import Modelo.Producto;
 import Control.Control;
 import Modelo.exportar_excel;
+import java.awt.Toolkit;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.sql.Connection;
 import java.sql.ResultSetMetaData;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -29,7 +29,6 @@ import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.JasperPrintManager;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.view.JasperViewer;
 import vw.dialogs.ReporteDetalleVenta;
@@ -55,9 +54,7 @@ public class Reporte_Ventas extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
         cargarPersonal();
         this.setResizable(false);
-        URL url = getClass().getResource("/images/facelet/icon.png");
-        ImageIcon img = new ImageIcon(url);
-        setIconImage(img.getImage());
+        this.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/facelet/icon.png")));
         Date fecha = new Date();
         jDateChooser1.setDate(fecha);
         jDateChooser2.setDate(fecha);
@@ -74,22 +71,30 @@ public class Reporte_Ventas extends javax.swing.JFrame {
     private void initComponents() {
 
         jButton3 = new javax.swing.JButton();
-        jPanel1 = new javax.swing.JPanel();
+        Centro = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
-        volver = new javax.swing.JButton();
-        jLabel2 = new javax.swing.JLabel();
+        superior = new javax.swing.JPanel();
+        jLabel7 = new javax.swing.JLabel();
         jDateChooser1 = new com.alee.extended.date.WebDateField();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        jButton6 = new javax.swing.JButton();
+        jSeparator4 = new javax.swing.JSeparator();
         jLabel6 = new javax.swing.JLabel();
         jDateChooser2 = new com.alee.extended.date.WebDateField();
+        jSeparator3 = new javax.swing.JSeparator();
+        jLabel2 = new javax.swing.JLabel();
         rol = new javax.swing.JComboBox();
-        jLabel7 = new javax.swing.JLabel();
+        jSeparator5 = new javax.swing.JSeparator();
+        jButton1 = new javax.swing.JButton();
+        inferior = new javax.swing.JPanel();
+        infIzq = new javax.swing.JPanel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        infDer = new javax.swing.JPanel();
+        jButton2 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
+        jButton6 = new javax.swing.JButton();
+        jSeparator2 = new javax.swing.JSeparator();
+        volver = new javax.swing.JButton();
 
         jButton3.setText("Nuevo");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
@@ -100,56 +105,109 @@ public class Reporte_Ventas extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Reporte de Ventas - BackBox");
+        setExtendedState(6);
         setPreferredSize(new java.awt.Dimension(849, 540));
 
-        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        jPanel1.setPreferredSize(new java.awt.Dimension(849, 500));
-        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        Centro.setBackground(new java.awt.Color(255, 255, 255));
+        Centro.setPreferredSize(new java.awt.Dimension(849, 500));
+        Centro.setLayout(new java.awt.GridLayout(1, 0));
 
         jTable1.setAutoscrolls(false);
         jScrollPane1.setViewportView(jTable1);
 
-        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 100, 829, 330));
+        Centro.add(jScrollPane1);
 
-        volver.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-xhdpi/ic_arrow_back_black_24dp.png"))); // NOI18N
-        volver.setBorder(null);
-        volver.setBorderPainted(false);
-        volver.setContentAreaFilled(false);
-        volver.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        volver.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        volver.setPreferredSize(new java.awt.Dimension(55, 47));
-        volver.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
-        volver.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        volver.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                volverActionPerformed(evt);
-            }
-        });
-        jPanel1.add(volver, new org.netbeans.lib.awtextra.AbsoluteConstraints(780, 450, -1, -1));
+        getContentPane().add(Centro, java.awt.BorderLayout.CENTER);
 
-        jLabel2.setFont(new java.awt.Font("Segoe UI Light", 1, 14)); // NOI18N
-        jLabel2.setText("Trabajador");
-        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(261, 25, -1, -1));
-        jPanel1.add(jDateChooser1, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 24, 133, -1));
+        superior.setBackground(java.awt.Color.white);
+        superior.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
+
+        jLabel7.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
+        jLabel7.setText("Fecha Inicial:");
+        superior.add(jLabel7);
+
+        jDateChooser1.setFont(new java.awt.Font("Segoe UI Light", 0, 11)); // NOI18N
+        jDateChooser1.setMinimumSize(new java.awt.Dimension(130, 30));
+        jDateChooser1.setPreferredSize(new java.awt.Dimension(130, 30));
+        superior.add(jDateChooser1);
+
+        jSeparator4.setOrientation(javax.swing.SwingConstants.VERTICAL);
+        jSeparator4.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        jSeparator4.setPreferredSize(new java.awt.Dimension(30, 30));
+        jSeparator4.setRequestFocusEnabled(false);
+        superior.add(jSeparator4);
+
+        jLabel6.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
+        jLabel6.setText("Fecha Final:");
+        superior.add(jLabel6);
+
+        jDateChooser2.setFont(new java.awt.Font("Segoe UI Light", 0, 11)); // NOI18N
+        jDateChooser2.setMinimumSize(new java.awt.Dimension(130, 30));
+        jDateChooser2.setPreferredSize(new java.awt.Dimension(130, 30));
+        superior.add(jDateChooser2);
+
+        jSeparator3.setOrientation(javax.swing.SwingConstants.VERTICAL);
+        jSeparator3.setPreferredSize(new java.awt.Dimension(30, 30));
+        jSeparator3.setRequestFocusEnabled(false);
+        superior.add(jSeparator3);
+
+        jLabel2.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
+        jLabel2.setText("Trabajador:");
+        superior.add(jLabel2);
+
+        rol.setFont(new java.awt.Font("Segoe UI Light", 0, 18)); // NOI18N
+        rol.setMaximumRowCount(10);
+        rol.setAutoscrolls(true);
+        rol.setMinimumSize(new java.awt.Dimension(130, 30));
+        rol.setPreferredSize(new java.awt.Dimension(130, 30));
+        superior.add(rol);
+
+        jSeparator5.setOrientation(javax.swing.SwingConstants.VERTICAL);
+        jSeparator5.setPreferredSize(new java.awt.Dimension(30, 30));
+        jSeparator5.setRequestFocusEnabled(false);
+        superior.add(jSeparator5);
 
         jButton1.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
         jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-mdpi/ic_find_in_page_black_24dp.png"))); // NOI18N
-        jButton1.setText("Buscar");
         jButton1.setBorder(null);
         jButton1.setBorderPainted(false);
         jButton1.setContentAreaFilled(false);
         jButton1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jButton1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton1.setPreferredSize(new java.awt.Dimension(55, 47));
-        jButton1.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
+        jButton1.setMaximumSize(new java.awt.Dimension(30, 30));
+        jButton1.setMinimumSize(new java.awt.Dimension(30, 30));
+        jButton1.setPreferredSize(new java.awt.Dimension(30, 30));
         jButton1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 31, -1, 51));
+        superior.add(jButton1);
+
+        getContentPane().add(superior, java.awt.BorderLayout.PAGE_START);
+
+        inferior.setBackground(java.awt.Color.white);
+        inferior.setLayout(new java.awt.GridLayout(1, 0));
+
+        infIzq.setBackground(java.awt.Color.lightGray);
+        infIzq.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
+
+        jLabel3.setFont(new java.awt.Font("Segoe UI Light", 1, 36)); // NOI18N
+        jLabel3.setText("Total:");
+        infIzq.add(jLabel3);
+
+        jLabel5.setFont(new java.awt.Font("Segoe UI Light", 1, 36)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(255, 153, 0));
+        jLabel5.setMaximumSize(new java.awt.Dimension(9999, 48));
+        jLabel5.setMinimumSize(new java.awt.Dimension(290, 48));
+        jLabel5.setPreferredSize(new java.awt.Dimension(290, 48));
+        infIzq.add(jLabel5);
+
+        inferior.add(infIzq);
+
+        infDer.setBackground(java.awt.Color.white);
+        infDer.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
 
         jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-mdpi/ic_assignment_black_24dp.png"))); // NOI18N
         jButton2.setText("Detalle");
@@ -166,15 +224,19 @@ public class Reporte_Ventas extends javax.swing.JFrame {
                 jButton2ActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 450, -1, -1));
+        infDer.add(jButton2);
 
-        jLabel3.setFont(new java.awt.Font("Segoe UI Light", 1, 36)); // NOI18N
-        jLabel3.setText("Total:");
-        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 440, -1, -1));
-
-        jLabel5.setFont(new java.awt.Font("Segoe UI Light", 1, 36)); // NOI18N
-        jLabel5.setForeground(new java.awt.Color(255, 153, 0));
-        jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 444, 348, 40));
+        jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/facelet/pdf.jpg"))); // NOI18N
+        jButton4.setBorder(null);
+        jButton4.setBorderPainted(false);
+        jButton4.setContentAreaFilled(false);
+        jButton4.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
+        infDer.add(jButton4);
 
         jButton6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-xhdpi/export_to_excel_24dp.png"))); // NOI18N
         jButton6.setBorder(null);
@@ -190,48 +252,32 @@ public class Reporte_Ventas extends javax.swing.JFrame {
                 jButton6ActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 450, -1, -1));
+        infDer.add(jButton6);
 
-        jLabel6.setFont(new java.awt.Font("Segoe UI Light", 1, 14)); // NOI18N
-        jLabel6.setText("Fecha Final");
-        jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(21, 57, -1, -1));
-        jPanel1.add(jDateChooser2, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 56, 133, -1));
+        jSeparator2.setOrientation(javax.swing.SwingConstants.VERTICAL);
+        jSeparator2.setPreferredSize(new java.awt.Dimension(160, 40));
+        jSeparator2.setRequestFocusEnabled(false);
+        infDer.add(jSeparator2);
 
-        rol.setFont(new java.awt.Font("Segoe UI Light", 0, 18)); // NOI18N
-        rol.setMaximumRowCount(10);
-        rol.setAutoscrolls(true);
-        rol.setMinimumSize(new java.awt.Dimension(31, 22));
-        rol.setPreferredSize(new java.awt.Dimension(31, 25));
-        jPanel1.add(rol, new org.netbeans.lib.awtextra.AbsoluteConstraints(356, 21, 134, -1));
-
-        jLabel7.setFont(new java.awt.Font("Segoe UI Light", 1, 14)); // NOI18N
-        jLabel7.setText("Fecha Inicial");
-        jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(21, 25, -1, -1));
-
-        jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/facelet/pdf.jpg"))); // NOI18N
-        jButton4.setBorder(null);
-        jButton4.setBorderPainted(false);
-        jButton4.setContentAreaFilled(false);
-        jButton4.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
+        volver.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-xhdpi/ic_arrow_back_black_24dp.png"))); // NOI18N
+        volver.setBorder(null);
+        volver.setBorderPainted(false);
+        volver.setContentAreaFilled(false);
+        volver.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        volver.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        volver.setPreferredSize(new java.awt.Dimension(55, 47));
+        volver.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
+        volver.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        volver.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                volverActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 450, -1, -1));
+        infDer.add(volver);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 512, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
-        );
+        inferior.add(infDer);
+
+        getContentPane().add(inferior, java.awt.BorderLayout.PAGE_END);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -492,7 +538,7 @@ public class Reporte_Ventas extends javax.swing.JFrame {
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "ERROR " + e.getMessage());
         } finally {
-            Control.cerrarConexion();            
+            Control.cerrarConexion();
         }
     }
 
@@ -501,6 +547,10 @@ public class Reporte_Ventas extends javax.swing.JFrame {
      */
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel Centro;
+    private javax.swing.JPanel infDer;
+    private javax.swing.JPanel infIzq;
+    private javax.swing.JPanel inferior;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
@@ -513,10 +563,14 @@ public class Reporte_Ventas extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JSeparator jSeparator3;
+    private javax.swing.JSeparator jSeparator4;
+    private javax.swing.JSeparator jSeparator5;
     private javax.swing.JTable jTable1;
     private javax.swing.JComboBox rol;
+    private javax.swing.JPanel superior;
     private javax.swing.JButton volver;
     // End of variables declaration//GEN-END:variables
 }

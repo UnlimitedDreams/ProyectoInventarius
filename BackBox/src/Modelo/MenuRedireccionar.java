@@ -52,14 +52,22 @@ public class MenuRedireccionar {
     private java.awt.Frame parent;
     private int codEmpresa;
 
+    /**
+     *
+     */
     public MenuRedireccionar() {
     }
 
+    /**
+     *
+     * @param parent
+     * @param CadenaMenu
+     * @param acciones
+     * @param usuario
+     * @param codigoEmpresa
+     */
     public MenuRedireccionar(java.awt.Frame parent, String CadenaMenu, ArrayList acciones,
-            String usuario, int codigoEmpresa
-
-    
-        ) {
+            String usuario, int codigoEmpresa) {
         this.CadenaMenu = CadenaMenu;
         this.listMenu = acciones;
         this.Usuario = usuario;
