@@ -3,17 +3,9 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="1"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/E:/GIT/ProyectoInventarius/BackBox/src/vw/components/MaestroIva.java</file>
-            <file>file:/E:/GIT/ProyectoInventarius/BackBox/src/vw/components/CargaArchivo.java</file>
-            <file>file:/E:/GIT/ProyectoInventarius/BackBox/src/vw/components/Kits.java</file>
-            <file>file:/E:/GIT/ProyectoInventarius/BackBox/src/vw/components/Entrada_Nueva.java</file>
+            <file>file:/E:/GIT/ProyectoInventarius/BackBox/src/vw/components/Reporte_Entradas.java</file>
+            <file>file:/E:/GIT/ProyectoInventarius/BackBox/src/vw/components/Reporte_Ventas.java</file>
             <file>file:/E:/GIT/ProyectoInventarius/BackBox/src/vw/components/DatallesPorFecha.java</file>
-            <file>file:/E:/GIT/ProyectoInventarius/BackBox/src/vw/main/Menu.java</file>
-            <file>file:/E:/GIT/ProyectoInventarius/BackBox/src/vw/components/CategoriaGestion.java</file>
-            <file>file:/E:/GIT/ProyectoInventarius/BackBox/src/vw/components/Detalle_Entrada.java</file>
-            <file>file:/E:/GIT/ProyectoInventarius/BackBox/src/vw/components/Bodega.java</file>
-            <file>file:/E:/GIT/ProyectoInventarius/BackBox/src/vw/components/Clientes.java</file>
-            <file>file:/E:/GIT/ProyectoInventarius/BackBox/src/vw/dialogs/KitUpdate2.java</file>
         </group>
     </open-files>
 </project-private>

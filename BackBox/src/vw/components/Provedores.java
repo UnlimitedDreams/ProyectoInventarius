@@ -38,7 +38,6 @@ public class Provedores extends javax.swing.JFrame {
         inicio(1);
         this.nom = nom;
         this.setLocationRelativeTo(null);
-        this.setResizable(false);
         URL url = getClass().getResource("/images/facelet/icon.png");
         ImageIcon img = new ImageIcon(url);
         setIconImage(img.getImage());
@@ -144,7 +143,7 @@ public class Provedores extends javax.swing.JFrame {
         getContentPane().add(superior, java.awt.BorderLayout.PAGE_START);
 
         inferior.setBackground(java.awt.Color.white);
-        inferior.setLayout(new java.awt.GridLayout());
+        inferior.setLayout(new java.awt.GridLayout(1, 0));
 
         infIzq.setBackground(java.awt.Color.white);
         infIzq.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));

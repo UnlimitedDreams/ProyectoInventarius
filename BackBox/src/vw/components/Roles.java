@@ -12,39 +12,27 @@ import Modelo.MenuRedireccionar;
 import Modelo.Producto;
 import Modelo.acciones;
 import Modelo.seccion;
-import java.awt.Desktop;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
-import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.ImageIcon;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
 import javax.swing.table.DefaultTableModel;
-import vw.dialogs.AcercaDe;
-import vw.dialogs.CategoriasRegistrar;
-import vw.dialogs.ProveedoresRegistrar;
-import vw.dialogs.RolActualizar;
-import vw.dialogs.RolRegistrarF;
 import vw.dialogs.RolRegistrar;
 import vw.dialogs.RolUpdate;
-import vw.dialogs.UsuarioPermiso;
-import vw.dialogs.UsuariosRegistrar;
 import vw.main.Acceder;
 import vw.main.Menu;
-import vw.model.Articulo;
-import vw.model.Venta;
 
 /**
  *
@@ -68,11 +56,7 @@ public class Roles extends javax.swing.JFrame {
         this.List_Menu = acciones;
         this.codEmpresa = codEmpresa;
         this.setLocationRelativeTo(null);
-        this.setResizable(false);
-        URL url = getClass().getResource("/images/facelet/icon.png");
-        ImageIcon img = new ImageIcon(url);
-        setIconImage(img.getImage());
-
+        this.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/facelet/icon.png")));
         ContenedorMenus con_menu = new ContenedorMenus();
         con_menu = (ContenedorMenus) List_Menu.get(0);
         listaSeccion = con_menu.getListaSeccion();
@@ -102,9 +86,7 @@ public class Roles extends javax.swing.JFrame {
                                     } else {
                                         Roles.this.dispose();
                                     }
-                                } catch (IOException ex) {
-                                    Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
-                                } catch (URISyntaxException ex) {
+                                } catch (IOException | URISyntaxException ex) {
                                     Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
                                 } catch (ClassNotFoundException ex) {
                                     Logger.getLogger(Roles.class.getName()).log(Level.SEVERE, null, ex);
@@ -134,19 +116,19 @@ public class Roles extends javax.swing.JFrame {
             while (Control.rs.next()) {
                 acciones.add(Control.rs.getString(1));
             }
-            jButton1.setEnabled(false);
-            jButton2.setEnabled(false);
+            nuevo.setEnabled(false);
+            borrar.setEnabled(false);
             actualizar.setEnabled(false);
 
             String acci = "";
             for (String accione : acciones) {
                 acci = (String) accione;
                 if (acci.equalsIgnoreCase("RolCrear")) {
-                    jButton1.setEnabled(true);
+                    nuevo.setEnabled(true);
                 } else if (acci.equalsIgnoreCase("RolEditar")) {
                     actualizar.setEnabled(true);
                 } else if (acci.equalsIgnoreCase("Rolborrar")) {
-                    jButton2.setEnabled(true);
+                    borrar.setEnabled(true);
                 }
             }
 
@@ -208,14 +190,16 @@ public class Roles extends javax.swing.JFrame {
     private void initComponents() {
 
         jButton3 = new javax.swing.JButton();
-        jPanel1 = new javax.swing.JPanel();
-        buscaUsu = new javax.swing.JTextField();
+        centro = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
-        jButton4 = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        superior = new javax.swing.JPanel();
+        buscaUsu = new javax.swing.JTextField();
+        inferior = new javax.swing.JPanel();
+        nuevo = new javax.swing.JButton();
+        borrar = new javax.swing.JButton();
         actualizar = new javax.swing.JButton();
+        volver = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         file = new javax.swing.JMenu();
         inicio = new javax.swing.JMenuItem();
@@ -232,10 +216,23 @@ public class Roles extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Roles - BackBox");
+        setExtendedState(6);
 
-        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+        centro.setBackground(new java.awt.Color(255, 255, 255));
+        centro.setLayout(new javax.swing.BoxLayout(centro, javax.swing.BoxLayout.LINE_AXIS));
+
+        jTable1.setFont(new java.awt.Font("Segoe UI Light", 0, 11)); // NOI18N
+        jScrollPane1.setViewportView(jTable1);
+
+        centro.add(jScrollPane1);
+
+        getContentPane().add(centro, java.awt.BorderLayout.CENTER);
+
+        superior.setBackground(java.awt.Color.white);
 
         buscaUsu.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
+        buscaUsu.setMinimumSize(new java.awt.Dimension(700, 30));
+        buscaUsu.setPreferredSize(new java.awt.Dimension(700, 30));
         buscaUsu.setSelectionColor(new java.awt.Color(51, 0, 255));
         buscaUsu.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -250,58 +247,48 @@ public class Roles extends javax.swing.JFrame {
                 buscaUsuKeyReleased(evt);
             }
         });
+        superior.add(buscaUsu);
 
-        jTable1.setFont(new java.awt.Font("Segoe UI Light", 0, 11)); // NOI18N
-        jScrollPane1.setViewportView(jTable1);
+        getContentPane().add(superior, java.awt.BorderLayout.PAGE_START);
 
-        jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-xhdpi/ic_arrow_back_black_24dp.png"))); // NOI18N
-        jButton4.setBorder(null);
-        jButton4.setBorderPainted(false);
-        jButton4.setContentAreaFilled(false);
-        jButton4.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jButton4.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton4.setPreferredSize(new java.awt.Dimension(55, 47));
-        jButton4.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
-        jButton4.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
+        inferior.setBackground(java.awt.Color.white);
+        inferior.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
+
+        nuevo.setFont(new java.awt.Font("Segoe UI Light", 0, 11)); // NOI18N
+        nuevo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-mdpi/ic_add_black_24dp.png"))); // NOI18N
+        nuevo.setText("Nuevo");
+        nuevo.setBorder(null);
+        nuevo.setBorderPainted(false);
+        nuevo.setContentAreaFilled(false);
+        nuevo.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        nuevo.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        nuevo.setPreferredSize(new java.awt.Dimension(55, 47));
+        nuevo.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
+        nuevo.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        nuevo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                nuevoActionPerformed(evt);
             }
         });
+        inferior.add(nuevo);
 
-        jButton1.setFont(new java.awt.Font("Segoe UI Light", 0, 11)); // NOI18N
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-mdpi/ic_add_black_24dp.png"))); // NOI18N
-        jButton1.setText("Nuevo");
-        jButton1.setBorder(null);
-        jButton1.setBorderPainted(false);
-        jButton1.setContentAreaFilled(false);
-        jButton1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jButton1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton1.setPreferredSize(new java.awt.Dimension(55, 47));
-        jButton1.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
-        jButton1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        borrar.setFont(new java.awt.Font("Segoe UI Light", 0, 11)); // NOI18N
+        borrar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-mdpi/ic_delete_black_24dp.png"))); // NOI18N
+        borrar.setText("Borrar");
+        borrar.setBorder(null);
+        borrar.setBorderPainted(false);
+        borrar.setContentAreaFilled(false);
+        borrar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        borrar.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        borrar.setPreferredSize(new java.awt.Dimension(55, 47));
+        borrar.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
+        borrar.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        borrar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                borrarActionPerformed(evt);
             }
         });
-
-        jButton2.setFont(new java.awt.Font("Segoe UI Light", 0, 11)); // NOI18N
-        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-mdpi/ic_delete_black_24dp.png"))); // NOI18N
-        jButton2.setText("Borrar");
-        jButton2.setBorder(null);
-        jButton2.setBorderPainted(false);
-        jButton2.setContentAreaFilled(false);
-        jButton2.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jButton2.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton2.setPreferredSize(new java.awt.Dimension(55, 47));
-        jButton2.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
-        jButton2.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
-            }
-        });
+        inferior.add(borrar);
 
         actualizar.setFont(new java.awt.Font("Segoe UI Light", 0, 11)); // NOI18N
         actualizar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-mdpi/ic_update_black_24dp.png"))); // NOI18N
@@ -319,44 +306,25 @@ public class Roles extends javax.swing.JFrame {
                 actualizarActionPerformed(evt);
             }
         });
+        inferior.add(actualizar);
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 742, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(478, 478, 478)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(actualizar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(51, 51, 51)
-                        .addComponent(buscaUsu, javax.swing.GroupLayout.PREFERRED_SIZE, 631, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(10, 10, 10))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(19, 19, 19)
-                .addComponent(buscaUsu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(26, 26, 26)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(actualizar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-        );
+        volver.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-xhdpi/ic_arrow_back_black_24dp.png"))); // NOI18N
+        volver.setBorder(null);
+        volver.setBorderPainted(false);
+        volver.setContentAreaFilled(false);
+        volver.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        volver.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        volver.setPreferredSize(new java.awt.Dimension(55, 47));
+        volver.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
+        volver.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        volver.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                volverActionPerformed(evt);
+            }
+        });
+        inferior.add(volver);
+
+        getContentPane().add(inferior, java.awt.BorderLayout.PAGE_END);
 
         file.setText("Archivo");
         file.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
@@ -395,17 +363,6 @@ public class Roles extends javax.swing.JFrame {
 
         setJMenuBar(jMenuBar1);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-        );
-
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -413,21 +370,21 @@ public class Roles extends javax.swing.JFrame {
 
     }//GEN-LAST:event_jButton3ActionPerformed
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+    private void volverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_volverActionPerformed
 
         Menu m = new Menu(usuario);
         this.setVisible(false);
         m.setVisible(true);
-    }//GEN-LAST:event_jButton4ActionPerformed
+    }//GEN-LAST:event_volverActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void borrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_borrarActionPerformed
         try {
             borrar();
             inicio(1);
         } catch (Exception ex) {
 
         }
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_borrarActionPerformed
 
     private void actualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_actualizarActionPerformed
         String cod = "";
@@ -453,7 +410,7 @@ public class Roles extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_actualizarActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void nuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nuevoActionPerformed
         try {
             //new RolRegistrarF(this, true).setVisible(true);
             new RolRegistrar().setVisible(true);
@@ -467,7 +424,7 @@ public class Roles extends javax.swing.JFrame {
                 Logger.getLogger(Roles.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_nuevoActionPerformed
 
     private void inicioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inicioActionPerformed
         new Menu(usuario).setVisible(true);
@@ -599,19 +556,21 @@ public class Roles extends javax.swing.JFrame {
      */
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton actualizar;
+    private javax.swing.JButton borrar;
     private javax.swing.JTextField buscaUsu;
+    private javax.swing.JPanel centro;
     private javax.swing.JMenuItem cerrarSesion;
     private javax.swing.JMenu file;
+    private javax.swing.JPanel inferior;
     private javax.swing.JMenuItem inicio;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JTable jTable1;
+    private javax.swing.JButton nuevo;
     private javax.swing.JMenuItem salir;
+    private javax.swing.JPanel superior;
+    private javax.swing.JButton volver;
     // End of variables declaration//GEN-END:variables
 }
