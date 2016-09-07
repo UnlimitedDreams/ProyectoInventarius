@@ -11,6 +11,7 @@ import Modelo.ContenedorMenus;
 import Modelo.Producto;
 import Modelo.acciones;
 import Modelo.seccion;
+import java.awt.Toolkit;
 import java.net.URL;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -20,10 +21,8 @@ import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-import vw.dialogs.CategoriasRegistrar;
 import vw.dialogs.KitUpdate2;
 import vw.dialogs.KitsRegistro;
-import vw.dialogs.RolActualizar;
 import vw.main.Menu;
 
 /**
@@ -39,16 +38,15 @@ public class Kits extends javax.swing.JFrame {
 
     /**
      * Creates new form categoriaGestion
+     * @param Usuario
+     * @param Acciones
      */
     public Kits(String Usuario, ArrayList Acciones) {
         initComponents();
         this.List_Menu = Acciones;
         this.usuario = Usuario;
         this.setLocationRelativeTo(null);
-        this.setResizable(false);
-        URL url = getClass().getResource("/images/facelet/icon.png");
-        ImageIcon img = new ImageIcon(url);
-        setIconImage(img.getImage());
+        this.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/facelet/icon.png")));
         try {
             inicio();
         } catch (ClassNotFoundException ex) {
@@ -65,71 +63,32 @@ public class Kits extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
+        centro = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         promociones = new javax.swing.JTable();
-        jButton4 = new javax.swing.JButton();
-        nuevo = new javax.swing.JButton();
-        borrar = new javax.swing.JButton();
+        inferior = new javax.swing.JPanel();
         actualizar = new javax.swing.JButton();
+        borrar = new javax.swing.JButton();
+        nuevo = new javax.swing.JButton();
+        jSeparator1 = new javax.swing.JSeparator();
+        atras = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Gestión de Kits - Inventarius");
+        setTitle("Gestión de Kits - BackBox");
+        setMinimumSize(new java.awt.Dimension(800, 600));
+        setPreferredSize(new java.awt.Dimension(800, 600));
 
-        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+        centro.setBackground(new java.awt.Color(255, 255, 255));
+        centro.setLayout(new javax.swing.BoxLayout(centro, javax.swing.BoxLayout.LINE_AXIS));
 
         promociones.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
         jScrollPane1.setViewportView(promociones);
 
-        jButton4.setFont(new java.awt.Font("Segoe UI Light", 0, 11)); // NOI18N
-        jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-xhdpi/ic_arrow_back_black_24dp.png"))); // NOI18N
-        jButton4.setBorder(null);
-        jButton4.setBorderPainted(false);
-        jButton4.setContentAreaFilled(false);
-        jButton4.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jButton4.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton4.setPreferredSize(new java.awt.Dimension(55, 47));
-        jButton4.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
-        jButton4.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
-            }
-        });
+        centro.add(jScrollPane1);
 
-        nuevo.setFont(new java.awt.Font("Segoe UI Light", 0, 11)); // NOI18N
-        nuevo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-mdpi/ic_add_black_24dp.png"))); // NOI18N
-        nuevo.setText("Nuevo");
-        nuevo.setBorder(null);
-        nuevo.setBorderPainted(false);
-        nuevo.setContentAreaFilled(false);
-        nuevo.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        nuevo.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        nuevo.setPreferredSize(new java.awt.Dimension(55, 47));
-        nuevo.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
-        nuevo.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        nuevo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                nuevoActionPerformed(evt);
-            }
-        });
+        getContentPane().add(centro, java.awt.BorderLayout.CENTER);
 
-        borrar.setFont(new java.awt.Font("Segoe UI Light", 0, 11)); // NOI18N
-        borrar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-mdpi/ic_remove_black_24dp.png"))); // NOI18N
-        borrar.setText("Borrar");
-        borrar.setBorder(null);
-        borrar.setBorderPainted(false);
-        borrar.setContentAreaFilled(false);
-        borrar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        borrar.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        borrar.setPreferredSize(new java.awt.Dimension(55, 47));
-        borrar.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
-        borrar.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        borrar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                borrarActionPerformed(evt);
-            }
-        });
+        inferior.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
 
         actualizar.setFont(new java.awt.Font("Segoe UI Light", 0, 11)); // NOI18N
         actualizar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-mdpi/ic_update_black_24dp.png"))); // NOI18N
@@ -147,60 +106,75 @@ public class Kits extends javax.swing.JFrame {
                 actualizarActionPerformed(evt);
             }
         });
+        inferior.add(actualizar);
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(nuevo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(borrar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(actualizar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 742, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(borrar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(actualizar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(nuevo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
-        );
+        borrar.setFont(new java.awt.Font("Segoe UI Light", 0, 11)); // NOI18N
+        borrar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-mdpi/ic_remove_black_24dp.png"))); // NOI18N
+        borrar.setText("Borrar");
+        borrar.setBorder(null);
+        borrar.setBorderPainted(false);
+        borrar.setContentAreaFilled(false);
+        borrar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        borrar.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        borrar.setPreferredSize(new java.awt.Dimension(55, 47));
+        borrar.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
+        borrar.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        borrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                borrarActionPerformed(evt);
+            }
+        });
+        inferior.add(borrar);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
+        nuevo.setFont(new java.awt.Font("Segoe UI Light", 0, 11)); // NOI18N
+        nuevo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-mdpi/ic_add_black_24dp.png"))); // NOI18N
+        nuevo.setText("Nuevo");
+        nuevo.setBorder(null);
+        nuevo.setBorderPainted(false);
+        nuevo.setContentAreaFilled(false);
+        nuevo.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        nuevo.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        nuevo.setPreferredSize(new java.awt.Dimension(55, 47));
+        nuevo.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
+        nuevo.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        nuevo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                nuevoActionPerformed(evt);
+            }
+        });
+        inferior.add(nuevo);
+
+        jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
+        jSeparator1.setPreferredSize(new java.awt.Dimension(160, 40));
+        jSeparator1.setRequestFocusEnabled(false);
+        inferior.add(jSeparator1);
+
+        atras.setFont(new java.awt.Font("Segoe UI Light", 0, 11)); // NOI18N
+        atras.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/drawable-xhdpi/ic_arrow_back_black_24dp.png"))); // NOI18N
+        atras.setBorder(null);
+        atras.setBorderPainted(false);
+        atras.setContentAreaFilled(false);
+        atras.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        atras.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        atras.setPreferredSize(new java.awt.Dimension(55, 47));
+        atras.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
+        atras.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        atras.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                atrasActionPerformed(evt);
+            }
+        });
+        inferior.add(atras);
+
+        getContentPane().add(inferior, java.awt.BorderLayout.PAGE_END);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+    private void atrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_atrasActionPerformed
         new Menu(usuario).setVisible(true);
         this.dispose();
-    }//GEN-LAST:event_jButton4ActionPerformed
+    }//GEN-LAST:event_atrasActionPerformed
 
     private void nuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nuevoActionPerformed
         new KitsRegistro(this, true).setVisible(true);
@@ -210,7 +184,7 @@ public class Kits extends javax.swing.JFrame {
         try {
             borrar();
             inicio();
-        } catch (Exception ex) {
+        } catch (ClassNotFoundException | SQLException ex) {
             /*Nothing here*/
         }
 
@@ -223,7 +197,7 @@ public class Kits extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "Favor... seleccione una fila");
             } else {
                 String cod = (String) promociones.getValueAt(i, 0).toString();
-                new KitUpdate2(this, true, cod,1).setVisible(true);
+                new KitUpdate2(this, true, cod, 1).setVisible(true);
             }
 
         } catch (Exception ex) {
@@ -256,15 +230,15 @@ public class Kits extends javax.swing.JFrame {
                         + "a.cod_producto=c.cod_producto and \n"
                         + "b.cod_kit=c.cod_kit and b.cod_kit='" + cod + "'");
                 Producto temp = null;
-                while (Control.rs.next()) {                    
+                while (Control.rs.next()) {
                     temp = new Producto(Control.rs.getInt(1));
                     temp.setCantidad(Control.rs.getInt(2));
                     listPro.add(temp);
                 }
                 for (Producto producto : listPro) {
-                    Control.ejecuteUpdate("update producto set cantidad=cantidad+"+producto.getCantidad()+" where cod_producto=" + producto.getCodigoProducto());
+                    Control.ejecuteUpdate("update producto set cantidad=cantidad+" + producto.getCantidad() + " where cod_producto=" + producto.getCodigoProducto());
                 }
-                Control.ejecuteUpdate("update Kits  set estado='I' where cod_kit='" + cod+"'");
+                Control.ejecuteUpdate("update Kits  set estado='I' where cod_kit='" + cod + "'");
                 r = true;
                 if (r) {
                     Entrada.muestreMensajeV("Kit Borrada con éxito",
@@ -272,8 +246,8 @@ public class Kits extends javax.swing.JFrame {
                 } else {
                     Entrada.muestreMensajeV(":Error Fatal: \nNo se pudo borrar el Kit\n::Revise su conexión",
                             JOptionPane.ERROR_MESSAGE);
-                } 
-            } catch (Exception ex) {
+                }
+            } catch (ClassNotFoundException | SQLException ex) {
 
             } finally {
                 Control.con.commit();
@@ -370,10 +344,12 @@ public class Kits extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton actualizar;
+    private javax.swing.JButton atras;
     private javax.swing.JButton borrar;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel centro;
+    private javax.swing.JPanel inferior;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JSeparator jSeparator1;
     private javax.swing.JButton nuevo;
     private javax.swing.JTable promociones;
     // End of variables declaration//GEN-END:variables
