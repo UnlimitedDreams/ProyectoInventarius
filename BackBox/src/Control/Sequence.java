@@ -8,15 +8,15 @@ package Control;
 import Control.Control;
 
 /**
- * Esta clase se encargar de las secuencias de todas las tablas, recibiendo la consulta como parametro
+ * Esta clase se encargar de las secuencias de todas las tablas, recibiendo la
+ * consulta como parametro
+ *
  * @author: Unlimited Dreams
  * @version: 25/08/2016
  */
-
 public class Sequence {
 
-    
-/**
+    /**
      * Método que se encargar de retornar la secuencia de la tabla.
      *
      * @param sql El parámetro sql define la consulta de la tabla.
@@ -36,5 +36,21 @@ public class Sequence {
             Control.cerrarConexion();
         }
         return cod + 1;
+    }
+
+    public static int Next(String Sequence) throws ClassNotFoundException {
+        Control.conectar();
+        int cod = 0;
+        try {
+            Control.ejecuteQuery("select nextval('"+Sequence+"')");
+            while (Control.rs.next()) {
+                cod = Control.rs.getInt(1);
+            }
+        } catch (Exception ex) {
+
+        } finally {
+            Control.cerrarConexion();
+        }
+        return cod;
     }
 }

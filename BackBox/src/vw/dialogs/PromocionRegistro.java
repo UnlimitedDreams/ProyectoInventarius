@@ -90,8 +90,8 @@ public class PromocionRegistro extends javax.swing.JDialog {
 
     public void registrarPromocion() throws SQLException, ClassNotFoundException {
         boolean r = false;
-        try {
-            int codPromo = Sequence.seque("select max(cod_promocion) from promociones");
+        try {             
+            int codPromo = Sequence.Next("Sq_Promociones");
             
             Date date = jDateChooser1.getDate();
             SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd");

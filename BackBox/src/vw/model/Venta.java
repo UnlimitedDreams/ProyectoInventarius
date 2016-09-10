@@ -945,8 +945,7 @@ public class Venta extends javax.swing.JFrame implements KeyListener {
     }
 
     public void Vender() throws ClassNotFoundException, JRException, SQLException {
-        int codigo_venta = Sequence.seque("select max(cod_factura) from venta");
-        int codigo_pro = (Sequence.seque("select max(cod_venta) from venta_pro"));
+        int codigo_venta = Sequence.Next("Sq_Venta");
         boolean Proceso = false;
         boolean r = false;
         try {
@@ -982,13 +981,11 @@ public class Venta extends javax.swing.JFrame implements KeyListener {
                 Producto pro = null;
                 for (int i = 0; i < productos.size(); i++) {
                     pro = (Producto) productos.get(i);
-                    r = Control.ejecuteUpdate("insert into venta_pro values(" + codigo_pro + ","
+                    r = Control.ejecuteUpdate("insert into venta_pro values( nextval('Sq_Venta_pro'),"
                             + codigo_venta + "," + pro.getCantidad() + "," + pro.getIva() + ","
                             + (pro.getValorIva() * pro.getCantidad()) + "," + pro.getCodigoProducto() + ","
                             + "(case when upper(substring('" + pro.getCodigo() + "',0,4))='KIT' then '" + pro.getCodigo() + "' else '0'  end),"
                             + pro.getPrecio_venta() + ")");
-
-                    codigo_pro++;
                 }
                 restar_Bodega();
 //                generarFactura(codigo_venta, fecha, cone);

@@ -53,13 +53,12 @@ public class ProveedoresRegistrar extends javax.swing.JDialog {
     }
 
     public void registrar() throws ClassNotFoundException, SQLException {
-        if (buscar_cod() == false) {
-            int secUsuario = Sequence.seque("select max(cod_provedor) from provedor");
+        if (buscar_cod() == false) {            
             try {
                 Control.conectar();
                 Control.con.setAutoCommit(false);
                 boolean ejecutoUpdate = Control.ejecuteUpdate("insert into provedor"
-                        + " values(" + secUsuario + ",'"
+                        + " values(nextval('Sq_Proveedor'),'"
                         + nit.getText() + "','"
                         + nombre.getText() + "','"
                         + telefono.getText() + "','"

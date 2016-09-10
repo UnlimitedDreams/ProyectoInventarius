@@ -106,14 +106,13 @@ public class RolUpdate extends javax.swing.JFrame {
         acomodarDatos(listaaccion);
         boolean cerrar = false;
         try {
-            int codigo = Sequence.seque("select max(cod_rol) from rol");
+            int codigo = Sequence.Next("Sq_Rol");
             Control.conectar();
             Control.con.setAutoCommit(false);
             int a = 0;
             boolean validacion = false;
             boolean r = Control.ejecuteUpdate("insert into rol values(" + codigo + ",'" + jTextField3.getText() + "','A')");
-            if (r) {
-                System.out.println("insert rol");
+            if (r) {                
                 for (acciones object : listaaccion) {
                     System.out.println(object.toString());
                     System.out.println("-- registrar - " + object.getAccion());

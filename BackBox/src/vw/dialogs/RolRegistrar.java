@@ -100,7 +100,7 @@ public class RolRegistrar extends javax.swing.JFrame {
         acomodarDatos(listaaccion);
         boolean cerrar = false;
         try {
-            int codigo = Sequence.seque("select max(cod_rol) from rol");
+            int codigo = Sequence.Next("Sq_Rol");
             Control.conectar();
             Control.con.setAutoCommit(false);
             int a = 0;

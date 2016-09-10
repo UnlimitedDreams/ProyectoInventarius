@@ -155,8 +155,6 @@ public class CargaArchivo extends javax.swing.JFrame {
         ArrayList<String> listaError = new ArrayList();
         boolean f = false;
         boolean r1 = false;
-        int codProducto = Sequence.seque("select max(cod_producto) from producto");
-        int codigo_sal = Sequence.seque("select max(cod_entra) from Salida_Entrada");
         SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd");
         String fechafinal = format2.format(fecha);
         String mns = "Inventario : " + fechafinal;
@@ -241,8 +239,7 @@ public class CargaArchivo extends javax.swing.JFrame {
                             cantFinal = pr.getCantidad();
                             cantSAlida = cantidad;
                         }                        
-                        f = Control.ejecuteUpdate("insert into Salida_Entrada values("
-                                + codigo_sal + ",'" + tipo + "'," + Math.abs(cantSAlida) + ",'" + fecha + "','" + mns + "','" + nombre + "'," + pr.getCodigoProducto() + ")");
+                        f = Control.ejecuteUpdate("insert into Salida_Entrada values(nextval('Sq_SalidaEntrada'),'" + tipo + "'," + Math.abs(cantSAlida) + ",'" + fecha + "','" + mns + "','" + nombre + "'," + pr.getCodigoProducto() + ")");
                         System.out.println("paso 2");
                         f = Control.ejecuteUpdate("update producto set cantidad=" + cantFinal + " where"
                                 + " cod_producto=" + pr.getCodigoProducto());
@@ -255,14 +252,11 @@ public class CargaArchivo extends javax.swing.JFrame {
                         Creo++;
                         f = Control.ejecuteUpdate("insert into producto values('" + pr.getNombre() + "',"
                                 + pr.getCosto() + "," + pr.getIvaCargeArchivo() + "," + precio + "," + pr.getCategoria() + ","
-                                + pr.getCantidad() + ",'A','n'," + pr.getDesc() + "," + precio + ",1,1,'" + pr.getCodigo() + "',"
-                                + codProducto + ")");
+                                + pr.getCantidad() + ",'A','n'," + pr.getDesc() + "," + precio + ",1,1,'" + pr.getCodigo() + "',nextval('Sq_producto'))");
                     }
                     if (f == false) {
                         break;
                     }
-                    codigo_sal++;
-                    codProducto++;
                 }
             }
         } catch (SQLException ex) {

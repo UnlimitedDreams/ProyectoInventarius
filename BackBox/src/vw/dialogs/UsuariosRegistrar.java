@@ -118,8 +118,7 @@ public class UsuariosRegistrar extends javax.swing.JDialog {
         if (VerificarDatos()) {
             if (buscar_cod() == false) {
                 int cod_rol = traerCod();
-                int S = sexo.getSelectedIndex();
-                int usu = Sequence.seque("select max(cod_usuario) from usuario  ");
+                int S = sexo.getSelectedIndex();                
                 boolean f = false;
                 try {
                     Control.conectar();
@@ -139,7 +138,7 @@ public class UsuariosRegistrar extends javax.swing.JDialog {
                     if (f) {
 
                         f = Control.ejecuteUpdate("insert into usuario"
-                                + " values(" + usu + ",'" + usuario.getText() + "','"
+                                + " values( nextval('Sq_Usuario'),'" + usuario.getText() + "','"
                                 + clave.getText() + "'," + cod_rol + "," + cedula.getText() + ")");
 
                     } else {

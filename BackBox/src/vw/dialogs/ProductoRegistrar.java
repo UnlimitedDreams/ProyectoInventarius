@@ -146,7 +146,7 @@ public class ProductoRegistrar extends javax.swing.JDialog {
     public void registrar() throws ClassNotFoundException, SQLException {
         boolean proceso = false;
         try {
-            int codProducto = Sequence.seque("select max(cod_producto) from producto");
+            int codProducto = Sequence.Next("Sq_producto");
             System.out.println("cod_producto  : " + codProducto);
             Control.conectar();
             Control.con.setAutoCommit(false);
