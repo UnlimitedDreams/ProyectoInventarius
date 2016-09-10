@@ -88,10 +88,10 @@ public class KitsUpdate extends javax.swing.JDialog {
                 Tipo.addItem("Categoria");
                 Cate.setEnabled(false);
             }
-            
-            if(Estado.getSelectedItem().toString().trim().equalsIgnoreCase("A")){
+
+            if (Estado.getSelectedItem().toString().trim().equalsIgnoreCase("A")) {
                 Estado.addItem("D");
-            }else{
+            } else {
                 Estado.addItem("A");
             }
 
@@ -146,8 +146,6 @@ public class KitsUpdate extends javax.swing.JDialog {
     public void UpdatePromocion() throws SQLException, ClassNotFoundException {
         boolean r = false;
         try {
-            int codPromo = Sequence.seque("select max(cod_promocion) from promociones");
-            int codDetPro = Sequence.seque("select max(codDetallePromo) from DetallePromociones");
             Date date = jDateChooser1.getDate();
             SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd");
             String fechaString = format2.format(date);
@@ -157,25 +155,25 @@ public class KitsUpdate extends javax.swing.JDialog {
             String fecha2String = format.format(date2);
             Control.conectar();
             Control.con.setAutoCommit(false);
-            Control.ejecuteUpdate("delete from detallepromociones where codpromo=" + codPromocion);
-            Control.ejecuteUpdate("delete from promociones where cod_promocion=" + codPromocion);
+            r=Control.ejecuteUpdate("delete from detallepromociones where codpromo=" + codPromocion);
+            r=Control.ejecuteUpdate("delete from promociones where cod_promocion=" + codPromocion);
 
             String porcen[] = Porcentaje.getSelectedItem().toString().split("%");
 
-            Control.ejecuteUpdate("insert into promociones values(" + codPromo + ",'" + fechaString + "','" + fecha2String
+            r=Control.ejecuteUpdate("insert into promociones values(" + codPromocion + ",'" + fechaString + "','" + fecha2String
                     + "'," + Integer.parseInt(porcen[0].trim()) + ",'" + Tipo.getSelectedItem().toString() + "','"
                     + Cate.getSelectedItem().toString().trim() + "')");
 
             for (Producto LiProducto : productos) {
-                Control.ejecuteUpdate("insert into DetallePromociones values(" + codDetPro + "," + codPromo + "," + LiProducto.getCodigoProducto() + ")"
+               r=Control.ejecuteUpdate("insert into DetallePromociones values(nextval('Sq_KitDet')," + codPromocion + "," + LiProducto.getCodigoProducto() + ")"
                         + LiProducto.getCosto() + ")");
-                codDetPro++;
-                Control.ejecuteUpdate("update producto set precio_desc=" + LiProducto.getPrecio_final() + ","
+
+                r=Control.ejecuteUpdate("update producto set precio_desc=" + LiProducto.getPrecio_final() + ","
                         + "descu=" + Integer.parseInt(porcen[0].trim()) + " where cod_producto=" + LiProducto.getCodigoProducto());
             }
-            r = true;
-        } catch (Exception ex) {
 
+        } catch (Exception ex) {
+            r = false;
         } finally {
             Control.con.commit();
             Control.con.setAutoCommit(true);
@@ -186,7 +184,7 @@ public class KitsUpdate extends javax.swing.JDialog {
             promo.inicio();
             this.dispose();
         } else {
-            Entrada.muestreMensajeV("Error Al Crear Promocion");
+            Entrada.muestreMensajeV("Error Al Actualizar Promocion");
         }
     }
 
@@ -1519,7 +1517,7 @@ public class KitsUpdate extends javax.swing.JDialog {
             productos.clear();
             iniciar();
             Borrar();
-            
+
         } else {
             this.condicion = 1;
             Cate.setEnabled(true);
@@ -1725,11 +1723,11 @@ public class KitsUpdate extends javax.swing.JDialog {
     }//GEN-LAST:event_EstadoActionPerformed
 
     private void CateMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_CateMouseClicked
-       this.condicion=2;
+        this.condicion = 2;
     }//GEN-LAST:event_CateMouseClicked
 
     public void iniciar() {
-        TablaModel t = new TablaModel(productos, 6,1);
+        TablaModel t = new TablaModel(productos, 6, 1);
         t.calculeFrecuenciasPromocion();
         muevaLosDatosFre(t);
 

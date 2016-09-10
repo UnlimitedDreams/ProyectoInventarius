@@ -4,8 +4,6 @@
  * and open the template in the editor.
  */
 package vw.components;
-
-import Control.Sequence;
 import Control.Entrada;
 import Modelo.Producto;
 import Modelo.List_Categoria;
@@ -602,17 +600,15 @@ public class Entrada_Nueva extends javax.swing.JFrame {
                     if (VerificarFactura() == false) {
                         boolean r = false;
                         boolean r1 = false;
-                        int codigo_detalle = Sequence.seque("select max(cod_detalle) from detalle");
                         try {
                             Control.conectar();
                             Control.con.setAutoCommit(false);
                             for (int i = 0; i < productos.size(); i++) {
                                 pro = (Producto) productos.get(i);
-                                r = Control.ejecuteUpdate("insert into detalle values(" + codigo_detalle + ",'" + fecha + "',"
+                                r = Control.ejecuteUpdate("insert into detalle values(nextval('Sq_detalle'),'" + fecha + "',"
                                         + pro.getCantidad() + "," + pro.getCosto() + ","
                                         + v[0] + ",'" + nroFactura.getText() + "','" + comprass.getSelectedItem().toString() + "'"
                                         + "," + pro.getIva() + "," + pro.getPrecio_venta() + "," + codEmpresa + ",'" + nombreUsuario + "'," + pro.getCodigoProducto() + ")");
-                                codigo_detalle++;
                                 if (r) {
                                     r1 = Control.ejecuteUpdate("update producto set cantidad=cantidad+" + pro.getCantidad() + ","
                                             + "stock=" + pro.getStock() + ",bandera=1,nombre='" + pro.getNombre() + "',"

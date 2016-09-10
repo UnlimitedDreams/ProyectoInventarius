@@ -15,7 +15,6 @@ import javax.swing.ImageIcon;
 import Control.Entrada;
 import Modelo.List_Categoria;
 import Modelo.Producto;
-import Control.Sequence;
 import vw.model.Venta;
 
 /**
@@ -80,27 +79,33 @@ public class RegistroCliente extends javax.swing.JDialog {
     }
 
     public void registrar() throws ClassNotFoundException, SQLException {
-        int cod_cliente = Sequence.seque("select max(cod_cliente) from clientes");
-        Control.conectar();
-        boolean r = Control.ejecuteUpdate("insert into clientes values(" + cod_cliente + ",'"
-                + cedula.getText() + "','"
-                + nombre.getText() + "','"
-                + apellido.getText() + "','"
-                + email.getText() + "'," + telefono.getText() + "," + cedular.getText() + ",'"
-                + Dir.getText() + "')");
-        if (r) {
+        boolean r = false;
+        try {
+            Control.conectar();
+            Control.con.setAutoCommit(false);
+            r = Control.ejecuteUpdate("insert into clientes values(nextval('Sq_clientes'),'"
+                    + cedula.getText() + "','"
+                    + nombre.getText() + "','"
+                    + apellido.getText() + "','"
+                    + email.getText() + "'," + telefono.getText() + "," + cedular.getText() + ",'"
+                    + Dir.getText() + "')");
+        } catch (Exception ex) {
+
+        } finally {
+            Control.con.commit();
+            Control.con.setAutoCommit(true);
             Control.cerrarConexion();
+        }
+
+        if (r) {
             if (condicion == 1) {
                 v.Cliente.setText(cedula.getText());
                 v.NomCliente.setText(nombre.getText() + " " + apellido.getText());
             }
-
             this.dispose();
-
         } else {
             Entrada.muestreMensajeV("Error al grabar cliente ", javax.swing.JOptionPane.ERROR_MESSAGE);
         }
-        Control.cerrarConexion();
     }
 
     /**

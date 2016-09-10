@@ -92,7 +92,7 @@ public class PromocionRegistro extends javax.swing.JDialog {
         boolean r = false;
         try {
             int codPromo = Sequence.seque("select max(cod_promocion) from promociones");
-            int codDetPro = Sequence.seque("select max(codDetallePromo) from DetallePromociones");
+            
             Date date = jDateChooser1.getDate();
             SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd");
             String fechaString = format2.format(date);
@@ -100,21 +100,21 @@ public class PromocionRegistro extends javax.swing.JDialog {
             Date date2 = jDateChooser2.getDate();
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
             String fecha2String = format.format(date2);
+            
             Control.conectar();
             Control.con.setAutoCommit(false);
             String porcen[] = Porcentaje.getSelectedItem().toString().split("%");
-            Control.ejecuteUpdate("insert into promociones values(" + codPromo + ",'" + fechaString + "','" + fecha2String
+            r=Control.ejecuteUpdate("insert into promociones values(" + codPromo + ",'" + fechaString + "','" + fecha2String
                     + "'," + Integer.parseInt(porcen[0].trim()) + ",'" + Tipo.getSelectedItem().toString() + "','"
                     + Cate.getSelectedItem().toString().trim() + "')");
 
             for (Producto LiProducto : productos) {
-                Control.ejecuteUpdate("insert into DetallePromociones values(" + codDetPro + "," + codPromo + "," + LiProducto.getCodigoProducto() + ","
+                r=Control.ejecuteUpdate("insert into DetallePromociones values(nextval('Sq_DetallePromo')," + codPromo + "," + LiProducto.getCodigoProducto() + ","
                         + LiProducto.getCosto() + ")");
-                codDetPro++;
-                Control.ejecuteUpdate("update producto set precio_desc=" + LiProducto.getPrecio_final() + ","
+                
+                r=Control.ejecuteUpdate("update producto set precio_desc=" + LiProducto.getPrecio_final() + ","
                         + "descu=" + Integer.parseInt(porcen[0].trim()) + " where cod_producto=" + LiProducto.getCodigoProducto());
             }
-            r = true;
         } catch (Exception ex) {
 
         } finally {

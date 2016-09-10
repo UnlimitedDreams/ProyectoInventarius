@@ -24,7 +24,6 @@ public class IvaCrear extends javax.swing.JDialog {
     /**
      * Creates new form CategoriasRegistrar
      */
-
     public IvaCrear(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
@@ -33,8 +32,8 @@ public class IvaCrear extends javax.swing.JDialog {
         URL url = getClass().getResource("/images/facelet/icon.png");
         ImageIcon img = new ImageIcon(url);
         setIconImage(img.getImage());
-        for (int i = 0; i < 100; i++) {            
-                porcen.addItem("" + i + " %");            
+        for (int i = 0; i < 100; i++) {
+            porcen.addItem("" + i + " %");
         }
     }
 
@@ -184,18 +183,11 @@ public class IvaCrear extends javax.swing.JDialog {
 
     public void Insert() throws ClassNotFoundException, SQLException {
         boolean r = false;
-        int codIva=Sequence.seque("select max(codiva) from maestro_iva");
         try {
             Control.conectar();
-            Control.con.setAutoCommit(false);            
+            Control.con.setAutoCommit(false);
             String valorIva[] = porcen.getSelectedItem().toString().split("%");
-            r = Control.ejecuteUpdate("insert into  maestro_iva values(" + codIva + ",'"+descrip.getText()+"',"+valorIva[0]+",'A')");                    
-            if (r) {                
-                Entrada.muestreMensajeV("Exito a Crear",
-                        javax.swing.JOptionPane.INFORMATION_MESSAGE);
-            } else {
-                Entrada.muestreMensajeV("Erro al Crear Iva");
-            }
+            r = Control.ejecuteUpdate("insert into  maestro_iva values(nextval('Sq_iva'),'" + descrip.getText() + "'," + valorIva[0] + ",'A')");
         } catch (SQLException ex) {
             System.out.println("Error haciendo el Update " + ex.toString());
         } finally {
@@ -204,7 +196,11 @@ public class IvaCrear extends javax.swing.JDialog {
             Control.cerrarConexion();
         }
         if (r) {
+            Entrada.muestreMensajeV("Exito a Crear",
+                    javax.swing.JOptionPane.INFORMATION_MESSAGE);
             this.dispose();
+        } else {
+            Entrada.muestreMensajeV("Erro al Crear Iva");
         }
     }
 

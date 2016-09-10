@@ -101,7 +101,6 @@ public class RolRegistrar extends javax.swing.JFrame {
         boolean cerrar = false;
         try {
             int codigo = Sequence.seque("select max(cod_rol) from rol");
-            int codigoAct = Sequence.seque("select max(cod_detalleAc) from detalleactividad");
             Control.conectar();
             Control.con.setAutoCommit(false);
             int a = 0;
@@ -114,154 +113,154 @@ public class RolRegistrar extends javax.swing.JFrame {
                     System.out.println("-- registrar - " + object.getAccion());
                     validacion = false;
                     if (object.getAccion().equalsIgnoreCase("Bodega")) {
-                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + "," + object.getCod_seccion() + ")");
-                        codigoAct++;
-//                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",3)");
-//                        codigoAct++;
+                        Control.ejecuteUpdate("insert into detalleactividad values(  nextval('Sq_detalleActi'),1," + codigo + "," + object.getCod_seccion() + ")");
+                        
+//                        Control.ejecuteUpdate("insert into detalleactividad values(  nextval('Sq_detalleActi'),1," + codigo + ",3)");
+//                        
                     }
 
                     if (object.getAccion().equalsIgnoreCase("Articulos")) {
-                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + "," + object.getCod_seccion() + ")");
-                        codigoAct++;
-//                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",3)");
-//                        codigoAct++;
+                        Control.ejecuteUpdate("insert into detalleactividad values(  nextval('Sq_detalleActi'),1," + codigo + "," + object.getCod_seccion() + ")");
+                        
+//                        Control.ejecuteUpdate("insert into detalleactividad values(  nextval('Sq_detalleActi'),1," + codigo + ",3)");
+//                        
 
                     } else if (object.getAccion().equalsIgnoreCase("Nueva Compra")) {
-                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + "," + object.getCod_seccion() + ")");
-                        codigoAct++;
-//                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",3)");
-//                        codigoAct++;
+                        Control.ejecuteUpdate("insert into detalleactividad values(  nextval('Sq_detalleActi'),1," + codigo + "," + object.getCod_seccion() + ")");
+                        
+//                        Control.ejecuteUpdate("insert into detalleactividad values(  nextval('Sq_detalleActi'),1," + codigo + ",3)");
+//                        
 
                     }
                     System.out.println("- " + a++);
                     if (object.getAccion().equalsIgnoreCase("Categoria")) {
-                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + "," + object.getCod_seccion() + ")");
-                        codigoAct++;
-//                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",3)");
-//                        codigoAct++;
+                        Control.ejecuteUpdate("insert into detalleactividad values(  nextval('Sq_detalleActi'),1," + codigo + "," + object.getCod_seccion() + ")");
+                        
+//                        Control.ejecuteUpdate("insert into detalleactividad values(  nextval('Sq_detalleActi'),1," + codigo + ",3)");
+//                        
                     }
                     if (object.getAccion().trim().equalsIgnoreCase("Crear Categoria")) {
                         System.out.println("entro crear cate");
-                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + "," + object.getCod_seccion() + ")");
-                        codigoAct++;
-//                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",1," + codigo + ",3)");
-//                        codigoAct++;
+                        Control.ejecuteUpdate("insert into detalleactividad values(  nextval('Sq_detalleActi'),1," + codigo + "," + object.getCod_seccion() + ")");
+                        
+//                        Control.ejecuteUpdate("insert into detalleactividad values(  nextval('Sq_detalleActi'),1," + codigo + ",3)");
+//                        
                     }
 
                     if (object.getAccion().equalsIgnoreCase("Usuarios")) {
-                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + "," + object.getCod_seccion() + ")");
-                        codigoAct++;
-//                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",3)");
-//                        codigoAct++;
+                        Control.ejecuteUpdate("insert into detalleactividad values(  nextval('Sq_detalleActi'),18," + codigo + "," + object.getCod_seccion() + ")");
+                        
+//                        Control.ejecuteUpdate("insert into detalleactividad values(  nextval('Sq_detalleActi'),18," + codigo + ",3)");
+//                        
                     } else if (object.getAccion().equalsIgnoreCase("Crear Usuario")) {
-                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + "," + object.getCod_seccion() + ")");
-                        codigoAct++;
-//                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",3)");
-//                        codigoAct++;
+                        Control.ejecuteUpdate("insert into detalleactividad values(  nextval('Sq_detalleActi'),18," + codigo + "," + object.getCod_seccion() + ")");
+                        
+//                        Control.ejecuteUpdate("insert into detalleactividad values(  nextval('Sq_detalleActi'),18," + codigo + ",3)");
+//                        
                     }
                     System.out.println("- " + a++);
                     if (object.getAccion().equalsIgnoreCase("Realizar Venta")) {
-                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",2," + codigo + "," + 16 + ")");
-                        codigoAct++;
-                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",2," + codigo + "," + 17 + ")");
-                        codigoAct++;
-                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",2," + codigo + "," + 18 + ")");
-                        codigoAct++;
-//                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",2," + codigo + ",3)");
-//                        codigoAct++;
+                        Control.ejecuteUpdate("insert into detalleactividad values(  nextval('Sq_detalleActi'),2," + codigo + "," + 16 + ")");
+                        
+                        Control.ejecuteUpdate("insert into detalleactividad values(  nextval('Sq_detalleActi'),2," + codigo + "," + 17 + ")");
+                        
+                        Control.ejecuteUpdate("insert into detalleactividad values(  nextval('Sq_detalleActi'),2," + codigo + "," + 18 + ")");
+                        
+//                        Control.ejecuteUpdate("insert into detalleactividad values(  nextval('Sq_detalleActi'),2," + codigo + ",3)");
+//                        
                     }
 
                     if (object.getAccion().equalsIgnoreCase("Reporte Venta")) {
-                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",3," + codigo + "," + object.getCod_seccion() + ")");
-                        codigoAct++;
+                        Control.ejecuteUpdate("insert into detalleactividad values(  nextval('Sq_detalleActi'),3," + codigo + "," + object.getCod_seccion() + ")");
+                        
                         validacion = true;
                     }
 
                     if (object.getAccion().equalsIgnoreCase("Reporte Compras")) {
-                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",3," + codigo + "," + object.getCod_seccion() + ")");
-                        codigoAct++;
+                        Control.ejecuteUpdate("insert into detalleactividad values(  nextval('Sq_detalleActi'),3," + codigo + "," + object.getCod_seccion() + ")");
+                        
                         validacion = true;
                     }
 
                     if (object.getAccion().equalsIgnoreCase("Reporte Entrada y Salidas")) {
-                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",3," + codigo + "," + object.getCod_seccion() + ")");
-                        codigoAct++;
+                        Control.ejecuteUpdate("insert into detalleactividad values(  nextval('Sq_detalleActi'),3," + codigo + "," + object.getCod_seccion() + ")");
+                        
                         validacion = true;
                     }
 //                    if (validacion) {
-//                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",3," + codigo + ",3)");
-//                        codigoAct++;
+//                        Control.ejecuteUpdate("insert into detalleactividad values(  nextval('Sq_detalleActi'),3," + codigo + ",3)");
+//                        
 //                    }
 
                     System.out.println("- " + a++);
                     if (object.getAccion().equalsIgnoreCase("Proveedores")) {
-                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + "," + object.getCod_seccion() + ")");
-                        codigoAct++;
-//                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",3)");
-//                        codigoAct++;
+                        Control.ejecuteUpdate("insert into detalleactividad values(  nextval('Sq_detalleActi'),18," + codigo + "," + object.getCod_seccion() + ")");
+                        
+//                        Control.ejecuteUpdate("insert into detalleactividad values(  nextval('Sq_detalleActi'),18," + codigo + ",3)");
+//                        
                     } else if (object.getAccion().equalsIgnoreCase("Crear Proveedor")) {
-                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + "," + object.getCod_seccion() + ")");
-                        codigoAct++;
-//                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",3)");
-//                        codigoAct++;
+                        Control.ejecuteUpdate("insert into detalleactividad values(  nextval('Sq_detalleActi'),18," + codigo + "," + object.getCod_seccion() + ")");
+                        
+//                        Control.ejecuteUpdate("insert into detalleactividad values(  nextval('Sq_detalleActi'),18," + codigo + ",3)");
+//                        
                     }
                     System.out.println("- " + a++);
                     if (object.getAccion().equalsIgnoreCase("Rol")) {
-                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + "," + object.getCod_seccion() + ")");
-                        codigoAct++;
-//                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",3)");
-//                        codigoAct++;
+                        Control.ejecuteUpdate("insert into detalleactividad values(  nextval('Sq_detalleActi'),18," + codigo + "," + object.getCod_seccion() + ")");
+                        
+//                        Control.ejecuteUpdate("insert into detalleactividad values(  nextval('Sq_detalleActi'),18," + codigo + ",3)");
+//                        
                     } else if (object.getAccion().equalsIgnoreCase("Crear Rol")) {
-                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + "," + object.getCod_seccion() + ")");
-                        codigoAct++;
-//                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",3)");
-//                        codigoAct++;
+                        Control.ejecuteUpdate("insert into detalleactividad values(  nextval('Sq_detalleActi'),18," + codigo + "," + object.getCod_seccion() + ")");
+                        
+//                        Control.ejecuteUpdate("insert into detalleactividad values(  nextval('Sq_detalleActi'),18," + codigo + ",3)");
+//                        
                     }
                     if (object.getAccion().equalsIgnoreCase("Clientes")) {
-                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + "," + object.getCod_seccion() + ")");
-                        codigoAct++;
-//                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",3)");
-//                        codigoAct++;
+                        Control.ejecuteUpdate("insert into detalleactividad values(  nextval('Sq_detalleActi'),18," + codigo + "," + object.getCod_seccion() + ")");
+                        
+//                        Control.ejecuteUpdate("insert into detalleactividad values(  nextval('Sq_detalleActi'),18," + codigo + ",3)");
+//                        
                     }
                     if (object.getAccion().equalsIgnoreCase("Nuevo Clientes")) {
-                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + "," + object.getCod_seccion() + ")");
-                        codigoAct++;
-//                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",3)");
-//                        codigoAct++;
+                        Control.ejecuteUpdate("insert into detalleactividad values(  nextval('Sq_detalleActi'),18," + codigo + "," + object.getCod_seccion() + ")");
+                        
+//                        Control.ejecuteUpdate("insert into detalleactividad values(  nextval('Sq_detalleActi'),18," + codigo + ",3)");
+//                        
                     }
                     if (object.getAccion().equalsIgnoreCase("Iva")) {
-                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",19," + codigo + "," + object.getCod_seccion() + ")");
-                        codigoAct++;
-//                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",3)");
-//                        codigoAct++;
+                        Control.ejecuteUpdate("insert into detalleactividad values(  nextval('Sq_detalleActi'),19," + codigo + "," + object.getCod_seccion() + ")");
+                        
+//                        Control.ejecuteUpdate("insert into detalleactividad values(  nextval('Sq_detalleActi'),18," + codigo + ",3)");
+//                        
                     }
 
                     if (object.getAccion().equalsIgnoreCase("Promocion")) {
-                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",19," + codigo + "," + object.getCod_seccion() + ")");
-                        codigoAct++;
-//                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",3)");
-//                        codigoAct++;
+                        Control.ejecuteUpdate("insert into detalleactividad values(  nextval('Sq_detalleActi'),19," + codigo + "," + object.getCod_seccion() + ")");
+                        
+//                        Control.ejecuteUpdate("insert into detalleactividad values(  nextval('Sq_detalleActi'),18," + codigo + ",3)");
+//                        
                     }
 
                     if (object.getAccion().equalsIgnoreCase("Crear Promocion")) {
-                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",19," + codigo + "," + object.getCod_seccion() + ")");
-                        codigoAct++;
-//                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",3)");
-//                        codigoAct++;
+                        Control.ejecuteUpdate("insert into detalleactividad values(  nextval('Sq_detalleActi'),19," + codigo + "," + object.getCod_seccion() + ")");
+                        
+//                        Control.ejecuteUpdate("insert into detalleactividad values(  nextval('Sq_detalleActi'),18," + codigo + ",3)");
+//                        
                     }
 
                     if (object.getAccion().equalsIgnoreCase("Kits")) {
-                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",19," + codigo + "," + object.getCod_seccion() + ")");
-                        codigoAct++;
-//                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",3)");
-//                        codigoAct++;
+                        Control.ejecuteUpdate("insert into detalleactividad values(  nextval('Sq_detalleActi'),19," + codigo + "," + object.getCod_seccion() + ")");
+                        
+//                        Control.ejecuteUpdate("insert into detalleactividad values(  nextval('Sq_detalleActi'),18," + codigo + ",3)");
+//                        
                     }
 
                     if (object.getAccion().equalsIgnoreCase("Crear Kits")) {
-                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",19," + codigo + "," + object.getCod_seccion() + ")");
-                        codigoAct++;
-//                        Control.ejecuteUpdate("insert into detalleactividad values(" + codigoAct + ",18," + codigo + ",3)");
-//                        codigoAct++;
+                        Control.ejecuteUpdate("insert into detalleactividad values(  nextval('Sq_detalleActi'),19," + codigo + "," + object.getCod_seccion() + ")");
+                        
+//                        Control.ejecuteUpdate("insert into detalleactividad values(  nextval('Sq_detalleActi'),18," + codigo + ",3)");
+//                        
                     }
                 }
 

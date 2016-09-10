@@ -78,8 +78,6 @@ public class PromocionUpdate extends javax.swing.JDialog {
                 Cate.addItem(Control.rs.getString(6));
                 Estado.addItem(Control.rs.getString(7));
             }
-            
-            System.out.println("---------------------------------");
 
             Control.ejecuteQuery("select cod_categoria,rtrim(ltrim(descripcion)) from categoria order by descripcion");
             while (Control.rs.next()) {
@@ -148,7 +146,6 @@ public class PromocionUpdate extends javax.swing.JDialog {
     public void UpdatePromocion() throws SQLException, ClassNotFoundException {
         if (ValidarTable()) {
             boolean r = false;
-            int codDetPro = Sequence.seque("select max(codDetallePromo) from DetallePromociones");
             try {
                 Date date = jDateChooser1.getDate();
                 SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd");
@@ -186,9 +183,8 @@ public class PromocionUpdate extends javax.swing.JDialog {
                         + Cate.getSelectedItem().toString().trim() + "','A')");
 
                 for (Producto LiProducto : productos) {
-                    r = Control.ejecuteUpdate("insert into DetallePromociones values(" + codDetPro + "," + this.codPromocion + "," + LiProducto.getCodigoProducto() + ","
+                    r = Control.ejecuteUpdate("insert into DetallePromociones values(nextval('Sq_DetallePromo')," + this.codPromocion + "," + LiProducto.getCodigoProducto() + ","
                             + LiProducto.getCosto() + ")");
-                    codDetPro++;
 
                     r = Control.ejecuteUpdate("update producto set precio_desc=" + LiProducto.getPrecio_final() + ","
                             + "descu=" + Integer.parseInt(porcen[0].trim()) + " where cod_producto=" + LiProducto.getCodigoProducto());

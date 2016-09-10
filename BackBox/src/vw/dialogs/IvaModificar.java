@@ -33,12 +33,13 @@ public class IvaModificar extends javax.swing.JDialog {
         initComponents();
         this.setLocationRelativeTo(null);
         this.setResizable(false);
-        URL url = getClass().getResource("/images/facelet/icon.png");
-        ImageIcon img = new ImageIcon(url);
-        setIconImage(img.getImage());
         this.descripcion = descripcion;
         this.porcentaje = porcentaje;
         this.codIva = codiva;
+
+        URL url = getClass().getResource("/images/facelet/icon.png");
+        ImageIcon img = new ImageIcon(url);
+        setIconImage(img.getImage());
         descrip.setText(this.descripcion);
         porcen.addItem(porcentaje + " %");
         for (int i = 0; i < 100; i++) {
@@ -66,7 +67,7 @@ public class IvaModificar extends javax.swing.JDialog {
         jButton1 = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        porcen = new javax.swing.JComboBox<String>();
+        porcen = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Nueva Categoria");
@@ -197,18 +198,10 @@ public class IvaModificar extends javax.swing.JDialog {
         boolean r = false;
         try {
             Control.conectar();
-            Control.con.setAutoCommit(false);            
+            Control.con.setAutoCommit(false);
             String valorIva[] = porcen.getSelectedItem().toString().split("%");
-            System.out.println("update maestro_iva set descripcion='" + descrip.getText() + "',porcentaje=" + valorIva[0] + " where"
-                    + " codiva=" + codIva);
             r = Control.ejecuteUpdate("update maestro_iva set descripcion='" + descrip.getText() + "',porcentaje=" + valorIva[0] + " where"
-                    + " codiva=" + codIva);            
-            if (r) {                
-                Entrada.muestreMensajeV("Ajuste del Iva Exitoso",
-                        javax.swing.JOptionPane.INFORMATION_MESSAGE);
-            } else {
-                Entrada.muestreMensajeV("ERROR");
-            }
+                    + " codiva=" + codIva);
         } catch (SQLException ex) {
             System.out.println("Error haciendo el Update " + ex.toString());
         } finally {
@@ -216,29 +209,14 @@ public class IvaModificar extends javax.swing.JDialog {
             Control.con.setAutoCommit(true);
             Control.cerrarConexion();
         }
+
         if (r) {
+            Entrada.muestreMensajeV("Ajuste del Iva Exitoso",
+                    javax.swing.JOptionPane.INFORMATION_MESSAGE);
             this.dispose();
+        } else {
+            Entrada.muestreMensajeV("ERROR");
         }
-    }
-
-    public boolean buscarSerie(String serie) throws ClassNotFoundException {
-        Control.conectar();
-        boolean r = false;
-
-        try {
-            Control.ejecuteQuery("select *  from categoria where serie='" + serie + "'");
-            r = false;
-
-            while (Control.rs.next()) {
-                r = true;
-            }
-            Control.cerrarConexion();
-        } catch (Exception ex) {
-        } finally {
-            Control.cerrarConexion();
-        }
-        return r;
-
     }
 
     /**

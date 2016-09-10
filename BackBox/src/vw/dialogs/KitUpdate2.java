@@ -121,31 +121,29 @@ public class KitUpdate2 extends javax.swing.JDialog {
     public void UpdateKit() throws SQLException, ClassNotFoundException {
         boolean r = false;
         try {
-            int codKitDel = Sequence.seque("select max(codKitDet) from KitDetalle");
             Control.conectar();
             Control.con.setAutoCommit(false);
             int canti = 0;
 
-            Control.ejecuteUpdate("delete from Kitdetalle where cod_kit='" + codigo.getText() + "'");
-            Control.ejecuteUpdate("delete from Kits where cod_kit='" + codigo.getText() + "'");
+            r=Control.ejecuteUpdate("delete from Kitdetalle where cod_kit='" + codigo.getText() + "'");
+            r=Control.ejecuteUpdate("delete from Kits where cod_kit='" + codigo.getText() + "'");
 
-            Control.ejecuteUpdate("insert into Kits values('" + codigo.getText().trim() + "',"
+            r=Control.ejecuteUpdate("insert into Kits values('" + codigo.getText().trim() + "',"
                     + Double.parseDouble(Costo.getText()) + "," + Double.parseDouble(precio.getText())
                     + "," + Integer.parseInt(Cantidad.getText()) + ",'A'," + numKit + ",'" + nombre.getText() + "',"
                     + Double.parseDouble(iva.getText()) + ")");
 
             for (Producto LiProducto : productos) {
-                Control.ejecuteUpdate("insert into KitDetalle values(" + codKitDel + ",'" + codigo.getText().trim() + "',"
+                r=Control.ejecuteUpdate("insert into KitDetalle values(nextval('Sq_KitDet'),'" + codigo.getText().trim() + "',"
                         + LiProducto.getCodigoProducto() + "," + LiProducto.getPrecio_venta() + ")");
-                codKitDel++;
+
                 canti = (LiProducto.getCantidad() + (this.CantProducto * LiProducto.getCantidadKit2())) - Integer.parseInt(Cantidad.getText());
-                Control.ejecuteUpdate("update producto set cantidad=" + canti + " where cod_producto=" + LiProducto.getCodigoProducto());
+                r=Control.ejecuteUpdate("update producto set cantidad=" + canti + " where cod_producto=" + LiProducto.getCodigoProducto());
                 canti = 0;
             }
 
-            r = true;
         } catch (Exception ex) {
-
+            
         } finally {
             Control.con.commit();
             Control.con.setAutoCommit(true);
@@ -156,7 +154,7 @@ public class KitUpdate2 extends javax.swing.JDialog {
             if (this.condicion == 1) {
                 kit.inicio();
             } else if (this.condicion == 2) {
-                //Bodega.inicio();
+                Bodega.inicio();
             }
 
             this.dispose();

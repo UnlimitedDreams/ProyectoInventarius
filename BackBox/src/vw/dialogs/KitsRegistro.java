@@ -102,7 +102,6 @@ public class KitsRegistro extends javax.swing.JDialog {
     public void registrarKit() throws SQLException, ClassNotFoundException {
         boolean r = false;
         try {
-            int codKitDel = Sequence.seque("select max(codKitDet) from KitDetalle");
             Control.conectar();
             Control.con.setAutoCommit(false);
             r = Control.ejecuteUpdate("insert into Kits values('" + codigo.getText().trim() + "',"
@@ -110,9 +109,9 @@ public class KitsRegistro extends javax.swing.JDialog {
                     + "," + Integer.parseInt(Cantidad.getText()) + ",'A'," + numKit + ",'" + nombre.getText() + "'," + Double.parseDouble(iva.getText())  + ")");
             int canti = 0;
             for (Producto LiProducto : productos) {
-                r = Control.ejecuteUpdate("insert into KitDetalle values(" + codKitDel + ",'" + codigo.getText().trim() + "',"
+                r = Control.ejecuteUpdate("insert into KitDetalle values(nextval('Sq_KitDet'),'" + codigo.getText().trim() + "',"
                         + LiProducto.getCodigoProducto() + "," + LiProducto.getPrecio_venta() + "," + LiProducto.getCantidadKit() + ")");
-                codKitDel++;
+
                 canti = LiProducto.getCantidad() - (Integer.parseInt(Cantidad.getText()) * LiProducto.getCantidadKit());
                 r = Control.ejecuteUpdate("update producto set cantidad=" + canti + " where cod_producto=" + LiProducto.getCodigoProducto());
                 canti = 0;

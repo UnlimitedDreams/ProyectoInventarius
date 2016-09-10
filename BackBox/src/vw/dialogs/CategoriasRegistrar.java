@@ -12,7 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import Control.Entrada;
-import Control.Sequence;
+
 
 /**
  *
@@ -186,13 +186,12 @@ public class CategoriasRegistrar extends javax.swing.JDialog {
     }//GEN-LAST:event_PorcentajeActionPerformed
 
     public void registrar() throws ClassNotFoundException, SQLException {
-        int codigo = Sequence.seque("select max(cod_categoria) from categoria");
         boolean r = false;
         try {
             Control.conectar();
             Control.con.setAutoCommit(false);
              String valorIva[] = Porcentaje.getSelectedItem().toString().split("%");
-            r = Control.ejecuteUpdate("insert into categoria values(" + codigo + ",'" + jTextField3.getText()
+            r = Control.ejecuteUpdate("insert into categoria values(nextval('Sq_categoria'),'" + jTextField3.getText()
                     + "','A',"+Integer.parseInt(valorIva[0].trim())+")");
             if (r) {
                 Entrada.muestreMensajeV("Categoria Registrada",
@@ -218,7 +217,7 @@ public class CategoriasRegistrar extends javax.swing.JDialog {
         boolean r = false;
 
         try {
-            Control.ejecuteQuery("select *  from categoria where serie='" + serie + "'");
+            Control.ejecuteQuery("select count(*) from categoria where serie='" + serie + "'");
             r = false;
 
             while (Control.rs.next()) {
