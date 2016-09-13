@@ -66,7 +66,7 @@ public class IvaModificar extends javax.swing.JDialog {
         jButton1 = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        porcen = new javax.swing.JComboBox<String>();
+        porcen = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Nueva Categoria");

@@ -53,7 +53,6 @@ public class Reporte_Ventas extends javax.swing.JFrame {
         this.ListAcciones = acciones;
         this.setLocationRelativeTo(null);
         cargarPersonal();
-        this.setResizable(false);
         this.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/facelet/icon.png")));
         Date fecha = new Date();
         jDateChooser1.setDate(fecha);
