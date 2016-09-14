@@ -226,3 +226,4 @@ pip-log.txt
 *.jar
 *.war
 *.ear
+!/BackBox/resources/com/backbox/img/var/

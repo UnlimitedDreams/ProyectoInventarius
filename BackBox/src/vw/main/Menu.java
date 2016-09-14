@@ -230,6 +230,7 @@ public class Menu extends javax.swing.JFrame {
 
         mainFrame = new javax.swing.JPanel();
         centro = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
         superior = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         inferior = new javax.swing.JPanel();
@@ -255,7 +256,10 @@ public class Menu extends javax.swing.JFrame {
         mainFrame.setLayout(new java.awt.BorderLayout());
 
         centro.setBackground(java.awt.Color.white);
-        centro.setLayout(new java.awt.BorderLayout());
+
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/backbox/img/var/bbx001.png"))); // NOI18N
+        centro.add(jLabel1);
+
         mainFrame.add(centro, java.awt.BorderLayout.CENTER);
 
         superior.setBackground(java.awt.Color.white);
@@ -395,6 +399,7 @@ public class Menu extends javax.swing.JFrame {
     private javax.swing.JPanel inferior;
     private javax.swing.JMenuItem inicio;
     private javax.swing.JPanel izquierda;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPopupMenu.Separator jSeparator1;
