@@ -86,7 +86,8 @@ public class Menu extends javax.swing.JFrame {
                                     MenuRedireccionar MenuF = new MenuRedireccionar(Menu.this, e.getActionCommand(), List_Menu, usuario, codigoEmpresa);
                                     try {
                                         MenuF.reDireccion();
-                                        if (e.getActionCommand().equalsIgnoreCase("Crear Categoria ")
+                                        System.out.println("No cierra Ventana --- " + e.getActionCommand());
+                                        if (e.getActionCommand().equalsIgnoreCase("Crear Categoria")
                                                 || e.getActionCommand().equalsIgnoreCase("Crear Usuario")
                                                 || e.getActionCommand().equalsIgnoreCase("Crear Proveedor")
                                                 || e.getActionCommand().equalsIgnoreCase("Crear Rol")) {

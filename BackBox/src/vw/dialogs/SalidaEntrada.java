@@ -231,22 +231,27 @@ public class SalidaEntrada extends javax.swing.JDialog {
      */
     public void actualizarCantidad() throws ClassNotFoundException, SQLException {
         int cant2 = (int) cantidad.getValue();
+
         if (cant2 <= Integer.parseInt(cant) || tipo.equalsIgnoreCase("Entrada")) {
-            int codigo_sal = Sequence.seque("select max(cod_entra) from Salida_Entrada");
             boolean r = false;
+            boolean validacion = false;
             try {
                 Control.conectar();
                 Control.con.setAutoCommit(false);
                 Date fecha = new Date();
-                if (jTextArea1.getText().equalsIgnoreCase("")) {
+
+                if (cant2 <= 0) {
+                    Entrada.muestreMensajeV("Debe escribir una cantidad mayor a cero",
+                            javax.swing.JOptionPane.WARNING_MESSAGE);
+                } else if (jTextArea1.getText().equalsIgnoreCase("")) {
                     Entrada.muestreMensajeV("Debe escribir una descripcion en comentarios",
                             javax.swing.JOptionPane.WARNING_MESSAGE);
                 } else {
-                    boolean r1 = Control.ejecuteUpdate("insert into Salida_Entrada values("
-                            + codigo_sal + ",'" + tipo + "'," + cantidad.getValue() + ",'" + fecha + "',"
+                    validacion = true;
+                    r = Control.ejecuteUpdate("insert into Salida_Entrada values(nextval('sq_salidaentrada'),'" + tipo + "'," + cantidad.getValue() + ",'" + fecha + "',"
                             + "'" + jTextArea1.getText() + "','" + nombre + "'," + codProducto + ","
                             + "(case when upper(substring('" + codigo + "',0,4))='KIT' then '" + codigo + "' else '0'  end) )");
-                    if (r1) {
+                    if (r) {
 
                         if (tipo.equalsIgnoreCase("Salida") && codigo.contains("Kit")) {
                             r = Control.ejecuteUpdate("update Kits set cantidad=cantidad-" + cantidad.getValue() + " where cod_kit='" + codigo + "'");
@@ -279,7 +284,7 @@ public class SalidaEntrada extends javax.swing.JDialog {
                 this.Bode.inicio();
                 this.dispose();
 
-            } else {
+            } else if (validacion == true) {
                 Entrada.muestreMensajeV("Error Haciendo Cambios a La Bodega",
                         javax.swing.JOptionPane.ERROR_MESSAGE);
             }

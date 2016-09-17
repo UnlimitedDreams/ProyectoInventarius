@@ -185,7 +185,7 @@ public class Acciones extends javax.swing.JDialog {
 
         try {
             Control.conectar();
-            Control.ejecuteQuery("select * from acciones where codacciones not in (3,17,18) order by orden");
+            Control.ejecuteQuery("select * from acciones where codacciones is no null and codacciones not in (0) order by orden");
             rsetMetaData = Control.rs.getMetaData();
             numeroPreguntas = rsetMetaData.getColumnCount();
             while (Control.rs.next()) {

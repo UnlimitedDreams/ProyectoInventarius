@@ -148,12 +148,20 @@ public class Stock extends javax.swing.JFrame {
                 + "	cantidad as \"Cantidad\" \n"
                 + "from 	producto \n"
                 + "where 	(cantidad=0 or stock>=cantidad) \n"
-                + "and 	estado='A';";
+                + "and 	estado='A' order by nombre";
         String codi = "", nom = "", valor = "", cant = "", costo = "";
         DefaultTableModel modeloEmpleado = new DefaultTableModel();
         int numeroPreguntas;
         ResultSetMetaData rsetMetaData;
+//        this.jTable1.setModel(modeloEmpleado);
+//        jTable1.getColumnModel().getColumn(0).setPreferredWidth(100);
+//        jTable1.getColumnModel().getColumn(1).setPreferredWidth(500);
+//        jTable1.getColumnModel().getColumn(2).setPreferredWidth(150);
+//        jTable1.getColumnModel().getColumn(3).setPreferredWidth(65);
+        //jTable1.getColumnModel().getColumn(1).setMaxWidth(1);
+        jTable1.setRowHeight(30);
         this.jTable1.setModel(modeloEmpleado);
+
         try {
             boolean r = Control.ejecuteQuery(query);
             rsetMetaData = Control.rs.getMetaData();
@@ -164,19 +172,12 @@ public class Stock extends javax.swing.JFrame {
             }
 
             while (Control.rs.next()) {
-                codi = Control.rs.getString(1);
-                nom = Control.rs.getString(2);
-                costo = Control.rs.getString(3);
-                cant = Control.rs.getString(4);
-
                 Object[] registroEmpleado = new Object[numeroPreguntas];
-
                 for (int i = 0; i < numeroPreguntas; i++) {
                     registroEmpleado[i] = Control.rs.getObject(i + 1);
                 }
                 modeloEmpleado.addRow(registroEmpleado);
             }
-            Control.cerrarConexion();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "ERROR " + e.getMessage());
         } finally {
@@ -191,6 +192,7 @@ public class Stock extends javax.swing.JFrame {
         centro = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
+        jLabel1 = new javax.swing.JLabel();
         superior = new javax.swing.JPanel();
         inferior = new javax.swing.JPanel();
         excel = new javax.swing.JButton();
@@ -216,20 +218,29 @@ public class Stock extends javax.swing.JFrame {
         jTable1.setFont(new java.awt.Font("Segoe UI Light", 0, 11)); // NOI18N
         jScrollPane1.setViewportView(jTable1);
 
+        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jLabel1.setText("Lista de Productos en Stock");
+        jLabel1.setMinimumSize(new java.awt.Dimension(100, 22));
+
         javax.swing.GroupLayout centroLayout = new javax.swing.GroupLayout(centro);
         centro.setLayout(centroLayout);
         centroLayout.setHorizontalGroup(
             centroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, centroLayout.createSequentialGroup()
+            .addGroup(centroLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 770, Short.MAX_VALUE)
+                .addGroup(centroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 770, Short.MAX_VALUE)
+                    .addGroup(centroLayout.createSequentialGroup()
+                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         centroLayout.setVerticalGroup(
             centroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(centroLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 488, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, centroLayout.createSequentialGroup()
+                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 43, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -331,8 +342,9 @@ public class Stock extends javax.swing.JFrame {
     private void volverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_volverActionPerformed
         Bodega m;
         m = new Bodega(usuario, List_Menu, codEmpresa);
-        this.setVisible(false);
         m.setVisible(true);
+        this.dispose();
+
     }//GEN-LAST:event_volverActionPerformed
 
     private void excelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_excelActionPerformed
@@ -393,6 +405,7 @@ public class Stock extends javax.swing.JFrame {
     private javax.swing.JPanel inferior;
     private javax.swing.JMenuItem inicio;
     private javax.swing.JPanel izquierda;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPopupMenu.Separator jSeparator1;

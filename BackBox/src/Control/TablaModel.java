@@ -41,12 +41,6 @@ public class TablaModel implements TableCellRenderer {
         } else if (condicion == 2) {
             this.ListAcciones = x;
         }
-
-//        Producto temp = null;
-//        for (int i = 0; i < x.size(); i++) {
-//            temp = (Producto) x.get(i);
-//            pro.add(temp);
-//        }
     }
 
     public void calculeFrecuenciasV() {

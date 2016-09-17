@@ -58,9 +58,7 @@ public class CategoriasRegistrar extends javax.swing.JDialog {
         jLabel6 = new javax.swing.JLabel();
         Porcentaje = new javax.swing.JComboBox();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Nueva Categoria");
-        setPreferredSize(new java.awt.Dimension(557, 280));
 
         jPanel1.setBackground(java.awt.Color.white);
         jPanel1.setMinimumSize(new java.awt.Dimension(540, 400));

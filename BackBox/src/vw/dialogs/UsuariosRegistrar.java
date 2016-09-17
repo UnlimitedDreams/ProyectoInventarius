@@ -118,7 +118,7 @@ public class UsuariosRegistrar extends javax.swing.JDialog {
         if (VerificarDatos()) {
             if (buscar_cod() == false) {
                 int cod_rol = traerCod();
-                int S = sexo.getSelectedIndex();                
+                int S = sexo.getSelectedIndex();
                 boolean f = false;
                 try {
                     Control.conectar();
@@ -129,6 +129,7 @@ public class UsuariosRegistrar extends javax.swing.JDialog {
                     } else if (S == 2) {
                         sexo = "F";
                     }
+
                     f = Control.ejecuteUpdate("insert into persona values("
                             + cedula.getText() + ",'"
                             + nombre.getText() + "','"
@@ -136,17 +137,15 @@ public class UsuariosRegistrar extends javax.swing.JDialog {
                             + sexo + "',"
                             + "'A','" + email.getText() + "','" + telefono.getText() + "','" + cedular.getText() + "')");
                     if (f) {
-
                         f = Control.ejecuteUpdate("insert into usuario"
                                 + " values( nextval('Sq_Usuario'),'" + usuario.getText() + "','"
                                 + clave.getText() + "'," + cod_rol + "," + cedula.getText() + ")");
-
                     } else {
                         Entrada.muestreMensajeV("ERROR ", javax.swing.JOptionPane.ERROR_MESSAGE);
                     }
 
                 } catch (Exception ex) {
-                    f=false;
+                    f = false;
                 } finally {
                     Control.con.commit();
                     Control.con.setAutoCommit(true);
@@ -202,7 +201,10 @@ public class UsuariosRegistrar extends javax.swing.JDialog {
         } else {
             Entrada.muestreMensajeV("Debe llenar Todos los Datos", javax.swing.JOptionPane.WARNING_MESSAGE);
         }
+    }
 
+    public void AsignaciondePermisos(String rol) {
+        
     }
 
     public int traerCod() throws ClassNotFoundException {

@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package vw.components;
+
 import Control.Entrada;
 import Modelo.Producto;
 import Modelo.List_Categoria;
@@ -36,7 +37,7 @@ import vw.model.Venta;
  * @author Britany
  */
 public class Entrada_Nueva extends javax.swing.JFrame {
-
+    
     ArrayList<Producto> productos = new ArrayList();
     String nom;
     String nombreUsuario;
@@ -44,7 +45,7 @@ public class Entrada_Nueva extends javax.swing.JFrame {
     int codEmpresa;
     ArrayList<Integer> ListAcciones = new ArrayList();
     ArrayList<Integer> listIvas = new ArrayList();
-
+    
     public Entrada_Nueva(ArrayList x, String nom, String fac, ArrayList acciones, int codEmpresa) throws ClassNotFoundException {
         try {
             initComponents();
@@ -54,9 +55,10 @@ public class Entrada_Nueva extends javax.swing.JFrame {
             this.nom = nom;
             this.codEmpresa = codEmpresa;
             this.condicionfiltro = false;
-            this.ListAcciones = acciones;
+            this.ListAcciones = acciones;           
             Categoria2();
             this.productos = x;
+//            this.rsContent.setVisible(false);
             iniciar();
             recuperar_fecha();
             nroFactura.setText(fac);
@@ -68,7 +70,7 @@ public class Entrada_Nueva extends javax.swing.JFrame {
             Logger.getLogger(Entrada_Nueva.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
+    
     public void ConfigurarIva() throws SQLException {
         try {
             listIvas.clear();
@@ -83,13 +85,13 @@ public class Entrada_Nueva extends javax.swing.JFrame {
                     .getName()).log(Level.SEVERE, null, ex);
         }
     }
-
+    
     public void recuperar_fecha() {
         Date fecha = new Date();
         fechaActual.setDate(fecha);
-
+        
     }
-
+    
     public void sumarTot() {
         Producto pro = null;
         double sum = 0;
@@ -99,9 +101,9 @@ public class Entrada_Nueva extends javax.swing.JFrame {
         }
         jLabel4.setText("" + sum);
     }
-
+    
     public void Categoria2() throws ClassNotFoundException {
-
+        
         try {
             Control.conectar();
             Control.ejecuteQuery("select * from categoriabusqueda()");
@@ -112,29 +114,29 @@ public class Entrada_Nueva extends javax.swing.JFrame {
                 proveedores.addItem(Control.rs.getInt(1) + "-" + Control.rs.getString(3));
             }
         } catch (Exception ex) {
-
+            
         } finally {
             Control.cerrarConexion();
         }
     }
-
+    
     public void iniciar() {
         TablaModel t = new TablaModel(productos, 7, 1);
         t.DatosEntradaNueva();
         muevaLosDatosFre(t);
     }
-
+    
     public void muevaLosDatosFre(TablaModel x) {
         compras.getDefaultEditor(null);
         for (int i = 0; i < 7; i++) {
             for (int k = 0; k < x.getNrofreq(); k++) {
                 System.out.println("--- : " + x.frecuencias[i][k]);
                 compras.setValueAt(x.frecuencias[i][k], k, i);
-
+                
             }
         }
     }
-
+    
     public void cargarUsuario() throws SQLException, ClassNotFoundException {
         Control.conectar();
         System.out.println("usuario : " + nom);
@@ -148,9 +150,9 @@ public class Entrada_Nueva extends javax.swing.JFrame {
         this.codEmpresa = empresa;
         this.nombreUsuario = nombre;
         Control.cerrarConexion();
-
+        
     }
-
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -158,11 +160,11 @@ public class Entrada_Nueva extends javax.swing.JFrame {
 
         centro = new javax.swing.JPanel();
         jTextField2 = new javax.swing.JTextField();
-        jPanel5 = new javax.swing.JPanel();
         rsContent = new javax.swing.JScrollPane();
         rsQuery = new javax.swing.JTable();
         jScrollPane2 = new javax.swing.JScrollPane();
         compras = new javax.swing.JTable();
+        jPanel5 = new javax.swing.JPanel();
         superior = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         nroFactura = new javax.swing.JTextField();
@@ -211,10 +213,6 @@ public class Entrada_Nueva extends javax.swing.JFrame {
         });
         centro.add(jTextField2);
 
-        jPanel5.setBackground(java.awt.Color.white);
-        jPanel5.setMinimumSize(new java.awt.Dimension(25, 78));
-        jPanel5.setPreferredSize(new java.awt.Dimension(25, 78));
-
         rsContent.setMinimumSize(new java.awt.Dimension(25, 78));
         rsContent.setPreferredSize(new java.awt.Dimension(25, 78));
 
@@ -238,20 +236,7 @@ public class Entrada_Nueva extends javax.swing.JFrame {
         });
         rsContent.setViewportView(rsQuery);
 
-        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
-        jPanel5.setLayout(jPanel5Layout);
-        jPanel5Layout.setHorizontalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(rsContent, javax.swing.GroupLayout.DEFAULT_SIZE, 745, Short.MAX_VALUE)
-        );
-        jPanel5Layout.setVerticalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel5Layout.createSequentialGroup()
-                .addComponent(rsContent, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-
-        centro.add(jPanel5);
+        centro.add(rsContent);
 
         compras.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         compras.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
@@ -386,6 +371,23 @@ public class Entrada_Nueva extends javax.swing.JFrame {
         jScrollPane2.setViewportView(compras);
 
         centro.add(jScrollPane2);
+
+        jPanel5.setBackground(java.awt.Color.white);
+        jPanel5.setMinimumSize(new java.awt.Dimension(25, 78));
+        jPanel5.setPreferredSize(new java.awt.Dimension(25, 78));
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 745, Short.MAX_VALUE)
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 78, Short.MAX_VALUE)
+        );
+
+        centro.add(jPanel5);
 
         getContentPane().add(centro, java.awt.BorderLayout.CENTER);
 
@@ -627,7 +629,7 @@ public class Entrada_Nueva extends javax.swing.JFrame {
                             } else {
                                 Entrada.muestreMensajeV("Error al Registrar Producto Pongase en contacto con Soporte");
                             }
-
+                            
                         } catch (SQLException ex) {
                             System.out.println("Error SQL : " + ex.toString());
                         } finally {
@@ -639,15 +641,15 @@ public class Entrada_Nueva extends javax.swing.JFrame {
                                 Logger.getLogger(Entrada_Nueva.class.getName()).log(Level.SEVERE, null, ex);
                             }
                         }
-
+                        
                     } else {
                         Entrada.muestreMensajeV("La Factura ingresada ya se encuentra registrada para ese proveedor.");
                     }
-
+                    
                 } catch (Exception ex) {
                     System.out.println("Error Proceso : " + ex.toString());
                 }
-
+                
                 if (Rfinal) {
                     try {
                         Articulo a = new Articulo(nom, ListAcciones, codEmpresa);
@@ -660,11 +662,11 @@ public class Entrada_Nueva extends javax.swing.JFrame {
             } else {
                 Entrada.muestreMensajeV("El costo de los productos no puede ser $0 (cero)");
             }
-
+            
         }
 
     }//GEN-LAST:event_jButton1ActionPerformed
-
+    
     public void generarFactura(String cod_factura, String fecha, Connection c, String provedor) throws JRException, ClassNotFoundException {
         try {
             HashMap<String, Object> parametros = new HashMap<String, Object>();
@@ -681,17 +683,17 @@ public class Entrada_Nueva extends javax.swing.JFrame {
             System.err.println(ex.toString());
         }
     }
-
+    
     public boolean promedio_costo(int costo, double x, int cod) throws ClassNotFoundException {
-
+        
         int valor = 0;
         valor = (costo + (int) x) / 2;
         boolean r = Control.ejecuteUpdate("update producto set costo=" + valor
                 + " where cod_producto=" + cod);
-
+        
         return r;
     }
-
+    
     public int costo(int cod) throws ClassNotFoundException {
         int costo = 0;
         try {
@@ -705,7 +707,7 @@ public class Entrada_Nueva extends javax.swing.JFrame {
         }
         return costo;
     }
-
+    
     public boolean SoloNumeros(String cadena, int condicion) {
         double valorD = 0;
         int valorI = 0;
@@ -720,7 +722,7 @@ public class Entrada_Nueva extends javax.swing.JFrame {
             return false;
         }
     }
-
+    
     public boolean ValidarDatosEnTabla() {
         Producto prod = null;
         String mnserror = "N";
@@ -772,7 +774,7 @@ public class Entrada_Nueva extends javax.swing.JFrame {
                     mnserror = "La cantidad del Stock debe ser Numerico";
                     r = false;
                     break;
-
+                    
                 } else if (i == 4 && SoloNumeros((String) compras.getValueAt(k, i), 1) == false) {
                     mnserror = "El valor del iva debe ser Numerico";
                     r = false;
@@ -796,7 +798,7 @@ public class Entrada_Nueva extends javax.swing.JFrame {
         }
         return r;
     }
-
+    
     public boolean ajustar_Datos_CalculoCosto() {
         boolean costo = false;
         Producto prod = null;
@@ -827,7 +829,7 @@ public class Entrada_Nueva extends javax.swing.JFrame {
         }
         return costo;
     }
-
+    
     public void Restar_Todo() {
         iniciar();
         for (int i = 0; i < 4; i++) {
@@ -836,9 +838,9 @@ public class Entrada_Nueva extends javax.swing.JFrame {
             }
         }
         productos.clear();
-
+        
     }
-
+    
     public boolean VerificarFactura() throws ClassNotFoundException {
         Control.conectar();
         boolean r = false;
@@ -849,14 +851,16 @@ public class Entrada_Nueva extends javax.swing.JFrame {
             while (Control.rs.next()) {
                 r = true;
             }
-
+            
         } catch (Exception ex) {
-
+            
         } finally {
             Control.cerrarConexion();
         }
         return r;
-    }    public void borrar() {
+    }
+
+    public void borrar() {
         String op[] = new String[2];
         op[0] = "Si";
         op[1] = "No";
@@ -868,7 +872,7 @@ public class Entrada_Nueva extends javax.swing.JFrame {
             } else {
                 String cod = (String) compras.getValueAt(i, 0).toString();
                 Producto p = null;
-
+                
                 for (int k = 0; k < productos.size(); k++) {
                     p = (Producto) productos.get(k);
                     if (p.getCodigo().equalsIgnoreCase(cod)) {
@@ -905,7 +909,7 @@ public class Entrada_Nueva extends javax.swing.JFrame {
 
     private void jTextField2KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField2KeyReleased
         if (evt.getKeyCode() == 10 && condicionfiltro == false) {
-            //rsContent.setVisible(false);
+//            rsContent.setVisible(false); 
             this.condicionfiltro = true;
             Producto p = null;
             String cod = "";
@@ -956,7 +960,7 @@ public class Entrada_Nueva extends javax.swing.JFrame {
                     Control.cerrarConexion();
                 }
             }
-            // rsContent.setVisible(false);
+//             rsContent.setVisible(false);
             jTextField2.setText("");
             iniciar();
             jTextField2.requestFocus();
@@ -976,7 +980,7 @@ public class Entrada_Nueva extends javax.swing.JFrame {
     }//GEN-LAST:event_rsQueryFocusGained
 
     private void rsQueryFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_rsQueryFocusLost
-        //rsContent.setVisible(false);
+//        rsContent.setVisible(false);
         jTextField2.setText("");
     }//GEN-LAST:event_rsQueryFocusLost
     
@@ -988,7 +992,7 @@ public class Entrada_Nueva extends javax.swing.JFrame {
             return false;
         }
     }
-
+    
     public void Borrar() {
         System.out.println("+++++");
         for (int i = 0; i < 5; i++) {
@@ -998,7 +1002,7 @@ public class Entrada_Nueva extends javax.swing.JFrame {
         }
         iniciar();
     }
-
+    
     public void Borrar2() {
         for (int i = 0; i < 5; i++) {
             for (int k = 0; k < 1; k++) {
@@ -1007,7 +1011,7 @@ public class Entrada_Nueva extends javax.swing.JFrame {
         }
         iniciar();
     }
-
+    
     public void Buscar() throws ClassNotFoundException {
         String query = "";
         if (SoloNumeros(jTextField2.getText())) {
@@ -1026,11 +1030,11 @@ public class Entrada_Nueva extends javax.swing.JFrame {
         int numeroPreguntas;
         ResultSetMetaData rsetMetaData;
         boolean r2 = false;
-
+        
         this.rsQuery.setModel(modeloEmpleado);
         try {
             boolean r = Control.ejecuteQuery(query);
-
+            
             rsetMetaData = Control.rs.getMetaData();
             numeroPreguntas = rsetMetaData.getColumnCount();
             //Establece los nombres de las columnas de las tablas
@@ -1046,9 +1050,9 @@ public class Entrada_Nueva extends javax.swing.JFrame {
                     }
                     modeloEmpleado.addRow(registroEmpleado);
                 }
-                //rsContent.setVisible(true);
+//                rsContent.setVisible(true);
             } else {
-                // rsContent.setVisible(false);
+//                 rsContent.setVisible(false);
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "ERROR " + e.getMessage());
@@ -1117,7 +1121,7 @@ public class Entrada_Nueva extends javax.swing.JFrame {
             }
         }
 
-        //rsContent.setVisible(false);
+//        rsContent.setVisible(false);
         jTextField2.setText("");
         iniciar();
         jTextField2.requestFocus();
@@ -1144,17 +1148,17 @@ public class Entrada_Nueva extends javax.swing.JFrame {
     }//GEN-LAST:event_comprasKeyPressed
 
     private void comprasFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_comprasFocusGained
-        //rsContent.setVisible(false);
+//        rsContent.setVisible(false);
         jTextField2.setText("");
     }//GEN-LAST:event_comprasFocusGained
 
     private void comprasFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_comprasFocusLost
-        //rsContent.setVisible(false);
+//        rsContent.setVisible(false);
         jTextField2.setText("");
     }//GEN-LAST:event_comprasFocusLost
 
     private void centroFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_centroFocusLost
-        // rsContent.setVisible(false);
+//         rsContent.setVisible(false);
         jTextField2.setText("");
     }//GEN-LAST:event_centroFocusLost
 

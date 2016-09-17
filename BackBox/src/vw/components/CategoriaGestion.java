@@ -34,6 +34,7 @@ public class CategoriaGestion extends javax.swing.JFrame {
 
     /**
      * Creates new form categoriaGestion
+     *
      * @param Usuario
      * @param Acciones
      */
@@ -292,11 +293,13 @@ public class CategoriaGestion extends javax.swing.JFrame {
         int numeroPreguntas;
         ResultSetMetaData rsetMetaData;
         this.categoriaLista.setModel(modeloEmpleado);
+        categoriaLista.setRowHeight(30);
+        this.categoriaLista.setModel(modeloEmpleado);
         try {
             Control.conectar();
             Control.ejecuteQuery("select    "
                     + "codigo \"Código\","
-                    + "descripcion \"Descripción\" "
+                    + "descripcion \"Descripción\" , ganancia "
                     + "from CategoriaBusqueda()");
             rsetMetaData = Control.rs.getMetaData();
             numeroPreguntas = rsetMetaData.getColumnCount();
@@ -312,9 +315,10 @@ public class CategoriaGestion extends javax.swing.JFrame {
                     registroEmpleado[i] = Control.rs.getObject(i + 1);
                 }
                 modeloEmpleado.addRow(registroEmpleado);
-            }            
-            categoriaLista.getColumnModel().getColumn(0).setMaxWidth(150);
-            categoriaLista.getColumnModel().getColumn(0).setMinWidth(150);            
+            }
+            categoriaLista.getColumnModel().getColumn(0).setMaxWidth(80);
+            categoriaLista.getColumnModel().getColumn(1).setMinWidth(200);
+            categoriaLista.getColumnModel().getColumn(2).setMinWidth(80);
         } catch (ClassNotFoundException | SQLException e) {
             JOptionPane.showMessageDialog(null, "ERROR " + e.getMessage());
         } finally {
