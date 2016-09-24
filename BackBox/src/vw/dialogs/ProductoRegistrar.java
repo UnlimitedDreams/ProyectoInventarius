@@ -202,7 +202,7 @@ public class ProductoRegistrar extends javax.swing.JDialog {
             System.out.println("Entro a nueva ventana");
 
             TablaModel t = new TablaModel(pr,7,1);
-            t.DatosEntradaNueva();
+            t.ModelCargaArchivo();
 
             v.compras.getDefaultEditor(null);
             for (int i = 0; i < 6; i++) {

@@ -888,13 +888,6 @@ public class Articulo extends javax.swing.JFrame implements Runnable {
             }
 
             while (Control.rs.next()) {
-                cod = Control.rs.getString(1);
-                nom = Control.rs.getString(2);
-                costo = Control.rs.getString(3);
-                iva = Control.rs.getString(4);
-                precio = Control.rs.getString(5);
-                cant = Control.rs.getString(6);
-                cate = Control.rs.getString(7);
 
                 Object[] registroEmpleado = new Object[numeroPreguntas];
 

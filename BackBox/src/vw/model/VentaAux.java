@@ -340,8 +340,8 @@ public class VentaAux extends javax.swing.JFrame {
 
     public void iniciar() {
         System.out.println("Tamañ de productos " + productos.size());
-        TablaModel t = new TablaModel(productos, 5,1);
-        t.calculeFrecuenciasV();
+        TablaModel t = new TablaModel(productos, 5, 1);
+        t.modelVenta();
         muevaLosDatosFre(t);
 
     }
@@ -994,8 +994,7 @@ public class VentaAux extends javax.swing.JFrame {
     }
 
     public void Vender() throws ClassNotFoundException, JRException, SQLException {
-        int codigo_venta = Sequence.seque("select max(cod_factura) from venta");
-        int codigo_pro = (Sequence.seque("select max(cod_venta) from venta_pro"));
+        int codigo_venta = Sequence.Next("Sq_Venta");
         boolean Proceso = false;
         boolean r = false;
         try {
@@ -1025,10 +1024,9 @@ public class VentaAux extends javax.swing.JFrame {
                 Producto pro = null;
                 for (int i = 0; i < productos.size(); i++) {
                     pro = (Producto) productos.get(i);
-                    r = Control.ejecuteUpdate("insert into venta_pro values(" + codigo_pro + ","
+                    r = Control.ejecuteUpdate("insert into venta_pro values(nextval('Sq_Venta_pro'),"
                             + codigo_venta + "," + pro.getCantidad() + "," + pro.getIva() + "," + (pro.getValorIva() * pro.getCantidad())
                             + "," + pro.getCodigoProducto() + ")");
-                    codigo_pro++;
                 }
                 restar_Bodega();
                 //generarFactura(codigo_venta, fecha, cone);

@@ -132,7 +132,7 @@ public class CargaArchivo extends javax.swing.JFrame {
                 }
         ));
         TablaModel t = new TablaModel(p,7,1);
-        t.DatosCargaArchivo();
+        t.ModelCargaArchivo();
         muevaLosDatosFre(t);
     }
 

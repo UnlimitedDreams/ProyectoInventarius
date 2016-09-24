@@ -122,7 +122,7 @@ public class Entrada_Nueva extends javax.swing.JFrame {
     
     public void iniciar() {
         TablaModel t = new TablaModel(productos, 7, 1);
-        t.DatosEntradaNueva();
+        t.ModelMostrarCarga();
         muevaLosDatosFre(t);
     }
     

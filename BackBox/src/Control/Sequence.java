@@ -19,25 +19,9 @@ public class Sequence {
     /**
      * Método que se encargar de retornar la secuencia de la tabla.
      *
-     * @param sql El parámetro sql define la consulta de la tabla.
-     * @return El número de secuencoa de la tabla
-     */
-    public static int seque(String sql) throws ClassNotFoundException {
-        Control.conectar();
-        int cod = 0;
-        try {
-            Control.ejecuteQuery(sql);
-            while (Control.rs.next()) {
-                cod = Control.rs.getInt(1);
-            }
-        } catch (Exception ex) {
-
-        } finally {
-            Control.cerrarConexion();
-        }
-        return cod + 1;
-    }
-
+     * @param Sequence El parámetro sequence defeine la secuencia creada en la base de datos para la tabla.
+     * @return El número de secuencia de la tabla
+     */       
     public static int Next(String Sequence) throws ClassNotFoundException {
         Control.conectar();
         int cod = 0;

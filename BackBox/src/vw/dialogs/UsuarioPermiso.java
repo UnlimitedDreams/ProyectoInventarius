@@ -97,7 +97,7 @@ public class UsuarioPermiso extends javax.swing.JDialog {
         int Condicion = Entrada.menu("BackBox", "¿Esta Seguro que Desea Crear Los permisos? ", op);
         if (Condicion == 1) {
 
-            int codigoAct = Sequence.seque("select max(cod_permiso) from permisos");
+            //sq_Permisos
             try {
                 Control.conectar();
                 Control.con.setAutoCommit(false);

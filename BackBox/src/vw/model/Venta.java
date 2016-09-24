@@ -282,7 +282,7 @@ public class Venta extends javax.swing.JFrame implements KeyListener {
     public void iniciar() {
         System.out.println("Tamañ de productos " + productos.size());
         TablaModel t = new TablaModel(productos, 5, 1);
-        t.calculeFrecuenciasV();
+        t.modelVenta();
         muevaLosDatosFre(t);
 
     }
@@ -988,7 +988,7 @@ public class Venta extends javax.swing.JFrame implements KeyListener {
                             + pro.getPrecio_venta() + ")");
                 }
                 restar_Bodega();
-//                generarFactura(codigo_venta, fecha, cone);
+                generarFactura(codigo_venta, fecha, cone);
 
                 Proceso = true;
             } else {

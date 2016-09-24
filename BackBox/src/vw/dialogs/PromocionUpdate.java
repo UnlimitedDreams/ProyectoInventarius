@@ -1759,7 +1759,7 @@ public class PromocionUpdate extends javax.swing.JDialog {
 
     public void iniciar() {
         TablaModel t = new TablaModel(productos, 6,1);
-        t.calculeFrecuenciasPromocion();
+        t.ModelPromocionYkits();
         muevaLosDatosFre(t);
 
     }

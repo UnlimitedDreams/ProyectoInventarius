@@ -43,7 +43,11 @@ public class TablaModel implements TableCellRenderer {
         }
     }
 
-    public void calculeFrecuenciasV() {
+    /**
+     * Método que se encargar de retorna una matriz para vista de Venta,
+     * acomodada de acuerdo a unas columnas especificas crear la matriz.
+     */
+    public void modelVenta() {
         Producto temp = null;
         for (int i = 0; i < pro.size(); i++) {
             temp = (Producto) pro.get(i);
@@ -54,8 +58,12 @@ public class TablaModel implements TableCellRenderer {
             nrofreq++;
         }
     }
-    
-        public void RegistroRolTable() {
+
+    /**
+     * Método que se encargar de retorna una matriz para vista de Acciones,
+     * acomodada de acuerdo a unas columnas especificas crear la matriz.
+     */
+    public void ModeloAcciones() {
         acciones temp = null;
         for (int i = 0; i < ListAcciones.size(); i++) {
             temp = (acciones) ListAcciones.get(i);
@@ -64,7 +72,11 @@ public class TablaModel implements TableCellRenderer {
         }
     }
 
-    public void calculeFrecuenciasPromocion() {
+     /**
+     * Método que se encargar de retorna una matriz para vista de Promociones y Kits,
+     * acomodada de acuerdo a unas columnas especificas crear la matriz.
+     */
+    public void ModelPromocionYkits() {
         Producto temp = null;
         for (int i = 0; i < pro.size(); i++) {
             temp = (Producto) pro.get(i);
@@ -78,7 +90,11 @@ public class TablaModel implements TableCellRenderer {
         }
     }
 
-    public void calculeFrecuenciasKits() {
+    /**
+     * Método que se encargar de retorna una matriz para vista de Kits,
+     * acomodada de acuerdo a unas columnas especificas crear la matriz.
+     */
+    public void ModelKit() {
         Producto temp = null;
         for (int i = 0; i < pro.size(); i++) {
             temp = (Producto) pro.get(i);
@@ -91,12 +107,11 @@ public class TablaModel implements TableCellRenderer {
         }
     }
 
-    /**
-     * Método que se encargar de cargar la matriz en cada posicion. de acuerdo a
-     * la ventana CargaArchivo
-     *
+     /**
+     * Método que se encargar de retorna una matriz para vista de Kits,
+     * acomodada de acuerdo a unas columnas especificas crear la matriz.
      */
-    public void DatosCargaArchivo() {
+    public void ModelCargaArchivo() {
         Producto temp = null;
         for (int i = 0; i < pro.size(); i++) {
             temp = (Producto) pro.get(i);
@@ -111,12 +126,11 @@ public class TablaModel implements TableCellRenderer {
         }
     }
 
-    /**
-     * Método que se encargar de cargar la matriz en cada posicion. de acuerdo a
-     * la ventana Entrada Nueva
-     *
+   /**
+     * Método que se encargar de retorna una matriz para vista de Kits,
+     * acomodada de acuerdo a unas columnas especificas crear la matriz.
      */
-    public void DatosEntradaNueva() {
+    public void ModelMostrarCarga() {
         Producto temp = null;
         String iva = "";
         int ivaFinal = 0;

@@ -734,7 +734,7 @@ public class KitUpdate2 extends javax.swing.JDialog {
     public void iniciar() {
         System.out.println("Tamañ de productos " + productos.size());
         TablaModel t = new TablaModel(productos, 5,1);
-        t.calculeFrecuenciasKits();
+        t.ModelKit();
         muevaLosDatosFre(t);
 
     }

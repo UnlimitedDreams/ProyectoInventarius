@@ -72,7 +72,7 @@ public class RolUpdate extends javax.swing.JFrame {
     public void iniciar() {
         System.out.println("Tamañ de productos " + listaaccion.size());
         TablaModel t = new TablaModel(listaaccion, 1, 2);
-        t.RegistroRolTable();
+        t.ModeloAcciones();
         muevaLosDatosFre(t);
 
     }
