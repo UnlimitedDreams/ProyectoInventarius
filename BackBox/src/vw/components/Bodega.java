@@ -1,17 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package vw.components;
 
-import Control.Control;
-import Control.Entrada;
-import Modelo.ContenedorMenus;
-import Modelo.MenuRedireccionar;
-import Modelo.Producto;
-import Modelo.acciones;
-import Modelo.seccion;
+import Control.*;
+import Modelo.*;
+import vw.dialogs.*;
+import vw.main.*;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -29,157 +21,103 @@ import javax.swing.JOptionPane;
 import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
 import javax.swing.table.DefaultTableModel;
-import vw.dialogs.KitUpdate2;
-import vw.dialogs.ProductoUpdate2;
-import vw.dialogs.SalidaEntrada;
-import vw.main.Acceder;
-import vw.main.Menu;
 
 /**
+ * Esta JFrame se encarga de mostrar los productos en la bodega. habilitando
+ * ciertas acciones para el usuario
  *
- * @author usuario
+ * @author: Unlimited Dreams
+ * @version: 25/08/2016
  */
 public class Bodega extends javax.swing.JFrame {
 
-    String usuario;
+    String cod_usuario;
     String UsuNombre;
     int codEmpresa;
-    ArrayList<seccion> listaSeccion = new ArrayList();
-    ArrayList<acciones> listaaccion = new ArrayList();
-    ArrayList<ContenedorMenus> List_Menu = new ArrayList();
+    ArrayList<seccion> listaMenu = new ArrayList();
+    ArrayList<acciones> listaItemMenu = new ArrayList();
+    ArrayList<ContenedorMenus> listaMenuItem = new ArrayList();
 
-    public Bodega(String usuario, ArrayList acciones, int codEmpresa) {
-        initComponents();
-        this.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/facelet/icon.png")));
+    /**
+     * Metodo que se encargar de iniciar el Jframe hace varias cosas: . 1.
+     * Consulta el estado del stock de la bodega para alertar al usuario de que
+     * hace falta. 2. Recupera una lista de menus con sus items que se genero en
+     * el Menu pricipal , esta lista se usara para crear el menu de la vista.
+     * Bodega 3. Carga una lista de productos para mostrarlos en la view tiene
+     * un tope de 500. 4. Carga los permisos que tiene el usuario para la vista
+     * de Bodega.
+     *
+     * @param codigo_usuario Codigo de usuario Recuperado en el Menu Principal.
+     * @param listaMenuFinal Lista de MenuItem Cargada desde el Menu principal.
+     * @param codEmpresa codigo de la empresa que tengo asociada en el sistema.
+     */
+    public Bodega(String codigo_usuario, ArrayList listaMenuFinal, int codEmpresa) {
         try {
-            inicio();
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(Bodega.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        this.usuario = usuario;
-        this.List_Menu = acciones;
-        this.codEmpresa = codEmpresa;
-        this.setLocationRelativeTo(null);
-        try {
+            initComponents();
             Stock();
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(Bodega.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        ContenedorMenus con_menu = new ContenedorMenus();
-        con_menu = (ContenedorMenus) List_Menu.get(0);
-        listaSeccion = con_menu.getListaSeccion();
-        listaaccion = con_menu.getListaAcciones();
-        for (seccion object : listaSeccion) {
-            JMenu menu = new JMenu(object.getDescripcion());
-            jMenuBar1.add(menu);
-            for (acciones object1 : listaaccion) {
-                if (object1.getCod_seccion() == object.getCod_seccion()) {
-                    if (object1.getAccion().equalsIgnoreCase("Linea")) {
-                        menu.add(new JSeparator());
-                    } else {
-                        //10 = Control + Alt
-                        JMenuItem menuItem = new JMenuItem();
-                        menuItem = MenuRedireccionar.Atajos(object1.getAccion());
-                        menuItem.addActionListener(new ActionListener() {
-                            @Override
-                            public void actionPerformed(ActionEvent e) {
-                                MenuRedireccionar MenuF = new MenuRedireccionar(Bodega.this, e.getActionCommand(), List_Menu, usuario, codEmpresa);
-                                try {
-                                    MenuF.reDireccion();
-                                    if (e.getActionCommand().equalsIgnoreCase("Crear Categoria ")
-                                            || e.getActionCommand().equalsIgnoreCase("Crear Usuario")
-                                            || e.getActionCommand().equalsIgnoreCase("Crear Proveedor")
-                                            || e.getActionCommand().equalsIgnoreCase("Crear Rol")) {
-                                    } else {
-                                        Bodega.this.dispose();
+            this.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/facelet/icon.png")));
+            this.cod_usuario = codigo_usuario;
+            this.listaMenuItem = listaMenuFinal;
+            this.codEmpresa = codEmpresa;
+            this.setLocationRelativeTo(null);
+            //Recuperamos los valores de los menus
+            ContenedorMenus con_menu = new ContenedorMenus();
+            con_menu = (ContenedorMenus) listaMenuItem.get(0);
+            listaMenu = con_menu.getListaSeccion();
+            listaItemMenu = con_menu.getListaAcciones();
+            //Asignamos acciones para los menus
+            for (seccion obj_seccion : listaMenu) {
+                JMenu menu = new JMenu(obj_seccion.getDescripcion());
+                jMenuBar1.add(menu);
+                for (acciones obj_acciones : listaItemMenu) {
+                    if (obj_acciones.getCod_seccion() == obj_seccion.getCod_seccion()) {
+                        if (obj_acciones.getAccion().equalsIgnoreCase("Linea")) {
+                            menu.add(new JSeparator());
+                        } else {
+                            //10 = Control + Alt
+                            JMenuItem menuItem = new JMenuItem();
+                            menuItem = MenuRedireccionar.Atajos(obj_acciones.getAccion());
+                            menuItem.addActionListener(new ActionListener() {
+                                @Override
+                                public void actionPerformed(ActionEvent e) {
+                                    MenuRedireccionar MenuF = new MenuRedireccionar(Bodega.this, e.getActionCommand(), listaMenuItem, codigo_usuario, codEmpresa);
+                                    try {
+                                        MenuF.reDireccion();
+                                        if (e.getActionCommand().equalsIgnoreCase("Crear Categoria ")
+                                                || e.getActionCommand().equalsIgnoreCase("Crear Usuario")
+                                                || e.getActionCommand().equalsIgnoreCase("Crear Proveedor")
+                                                || e.getActionCommand().equalsIgnoreCase("Crear Rol")) {
+                                        } else {
+                                            Bodega.this.dispose();
+                                        }
+                                    } catch (IOException | URISyntaxException ex) {
+                                        Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+                                    } catch (ClassNotFoundException ex) {
+                                        Logger.getLogger(Bodega.class.getName()).log(Level.SEVERE, null, ex);
                                     }
-                                } catch (IOException | URISyntaxException ex) {
-                                    Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
-                                } catch (ClassNotFoundException ex) {
-                                    Logger.getLogger(Bodega.class.getName()).log(Level.SEVERE, null, ex);
                                 }
-                            }
-                        });
-                        menu.add(menuItem);
+                            });
+                            menu.add(menuItem);
+                        }
                     }
                 }
             }
-        }
-        MenuAyuda();
-        try {
-            Permisos();
+            try {
+                MenuAyuda();
+                CargaProductos();
+                Permisos();
+            } catch (ClassNotFoundException ex) {
+                //Error
+            }
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(Bodega.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-    }
-
-    public final void inicio() throws ClassNotFoundException {
-
-        DefaultTableModel modeloEmpleado = new DefaultTableModel();
-        int numeroPreguntas;
-        ResultSetMetaData rsetMetaData;
-        String cabeceras[] = {"Codigo", "Nombre", "Categoria", "Costo", "Iva", "Precio", "(%)Desc.", "Cantidad"};
-        modeloEmpleado = new DefaultTableModel(null, cabeceras) {
-            @Override
-            public boolean isCellEditable(int row, int column) {//para evitar que las celdas sean editables
-                return false;
-            }
-        };
-        this.tablaProductos.setModel(modeloEmpleado);
-        tablaProductos.getColumnModel().getColumn(0).setPreferredWidth(100);
-        tablaProductos.getColumnModel().getColumn(1).setPreferredWidth(500);
-        tablaProductos.getColumnModel().getColumn(2).setPreferredWidth(150);
-        tablaProductos.getColumnModel().getColumn(3).setPreferredWidth(65);
-        tablaProductos.getColumnModel().getColumn(4).setPreferredWidth(45);
-        tablaProductos.getColumnModel().getColumn(5).setPreferredWidth(65);
-        tablaProductos.getColumnModel().getColumn(6).setPreferredWidth(90);
-        tablaProductos.getColumnModel().getColumn(7).setPreferredWidth(100);
-        //tablaProductos.getColumnModel().getColumn(1).setMaxWidth(1);
-        tablaProductos.setRowHeight(30);
-        this.tablaProductos.setModel(modeloEmpleado);
-
-        try {
-            Control.conectar();
-            Control.ejecuteQuery("select codigo \"Codigo\",nombre \"Nombre\",categoria \"Categoria\",costo \"Costo\",iva \"Iva\",precio \"Precio\""
-                    + ",descuento \"Descuento\",cantidad \"Cantidad\" from BodegaInicio() limit 500");
-            rsetMetaData = Control.rs.getMetaData();
-            numeroPreguntas = rsetMetaData.getColumnCount();
-            while (Control.rs.next()) {
-                Object[] registroEmpleado = new Object[numeroPreguntas];
-                for (int i = 0; i < numeroPreguntas; i++) {
-                    registroEmpleado[i] = Control.rs.getObject(i + 1);
-                }
-                modeloEmpleado.addRow(registroEmpleado);
-            }
-        } catch (ClassNotFoundException | SQLException e) {
-            JOptionPane.showMessageDialog(null, "Error al Cargar Bodega " + e.getMessage());
-        } finally {
-            Control.cerrarConexion();
+            //Error
         }
     }
 
-    private void Stock() throws ClassNotFoundException {
-        Control.conectar();
-        try {
-            Control.ejecuteQuery("select * from Reporte_Stock()");
-            int count = 0;
-
-            while (Control.rs.next()) {
-                count++;
-            }
-            if (count > 0) {
-                Entrada.muestreMensajeV("Hay " + count + " productos en cero cantidad",
-                        javax.swing.JOptionPane.INFORMATION_MESSAGE);
-            }
-            Control.cerrarConexion();
-        } catch (Exception ex) {
-            Entrada.muestreMensajeV("Error al Cargar Stock de Productos " + ex.getMessage());
-        } finally {
-            Control.cerrarConexion();
-        }
-    }
-
+    /**
+     * Metodo que se encarga de carga, de cargar el menu de ayuda del sistema.
+     */
     private void MenuAyuda() {
         ArrayList<String> Ayuda = new ArrayList();
         Ayuda.add("Ayuda en Linea");
@@ -189,23 +127,23 @@ public class Bodega extends javax.swing.JFrame {
         Ayuda.add("Acerca de");
         JMenu menu = new JMenu("Ayuda");
         jMenuBar1.add(menu);
-        for (String object1 : Ayuda) {
+        for (String obj_accion : Ayuda) {
 
-            if (object1.equalsIgnoreCase("Linea")) {
+            if (obj_accion.equalsIgnoreCase("Linea")) {
                 menu.add(new JSeparator());
             } else {
-                JMenuItem menuItem = new JMenuItem(object1);
-                if (object1.equalsIgnoreCase("Lista Bodega")) {
+                JMenuItem menuItem = new JMenuItem(obj_accion);
+                if (obj_accion.equalsIgnoreCase("Lista Bodega")) {
                     menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, ActionEvent.ALT_MASK));
                 }
-                if (object1.equalsIgnoreCase("Lista Usuarios")) {
+                if (obj_accion.equalsIgnoreCase("Lista Usuarios")) {
                     menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_1, ActionEvent.ALT_MASK));
                 }
-                if (object1.equalsIgnoreCase("Crear Usuario")) {
+                if (obj_accion.equalsIgnoreCase("Crear Usuario")) {
                     menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_2, ActionEvent.ALT_MASK));
                 }
                 menuItem.addActionListener((ActionEvent e) -> {
-                    MenuRedireccionar MenuF = new MenuRedireccionar(this, e.getActionCommand().toString(), List_Menu, usuario, codEmpresa);
+                    MenuRedireccionar MenuF = new MenuRedireccionar(this, e.getActionCommand().toString(), listaMenuItem, cod_usuario, codEmpresa);
                     try {
                         MenuF.reDireccion();
                     } catch (IOException | URISyntaxException ex) {
@@ -219,13 +157,87 @@ public class Bodega extends javax.swing.JFrame {
         }
     }
 
-    private void Permisos() throws ClassNotFoundException {
-        Control.conectar();
+    /**
+     * Metodo que se encarga de Cargar Una lista de productos de la bodega tiene
+     * como limite 500
+     */
+    public final void CargaProductos() throws ClassNotFoundException {
+        //Declaramos las columnas para la tabla
+        String cabeceras[] = {"Codigo", "Nombre", "Categoria", "Costo", "Iva", "Precio", "(%)Desc.", "Cantidad"};
+        DefaultTableModel modeloEmpleado = new DefaultTableModel(null, cabeceras) {
+            @Override
+            public boolean isCellEditable(int row, int column) {//para evitar que las celdas sean editables
+                return false;
+            }
+        };
+        //Definimos tamaño de las columnas
+        this.tablaProductos.setModel(modeloEmpleado);
+        tablaProductos.getColumnModel().getColumn(0).setPreferredWidth(100);
+        tablaProductos.getColumnModel().getColumn(1).setPreferredWidth(500);
+        tablaProductos.getColumnModel().getColumn(2).setPreferredWidth(150);
+        tablaProductos.getColumnModel().getColumn(3).setPreferredWidth(65);
+        tablaProductos.getColumnModel().getColumn(4).setPreferredWidth(45);
+        tablaProductos.getColumnModel().getColumn(5).setPreferredWidth(65);
+        tablaProductos.getColumnModel().getColumn(6).setPreferredWidth(90);
+        tablaProductos.getColumnModel().getColumn(7).setPreferredWidth(100);
+        tablaProductos.setRowHeight(30);
+        this.tablaProductos.setModel(modeloEmpleado);
+
         try {
-            ArrayList<String> acciones = new ArrayList();
-            Control.ejecuteQuery("select * from Permisos(" + usuario + ",'Bodega')");
+            int NumeroColumnas;
+            ResultSetMetaData rsetMetaData;
+            Control.conectar();
+            Control.ejecuteQuery("select codigo,nombre,categoria,costo ,iva ,precio,descuento,cantidad from BodegaInicio() limit 500");
+            rsetMetaData = Control.rs.getMetaData();
+            NumeroColumnas = rsetMetaData.getColumnCount();
             while (Control.rs.next()) {
-                acciones.add(Control.rs.getString(1));
+                Object[] registroEmpleado = new Object[NumeroColumnas];
+                for (int i = 0; i < NumeroColumnas; i++) {
+                    registroEmpleado[i] = Control.rs.getObject(i + 1);
+                }
+                modeloEmpleado.addRow(registroEmpleado);
+            }
+        } catch (ClassNotFoundException | SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error al Cargar Bodega " + e.getMessage());
+        } finally {
+            Control.cerrarConexion();
+        }
+    }
+
+    /**
+     * Metodo que se encarga de Contar si hay productos en stock , y dar un
+     * mensaje de alerta como limite 500
+     */
+    private void Stock() throws ClassNotFoundException {
+        try {
+            Control.conectar();
+            Control.ejecuteQuery("select count(*) from Reporte_Stock()");
+            int count = 0;
+            while (Control.rs.next()) {
+                count = Control.rs.getInt(1);
+            }
+            if (count > 0) {
+                Entrada.muestreMensajeV("Hay " + count + " productos en cero cantidad",
+                        javax.swing.JOptionPane.INFORMATION_MESSAGE);
+            }
+        } catch (Exception ex) {
+            Entrada.muestreMensajeV("Error al Cargar Stock de Productos " + ex.getMessage());
+        } finally {
+            Control.cerrarConexion();
+        }
+    }
+
+    /**
+     * Metodo que se encarga de determinar los permisos para el usuario ,
+     * deacuerdo a la vista como limite 500
+     */
+    private void Permisos() throws ClassNotFoundException {
+        try {
+            Control.conectar();
+            ArrayList<String> list_Permisos = new ArrayList();
+            Control.ejecuteQuery("select * from Permisos(" + cod_usuario + ",'Bodega')");
+            while (Control.rs.next()) {
+                list_Permisos.add(Control.rs.getString(1));
             }
             salida.setEnabled(false);
             entrada.setEnabled(false);
@@ -233,8 +245,8 @@ public class Bodega extends javax.swing.JFrame {
             actualizar.setEnabled(false);
             stock.setEnabled(false);
             String acci = "";
-            for (String accione : acciones) {
-                acci = (String) accione;
+            for (String permiso : list_Permisos) {
+                acci = (String) permiso;
                 if (acci.equalsIgnoreCase("EntradaSalida")) {
                     salida.setEnabled(true);
                     entrada.setEnabled(true);
@@ -246,7 +258,6 @@ public class Bodega extends javax.swing.JFrame {
                     stock.setEnabled(true);
                 }
             }
-
         } catch (SQLException ex) {
             Logger.getLogger(Bodega.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
@@ -254,11 +265,6 @@ public class Bodega extends javax.swing.JFrame {
         }
     }
 
-    /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
-     */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -507,7 +513,7 @@ public class Bodega extends javax.swing.JFrame {
 
     private void buscaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_buscaKeyReleased
         try {
-            Buscar();
+            BuscarProducto();
         } catch (Exception ex) {
 
         }
@@ -515,24 +521,25 @@ public class Bodega extends javax.swing.JFrame {
 
     private void actualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_actualizarActionPerformed
         try {
-            update();
+            updateProducto();
         } catch (Exception ex) {
-            Entrada.muestreMensajeV("Error Al Actualizar Datos",
+            Entrada.muestreMensajeV("Error al Actualizar Datos",
                     javax.swing.JOptionPane.INFORMATION_MESSAGE);
         }
     }//GEN-LAST:event_actualizarActionPerformed
 
     private void borrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_borrarActionPerformed
         try {
-            borrar();
+            borrarProducto();
         } catch (Exception ex) {
-
+            Entrada.muestreMensajeV("Error al Borrar Datos",
+                    javax.swing.JOptionPane.INFORMATION_MESSAGE);
         }
     }//GEN-LAST:event_borrarActionPerformed
 
     private void stockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stockActionPerformed
         try {
-            Stock st = new Stock(usuario, List_Menu, codEmpresa);
+            Stock st = new Stock(cod_usuario, listaMenuItem, codEmpresa);
             st.setVisible(true);
             this.dispose();
         } catch (Exception ex) {
@@ -543,7 +550,7 @@ public class Bodega extends javax.swing.JFrame {
 
     private void entradaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_entradaActionPerformed
         try {
-            Entrar();
+            IngresarProducto();
         } catch (Exception ex) {
             //nothing here
         }
@@ -551,82 +558,75 @@ public class Bodega extends javax.swing.JFrame {
 
     private void salidaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_salidaActionPerformed
         try {
-            Sacar();
+            SalidaProducto();
         } catch (Exception ex) {
             //nothing here
         }
     }//GEN-LAST:event_salidaActionPerformed
 
     private void inicioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inicioActionPerformed
-        Menu m = new Menu(usuario);
-        this.setVisible(false);
+        Menu m = new Menu(cod_usuario);
         m.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_inicioActionPerformed
 
     private void inicio1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inicio1ActionPerformed
-        new Menu(usuario).setVisible(true);
+        new Menu(cod_usuario).setVisible(true);
         this.dispose();
     }//GEN-LAST:event_inicio1ActionPerformed
 
     private void cerrarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cerrarSesionActionPerformed
-        this.dispose();
         new Acceder().setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_cerrarSesionActionPerformed
 
     private void salirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_salirActionPerformed
         System.exit(0);
     }//GEN-LAST:event_salirActionPerformed
 
-    public boolean SoloNumeros(String cadena) {
-        try {
-            Long.parseLong(cadena);
-            return true;
-        } catch (Exception ex) {
-            return false;
-        }
-    }
-
-    public void Buscar() throws ClassNotFoundException {
+    /**
+     * Metodo que se encarga de filtrar los productos de acuerdo al codigo o al
+     * nombre del producto
+     */
+    public void BuscarProducto() throws ClassNotFoundException {
         if (busca.getText().length() > 0) {
-            String query = "";
-            if (SoloNumeros(busca.getText())) {
-                query = "select codigo \"Codigo\",nombre \"Nombre\",cate \"Categoria\",rcosto \"Costo\",riva \"Iva\",rprecio \"Precio\","
-                        + "rdescuento \"Descuento\",rcantidad \"Cantidad\"  from BodegaInicioBuscar(1,'" + busca.getText() + "') ";
-            } else {
-                query = "select codigo \"Codigo\",nombre \"Nombre\",cate \"Categoria\",rcosto \"Costo\",riva \"Iva\",rprecio \"Precio\","
-                        + "rdescuento \"Descuento\",rcantidad \"Cantidad\"  from BodegaInicioBuscar(2,'" + busca.getText() + "')";
-            }
-            Control.conectar();
-            DefaultTableModel modeloEmpleado = new DefaultTableModel();
-            int numeroPreguntas;
-            ResultSetMetaData rsetMetaData;
-            String cabeceras[] = {"Codigo", "Nombre", "Categoria", "Costo", "Iva", "Precio", "(%)Desc.", "Cantidad"};
-            modeloEmpleado = new DefaultTableModel(null, cabeceras) {
-                @Override
-                public boolean isCellEditable(int row, int column) {//para evitar que las celdas sean editables
-                    return false;
-                }
-            };
-            this.tablaProductos.setModel(modeloEmpleado);
-            tablaProductos.getColumnModel().getColumn(0).setPreferredWidth(100);
-            tablaProductos.getColumnModel().getColumn(1).setPreferredWidth(500);
-            tablaProductos.getColumnModel().getColumn(2).setPreferredWidth(150);
-            tablaProductos.getColumnModel().getColumn(3).setPreferredWidth(65);
-            tablaProductos.getColumnModel().getColumn(4).setPreferredWidth(45);
-            tablaProductos.getColumnModel().getColumn(5).setPreferredWidth(65);
-            tablaProductos.getColumnModel().getColumn(6).setPreferredWidth(90);
-            tablaProductos.getColumnModel().getColumn(7).setPreferredWidth(100);
-            //tablaProductos.getColumnModel().getColumn(1).setMaxWidth(1);
-            tablaProductos.setRowHeight(30);
-            this.tablaProductos.setModel(modeloEmpleado);
             try {
+                Control.conectar();
+                String query = "";
+                if (Utilidades.SoloNumeros(busca.getText())) {
+                    query = "select codigo \"Codigo\",nombre \"Nombre\",cate \"Categoria\",rcosto \"Costo\",riva \"Iva\",rprecio \"Precio\","
+                            + "rdescuento \"Descuento\",rcantidad \"Cantidad\"  from BodegaInicioBuscar(1,'" + busca.getText() + "') ";
+                } else {
+                    query = "select codigo \"Codigo\",nombre \"Nombre\",cate \"Categoria\",rcosto \"Costo\",riva \"Iva\",rprecio \"Precio\","
+                            + "rdescuento \"Descuento\",rcantidad \"Cantidad\"  from BodegaInicioBuscar(2,'" + busca.getText() + "')";
+                }
+                int numeroPreguntas;
+                ResultSetMetaData rsetMetaData;
+                String cabeceras[] = {"Codigo", "Nombre", "Categoria", "Costo", "Iva", "Precio", "(%)Desc.", "Cantidad"};
+                DefaultTableModel modeloEmpleado = new DefaultTableModel(null, cabeceras) {
+                    @Override
+                    public boolean isCellEditable(int row, int column) {//para evitar que las celdas sean editables
+                        return false;
+                    }
+                };
+                this.tablaProductos.setModel(modeloEmpleado);
+                tablaProductos.getColumnModel().getColumn(0).setPreferredWidth(100);
+                tablaProductos.getColumnModel().getColumn(1).setPreferredWidth(500);
+                tablaProductos.getColumnModel().getColumn(2).setPreferredWidth(150);
+                tablaProductos.getColumnModel().getColumn(3).setPreferredWidth(65);
+                tablaProductos.getColumnModel().getColumn(4).setPreferredWidth(45);
+                tablaProductos.getColumnModel().getColumn(5).setPreferredWidth(65);
+                tablaProductos.getColumnModel().getColumn(6).setPreferredWidth(90);
+                tablaProductos.getColumnModel().getColumn(7).setPreferredWidth(100);
+                tablaProductos.setRowHeight(30);
+                this.tablaProductos.setModel(modeloEmpleado);
+
                 Control.ejecuteQuery(query);
                 rsetMetaData = Control.rs.getMetaData();
                 numeroPreguntas = rsetMetaData.getColumnCount();
 
                 while (Control.rs.next()) {
                     Object[] registroEmpleado = new Object[numeroPreguntas];
-
                     for (int i = 0; i < numeroPreguntas; i++) {
                         registroEmpleado[i] = Control.rs.getObject(i + 1);
                     }
@@ -638,11 +638,15 @@ public class Bodega extends javax.swing.JFrame {
                 Control.cerrarConexion();
             }
         } else {
-            inicio();
+            CargaProductos();
         }
     }
 
-    public void update() throws ClassNotFoundException {
+    /**
+     * Metodo que se encarga de mandar los datos a la vista para actualizr los
+     * productos.
+     */
+    public void updateProducto() throws ClassNotFoundException {
         Producto producto = new Producto();
         int i = tablaProductos.getSelectedRow();
         if (i == -1) {
@@ -667,13 +671,15 @@ public class Bodega extends javax.swing.JFrame {
             if (categoria.equalsIgnoreCase("Kits")) {
                 new KitUpdate2(this, true, cod, 2).setVisible(true);
             } else {
-                ProductoUpdate2 p = new ProductoUpdate2(this, true, producto, codEmpresa);
-                p.setVisible(true);
+                new ProductoUpdate2(this, true, producto, codEmpresa).setVisible(true);
             }
         }
     }
 
-    public void borrar() throws ClassNotFoundException, SQLException {
+    /**
+     * Metodo que se encarga de Borrar un producto , cambiandolo de estado
+     */
+    public void borrarProducto() throws ClassNotFoundException, SQLException {
         boolean r = false;
         int Condicion = 0;
         try {
@@ -705,68 +711,74 @@ public class Bodega extends javax.swing.JFrame {
 
         if (r && Condicion == 1) {
             Entrada.muestreMensajeV("Producto Borrado con Exito");
-            inicio();
+            CargaProductos();
         } else if (r == false && Condicion == 1) {
             Entrada.muestreMensajeV("Error Borrando el Producto");
         }
 
     }
 
-    public void Sacar() throws ClassNotFoundException {
+    /**
+     * Metodo que se encarga de mandar informacion a la vista de Salida y
+     * entrada de productos , para su proceso
+     */
+    public void SalidaProducto() throws ClassNotFoundException {
         int i = tablaProductos.getSelectedRow();
         if (i == -1) {
             Entrada.muestreMensajeV("Seleccione un Producto por favor",
                     javax.swing.JOptionPane.WARNING_MESSAGE);
         } else {
-            String cod = (String) tablaProductos.getValueAt(i, 0).toString();
-            String c = (String) tablaProductos.getValueAt(i, 7).toString();
-            SalidaEntrada newSalida = new SalidaEntrada(this, true,
-                    cod, "Salida", usuario, c, List_Menu, codEmpresa);
-            newSalida.setVisible(true);
-
+            String cod_producto = (String) tablaProductos.getValueAt(i, 0).toString();
+            String cantidad = (String) tablaProductos.getValueAt(i, 7).toString();
+            SalidaEntrada ViewSalidaEntrada = new SalidaEntrada(this, true,
+                    cod_producto, "Salida", cod_usuario, cantidad, listaMenuItem, codEmpresa);
+            ViewSalidaEntrada.setVisible(true);
         }
     }
 
-    public ArrayList<seccion> getListaSeccion() {
-        return listaSeccion;
-    }
-
-    public void setListaSeccion(ArrayList<seccion> listaSeccion) {
-        this.listaSeccion = listaSeccion;
-    }
-
-    public ArrayList<acciones> getListaaccion() {
-        return listaaccion;
-    }
-
-    public void setListaaccion(ArrayList<acciones> listaaccion) {
-        this.listaaccion = listaaccion;
-    }
-
-    public ArrayList<ContenedorMenus> getList_Menu() {
-        return List_Menu;
-    }
-
-    public void setList_Menu(ArrayList<ContenedorMenus> List_Menu) {
-        this.List_Menu = List_Menu;
-    }
-
-    public void Entrar() throws ClassNotFoundException {
+    /**
+     * Metodo que se encarga de mandar informacion a la vista de Salida y
+     * entrada de productos , para su proceso
+     */
+    public void IngresarProducto() throws ClassNotFoundException {
         int i = tablaProductos.getSelectedRow();
         int j = tablaProductos.getSelectedColumn();
         if (i == -1) {
             Entrada.muestreMensajeV("Seleccione un Producto por favor",
                     javax.swing.JOptionPane.WARNING_MESSAGE);
         } else {
-            String cod = (String) tablaProductos.getValueAt(i, 0).toString();
-            String c = (String) tablaProductos.getValueAt(i, 6).toString();
-
-            SalidaEntrada newEntrada = new SalidaEntrada(this, true,
-                    cod, "Entrada", usuario, c, List_Menu, codEmpresa);
-            newEntrada.setVisible(true);
-
+            String cod_producto = (String) tablaProductos.getValueAt(i, 0).toString();
+            String cantidad = (String) tablaProductos.getValueAt(i, 6).toString();
+            SalidaEntrada ViewSalidaEntrada = new SalidaEntrada(this, true,
+                    cod_producto, "Entrada", cod_usuario, cantidad, listaMenuItem, codEmpresa);
+            ViewSalidaEntrada.setVisible(true);
         }
     }
+
+    public ArrayList<seccion> getListaSeccion() {
+        return listaMenu;
+    }
+
+    public void setListaSeccion(ArrayList<seccion> listaSeccion) {
+        this.listaMenu = listaSeccion;
+    }
+
+    public ArrayList<acciones> getListaaccion() {
+        return listaItemMenu;
+    }
+
+    public void setListaaccion(ArrayList<acciones> listaaccion) {
+        this.listaItemMenu = listaaccion;
+    }
+
+    public ArrayList<ContenedorMenus> getList_Menu() {
+        return listaMenuItem;
+    }
+
+    public void setList_Menu(ArrayList<ContenedorMenus> List_Menu) {
+        this.listaMenuItem = List_Menu;
+    }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton actualizar;

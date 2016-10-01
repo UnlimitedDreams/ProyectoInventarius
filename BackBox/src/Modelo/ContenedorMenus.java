@@ -1,15 +1,11 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Modelo;
 
 import java.util.ArrayList;
 
 /**
- *
- * @author admin
+ * Esta clase se encarga de Cargar, el Menu de cada Usuario. con sus titulos y subtitulos, de acuerdo al rol que tenga el usuario
+ * @author: Unlimited Dreams
+ * @version: 25/08/2016
  */
 public class ContenedorMenus {
     private ArrayList<acciones> listaAcciones=new ArrayList();
@@ -33,8 +29,4 @@ public class ContenedorMenus {
     public void setListaSeccion(ArrayList<seccion> listaSeccion) {
         this.listaSeccion = listaSeccion;
     }
-    
-    
-    
-    
 }

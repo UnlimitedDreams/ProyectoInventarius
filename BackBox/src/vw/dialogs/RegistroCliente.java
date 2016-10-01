@@ -13,7 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import Control.Entrada;
-import Modelo.List_Categoria;
+import Modelo.List_Object;
 import Modelo.Producto;
 import vw.model.Venta;
 

@@ -14,7 +14,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import Control.Entrada;
-import Modelo.List_Categoria;
+import Modelo.List_Object;
 import Modelo.Producto;
 import Control.Sequence;
 import java.awt.Color;
@@ -40,7 +40,7 @@ public class ProductoUpdate2 extends javax.swing.JDialog {
     int codEmpresa;
     Bodega v = null;
     ArrayList<Integer> ListAcciones = new ArrayList();
-    ArrayList<List_Categoria> listIvas = new ArrayList();
+    ArrayList<List_Object> listIvas = new ArrayList();
 
     /**
      * Creates new form ProductoRegistrar
@@ -90,7 +90,7 @@ public class ProductoUpdate2 extends javax.swing.JDialog {
                     + "select codiva,porcentaje from maestro_iva a where codiva not in (select iva from producto where iva=a.codiva)");
             while (Control.rs.next()) {
                 iva.addItem(Control.rs.getString(2) + " %");
-                listIvas.add(new List_Categoria(Control.rs.getInt(1), "" + Control.rs.getInt(2)));
+                listIvas.add(new List_Object(Control.rs.getInt(1), "" + Control.rs.getInt(2)));
             }
 
             Control.ejecuteQuery("select * from (select producto.cod_categoria,rtrim(ltrim(descripcion)) descrip from categoria , producto where categoria.cod_categoria=producto.cod_categoria\n"
@@ -168,7 +168,7 @@ public class ProductoUpdate2 extends javax.swing.JDialog {
             String nomcategoria = iva.getSelectedItem().toString();
             String val[] = nomcategoria.trim().split("%");
             int codIva = 0;
-            for (List_Categoria ivas : listIvas) {
+            for (List_Object ivas : listIvas) {
                 if (ivas.getNom().equalsIgnoreCase(val[0].trim())) {
                     codIva = ivas.getCod();
                 }
@@ -189,7 +189,7 @@ public class ProductoUpdate2 extends javax.swing.JDialog {
         if (r) {
             Entrada.muestreMensajeV("Actualizacion Exitosa",
                     javax.swing.JOptionPane.INFORMATION_MESSAGE);
-            this.v.inicio();
+            this.v.CargaProductos();
             this.dispose();
         } else {
             Entrada.muestreMensajeV("Error Actualizando");

@@ -643,6 +643,7 @@ public class Articulo extends javax.swing.JFrame implements Runnable {
         jProgressBar1.setStringPainted(true);
         cantidad = Hoja.Carga();
         ArrayList datos = null;
+        System.out.println("------------------ : " + movimiento.length);
         if ((movimiento.length == costo.length) && (iva.length == precio.length) && (categoria.length == cantidad.length
                 && nombres.length == movimiento.length)) {
             if (ValidarDatosEnTabla(costo, 1)) {
@@ -652,7 +653,9 @@ public class Articulo extends javax.swing.JFrame implements Runnable {
                             if (ValidarDatosEnTabla(cantidad, 5)) {
                                 jProgressBar1.setValue(90);
                                 jProgressBar1.setStringPainted(true);
+                                System.out.println("------------");
                                 datos = DatosPersona(movimiento, nombres, costo, iva, precio, categoria, cantidad);
+                                System.out.println("datos : " + datos);
                                 CargaArchivo car = new CargaArchivo(datos, usuario, List_Menu);
                                 this.dispose();
                                 car.setVisible(true);

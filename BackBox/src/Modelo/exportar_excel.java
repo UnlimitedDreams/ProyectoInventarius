@@ -1,6 +1,5 @@
 package Modelo;
 
-//package impor_export;
 import java.io.*;
 import java.util.List;
 import javax.swing.*;
@@ -9,6 +8,12 @@ import jxl.format.UnderlineStyle;
 import jxl.write.*;
 import jxl.write.biff.RowsExceededException;
 import jxl.*;
+
+/**
+ * Esta clase se encarga de exportar un archivo excel mediante un Jtable
+ * @author: Unlimited Dreams
+ * @version: 25/08/2016
+ */
 
 public class exportar_excel {
 
@@ -45,23 +50,6 @@ public class exportar_excel {
                     }
                 }
             }
-                System.out.println("-----");
-                
-//            for (int index = 0; index < tabla.size(); index++) {
-//                JTable table = tabla.get(index);
-//                if (index == 0) {
-//                WritableSheet s = w.getSheet(0);
-//                for (int i = 0; i < table.getColumnCount(); i++) {
-//                    for (int j = 0; j < table.getRowCount(); j++) {
-//                        objeto = table.getValueAt(j, i);
-////                        createColumna(s, table.getColumnName(i), i);//crea la columna
-//                        createFilas(s, i, j, String.valueOf(objeto));//crea las filas
-//
-//                    }
-//                }
-//                }
-//
-//            }
             w.write();
             w.close();
             out.close();

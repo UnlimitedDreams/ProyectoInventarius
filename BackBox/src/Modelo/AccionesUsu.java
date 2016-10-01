@@ -1,14 +1,12 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Modelo;
 
 /**
- *
- * @author Asus
+ * Esta clase es el modelo de la tabla de Acciones permitidas para el Usuario
+ * @author: Unlimited Dreams
+ * @version: 25/08/2016
  */
+
+
 public class AccionesUsu {
     private int codigoAccion;
     private String descripcion;

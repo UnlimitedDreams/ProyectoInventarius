@@ -10,7 +10,7 @@ import Control.Entrada;
 import Control.Sequence;
 import Control.TablaModel;
 import Modelo.ContenedorMenus;
-import Modelo.List_Categoria;
+import Modelo.List_Object;
 import Modelo.Producto;
 import Modelo.acciones;
 import Modelo.seccion;

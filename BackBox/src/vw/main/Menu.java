@@ -6,10 +6,7 @@
 package vw.main;
 
 import Control.Control;
-import Modelo.ContenedorMenus;
-import Modelo.MenuRedireccionar;
-import Modelo.acciones;
-import Modelo.seccion;
+import Modelo.*;
 import com.backbox.util.VerticalLabelUI;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -61,9 +58,7 @@ public class Menu extends javax.swing.JFrame {
         List_Menu.clear();
         try {
             cargarUsuario(usuario);
-            System.out.println("1");
             cargarSecciones();
-            System.out.println("2");
             cargarAccion();
             ContenedorMenus con_menu = new ContenedorMenus();
             con_menu.setListaAcciones(listaaccion);

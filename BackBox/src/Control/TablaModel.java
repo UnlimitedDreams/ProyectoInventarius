@@ -4,8 +4,10 @@
  */
 package Control;
 
+import Modelo.List_Object;
 import Modelo.Producto;
 import Modelo.acciones;
+import Modelo.seccion;
 import java.awt.Component;
 import java.util.ArrayList;
 import javax.swing.JTable;
@@ -17,10 +19,12 @@ import javax.swing.table.TableCellRenderer;
  * @author: Unlimited Dreams
  * @version: 25/08/2016
  */
-public class TablaModel implements TableCellRenderer {
+public class TablaModel {
 
     ArrayList<Producto> pro = new ArrayList();
     ArrayList<acciones> ListAcciones = new ArrayList();
+    ArrayList<List_Object> ListObject = new ArrayList();
+    ArrayList<seccion> ListSeccion = new ArrayList();
     public String frecuencias[][];
     int nrofreq;
 
@@ -34,12 +38,35 @@ public class TablaModel implements TableCellRenderer {
      */
     public TablaModel(ArrayList x, int Columnas, int condicion) {
         nuevo();
-        frecuencias = new String[Columnas][x.size()];
-        nrofreq = 0;
+        if (condicion != 4) {
+            frecuencias = new String[Columnas][x.size()];
+            nrofreq = 0;
+        }
+
         if (condicion == 1) {
             this.pro = x;
         } else if (condicion == 2) {
             this.ListAcciones = x;
+        } else if (condicion == 3) {
+            this.ListObject = x;
+        } else if (condicion == 4) {
+            this.ListSeccion = x;
+            seccion temp;
+            acciones temp2;
+            for (int i = 0; i < ListSeccion.size(); i++) {
+                temp = (seccion) ListSeccion.get(i);
+                if (temp.getEstado().equalsIgnoreCase("Activo")) {
+                    for (int k = 0; k < ListSeccion.get(i).getList_acciones().size(); k++) {
+                        temp2 = (acciones) ListSeccion.get(i).getList_acciones().get(k);
+                        if (temp2.getCod_actividad() == temp.getPosicion()) {
+                            ListAcciones.add(temp2);
+                        }
+                    }
+                }
+            }
+            System.out.println("tamañooooo : " + ListAcciones.size());
+            frecuencias = new String[Columnas][ListAcciones.size()];
+            nrofreq = 0;
         }
     }
 
@@ -72,9 +99,9 @@ public class TablaModel implements TableCellRenderer {
         }
     }
 
-     /**
-     * Método que se encargar de retorna una matriz para vista de Promociones y Kits,
-     * acomodada de acuerdo a unas columnas especificas crear la matriz.
+    /**
+     * Método que se encargar de retorna una matriz para vista de Promociones y
+     * Kits, acomodada de acuerdo a unas columnas especificas crear la matriz.
      */
     public void ModelPromocionYkits() {
         Producto temp = null;
@@ -107,7 +134,7 @@ public class TablaModel implements TableCellRenderer {
         }
     }
 
-     /**
+    /**
      * Método que se encargar de retorna una matriz para vista de Kits,
      * acomodada de acuerdo a unas columnas especificas crear la matriz.
      */
@@ -126,7 +153,7 @@ public class TablaModel implements TableCellRenderer {
         }
     }
 
-   /**
+    /**
      * Método que se encargar de retorna una matriz para vista de Kits,
      * acomodada de acuerdo a unas columnas especificas crear la matriz.
      */
@@ -158,6 +185,38 @@ public class TablaModel implements TableCellRenderer {
         }
     }
 
+    /**
+     * Método que se encargar de retorna una matriz para vista de Kits,
+     * acomodada de acuerdo a unas columnas especificas crear la matriz.
+     */
+    public void ModelMaestroItem() {
+        List_Object temp = null;
+        String iva = "";
+        int ivaFinal = 0;
+        for (int i = 0; i < ListObject.size(); i++) {
+            temp = (List_Object) ListObject.get(i);
+            frecuencias[0][nrofreq] = "" + ListObject.get(i).getCod();
+            frecuencias[1][nrofreq] = "" + ListObject.get(i).getNom();
+            nrofreq++;
+        }
+    }
+
+    /**
+     * Método que se encargar de retorna una matriz para vista de Kits,
+     * acomodada de acuerdo a unas columnas especificas crear la matriz.
+     */
+    public void ModelMaestroItem2() {
+        acciones temp = null;
+        String iva = "";
+        int ivaFinal = 0;
+        for (int i = 0; i < ListAcciones.size(); i++) {
+            temp = (acciones) ListAcciones.get(i);
+            frecuencias[0][nrofreq] = "" + ListAcciones.get(i).getCod_accion();
+            frecuencias[1][nrofreq] = "" + ListAcciones.get(i).getAccion();
+            nrofreq++;
+        }
+    }
+
     public void nuevo() {
         pro.clear();
     }
@@ -170,8 +229,4 @@ public class TablaModel implements TableCellRenderer {
         this.nrofreq = nrofreq;
     }
 
-    @Override
-    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 }

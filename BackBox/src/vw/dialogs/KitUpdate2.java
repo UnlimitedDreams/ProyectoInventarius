@@ -10,7 +10,7 @@ import Control.Entrada;
 import Control.Sequence;
 import Control.TablaModel;
 import Modelo.ContenedorMenus;
-import Modelo.List_Categoria;
+import Modelo.List_Object;
 import Modelo.Producto;
 import Modelo.acciones;
 import Modelo.seccion;
@@ -154,7 +154,7 @@ public class KitUpdate2 extends javax.swing.JDialog {
             if (this.condicion == 1) {
                 kit.inicio();
             } else if (this.condicion == 2) {
-                Bodega.inicio();
+                Bodega.CargaProductos();
             }
 
             this.dispose();

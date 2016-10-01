@@ -6,9 +6,8 @@
 package vw.components;
 
 import Control.*;
-import Modelo.Producto;
+import Modelo.*;
 import vw.main.Menu;
-import Modelo.List_Categoria;
 import java.awt.Toolkit;
 import java.net.URL;
 import java.sql.SQLException;
@@ -18,70 +17,80 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
-import vw.model.Articulo;
-import vw.model.Venta;
+import vw.model.*;
 
 /**
+ * Este Jframe se encarga de mostrar la informacion que se ve a cargar al
+ * sistema, para los productos
  *
- * @author Britany
+ * @author: Unlimited Dreams
+ * @version: 25/08/2016
  */
 public class CargaArchivo extends javax.swing.JFrame {
 
     /**
-     * Creates new form Articulo
+     * Metodo que se encarga iniciar el Jframe para cargar los productos.
+     *
+     * @param listaproductos lista de productos que se extrayeron del archivo
+     * excel.
+     * @param cod_usuario codigo de usuario que esta haciendo el carge
+     * @param acciones lista de MenuItem del usuario
      */
-    ArrayList p;
-    String usuario;
-    String nombre;
+    ArrayList listaProductos;
+    String cod_usuario;
+    String nom_usuario;
     ArrayList<Integer> ListAcciones = new ArrayList();
-    ArrayList<List_Categoria> listIvas = new ArrayList();
+    ArrayList<List_Object> listIvas = new ArrayList();
 
-    public CargaArchivo(ArrayList p, String nom, ArrayList acciones) throws ClassNotFoundException {
+    public CargaArchivo(ArrayList listaproductos, String cod_usuario, ArrayList acciones) throws ClassNotFoundException {
         try {
             initComponents();
-            this.usuario = nom;
-            this.nombre = "";
+            this.cod_usuario = cod_usuario;
+            this.nom_usuario = "";
             this.ListAcciones = acciones;
             this.setLocationRelativeTo(null);
             this.setResizable(false);
-            this.p = p;
+            this.listaProductos = listaproductos;
             ConfigurarInicio();
             iniciar();
             cargarUsuario();
-            jTextField1.setText("" + p.size());
+            jTextField1.setText("" + listaproductos.size());
             URL url = getClass().getResource("/images/facelet/icon.png");
             ImageIcon img = new ImageIcon(url);
             setIconImage(img.getImage());
         } catch (SQLException ex) {
             Logger.getLogger(CargaArchivo.class.getName()).log(Level.SEVERE, null, ex);
         }
-
     }
 
+    /**
+     * Metodo que se encarga de recuperar el nombre del usuario
+     */
     public void cargarUsuario() throws SQLException, ClassNotFoundException {
         Control.conectar();
-        Control.ejecuteQuery("select * from CargaUsuario(" + usuario + ")");
+        Control.ejecuteQuery("select * from CargaUsuario(" + cod_usuario + ")");
         String nombre = "";
         while (Control.rs.next()) {
             nombre = Control.rs.getString(1) + " " + Control.rs.getString(2);
         }
-        this.nombre = nombre;
+        this.nom_usuario = nombre;
         Control.cerrarConexion();
     }
 
+    /**
+     * Metodo que se encarga de ajustar y determinar si el producto que esta
+     * cargado ya se encuentra en el sistema.
+     */
     public void ConfigurarInicio() throws SQLException {
         try {
             Control.conectar();
-            
-            String r = "";
-            Control.conectar();            
             Producto temp = null;
             int cantidad = 0;
             int iva = 0;
             int ivaF = 0;
-            for (int i = 0; i < p.size(); i++) {
-                temp = (Producto) p.get(i);
-                Control.ejecuteQuery("select * from CargaProductoBuqueda('"+temp.getCodigo()+"')");
+            for (int i = 0; i < listaProductos.size(); i++) {
+                temp = (Producto) listaProductos.get(i);
+                Control.ejecuteQuery("select * from CargaProductoBuqueda('" + temp.getCodigo() + "')");
                 if (Control.rs.next()) {
                     temp.setEsta("Existe");
                     temp.setCantBD(Control.rs.getInt(1));
@@ -91,7 +100,7 @@ public class CargaArchivo extends javax.swing.JFrame {
                     temp.setCantBD(0);
                 }
 
-                for (List_Categoria cate : listIvas) {
+                for (List_Object cate : listIvas) {
                     iva = Integer.parseInt(cate.getNom());
                     ivaF = cate.getCod();
                     if (temp.getIva() == iva) {
@@ -100,42 +109,41 @@ public class CargaArchivo extends javax.swing.JFrame {
                     }
                 }
             }
-            
-            
-            listIvas.clear();            
+
+            listIvas.clear();
             Control.ejecuteQuery("select * from CargaIva()");
             while (Control.rs.next()) {
-                listIvas.add(new List_Categoria(Control.rs.getInt(1), "" + Control.rs.getInt(2)));
+                listIvas.add(new List_Object(Control.rs.getInt(1), "" + Control.rs.getInt(2)));
             }
+
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(Venta.class
                     .getName()).log(Level.SEVERE, null, ex);
-        }finally
-        {
+        } finally {
             Control.cerrarConexion();
         }
 
     }
 
+    /**
+     * Metodo que se encarga de Configurar la table y cargar los productos a la
+     * tabla
+     */
     public void iniciar() throws SQLException {
-        try {
-            
-
-        } catch (Exception ex) {
-
-        } finally {                                   
-            Control.cerrarConexion();
-        }
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
-                new Object[p.size()][6], new String[]{
+                new Object[listaProductos.size()][6], new String[]{
                     "Codigo", "Nombre", "Costo", "Iva", "Precio", "Cantidad", "Estado"
                 }
         ));
-        TablaModel t = new TablaModel(p,7,1);
+        TablaModel t = new TablaModel(listaProductos, 7, 1);
         t.ModelCargaArchivo();
         muevaLosDatosFre(t);
+
     }
 
+    /**
+     * Metodo que se encarga de asignar un valor a cada columna de la tabla
+     */
     public void muevaLosDatosFre(TablaModel x) {
         jTable1.getDefaultEditor(null);
         for (int i = 0; i < 7; i++) {
@@ -146,29 +154,33 @@ public class CargaArchivo extends javax.swing.JFrame {
         }
     }
 
+    /**
+     * Metodo que se encarga de guardar los prodcutos en la base de datos
+     */
     public void insertarLibro() throws ClassNotFoundException, SQLException {
-        Producto pr = null;
         Date fecha = new Date();
-        int Noentro = 0;
-        int Actualizo = 0;
-        int Creo = 0;
         ArrayList<String> listaError = new ArrayList();
-        boolean f = false;
-        boolean r1 = false;
         SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd");
         String fechafinal = format2.format(fecha);
         String mns = "Inventario : " + fechafinal;
+        
         String tipo = "";
+        Producto pr = null;
+        int Noentro = 0;
+        int Actualizo = 0;
+        int Creo = 0;
+        boolean f = false;
         int cantidad = 0;
         int cantFinal = 0;
         int cantSAlida = 0;
         int Condicion = 0;
+        
         try {
             Control.conectar();
             Control.con.setAutoCommit(false);
 
-            for (int i = 0; i < p.size(); i++) {
-                pr = (Producto) p.get(i);
+            for (int i = 0; i < listaProductos.size(); i++) {
+                pr = (Producto) listaProductos.get(i);
                 double precio = pr.getPrecio_venta();
                 if (pr.getCantBD() >= 0) {
                     cantidad = pr.getCantidad() - pr.getCantBD();
@@ -212,8 +224,8 @@ public class CargaArchivo extends javax.swing.JFrame {
                     + "Sin Operacion : " + Noentro + "\n ¿Desea Realizar los combios ?", op);
             System.err.println("valor de condicion : " + Condicion);
             if (Condicion == 1) {
-                for (int i = 0; i < p.size(); i++) {
-                    pr = (Producto) p.get(i);
+                for (int i = 0; i < listaProductos.size(); i++) {
+                    pr = (Producto) listaProductos.get(i);
                     double precio = pr.getPrecio_venta();
                     if (pr.getCantBD() >= 0) {
                         cantidad = pr.getCantidad() - pr.getCantBD();
@@ -238,8 +250,8 @@ public class CargaArchivo extends javax.swing.JFrame {
                             tipo = "Salida";
                             cantFinal = pr.getCantidad();
                             cantSAlida = cantidad;
-                        }                        
-                        f = Control.ejecuteUpdate("insert into Salida_Entrada values(nextval('Sq_SalidaEntrada'),'" + tipo + "'," + Math.abs(cantSAlida) + ",'" + fecha + "','" + mns + "','" + nombre + "'," + pr.getCodigoProducto() + ")");
+                        }
+                        f = Control.ejecuteUpdate("insert into Salida_Entrada values(nextval('Sq_SalidaEntrada'),'" + tipo + "'," + Math.abs(cantSAlida) + ",'" + fecha + "','" + mns + "','" + nom_usuario + "'," + pr.getCodigoProducto() + ")");
                         System.out.println("paso 2");
                         f = Control.ejecuteUpdate("update producto set cantidad=" + cantFinal + " where"
                                 + " cod_producto=" + pr.getCodigoProducto());
@@ -271,7 +283,7 @@ public class CargaArchivo extends javax.swing.JFrame {
                 Entrada.muestreMensajeV("Carga Masiva Exitosa");
                 Articulo ar;
                 try {
-                    ar = new Articulo(usuario, ListAcciones, 1);
+                    ar = new Articulo(cod_usuario, ListAcciones, 1);
                     ar.setVisible(true);
                 } catch (ClassNotFoundException ex) {
                     Logger.getLogger(Entrada_Nueva.class.getName()).log(Level.SEVERE, null, ex);
@@ -409,13 +421,11 @@ public class CargaArchivo extends javax.swing.JFrame {
     }//GEN-LAST:event_NuevoActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        new Menu(usuario).setVisible(true);
+        new Menu(cod_usuario).setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_jButton4ActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Nuevo;

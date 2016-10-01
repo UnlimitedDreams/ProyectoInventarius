@@ -14,7 +14,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import Control.Entrada;
-import Modelo.List_Categoria;
+import Modelo.List_Object;
 import Modelo.Producto;
 import Control.Sequence;
 import Control.TablaModel;
@@ -38,7 +38,7 @@ public class ProductoRegistrar extends javax.swing.JDialog {
     Border Linea;
     Entrada_Nueva v = null;
     ArrayList<Integer> ListAcciones = new ArrayList();
-    ArrayList<List_Categoria> listIvas = new ArrayList();
+    ArrayList<List_Object> listIvas = new ArrayList();
 
     /**
      * Creates new form ProductoRegistrar
@@ -78,7 +78,7 @@ public class ProductoRegistrar extends javax.swing.JDialog {
             Control.ejecuteQuery("select codiva,porcentaje from maestro_iva where estado='A'");
             while (Control.rs.next()) {
                 iva.addItem(Control.rs.getString(2) + " %");
-                listIvas.add(new List_Categoria(Control.rs.getInt(1), "" + Control.rs.getInt(2)));
+                listIvas.add(new List_Object(Control.rs.getInt(1), "" + Control.rs.getInt(2)));
             }
             Control.ejecuteQuery("select secuencia from Numerador where TipoNumerador='Producto'");
             while (Control.rs.next()) {
@@ -158,7 +158,7 @@ public class ProductoRegistrar extends javax.swing.JDialog {
                 String val[] = nomcategoria.split("%");
                 int cod = 0;
                 int ValorIVa = 0;
-                for (List_Categoria iva : listIvas) {
+                for (List_Object iva : listIvas) {
                     if (iva.getNom().equalsIgnoreCase(val[0].replace(" ", ""))) {
                         cod = iva.getCod();
                         ValorIVa = Integer.parseInt(iva.getNom());

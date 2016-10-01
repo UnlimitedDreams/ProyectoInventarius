@@ -13,6 +13,8 @@ import java.awt.Toolkit;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import vw.components.MaestroItem;
+import vw.components.MaestroMenu;
 import vw.dialogs.AcercaDe;
 
 /**
@@ -325,18 +327,20 @@ public class Acceder extends javax.swing.JFrame {
                         + "usuario.usuario=lower('" + field01.getText() + "') and\n"
                         + " usuario.clave='" + field02.getText() + "'");
                 boolean f = false;
-                String cod_usuario="";
+                String cod_usuario = "";
                 while (Control.rs.next()) {
                     f = true;
-                    cod_usuario=Control.rs.getString(1);
+                    cod_usuario = Control.rs.getString(1);
                 }
-                if (f) {                    
-                        Menu newMenu = new Menu(cod_usuario);
-                        newMenu.setVisible(true);
-                        this.dispose();
+                if (f) {
+//                    Menu newMenu = new Menu(cod_usuario);
+//                    newMenu.setVisible(true);
+                    new MaestroItem(cod_usuario).setVisible(true);
+                    this.dispose();
                 } else {
                     Entrada.muestreMensajeV("El usuario o la clave no son correctos",
                             javax.swing.JOptionPane.ERROR_MESSAGE);
+                    this.field02.setText("");
                 }
             } catch (Exception ex) {
                 System.out.println("Error: " + ex.toString());

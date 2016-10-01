@@ -5,13 +5,8 @@
  */
 package vw.components;
 
-import Control.Entrada;
-import Modelo.Producto;
-import Control.Control;
-import Modelo.ContenedorMenus;
-import Modelo.MenuRedireccionar;
-import Modelo.acciones;
-import Modelo.seccion;
+import Control.*;
+import Modelo.*;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -29,14 +24,14 @@ import javax.swing.JOptionPane;
 import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
 import javax.swing.table.DefaultTableModel;
-import vw.dialogs.ClienteActualizar;
-import vw.dialogs.RegistroCliente;
-import vw.main.Acceder;
-import vw.main.Menu;
+import vw.dialogs.*;
+import vw.main.*;
 
 /**
+ * Esta JFrame se encarga de mostrar los clientes que tiene el sistema 
  *
- * @author Britany
+ * @author: Unlimited Dreams
+ * @version: 25/08/2016
  */
 public class Clientes extends javax.swing.JFrame {
 

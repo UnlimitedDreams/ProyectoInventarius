@@ -48,6 +48,8 @@ import net.sf.jasperreports.engine.JasperReport;
 import Control.Entrada;
 import Modelo.Producto;
 import Control.Sequence;
+import Reportes.Reporte;
+import com.itextpdf.text.DocumentException;
 import java.awt.event.KeyListener;
 import vw.dialogs.RegistroCliente;
 import vw.main.Acceder;
@@ -944,7 +946,7 @@ public class Venta extends javax.swing.JFrame implements KeyListener {
         }
     }
 
-    public void Vender() throws ClassNotFoundException, JRException, SQLException {
+    public void Vender() throws ClassNotFoundException, JRException, SQLException, DocumentException, IOException {
         int codigo_venta = Sequence.Next("Sq_Venta");
         boolean Proceso = false;
         boolean r = false;
@@ -962,7 +964,11 @@ public class Venta extends javax.swing.JFrame implements KeyListener {
                 cod_pago = 3;
             }
             Date fecha = new Date();
+            
+            
+            
             double valorIva = Double.parseDouble(porcentajeIVA.getText());
+            System.out.println("ivaaaaaaaaaaaaaaaaa : " + valorIva);
             String CambioUsu = "";
             if (cambio.getText().equalsIgnoreCase("0") || cambio.getText().equalsIgnoreCase("$ 0")) {
                 CambioUsu = "0";
@@ -987,8 +993,13 @@ public class Venta extends javax.swing.JFrame implements KeyListener {
                             + "(case when upper(substring('" + pro.getCodigo() + "',0,4))='KIT' then '" + pro.getCodigo() + "' else '0'  end),"
                             + pro.getPrecio_venta() + ")");
                 }
-                restar_Bodega();
-                generarFactura(codigo_venta, fecha, cone);
+                if (r) {
+                    r = restar_Bodega();
+//                generarFactura(codigo_venta, fecha, cone);
+                    if (r) {
+                        Reporte.ReciboCajaRegistroTiquete(""+codigo_venta, productos, ValorNeto, ValorPago, porcentajeIVA.getText(), ValorDesc);
+                    }
+                }
 
                 Proceso = true;
             } else {
@@ -1035,28 +1046,30 @@ public class Venta extends javax.swing.JFrame implements KeyListener {
         iniciar();
     }
 
-    public void restar_Bodega() throws ClassNotFoundException {
+    public boolean restar_Bodega() throws ClassNotFoundException {
         //control.conectar();
         Producto pro = null;
+        boolean r = false;
         int codigo_pro = 0;
         for (int i = 0; i < productos.size(); i++) {
             pro = (Producto) productos.get(i);
             if (tipoVenta == 1 && pro.getCodigo().contains("Kit")) {
-                Control.ejecuteUpdate("update Kits set cantidad=cantidad-" + pro.getCantidad() + " where "
+                r = Control.ejecuteUpdate("update Kits set cantidad=cantidad-" + pro.getCantidad() + " where "
                         + "cod_kit='" + pro.getCodigo() + "'");
             } else {
-                Control.ejecuteUpdate("update producto set cantidad=cantidad-" + pro.getCantidad() + " where "
+                r = Control.ejecuteUpdate("update producto set cantidad=cantidad-" + pro.getCantidad() + " where "
                         + "serie_producto='" + pro.getCodigo() + "'");
             }
             if (tipoVenta == 2 && pro.getCodigo().contains("Kit")) {
-                Control.ejecuteUpdate("update Kits set cantidad=cantidad+" + pro.getCantidad() + " where "
+                r = Control.ejecuteUpdate("update Kits set cantidad=cantidad+" + pro.getCantidad() + " where "
                         + "cod_kit='" + pro.getCodigo() + "'");
             } else {
-                Control.ejecuteUpdate("update producto set cantidad=cantidad+" + pro.getCantidad() + " where "
+                r = Control.ejecuteUpdate("update producto set cantidad=cantidad+" + pro.getCantidad() + " where "
                         + "serie_producto='" + pro.getCodigo() + "'");
             }
 
         }
+        return r;
         //control.cerrarConexion();
 
     }

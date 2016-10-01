@@ -13,7 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import Control.Entrada;
-import Modelo.List_Categoria;
+import Modelo.List_Object;
 import Control.Sequence;
 
 /**
@@ -52,12 +52,12 @@ public class UsuariosRegistrar extends javax.swing.JDialog {
         Control.conectar();
 
         String cod = "", nom = "";
-        ArrayList<List_Categoria> cater = new ArrayList();
+        ArrayList<List_Object> cater = new ArrayList();
         rol.addItem("--");
         try {
             Control.ejecuteQuery("select * from rol");
             while (Control.rs.next()) {
-                cater.add(new List_Categoria(Control.rs.getInt(1), Control.rs.getString(2)));
+                cater.add(new List_Object(Control.rs.getInt(1), Control.rs.getString(2)));
                 rol.addItem(Control.rs.getString(2));
             }
             Control.cerrarConexion();

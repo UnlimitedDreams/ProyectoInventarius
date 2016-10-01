@@ -7,7 +7,7 @@ package vw.components;
 
 import Control.Entrada;
 import Modelo.Producto;
-import Modelo.List_Categoria;
+import Modelo.List_Object;
 import Control.Control;
 import Control.TablaModel;
 import java.awt.Toolkit;
@@ -108,9 +108,9 @@ public class Entrada_Nueva extends javax.swing.JFrame {
             Control.conectar();
             Control.ejecuteQuery("select * from categoriabusqueda()");
             String cod = "", nom = "";
-            ArrayList<List_Categoria> cater = new ArrayList();
+            ArrayList<List_Object> cater = new ArrayList();
             while (Control.rs.next()) {
-                cater.add(new List_Categoria(Control.rs.getInt(1), Control.rs.getString(3)));
+                cater.add(new List_Object(Control.rs.getInt(1), Control.rs.getString(3)));
                 proveedores.addItem(Control.rs.getInt(1) + "-" + Control.rs.getString(3));
             }
         } catch (Exception ex) {

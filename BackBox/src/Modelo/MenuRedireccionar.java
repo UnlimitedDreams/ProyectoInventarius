@@ -17,31 +17,17 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
-import vw.components.Bodega;
-import vw.components.CategoriaGestion;
-import vw.components.Clientes;
-import vw.components.DatallesPorFecha;
-import vw.components.Entrada_Nueva;
-import vw.components.Kits;
-import vw.components.MaestroIva;
-import vw.components.Promociones;
-import vw.components.Provedores;
-import vw.components.Reporte_Entradas;
-import vw.components.Reporte_Ventas;
-import vw.components.Roles;
-import vw.components.Usuarios;
-import vw.components.VentaDiaria;
-import vw.dialogs.AcercaDe;
-import vw.dialogs.CategoriasRegistrar;
-import vw.dialogs.ProveedoresRegistrar;
-import vw.dialogs.RegistroCliente;
-import vw.dialogs.UsuariosRegistrar;
-import vw.model.Articulo;
-import vw.model.Venta;
+import vw.components.*;
+import vw.dialogs.*;
+import vw.model.*;
 
 /**
+ * Esta clase se encarga basicamente de 2 cosas : 1-Redireccionar a otra venta
+ * de acuerdo a la accion o el clik que el usuario presione 2-Se encarga de
+ * configurar los item del menu , con la acciones para los atajos de teclado.
  *
- * @author Asus
+ * @author: Unlimited Dreams
+ * @version: 25/08/2016
  */
 public class MenuRedireccionar {
 
@@ -58,7 +44,6 @@ public class MenuRedireccionar {
     }
 
     /**
-     *
      * @param parent
      * @param CadenaMenu
      * @param acciones
@@ -75,6 +60,12 @@ public class MenuRedireccionar {
 
     }
 
+    /**
+     * Método que se encargar de configurar las acciones de un Item del menu.
+     *
+     * @param accion se resive desde la vista. la cual determina que item de
+     * menu es.
+     */
     public static JMenuItem Atajos(String accion) {
         System.out.println("Entro : " + accion);
         JMenuItem menuItem = new JMenuItem(accion.trim());
@@ -150,10 +141,15 @@ public class MenuRedireccionar {
         if (accion.trim().equalsIgnoreCase("Crear Kits")) {
             menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_K, ActionEvent.CTRL_MASK));
         }
-
         return menuItem;
     }
 
+    /**
+     * Método que se encargar de redireccionar o darle accion a un item Menu
+     * para que viaje entre ventanas. este recive el nombre del itemMenu o
+     * accion y deacuerdo a eso , configura una ruta destino donde debe ir el
+     * evento
+     */
     public void reDireccion() throws IOException, URISyntaxException, ClassNotFoundException, ClassNotFoundException, ClassNotFoundException {
         try {
             if (CadenaMenu.equalsIgnoreCase("Bodega")) {
@@ -164,7 +160,7 @@ public class MenuRedireccionar {
                 new UsuariosRegistrar(this.parent, true).setVisible(true);
             } else if (CadenaMenu.equalsIgnoreCase("Rol")) {
                 new Roles(Usuario, listMenu, codEmpresa).setVisible(true);
-                
+
             } else if (CadenaMenu.equalsIgnoreCase("Crear Rol")) {
 
             } else if (CadenaMenu.equalsIgnoreCase("Proveedores")) {
@@ -175,8 +171,7 @@ public class MenuRedireccionar {
                 new Articulo(Usuario, listMenu, codEmpresa).setVisible(true);
             } else if (CadenaMenu.equalsIgnoreCase("Nueva Compra")) {
                 ArrayList<Producto> pr = new ArrayList();
-                String fac = "";
-                new Entrada_Nueva(pr, Usuario, fac, listMenu, codEmpresa).setVisible(true);
+                new Entrada_Nueva(pr, Usuario, "", listMenu, codEmpresa).setVisible(true);
             } else if (CadenaMenu.equalsIgnoreCase("Categoria")) {
                 new CategoriaGestion(Usuario, listMenu).setVisible(true);
             } else if (CadenaMenu.equalsIgnoreCase("Crear Categoria")) {
@@ -211,13 +206,13 @@ public class MenuRedireccionar {
                 r = new RegistroCliente(this.parent, true, productos, Usuario, listMenu, 2);
                 r.setVisible(true);
             } else if (CadenaMenu.equalsIgnoreCase("Iva")) {
-                new MaestroIva(Usuario, listMenu).setVisible(true);
+                //new MaestroIva(Usuario, listMenu).setVisible(true);
+//                new MaestroMenu(Usuario, listMenu).setVisible(true);
             } else if (CadenaMenu.equalsIgnoreCase("Promocion")) {
                 new Promociones(Usuario, listMenu).setVisible(true);
             } else if (CadenaMenu.equalsIgnoreCase("Kits")) {
                 new Kits(Usuario, listMenu).setVisible(true);
             }
-
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(MenuRedireccionar.class.getName()).log(Level.SEVERE, null, ex);
         }

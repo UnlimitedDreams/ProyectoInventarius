@@ -40,6 +40,9 @@ public class LeerExcel {
      */
 
     public void Archivo(String archivo, int columna) {
+        System.out.println("--*-****---");
+        System.out.println(""+archivo);
+        System.out.println(""+columna);
         File file = new File(archivo);
         int fecha = 0, ve = 0;
         try {
@@ -48,20 +51,23 @@ public class LeerExcel {
             XSSFSheet hssfSheet = workBook.getSheetAt(0);
             Iterator rowIterator = hssfSheet.rowIterator();
             while (rowIterator.hasNext()) {
-
+                System.out.println("1---------------");
                 XSSFRow hssfRow = (XSSFRow) rowIterator.next();
                 Iterator iterator = hssfRow.cellIterator();
                 List cellTempList = new ArrayList();
 
                 while (iterator.hasNext()) {
+                    System.out.println("entonces");
                     XSSFCell hssfCell = (XSSFCell) iterator.next();
                     cellTempList.add(hssfCell);
                 }
                 for (int j = 0; j < cellTempList.size(); j++) {
+                    System.out.println("entro aqui");
                     XSSFCell hssfCell = (XSSFCell) cellTempList.get(j);
                     String v2 = hssfCell.toString();
                     //Se pone diferente de cero para evitar, las cabeceras del excel
                     if (hssfCell.getColumnIndex() == columna && hssfCell.getRowIndex() != 0) {
+                        System.out.println("cargo");
                         value.add("" + cellTempList.get(j));
                     } else if (hssfCell.getColumnIndex() == columna && hssfCell.getRowIndex() != 0) {
                         value.add("" + cellTempList.get(j));

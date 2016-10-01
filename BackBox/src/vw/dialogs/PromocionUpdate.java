@@ -10,7 +10,7 @@ import Control.Entrada;
 import Control.Sequence;
 import Control.TablaModel;
 import Modelo.ContenedorMenus;
-import Modelo.List_Categoria;
+import Modelo.List_Object;
 import Modelo.Producto;
 import Modelo.acciones;
 import Modelo.seccion;
@@ -44,7 +44,7 @@ public class PromocionUpdate extends javax.swing.JDialog {
     Promociones promo = null;
     int codPromocion;
     ArrayList<Producto> productos = new ArrayList();
-    ArrayList<List_Categoria> ListCate = new ArrayList();
+    ArrayList<List_Object> ListCate = new ArrayList();
     boolean condicionfiltro;
     int condicion;
 

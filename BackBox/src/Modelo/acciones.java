@@ -1,16 +1,13 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package Modelo;
 
+package Modelo;
 /**
- *
- * @author Asus
+ * Esta clase se encarga de cargar las acciones de un rol
+ * @author: Unlimited Dreams
+ * @version: 25/08/2016
  */
 public class acciones {
    private int cod_actividad; 
+   private int cod_accion;
    private String accion;
    private int orden;
 
@@ -19,15 +16,10 @@ public class acciones {
         this.orden = orden;
     }
    
-   
-
-    public acciones(int cod_actividad, String accion) {
-        this.cod_actividad = cod_actividad;
+    public acciones(int cod_accion, String accion) {
+        this.cod_accion = cod_accion;
         this.accion = accion;        
     }
-
-    
-    
 
     public int getCod_seccion() {
         return cod_actividad;
@@ -53,13 +45,26 @@ public class acciones {
         this.orden = orden;
     }
 
+    public int getCod_actividad() {
+        return cod_actividad;
+    }
+
+    public void setCod_actividad(int cod_actividad) {
+        this.cod_actividad = cod_actividad;
+    }
+
+    public int getCod_accion() {
+        return cod_accion;
+    }
+
+    public void setCod_accion(int cod_accion) {
+        this.cod_accion = cod_accion;
+    }
+    
+
     @Override
     public String toString() {
         return "acciones{" + "cod_actividad=" + cod_actividad + ", accion=" + accion + ", orden=" + orden + '}';
     }
-    
-    
 
-   
-   
 }

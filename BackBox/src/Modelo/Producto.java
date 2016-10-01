@@ -1,13 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Modelo;
 
 /**
- *
- * @author Family
+ * Esta clase es el modelo principal der negocio , donde se configura la carga de los productos.contiene varios constructores para determinados
+ * llamados de este modelo.
+ * @author: Unlimited Dreams
+ * @version: 25/08/2016
  */
 public class Producto {
 
@@ -55,7 +52,7 @@ public class Producto {
         this.codigo = codigo;
         this.nombre = nombre;
         this.Costo = Costo;
-        this.precio_venta = precio_venta;
+        this.precio_final = precio_venta;
         this.cantidad = cantidad;
         this.stock = stock;
     }
@@ -148,11 +145,6 @@ public class Producto {
         this.cantidad = cantidad;
     }
 
-    @Override
-    public String toString() {
-        return "Producto{" + "codigo=" + codigo + ", nombre=" + nombre + ", Costo=" + Costo + ", iva=" + iva + ", precio_venta=" + precio_venta + ", cantidad=" + cantidad + ", desc=" + desc + ", categoria=" + categoria + '}';
-    }
-
     public double getPrecio_final() {
         return precio_final;
     }
@@ -240,9 +232,4 @@ public class Producto {
     public void setCantidadKit2(int cantidadKit2) {
         this.cantidadKit2 = cantidadKit2;
     }
-    
-    
-    
-    
-
 }

@@ -281,7 +281,7 @@ public class SalidaEntrada extends javax.swing.JDialog {
             }
             if (r) {
                 Bodega b = new Bodega(usuario, ListAcciones, codEmpresa);
-                this.Bode.inicio();
+                this.Bode.CargaProductos();
                 this.dispose();
 
             } else if (validacion == true) {
