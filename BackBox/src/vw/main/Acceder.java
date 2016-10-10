@@ -7,14 +7,18 @@ package vw.main;
 
 import Control.Control;
 import Control.Entrada;
+import Modelo.Producto;
 import com.alee.laf.WebLookAndFeel;
 import java.awt.Color;
 import java.awt.Toolkit;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import vw.components.Entrada_Nueva;
 import vw.components.MaestroItem;
 import vw.components.MaestroMenu;
+import vw.components.MaestroMenuItem;
 import vw.dialogs.AcercaDe;
 
 /**
@@ -335,7 +339,10 @@ public class Acceder extends javax.swing.JFrame {
                 if (f) {
 //                    Menu newMenu = new Menu(cod_usuario);
 //                    newMenu.setVisible(true);
-                    new MaestroItem(cod_usuario).setVisible(true);
+//                    new MaestroMenuItem(cod_usuario).setVisible(true);
+
+                    ArrayList<Producto> pr = new ArrayList();
+                    new Entrada_Nueva(pr, cod_usuario, "", null, 1).setVisible(true);
                     this.dispose();
                 } else {
                     Entrada.muestreMensajeV("El usuario o la clave no son correctos",

@@ -27,6 +27,7 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import vw.components.Kits;
 import vw.components.MaestroItem;
+import vw.components.MaestroMenuItem;
 import vw.components.Promociones;
 import vw.model.Venta;
 
@@ -43,15 +44,16 @@ public class MenuItemRegistro extends javax.swing.JDialog {
      * @param modal
      * @param cod
      */
-    MaestroItem MenuItem = null;
+    MaestroMenuItem MenuItem = null;
     int numKit;
     ArrayList<Producto> productos = new ArrayList();
     boolean condicionfiltro;
+    int codigoMenu;
 
     ArrayList<List_Object> list_Menu = new ArrayList();
     ArrayList<List_Object> list_MenuCarga = new ArrayList();
 
-    public MenuItemRegistro(java.awt.Frame parent, boolean modal) {
+    public MenuItemRegistro(java.awt.Frame parent, boolean modal, int codigoMenu) {
         super(parent, modal);
         initComponents();
         this.setLocationRelativeTo(null);
@@ -60,8 +62,9 @@ public class MenuItemRegistro extends javax.swing.JDialog {
         ImageIcon img = new ImageIcon(url);
         setIconImage(img.getImage());
         this.condicionfiltro = false;
-        this.MenuItem = (MaestroItem) parent;
+        this.MenuItem = (MaestroMenuItem) parent;
         nombre.requestFocus();
+        this.codigoMenu = codigoMenu;
         cargarDatos();
 
     }
@@ -74,6 +77,13 @@ public class MenuItemRegistro extends javax.swing.JDialog {
             while (Control.rs.next()) {
                 list_Menu.add(new List_Object(Control.rs.getInt(1), Control.rs.getString(2)));
                 listMenus.addItem(Control.rs.getString(2));
+            }
+            if (this.codigoMenu > 0) {
+                Control.ejecuteQuery("select distinct  b.codigoact,b.nombre from det_menuitem a , actividades b where b.codigoact=a.cod_actividad and ordenmenu=1");
+                while (Control.rs.next()) {
+                    list_MenuCarga.add(new List_Object(Control.rs.getInt(1),Control.rs.getString(2)));
+                }
+                IniciarMenus();
             }
 
         } catch (Exception ex) {
@@ -100,7 +110,7 @@ public class MenuItemRegistro extends javax.swing.JDialog {
     }
 
     public void sigueinte() {
-        new MenuItemRegistro2(this.MenuItem, true, list_MenuCarga).setVisible(true);
+        new MenuItemRegistro2(this.MenuItem, true, list_MenuCarga,codigoMenu).setVisible(true);
         this.dispose();
     }
 

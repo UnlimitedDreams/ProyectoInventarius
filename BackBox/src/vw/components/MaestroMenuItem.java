@@ -53,57 +53,18 @@ public class MaestroMenuItem extends javax.swing.JFrame {
     }
 
     public void CrearMenu() throws SQLException, ClassNotFoundException {
-        boolean r = false;
-        try {
-            String titulo = Entrada.leaCadenaV("Ingrese Titulo de Menu");
-            Control.conectar();
-            Control.con.setAutoCommit(false);
-            r = Control.ejecuteUpdate("insert into actividades values(nextval('sq_actividades'),'" + titulo + "','Activo')");
-        } catch (SQLException ex) {
-            System.out.println("Error de crear " + ex.toString());
-        } finally {
-            Control.con.commit();
-            Control.con.setAutoCommit(true);
-            Control.cerrarConexion();
-        }
+        new MenuItemRegistro(this, true, 0).setVisible(true);
 
-        if (r) {
-            Entrada.muestreMensajeV("Menu Creado Con Exito");
-            inicio();
-        } else {
-            Entrada.muestreMensajeV("Error al crear Menu");
-        }
     }
 
     public void ActualizarMenu() throws SQLException, ClassNotFoundException {
-        boolean r = false;
-        try {
-            int i = categoriaLista.getSelectedRow();
-            if (i == -1) {
-                Entrada.muestreMensajeV("Favor... seleccione una fila",
-                        JOptionPane.WARNING_MESSAGE);
-            } else {
-                String codigoMenu = (String) categoriaLista.getValueAt(i, 0).toString();
-                String nombreMenu = (String) categoriaLista.getValueAt(i, 1).toString();
-                String titulo = Entrada.leaCadenaV(nombreMenu);
-                Control.conectar();
-                Control.con.setAutoCommit(false);
-                r = Control.ejecuteUpdate("update actividades set nombre='" + titulo + "' where codigoact=" + Integer.parseInt(codigoMenu));
-            }
-
-        } catch (SQLException ex) {
-            /*Nothing Here*/
-        } finally {
-            Control.con.commit();
-            Control.con.setAutoCommit(true);
-            Control.cerrarConexion();
-        }
-
-        if (r) {
-            Entrada.muestreMensajeV("Actualizacion Exitosa");
-            inicio();
+        int i = categoriaLista.getSelectedRow();
+        if (i == -1) {
+            Entrada.muestreMensajeV("Favor... seleccione una fila",
+                    JOptionPane.WARNING_MESSAGE);
         } else {
-            Entrada.muestreMensajeV("Error al hacer Actualizacion");
+            String codigoMenu = (String) categoriaLista.getValueAt(i, 0).toString();
+            new MenuItemRegistro(this, true, Integer.parseInt(codigoMenu)).setVisible(true);
         }
 
     }
@@ -289,9 +250,8 @@ public class MaestroMenuItem extends javax.swing.JFrame {
                         JOptionPane.WARNING_MESSAGE);
             } else if (JOptionPane.showConfirmDialog(this, "¿Está seguro de borrar el Menu?", "Inventarius", JOptionPane.YES_NO_OPTION) == 0) {
                 String cod = (String) categoriaLista.getValueAt(i, 0).toString();
-                r = Control.ejecuteUpdate("update actividades "
-                        + "set estado='Inactivo' " /*Estado Inactivo*/
-                        + "where codigoact=" + Integer.parseInt(cod));
+                r = Control.ejecuteUpdate("delete from det_menuitem where ordenmenu=" + Integer.parseInt(cod));
+                r = Control.ejecuteUpdate("delete from menuitem where cod_menuitem=" + Integer.parseInt(cod));
 
                 if (r) {
                     Entrada.muestreMensajeV("Menu Borrado con éxito",
@@ -331,7 +291,7 @@ public class MaestroMenuItem extends javax.swing.JFrame {
         this.categoriaLista.setModel(modeloEmpleado);
         try {
             Control.conectar();
-            Control.ejecuteQuery("select codigoact,nombre from actividades where estado='Activo' order by nombre");
+            Control.ejecuteQuery("select cod_menuitem,titulo from menuitem");
             rsetMetaData = Control.rs.getMetaData();
             numeroPreguntas = rsetMetaData.getColumnCount();
             //Establece los nombres de las columnas de las tablas

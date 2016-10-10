@@ -21,6 +21,16 @@ public class acciones {
         this.accion = accion;        
     }
 
+    public acciones(int cod_actividad, int cod_accion, String accion) {
+        this.cod_actividad = cod_actividad;
+        this.cod_accion = cod_accion;
+        this.accion = accion;
+    }
+
+
+    
+    
+
     public int getCod_seccion() {
         return cod_actividad;
     }

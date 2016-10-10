@@ -50,11 +50,13 @@ public class MenuItemRegistro2 extends javax.swing.JDialog {
     ArrayList<seccion> list_MenuFinal = new ArrayList();
     boolean condicionfiltro;
     int posicion;
+    int permiso;
+    int validacion;
 
     ArrayList<acciones> list_Item = new ArrayList();
     ArrayList<acciones> list_Item2 = new ArrayList();
 
-    public MenuItemRegistro2(java.awt.Frame parent, boolean modal, ArrayList x) {
+    public MenuItemRegistro2(java.awt.Frame parent, boolean modal, ArrayList x, int validacion) {
         super(parent, modal);
         initComponents();
         this.setLocationRelativeTo(null);
@@ -67,15 +69,18 @@ public class MenuItemRegistro2 extends javax.swing.JDialog {
         nombre.requestFocus();
         this.list_Menu = x;
         posicion = 0;
+        this.permiso = 0;
+        this.validacion = validacion;
         cargarDatos();
 
     }
 
     public void cargarDatos() {
         try {
-            int posiciones=0;
+            System.out.println("Inicio");
+            int posiciones = 0;
             for (List_Object list_Object : list_Menu) {
-                list_MenuFinal.add(new seccion(list_Object.getCod(), list_Object.getNom(), "Inactivo",posiciones));
+                list_MenuFinal.add(new seccion(list_Object.getCod(), list_Object.getNom(), "Inactivo", posiciones));
                 listMenus.addItem(list_Object.getNom());
                 posiciones++;
             }
@@ -83,9 +88,11 @@ public class MenuItemRegistro2 extends javax.swing.JDialog {
             Control.conectar();
             Control.ejecuteQuery("select codacciones,nom_accion from acciones where estado='Activo'");
             while (Control.rs.next()) {
+                System.out.println("----------------");
                 list_Item.add(new acciones(Control.rs.getInt(1), Control.rs.getString(2)));
                 listItem.addItem(Control.rs.getString(2));
             }
+            this.permiso = 1;
 
         } catch (Exception ex) {
 
@@ -94,11 +101,60 @@ public class MenuItemRegistro2 extends javax.swing.JDialog {
         }
     }
 
-    public void registrarKit() throws SQLException, ClassNotFoundException {
+    public void cargarDatosUp() {
+        try {
+            Control.conectar();
+            Control.ejecuteQuery("select distinct a.cod_actividad,b.codacciones,b.nom_accion from det_menuitem a , acciones b where b.codacciones=a.cod_accion and ordenmenu="
+                    + validacion);
+            
+           
+
+            int posiciones = 0;
+            for (List_Object list_Object : list_Menu) {
+
+                list_MenuFinal.add(new seccion(list_Object.getCod(), list_Object.getNom(), "Inactivo", posiciones));
+                listMenus.addItem(list_Object.getNom());
+                posiciones++;
+            }
+            list_MenuFinal.get(0).setEstado("Activo");
+            Control.conectar();
+            Control.ejecuteQuery("select codacciones,nom_accion from acciones where estado='Activo'");
+            while (Control.rs.next()) {
+                System.out.println("----------------");
+                list_Item.add(new acciones(Control.rs.getInt(1), Control.rs.getString(2)));
+                listItem.addItem(Control.rs.getString(2));
+            }
+            this.permiso = 1;
+
+        } catch (Exception ex) {
+
+        } finally {
+            Control.cerrarConexion();
+        }
+    }
+
+    public void registrarMenuItem() throws SQLException, ClassNotFoundException {
         boolean r = false;
         try {
             Control.conectar();
             Control.con.setAutoCommit(false);
+            int num = Sequence.Next("sq_MenuItem");
+            Control.ejecuteUpdate("Insert into menuitem values (" + num + ",'prueba','" + new Date() + "')");
+            seccion temp;
+            acciones temp2;
+            for (int i = 0; i < list_MenuFinal.size(); i++) {
+                temp = (seccion) list_MenuFinal.get(i);
+                if (temp.getList_acciones().size() > 0) {
+                    for (int k = 0; k < list_MenuFinal.get(i).getList_acciones().size(); k++) {
+                        temp2 = (acciones) list_MenuFinal.get(i).getList_acciones().get(k);
+                        if (temp2.getCod_actividad() == temp.getPosicion()) {
+                            Control.ejecuteUpdate("Insert into det_menuitem values (nextval('sq_Det_MenuItem')," + temp.getCod_seccion()
+                                    + "," + temp2.getCod_accion() + "," + num + ")");
+                        }
+                    }
+                }
+            }
+            System.out.println(" ok ");
 
         } catch (Exception ex) {
             r = false;
@@ -108,10 +164,6 @@ public class MenuItemRegistro2 extends javax.swing.JDialog {
             Control.cerrarConexion();
         }
 
-    }
-
-    public void cambiarDatos() {
-        System.out.println("- " + listMenus.getSelectedItem().toString());
     }
 
     /**
@@ -338,6 +390,9 @@ public class MenuItemRegistro2 extends javax.swing.JDialog {
             }
         });
         jTable1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jTable1KeyPressed(evt);
+            }
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 jTable1KeyReleased(evt);
             }
@@ -375,7 +430,13 @@ public class MenuItemRegistro2 extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-
+        try {
+            registrarMenuItem();
+        } catch (SQLException ex) {
+            Logger.getLogger(MenuItemRegistro2.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(MenuItemRegistro2.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -384,34 +445,36 @@ public class MenuItemRegistro2 extends javax.swing.JDialog {
 
 
     private void listMenusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_listMenusActionPerformed
-        for (seccion list_obj2 : list_MenuFinal) {
-            System.out.println("secion : " + list_obj2.getDescripcion());
-            System.out.println(" cant acciones : " + list_obj2.getList_acciones().size());
-        }
-        System.out.println("posicion : " + posicion);
-        posicion = listMenus.getSelectedIndex();
+        if (this.permiso == 1) {
+            for (seccion list_obj2 : list_MenuFinal) {
+                System.out.println("secion : " + list_obj2.getDescripcion());
+                System.out.println(" cant acciones : " + list_obj2.getList_acciones().size());
+            }
+            System.out.println("posicion : " + posicion);
+            posicion = listMenus.getSelectedIndex();
 
-        for (seccion list_obj2 : list_MenuFinal) {
-            list_obj2.setEstado("Inactivo");
-        }
+            for (seccion list_obj2 : list_MenuFinal) {
+                list_obj2.setEstado("Inactivo");
+            }
 
-        list_MenuFinal.get(posicion).setEstado("Activo");
-        System.out.println("posicion : " + posicion);
+            list_MenuFinal.get(posicion).setEstado("Activo");
+            System.out.println("posicion : " + posicion);
 
-        Borrar();
-        for (seccion list_obj2 : list_MenuFinal) {
-             System.out.println("secion : " + list_obj2.getDescripcion());
-             System.out.println(" cant acciones : " + list_obj2.getList_acciones().size());
-        }
+            Borrar2();
+            for (seccion list_obj2 : list_MenuFinal) {
+                System.out.println("secion : " + list_obj2.getDescripcion());
+                System.out.println(" cant acciones : " + list_obj2.getList_acciones().size());
+            }
 //        list_Item2.clear();
-        for (seccion list_obj2 : list_MenuFinal) {
-             System.out.println("secion : " + list_obj2.getDescripcion());
-             System.out.println(" cant acciones : " + list_obj2.getList_acciones().size());
-        }
-        IniciarItem();
-        for (seccion list_obj2 : list_MenuFinal) {
-            System.out.println("secion : " + list_obj2.getDescripcion());
-            System.out.println(" cant acciones : " + list_obj2.getList_acciones().size());
+            for (seccion list_obj2 : list_MenuFinal) {
+                System.out.println("secion : " + list_obj2.getDescripcion());
+                System.out.println(" cant acciones : " + list_obj2.getList_acciones().size());
+            }
+            IniciarItem();
+            for (seccion list_obj2 : list_MenuFinal) {
+                System.out.println("secion : " + list_obj2.getDescripcion());
+                System.out.println(" cant acciones : " + list_obj2.getList_acciones().size());
+            }
         }
     }//GEN-LAST:event_listMenusActionPerformed
 
@@ -431,7 +494,18 @@ public class MenuItemRegistro2 extends javax.swing.JDialog {
         // TODO add your handling code here:
     }//GEN-LAST:event_listItemActionPerformed
 
+    private void jTable1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTable1KeyPressed
+        try {
+            if (evt.getKeyCode() == 127) {
+                Borrar();
+            }
+        } catch (Exception ex) {
+            System.err.println("Error al borrar producto :" + ex.toString());
+        }
+    }//GEN-LAST:event_jTable1KeyPressed
+
     public void CargarItem() {
+        acciones temp = null;
         String titulo = listItem.getSelectedItem().toString();
         int cod = 0;
         boolean r = false;
@@ -442,24 +516,27 @@ public class MenuItemRegistro2 extends javax.swing.JDialog {
                 break;
             }
         }
-
-
         for (acciones list_obj2 : list_MenuFinal.get(posicion).getList_acciones()) {
-            if (cod == list_obj2.getCod_accion() && list_obj2.getCod_actividad()==posicion) {
+            if (cod == list_obj2.getCod_accion() && list_obj2.getCod_actividad() == posicion) {
                 r = true;
             }
         }
         System.out.println("r : " + r);
         if (r == false) {
             for (acciones list_obj : list_Item) {
-                if (list_obj.getCod_accion()==cod) {
-                    System.out.println("registro : " + list_obj.getAccion());
-                    list_obj.setCod_actividad(posicion);
-                    list_Item2.add(list_obj);
+                if (list_obj.getCod_accion() == cod) {
+                    System.out.println("registro : " + list_obj.getAccion() + " posicion : " + posicion);
+//                    list_obj.setCod_actividad(posicion);
+                    temp = new acciones(posicion, list_obj.getCod_accion(), list_obj.getAccion());
                     break;
                 }
             }
+            list_Item2.add(temp);
             list_MenuFinal.get(posicion).setList_acciones(list_Item2);
+        }
+
+        for (acciones list_obj2 : list_Item2) {
+            System.out.println(".. " + list_obj2.getAccion() + " - " + list_obj2.getCod_actividad());
         }
 
         IniciarItem();
@@ -479,17 +556,38 @@ public class MenuItemRegistro2 extends javax.swing.JDialog {
     }
 
     public void Borrar() {
-        for (int i = 0; i < 2; i++) {
-            for (int k = 0; k < list_Item2.size() + 1; k++) {
-                jTable1.setValueAt("", k, i);
+        int i = jTable1.getSelectedRow();
+        String cod = (String) jTable1.getValueAt(i, 0).toString();
+        System.out.println("cod : " + cod);
+        for (acciones list_obj2 : list_Item2) {
+            if (Integer.parseInt(cod) == list_obj2.getCod_accion() && posicion == list_obj2.getCod_actividad()) {
+                System.out.println("encontro");
+                list_Item2.remove(list_obj2);
+                break;
             }
         }
+
+        for (int a = 0; a < 2; a++) {
+            for (int k = 0; k < list_Item2.size() + 1; k++) {
+                jTable1.setValueAt("", k, a);
+
+            }
+        }
+        IniciarItem();
     }
 
     public void MostrarItem(TablaModel x) {
         for (int i = 0; i < 2; i++) {
             for (int k = 0; k < x.getNrofreq(); k++) {
                 jTable1.setValueAt(x.frecuencias[i][k], k, i);
+            }
+        }
+    }
+
+    public void Borrar2() {
+        for (int i = 0; i < 2; i++) {
+            for (int k = 0; k < list_Item2.size(); k++) {
+                jTable1.setValueAt("", k, i);
             }
         }
     }

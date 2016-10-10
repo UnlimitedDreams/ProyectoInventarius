@@ -55,11 +55,25 @@ public class MaestroItem extends javax.swing.JFrame {
     }
 
     public void CrearItem() throws SQLException, ClassNotFoundException {
+         boolean r = false;
         try {
-            new MenuItemRegistro(this, true).setVisible(true);
-//            inicio();
-        }catch (Exception ex) {
+            String titulo = Entrada.leaCadenaV("Ingrese Titulo de accion");
+            Control.conectar();
+            Control.con.setAutoCommit(false);
+            r = Control.ejecuteUpdate("insert into acciones values(nextval('sq_acciones'),'" + titulo + "','Activo')");
+        } catch (SQLException ex) {
             System.out.println("Error de crear " + ex.toString());
+        } finally {
+            Control.con.commit();
+            Control.con.setAutoCommit(true);
+            Control.cerrarConexion();
+        }
+
+        if (r) {
+            Entrada.muestreMensajeV("Menu Creado Con Exito");
+            inicio();
+        } else {
+            Entrada.muestreMensajeV("Error al crear Menu");
         }
 
     }
