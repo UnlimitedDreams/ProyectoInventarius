@@ -61,9 +61,9 @@ public class Menu extends javax.swing.JFrame {
         List_Menu.clear();
         try {
             cargarUsuario(usuario);
-            System.out.println("1");
+            //System.out.println("1");
             cargarSecciones();
-            System.out.println("2");
+            //System.out.println("2");
             cargarAccion();
             ContenedorMenus con_menu = new ContenedorMenus();
             con_menu.setListaAcciones(listaaccion);
@@ -90,15 +90,11 @@ public class Menu extends javax.swing.JFrame {
                                                 || e.getActionCommand().equalsIgnoreCase("Crear Usuario")
                                                 || e.getActionCommand().equalsIgnoreCase("Crear Proveedor")
                                                 || e.getActionCommand().equalsIgnoreCase("Crear Rol")) {
-                                            System.out.println("No cierra Ventana");
+                                            //System.out.println("No cierra Ventana");
                                         } else {
                                             Menu.this.dispose();
                                         }
-                                    } catch (IOException ex) {
-                                        Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
-                                    } catch (URISyntaxException ex) {
-                                        Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
-                                    } catch (ClassNotFoundException ex) {
+                                    } catch (IOException | URISyntaxException | ClassNotFoundException ex) {
                                         Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
                                     }
                                 }
@@ -108,12 +104,10 @@ public class Menu extends javax.swing.JFrame {
                     }
                 }
             }
-            System.out.println("3");
+            //System.out.println("3");
             MenuAyuda();
             EliminarBandera();
-        } catch (SQLException ex) {
-            Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ClassNotFoundException ex) {
+        } catch (SQLException | ClassNotFoundException ex) {
             Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
         }
 
@@ -188,7 +182,7 @@ public class Menu extends javax.swing.JFrame {
             while (Control.rs.next()) {
                 listaaccion.add(new acciones(Control.rs.getInt(1), Control.rs.getString(2)));
             }
-            System.out.println("lista Acciones : " + listaaccion);
+            //System.out.println("lista Acciones : " + listaaccion);
             Control.cerrarConexion();
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);

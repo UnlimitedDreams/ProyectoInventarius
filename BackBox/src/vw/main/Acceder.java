@@ -379,7 +379,7 @@ public class Acceder extends javax.swing.JFrame {
         if (java.awt.Desktop.isDesktopSupported()) {
             try {
                 java.awt.Desktop dk = java.awt.Desktop.getDesktop();
-                dk.browse(new URI("https://github.com/UnlimitedDreams/ProyectoInventarius/wiki/1.-Ayuda"));
+                dk.browse(new URI("https://github.com/UnlimitedDreams/ProyectoInventarius/wiki"));
             } catch (URISyntaxException | IOException e) {
                 System.out.println("Error al abrir URL: " + e.getMessage());
             }
@@ -390,7 +390,7 @@ public class Acceder extends javax.swing.JFrame {
         if (java.awt.Desktop.isDesktopSupported()) {
             try {
                 java.awt.Desktop dk = java.awt.Desktop.getDesktop();
-                dk.browse(new URI("https://github.com/UnlimitedDreams/ProyectoInventarius/wiki/1.-Ayuda"));
+                dk.browse(new URI("https://github.com/UnlimitedDreams/ProyectoInventarius/wiki"));
             } catch (URISyntaxException | IOException e) {
                 System.out.println("Error al abrir URL: " + e.getMessage());
             }
@@ -401,7 +401,7 @@ public class Acceder extends javax.swing.JFrame {
         if (java.awt.Desktop.isDesktopSupported()) {
             try {
                 java.awt.Desktop dk = java.awt.Desktop.getDesktop();
-                dk.browse(new URI("https://github.com/UnlimitedDreams/ProyectoInventarius/wiki/0.-Inicio"));
+                dk.browse(new URI("https://github.com/UnlimitedDreams/ProyectoInventarius/wiki"));
             } catch (URISyntaxException | IOException e) {
                 System.out.println("Error al abrir URL: " + e.getMessage());
             }
